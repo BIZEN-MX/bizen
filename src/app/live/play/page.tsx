@@ -8,6 +8,7 @@ import { IconBolt, IconCheck, IconX, IconFire, IconTrophy, IconMedal1, IconMedal
 import { AvatarSvg } from "@/components/live/LiveAvatars"
 import { Volume2, VolumeX } from "lucide-react"
 import { useLiveAudio } from "@/hooks/useLiveAudio"
+import { QUIZ_CATALOG } from "@/data/live-quizzes"
 
 type GameStatus = "loading" | "lobby" | "in_question" | "showing_results" | "leaderboard" | "finished"
 
@@ -43,6 +44,8 @@ function PlayPageContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const sessionId = searchParams.get("session")
+  const quizId = searchParams.get("quizId")
+  const isSolo = sessionId === "solo"
   const supabase = createClient()
 
   // Player state (from sessionStorage)
@@ -106,21 +109,53 @@ function PlayPageContent() {
 
   // ── Load player info from sessionStorage ──
   useEffect(() => {
-    const pid = sessionStorage.getItem("live_participant_id")
+    let pid = sessionStorage.getItem("live_participant_id")
     const nick = sessionStorage.getItem("live_nickname")
     const em = sessionStorage.getItem("live_emoji")
-    if (!pid || !sessionId) {
+    
+    if (!sessionId) {
       router.replace("/live/join")
       return
     }
+
+    if (!pid && isSolo) {
+       // Create a temporary participant ID for solo mode
+       pid = "solo_" + Math.random().toString(36).substring(2, 11)
+       sessionStorage.setItem("live_participant_id", pid)
+    } else if (!pid && !isSolo) {
+      router.replace("/live/join")
+      return
+    }
+
     setParticipantId(pid)
     if (nick) setNickname(nick)
     if (em) setEmoji(em)
-  }, [sessionId, router])
+  }, [sessionId, router, isSolo])
 
   // ── Load initial session data ──
   useEffect(() => {
     if (!sessionId) return
+
+    if (isSolo) {
+      const quiz = QUIZ_CATALOG.find(q => q.id === quizId)
+      if (!quiz) { router.replace("/live/join"); return }
+
+      setSessionTitle(quiz.title)
+      const qs: Question[] = (quiz.questions || []).map((q: any, i: number) => ({ ...q, id: `q_${i}`, order_index: i }))
+      setAllQuestions(qs)
+      setTotalQuestions(qs.length)
+      setGameStatus("in_question")
+      setQuestionIndex(0)
+      
+      const q = qs[0]
+      if (q) {
+        setCurrentQuestion(q)
+        setTimeLimitForQuestion(q.time_limit)
+        setTimeLeft(q.time_limit)
+        answerStartTimeRef.current = Date.now()
+      }
+      return
+    }
 
     const loadSession = async () => {
       const { data, error } = await supabase
@@ -157,10 +192,11 @@ function PlayPageContent() {
     }
 
     loadSession()
-  }, [sessionId, supabase, router])
+  }, [sessionId, quizId, isSolo, supabase, router])
 
   // ── Find my participant score ──
   useEffect(() => {
+    if (isSolo) return
     const me = participants.find(p => p.id === participantId)
     if (me) {
       setMyScore(me.total_score || 0)
@@ -171,11 +207,11 @@ function PlayPageContent() {
       const myRankIdx = ranked.findIndex(p => p.id === participantId)
       setMyRank(myRankIdx >= 0 ? myRankIdx + 1 : null)
     }
-  }, [participants, participantId])
+  }, [participants, participantId, isSolo])
 
   // ── Supabase Realtime subscription ──
   useEffect(() => {
-    if (!sessionId) return
+    if (!sessionId || isSolo) return
 
     const channel = supabase
       .channel(`live_session_${sessionId}`)
@@ -232,7 +268,33 @@ function PlayPageContent() {
       .subscribe()
 
     return () => { supabase.removeChannel(channel) }
-  }, [sessionId, supabase, allQuestions])
+  }, [sessionId, supabase, allQuestions, isSolo])
+
+  // ── Solo mode auto-advance ──
+  useEffect(() => {
+    if (!isSolo || (gameStatus !== "showing_results" && gameStatus !== "leaderboard")) return
+    
+    // Auto-advance to next question after 3.5 seconds
+    const timeout = setTimeout(() => {
+      const nextIndex = questionIndex + 1
+      if (nextIndex >= allQuestions.length) {
+        setGameStatus("finished")
+      } else {
+        const q = allQuestions[nextIndex]
+        setQuestionIndex(nextIndex)
+        setCurrentQuestion(q)
+        setTimeLimitForQuestion(q.time_limit)
+        setTimeLeft(q.time_limit)
+        setSelectedOptionId(null)
+        setHasAnswered(false)
+        setAnswerResult(null)
+        setGameStatus("in_question")
+        answerStartTimeRef.current = Date.now()
+      }
+    }, 3500)
+    
+    return () => clearTimeout(timeout)
+  }, [isSolo, gameStatus, questionIndex, allQuestions])
 
   // ── Timer countdown ──
   useEffect(() => {
@@ -291,6 +353,29 @@ function PlayPageContent() {
 
     const answerTimeMs = optionId ? Date.now() - answerStartTimeRef.current : (timeLimitForQuestion * 1000)
 
+    if (isSolo) {
+      const isCorrect = optionId === currentQuestion.options.find(o => o.isCorrect)?.id
+      const timeBonus = isCorrect ? Math.max(0, Math.floor(((timeLimitForQuestion * 1000 - answerTimeMs) / (timeLimitForQuestion * 1000)) * 200)) : 0
+      const scoreEarned = isCorrect ? (currentQuestion.points_base + timeBonus) : 0
+      const newTotal = myScore + scoreEarned
+      const newStreak = isCorrect ? (myStreak + 1) : 0
+
+      setAnswerResult({
+        isCorrect,
+        scoreEarned,
+        newTotal,
+        newStreak,
+        correctOptionId: currentQuestion.options.find(o => o.isCorrect)?.id || null
+      })
+      setMyScore(newTotal)
+      setMyStreak(newStreak)
+      setMyRank(1) // Solo mode you are always #1
+
+      // Transition to showing_results after a small delay to let results settle
+      setTimeout(() => setGameStatus("showing_results"), 1200)
+      return
+    }
+
     try {
       const res = await fetch("/api/live/answer", {
         method: "POST",
@@ -318,7 +403,7 @@ function PlayPageContent() {
     } catch (err) {
       console.error("Error submitting answer:", err)
     }
-  }, [hasAnswered, currentQuestion, participantId, sessionId, timeLimitForQuestion])
+  }, [hasAnswered, currentQuestion, participantId, sessionId, timeLimitForQuestion, isSolo, myScore, myStreak])
 
   const handleOptionClick = (optionId: string) => {
     if (hasAnswered || gameStatus !== "in_question") return
@@ -580,7 +665,7 @@ function PlayPageContent() {
                 {!selectedOptionId ? <><IconFire size={18} color="#f87171" /> Tiempo agotado</> : answerResult?.isCorrect ? <><IconCheck size={22} /> ¡Correcto! +{answerResult.scoreEarned} pts</> : <><IconX size={22} /> Incorrecto</>}
               </p>
               <p style={{ color: "rgba(255,255,255,0.4)", fontSize: 13, marginTop: 4 }}>
-                Esperando al host para continuar...
+                {isSolo ? "Cargando siguiente pregunta..." : "Esperando al host para continuar..."}
               </p>
             </motion.div>
           )}
@@ -662,7 +747,7 @@ function PlayPageContent() {
         </div>
 
         <p style={{ textAlign: "center", color: "rgba(255,255,255,0.25)", fontSize: 13, padding: "0 24px 32px" }}>
-          Esperando al host para la siguiente pregunta...
+          {isSolo ? "Cargando siguiente pregunta..." : "Esperando al host para la siguiente pregunta..."}
         </p>
       </div>
     )

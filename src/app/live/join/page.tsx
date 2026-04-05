@@ -653,18 +653,69 @@ export default function JoinPage() {
                   <div style={{ 
                     marginTop: "auto", 
                     display: "flex", 
-                    alignItems: "center", 
-                    gap: 12, 
+                    flexDirection: "column",
+                    gap: 12,
                     paddingTop: 12,
                     borderTop: "1px solid rgba(255,255,255,0.05)" 
                   }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-                      <IconClock size={14} color="rgba(255,255,255,0.3)" />
-                      <span style={{ fontSize: 12, color: "rgba(255,255,255,0.4)" }}>{quiz.estimatedMinutes} min</span>
+                    <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                        <IconClock size={14} color="rgba(255,255,255,0.3)" />
+                        <span style={{ fontSize: 12, color: "rgba(255,255,255,0.4)" }}>{quiz.estimatedMinutes} min</span>
+                      </div>
+                      <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                        <IconQuestion size={14} color="rgba(255,255,255,0.3)" />
+                        <span style={{ fontSize: 12, color: "rgba(255,255,255,0.4)" }}>{quiz.questionCount} q</span>
+                      </div>
                     </div>
-                    <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-                      <IconQuestion size={14} color="rgba(255,255,255,0.3)" />
-                      <span style={{ fontSize: 12, color: "rgba(255,255,255,0.4)" }}>{quiz.questionCount} q</span>
+
+                    <div style={{ display: "flex", gap: 8 }}>
+                      <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          router.push(`/live/play?session=solo&quizId=${quiz.id}`)
+                        }}
+                        style={{
+                          flex: 1,
+                          padding: "10px 0",
+                          borderRadius: 12,
+                          background: "rgba(15,98,254,0.15)",
+                          border: "1px solid rgba(15,98,254,0.3)",
+                          color: "#3B82F6",
+                          fontSize: 13,
+                          fontWeight: 700,
+                          cursor: "pointer",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          gap: 6
+                        }}
+                      >
+                        <IconGamepad size={16} /> Practicar Solo
+                      </motion.button>
+                      
+                      <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          router.push("/live/host")
+                        }}
+                        style={{
+                          padding: "10px 12px",
+                          borderRadius: 12,
+                          background: "rgba(255,255,255,0.05)",
+                          border: "1px solid rgba(255,255,255,0.1)",
+                          color: "white",
+                          fontSize: 13,
+                          fontWeight: 600,
+                          cursor: "pointer"
+                        }}
+                      >
+                        Host
+                      </motion.button>
                     </div>
                   </div>
                 </motion.div>
