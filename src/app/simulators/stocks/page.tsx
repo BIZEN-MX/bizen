@@ -233,9 +233,18 @@ const CHALLENGES = [
   },
 ];
 
+const TICKER_STOCKS = [
+  { symbol: "AAPL", change: 1.84 }, { symbol: "MSFT", change: 0.92 },
+  { symbol: "NVDA", change: 3.21 }, { symbol: "GOOGL", change: -0.45 },
+  { symbol: "TSLA", change: -2.11 }, { symbol: "META", change: 2.07 },
+  { symbol: "AMZN", change: 1.33 }, { symbol: "JPM", change: 0.61 },
+  { symbol: "VOO", change: 0.77 }, { symbol: "QQQ", change: 1.14 },
+];
+
 function StockSimulatorContent() {
   const { user, loading, dbProfile, refreshUser } = useAuth();
   const [isMobile, setIsMobile] = useState(false);
+  const [sectorFilter, setSectorFilter] = useState("Todos");
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth <= 767);
     checkMobile();
@@ -588,20 +597,105 @@ function StockSimulatorContent() {
   if (loading || (user && !dataFetched)) return <PageLoader />;
   if (!user)
     return (
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          minHeight: "60vh",
-          fontSize: 16,
-          color: "#64748b",
-          flexDirection: "column",
-          gap: 12,
-        }}
-      >
-        <Shield size={40} color="#94a3b8" />
-        <p>Inicia sesión para jugar.</p>
+      <div style={{ minHeight: "100vh", background: "linear-gradient(170deg,#f8fafc 0%,#f1f5f9 100%)", fontFamily: '-apple-system,BlinkMacSystemFont,"SF Pro Display",Helvetica,Arial,sans-serif', overflow: "hidden" }}>
+        <style>{`
+          @keyframes ticker { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+          @keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+          @keyframes floatCard { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+          .preview-ticker { animation: ticker 28s linear infinite; display:flex; white-space:nowrap; gap:32px; }
+          .preview-card { animation: fadeUp 0.6s ease both; }
+          .preview-float { animation: floatCard 4s ease-in-out infinite; }
+        `}</style>
+
+        {/* Ticker Tape */}
+        <div style={{ background: "#0B1E5E", padding: "10px 0", overflow: "hidden", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
+          <div className="preview-ticker">
+            {[...TICKER_STOCKS, ...TICKER_STOCKS].map((t, i) => (
+              <span key={i} style={{ display: "inline-flex", alignItems: "center", gap: 8, fontSize: 13, fontWeight: 700, color: "white", flexShrink: 0 }}>
+                <span style={{ color: "rgba(255,255,255,0.5)", fontWeight: 400 }}>{t.symbol}</span>
+                <span style={{ color: t.change >= 0 ? "#34d399" : "#f87171" }}>{t.change >= 0 ? "▲" : "▼"} {Math.abs(t.change)}%</span>
+                <span style={{ color: "rgba(255,255,255,0.15)", margin: "0 8px" }}>|</span>
+              </span>
+            ))}
+          </div>
+        </div>
+
+        {/* Hero */}
+        <div style={{ maxWidth: 1100, margin: "0 auto", padding: "clamp(32px,5vw,80px) clamp(20px,4vw,40px)", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 60, alignItems: "center" }}>
+          <div className="preview-card" style={{ animationDelay: "0.1s" }}>
+            <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(16,185,129,0.1)", border: "1px solid rgba(16,185,129,0.3)", borderRadius: 99, padding: "5px 14px", marginBottom: 20, fontSize: 12, fontWeight: 700, color: "#059669", letterSpacing: "0.06em", textTransform: "uppercase" as const }}>
+              <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#10b981", display: "inline-block" }} />
+              Simulador Educativo — Sin dinero real
+            </div>
+            <h1 style={{ fontSize: "clamp(32px,5vw,54px)", fontWeight: 800, color: "#0B1E5E", margin: "0 0 16px", letterSpacing: "-0.03em", lineHeight: 1.1 }}>
+              Aprende a invertir<br />en <span style={{ background: "linear-gradient(135deg,#0056E7,#10b981)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>mercados reales</span>
+            </h1>
+            <p style={{ fontSize: 17, color: "#64748b", lineHeight: 1.7, margin: "0 0 32px", maxWidth: 480 }}>
+              Practica con <strong>Bizcoins</strong> en acciones del S&P 500, ETFs y más. Compite contra el mercado sin arriesgar dinero real.
+            </p>
+            <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+              <Link href="/login" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "14px 28px", background: "linear-gradient(135deg,#0B1E5E,#1e40af)", color: "white", borderRadius: 14, fontWeight: 700, fontSize: 16, textDecoration: "none", boxShadow: "0 8px 24px rgba(11,30,94,0.3)", transition: "all 0.2s" }}>
+                <Rocket size={18} /> Comenzar Gratis
+              </Link>
+              <Link href="/login" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "14px 24px", background: "white", color: "#0B1E5E", borderRadius: 14, fontWeight: 600, fontSize: 15, textDecoration: "none", border: "1.5px solid #e2e8f0", transition: "all 0.2s" }}>
+                Iniciar Sesión
+              </Link>
+            </div>
+            <div style={{ display: "flex", gap: 28, marginTop: 36, flexWrap: "wrap" }}>
+              {[{val: "1,000 bz", label: "Saldo inicial"}, {val: "15+", label: "Activos disponibles"}, {val: "0%", label: "Riesgo real"}].map((s, i) => (
+                <div key={i}>
+                  <p style={{ fontSize: 22, fontWeight: 800, color: "#0B1E5E", margin: "0 0 2px" }}>{s.val}</p>
+                  <p style={{ fontSize: 12, color: "#94a3b8", fontWeight: 600, margin: 0, textTransform: "uppercase" as const, letterSpacing: "0.05em" }}>{s.label}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Demo Portfolio Card — blurred */}
+          {!isMobile && (
+            <div className="preview-float" style={{ position: "relative" }}>
+              <div style={{ position: "absolute", inset: 0, background: "rgba(248,250,252,0.6)", backdropFilter: "blur(8px)", borderRadius: 28, zIndex: 10, display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", gap: 12 }}>
+                <div style={{ width: 52, height: 52, borderRadius: 16, background: "#0B1E5E", display: "flex", alignItems: "center", justifyContent: "center" }}><Shield size={26} color="white" /></div>
+                <p style={{ fontSize: 15, fontWeight: 700, color: "#0B1E5E", margin: 0 }}>Inicia sesión para ver tu portafolio</p>
+                <p style={{ fontSize: 13, color: "#64748b", margin: 0 }}>Datos reales, dinero simulado</p>
+              </div>
+              <div style={{ background: "white", borderRadius: 28, border: "1.5px solid #e2e8f0", boxShadow: "0 24px 60px rgba(0,0,0,0.08)", overflow: "hidden", filter: "blur(2px)" }}>
+                <div style={{ padding: "20px 24px", background: "linear-gradient(135deg,#0B1E5E,#1e40af)", color: "white" }}>
+                  <div style={{ fontSize: 12, opacity: 0.6, fontWeight: 600, letterSpacing: "0.05em", textTransform: "uppercase" as const }}>Portafolio Total</div>
+                  <div style={{ fontSize: 36, fontWeight: 900, letterSpacing: "-0.02em", margin: "6px 0 2px" }}>bz 1,284</div>
+                  <div style={{ fontSize: 13, color: "#34d399", fontWeight: 700 }}>▲ +28.4% desde el inicio</div>
+                </div>
+                <div style={{ padding: 20, display: "flex", flexDirection: "column", gap: 12 }}>
+                  {[{s:"AAPL",v:"bz 312",c:"+12.4%"},{s:"VOO",v:"bz 510",c:"+5.1%"},{s:"NVDA",v:"bz 462",c:"+41.2%"}].map((h,i) => (
+                    <div key={i} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 14px", background: "#f8fafc", borderRadius: 12, border: "1px solid #e2e8f0" }}>
+                      <span style={{ fontWeight: 700, color: "#0B1E5E" }}>{h.s}</span>
+                      <span style={{ fontWeight: 600, color: "#1e293b" }}>{h.v}</span>
+                      <span style={{ fontWeight: 700, color: "#10b981", fontSize: 13 }}>{h.c}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Features row */}
+        <div style={{ background: "white", borderTop: "1px solid #e2e8f0", padding: "32px clamp(20px,4vw,60px)" }}>
+          <div style={{ maxWidth: 1100, margin: "0 auto", display: "grid", gridTemplateColumns: `repeat(${isMobile ? 2 : 4}, 1fr)`, gap: 24 }}>
+            {[
+              { icon: "📈", title: "Datos Reales", desc: "Precios EOD del mercado" },
+              { icon: "🎯", title: "Sin Riesgo", desc: "Todo con Bizcoins simulados" },
+              { icon: "🏆", title: "Rankings", desc: "Compite con otros estudiantes" },
+              { icon: "🚨", title: "Cisne Negro", desc: "Simula crisis de mercado" },
+            ].map((f, i) => (
+              <div key={i} style={{ textAlign: "center" }}>
+                <div style={{ fontSize: 28, marginBottom: 8 }}>{f.icon}</div>
+                <div style={{ fontSize: 14, fontWeight: 700, color: "#0B1E5E", marginBottom: 4 }}>{f.title}</div>
+                <div style={{ fontSize: 12, color: "#94a3b8" }}>{f.desc}</div>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     );
 
@@ -610,8 +704,15 @@ function StockSimulatorContent() {
       <style>{`
         @keyframes spin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
         @keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
-        .sim-stock-row{transition:all 0.2s;cursor:pointer;border-radius:14px;padding:14px 16px;border:1.5px solid #e2e8f0;background:#f8fafc;display:flex;justify-content:space-between;align-items:center;}
-        .sim-stock-row:hover{background:#f0fdf4;border-color:#86efac;transform:translateX(3px);}
+        @keyframes staggerFadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes numberGlow { 0%,100%{opacity:1} 50%{opacity:0.6;filter:brightness(1.3)} }
+        @keyframes crisisPulse {
+          0%,100% { box-shadow: 0 0 0 0 rgba(239,68,68,0.4); }
+          70% { box-shadow: 0 0 0 10px rgba(239,68,68,0); }
+        }
+        @keyframes ticker { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+        .sim-stock-row{transition:all 0.25s cubic-bezier(0.4,0,0.2,1);cursor:pointer;border-radius:20px;padding:18px;border:1.5px solid #e2e8f0;background:white;display:flex;justify-content:space-between;align-items:center;}
+        .sim-stock-row:hover{background:#f0fdf4;border-color:#6ee7b7;box-shadow:0 8px 24px rgba(16,185,129,0.12);transform:translateY(-2px);}
         .sim-row-table:hover{background:#f8fafc;}
         .sim-row-table{transition:background 0.15s;}
         @media(max-width:767px){.bizen-market-outer{padding-bottom:80px!important}}
@@ -624,6 +725,11 @@ function StockSimulatorContent() {
           animation: pulseGlow 1.5s ease-in-out infinite;
           border: 2px solid #fff !important;
         }
+        .sector-pill { transition: all 0.2s; cursor: pointer; border: none; border-radius: 99px; font-family: inherit; font-weight: 600; font-size: 12px; padding: 7px 16px; }
+        .sector-pill:hover { transform: translateY(-1px); }
+        .crisis-btn { animation: crisisPulse 2s ease-in-out infinite; }
+        .balance-card { transition: all 0.3s; }
+        .balance-card:hover { transform: translateY(-3px) !important; }
       `}</style>
       <div
         className="bizen-market-outer"
@@ -790,38 +896,51 @@ function StockSimulatorContent() {
               </p>
             </div>
 
-            <button
-              onClick={triggerCrisis}
-              style={{
-                padding: "12px 20px",
-                borderRadius: 16,
-                border: "none",
-                background: isCrisis
-                  ? "linear-gradient(135deg, #10b981, #059669)"
-                  : "linear-gradient(135deg, #ef4444, #991b1b)",
-                color: "white",
-                fontWeight: 700,
-                fontSize: 14,
-                cursor: "pointer",
-                display: "flex",
-                alignItems: "center",
-                gap: 10,
-                boxShadow: isCrisis
-                  ? "0 4px 12px rgba(16,185,129,0.2)"
-                  : "0 4px 12px rgba(239,68,68,0.2)",
-                transition: "all 0.3s",
-              }}
-            >
-              {isCrisis ? (
-                <>
-                  <RefreshCw size={18} /> Recuperar Mercado
-                </>
-              ) : (
-                <>
-                  <Skull size={18} /> Simular Cisne Negro
-                </>
+            {/* Black Swan Button — Educational Feature */}
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 6 }}>
+              <motion.button
+                onClick={triggerCrisis}
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+                className={!isCrisis ? "crisis-btn" : ""}
+                style={{
+                  padding: "12px 20px",
+                  borderRadius: 16,
+                  border: isCrisis ? "2px solid rgba(16,185,129,0.4)" : "2px solid rgba(239,68,68,0.3)",
+                  background: isCrisis
+                    ? "linear-gradient(135deg, #064e3b, #065f46)"
+                    : "linear-gradient(135deg, #450a0a, #7f1d1d)",
+                  color: "white",
+                  fontWeight: 700,
+                  fontSize: 14,
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 10,
+                  fontFamily: "inherit",
+                  boxShadow: isCrisis
+                    ? "0 4px 20px rgba(16,185,129,0.3)"
+                    : "0 4px 20px rgba(239,68,68,0.35)",
+                  transition: "all 0.3s",
+                }}
+              >
+                {isCrisis ? (
+                  <><RefreshCw size={16} /> Restaurar Mercado</>
+                ) : (
+                  <><Skull size={16} /> 🦢 Simular Cisne Negro</>
+                )}
+              </motion.button>
+              {!isCrisis && (
+                <span style={{ fontSize: 11, color: "#94a3b8", maxWidth: 200, textAlign: "right", lineHeight: 1.4 }}>
+                  Simula una crisis financiera global y aprende a reaccionar
+                </span>
               )}
-            </button>
+              {isCrisis && (
+                <span style={{ fontSize: 11, color: "#ef4444", fontWeight: 700, display: "flex", alignItems: "center", gap: 4 }}>
+                  🚨 Crisis activa: -{crisisImpact}% en todos los activos
+                </span>
+              )}
+            </div>
           </div>
 
           {/* Crisis Overlay / Alert */}
@@ -1590,229 +1709,97 @@ function StockSimulatorContent() {
                       </div>
                     </div>
 
-                    <div
-                      style={{
-                        overflowX: "auto",
-                        background: "white",
-                        borderRadius: 24,
-                        border: "1.5px solid #e2e8f0",
-                        boxShadow: "0 4px 12px rgba(0,0,0,0.03)",
-                      }}
-                    >
-                      <table
-                        style={{ width: "100%", borderCollapse: "collapse" }}
-                      >
-                        <thead>
-                          <tr
-                            style={{
-                              borderBottom: "1px solid #f1f5f9",
-                              background: "#f8fafc",
-                            }}
-                          >
-                            <th
-                              style={{
-                                padding: "16px",
-                                textAlign: "left",
-                                fontSize: 12,
-                                fontWeight: 700,
-                                color: "#94a3b8",
-                                textTransform: "uppercase",
-                              }}
-                            >
-                              Activo
-                            </th>
-                            <th
-                              style={{
-                                padding: "16px",
-                                textAlign: "left",
-                                fontSize: 12,
-                                fontWeight: 700,
-                                color: "#94a3b8",
-                                textTransform: "uppercase",
-                              }}
-                            >
-                              Sector
-                            </th>
-                            <th
-                              style={{
-                                padding: "16px",
-                                textAlign: "right",
-                                fontSize: 12,
-                                fontWeight: 700,
-                                color: "#94a3b8",
-                                textTransform: "uppercase",
-                              }}
-                            >
-                              Cantidad
-                            </th>
-                            <th
-                              style={{
-                                padding: "16px",
-                                textAlign: "right",
-                                fontSize: 12,
-                                fontWeight: 700,
-                                color: "#94a3b8",
-                                textTransform: "uppercase",
-                              }}
-                            >
-                              Costo Prom.
-                            </th>
-                            <th
-                              style={{
-                                padding: "16px",
-                                textAlign: "right",
-                                fontSize: 12,
-                                fontWeight: 700,
-                                color: "#94a3b8",
-                                textTransform: "uppercase",
-                              }}
-                            >
-                              Precio Actual
-                            </th>
-                            <th
-                              style={{
-                                padding: "16px",
-                                textAlign: "right",
-                                fontSize: 12,
-                                fontWeight: 700,
-                                color: "#94a3b8",
-                                textTransform: "uppercase",
-                              }}
-                            >
-                              Retorno
-                            </th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {portfolio.holdings.map((h: any) => {
-                            const marketPriceUSD =
-                              processedMarketData.find(
-                                (m) => m.symbol === h.symbol,
-                              )?.price ?? Number(h.avg_cost) / 1;
-                            const marketPriceBizcoins = marketPriceUSD * 1;
-                            const ret =
-                              ((marketPriceBizcoins - Number(h.avg_cost)) /
-                                Number(h.avg_cost)) *
-                              100;
-                            const sector = SYMBOL_SECTORS[h.symbol] || "Otros";
-                            return (
-                              <tr
-                                key={h.symbol}
-                                className="sim-row-table"
-                                style={{ borderBottom: "1px solid #f8fafc" }}
-                              >
-                                <td style={{ padding: "16px" }}>
-                                  <div
-                                    style={{
-                                      display: "flex",
-                                      alignItems: "center",
-                                      gap: 12,
-                                    }}
-                                  >
-                                    <StockLogo symbol={h.symbol} size={36} />
-                                    <div>
-                                      <div
-                                        style={{
-                                          fontWeight: 700,
-                                          color: "#0B1E5E",
-                                        }}
-                                      >
-                                        {h.symbol}
-                                      </div>
-                                      <div
-                                        style={{
-                                          fontSize: 11,
-                                          color: "#94a3b8",
-                                        }}
-                                      >
-                                        {
-                                          marketData.find(
-                                            (m) => m.symbol === h.symbol,
-                                          )?.name
-                                        }
-                                      </div>
-                                    </div>
+                    {isMobile ? (
+                      /* Mobile: card layout */
+                      <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                        {portfolio.holdings.map((h: any) => {
+                          const marketPriceUSD = processedMarketData.find(m => m.symbol === h.symbol)?.price ?? Number(h.avg_cost);
+                          const marketPriceBizcoins = marketPriceUSD;
+                          const ret = ((marketPriceBizcoins - Number(h.avg_cost)) / Number(h.avg_cost)) * 100;
+                          const sector = SYMBOL_SECTORS[h.symbol] || "Otros";
+                          const positionValue = Number(h.quantity) * marketPriceBizcoins;
+                          return (
+                            <motion.div key={h.symbol} whileHover={{ y: -2 }} style={{ background: "white", borderRadius: 20, border: `1.5px solid ${ret >= 0 ? "rgba(16,185,129,0.2)" : "rgba(239,68,68,0.2)"}`, padding: "16px 18px", boxShadow: "0 2px 8px rgba(0,0,0,0.04)" }}>
+                              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+                                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                                  <StockLogo symbol={h.symbol} size={38} />
+                                  <div>
+                                    <div style={{ fontWeight: 800, fontSize: 16, color: "#0B1E5E" }}>{h.symbol}</div>
+                                    <span style={{ fontSize: 10, fontWeight: 600, padding: "2px 8px", borderRadius: 99, background: `${SECTOR_COLORS[sector]}15`, color: SECTOR_COLORS[sector] }}>{sector}</span>
                                   </div>
-                                </td>
-                                <td style={{ padding: "16px" }}>
-                                  <span
-                                    style={{
-                                      fontSize: 11,
-                                      fontWeight: 600,
-                                      padding: "4px 10px",
-                                      borderRadius: 8,
-                                      background: `${SECTOR_COLORS[sector]}15`,
-                                      color: SECTOR_COLORS[sector],
-                                    }}
-                                  >
-                                    {sector}
-                                  </span>
-                                </td>
-                                <td
-                                  style={{
-                                    padding: "16px",
-                                    textAlign: "right",
-                                    fontWeight: 600,
-                                    color: "#1e293b",
-                                  }}
-                                >
-                                  {Number(h.quantity).toFixed(4)}
-                                </td>
-                                <td
-                                  style={{
-                                    padding: "16px",
-                                    textAlign: "right",
-                                    color: "#64748b",
-                                  }}
-                                >
-                                  bz{" "}
-                                  {Math.round(
-                                    Number(h.avg_cost),
-                                  ).toLocaleString()}
-                                </td>
-                                <td
-                                  style={{
-                                    padding: "16px",
-                                    textAlign: "right",
-                                    fontWeight: 600,
-                                    color: isCrisis ? "#ef4444" : "#0B1E5E",
-                                  }}
-                                >
-                                  bz{" "}
-                                  {Math.round(
-                                    marketPriceBizcoins,
-                                  ).toLocaleString()}
-                                </td>
-                                <td
-                                  style={{
-                                    padding: "16px",
-                                    textAlign: "right",
-                                  }}
-                                >
-                                  <div
-                                    style={{
-                                      display: "flex",
-                                      alignItems: "center",
-                                      justifyContent: "flex-end",
-                                      gap: 4,
-                                      fontWeight: 700,
-                                      color: ret >= 0 ? "#10b981" : "#ef4444",
-                                    }}
-                                  >
-                                    {ret >= 0 ? (
-                                      <ArrowUpRight size={14} />
-                                    ) : (
-                                      <ArrowDownRight size={14} />
-                                    )}
+                                </div>
+                                <div style={{ textAlign: "right" }}>
+                                  <div style={{ fontWeight: 800, fontSize: 17, color: "#0B1E5E" }}>bz {Math.round(positionValue).toLocaleString()}</div>
+                                  <div style={{ display: "flex", alignItems: "center", gap: 4, justifyContent: "flex-end", color: ret >= 0 ? "#10b981" : "#ef4444", fontWeight: 700, fontSize: 13 }}>
+                                    {ret >= 0 ? <ArrowUpRight size={13} /> : <ArrowDownRight size={13} />}
                                     {Math.abs(ret).toFixed(2)}%
                                   </div>
-                                </td>
-                              </tr>
-                            );
-                          })}
-                        </tbody>
-                      </table>
-                    </div>
+                                </div>
+                              </div>
+                              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8 }}>
+                                {[
+                                  { label: "Cantidad", value: Number(h.quantity).toFixed(4) },
+                                  { label: "Costo Prom.", value: `bz ${Math.round(Number(h.avg_cost)).toLocaleString()}` },
+                                  { label: "Precio Actual", value: `bz ${Math.round(marketPriceBizcoins).toLocaleString()}` },
+                                ].map(stat => (
+                                  <div key={stat.label} style={{ background: "#f8fafc", borderRadius: 10, padding: "8px 10px" }}>
+                                    <div style={{ fontSize: 9, fontWeight: 700, color: "#94a3b8", textTransform: "uppercase" as const, letterSpacing: "0.05em", marginBottom: 2 }}>{stat.label}</div>
+                                    <div style={{ fontSize: 12, fontWeight: 700, color: "#1e293b" }}>{stat.value}</div>
+                                  </div>
+                                ))}
+                              </div>
+                            </motion.div>
+                          );
+                        })}
+                      </div>
+                    ) : (
+                      /* Desktop: table layout */
+                      <div style={{ overflowX: "auto", background: "white", borderRadius: 24, border: "1.5px solid #e2e8f0", boxShadow: "0 4px 12px rgba(0,0,0,0.03)" }}>
+                        <table style={{ width: "100%", borderCollapse: "collapse" }}>
+                          <thead>
+                            <tr style={{ borderBottom: "1px solid #f1f5f9", background: "#f8fafc" }}>
+                              {["Activo", "Sector", "Cantidad", "Costo Prom.", "Precio Actual", "Retorno"].map(col => (
+                                <th key={col} style={{ padding: "16px", textAlign: col === "Activo" || col === "Sector" ? "left" : "right", fontSize: 12, fontWeight: 700, color: "#94a3b8", textTransform: "uppercase" as const }}>{col}</th>
+                              ))}
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {portfolio.holdings.map((h: any) => {
+                              const marketPriceUSD = processedMarketData.find((m) => m.symbol === h.symbol)?.price ?? Number(h.avg_cost) / 1;
+                              const marketPriceBizcoins = marketPriceUSD * 1;
+                              const ret = ((marketPriceBizcoins - Number(h.avg_cost)) / Number(h.avg_cost)) * 100;
+                              const sector = SYMBOL_SECTORS[h.symbol] || "Otros";
+                              return (
+                                <tr key={h.symbol} className="sim-row-table" style={{ borderBottom: "1px solid #f8fafc" }}>
+                                  <td style={{ padding: "16px" }}>
+                                    <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                                      <StockLogo symbol={h.symbol} size={36} />
+                                      <div>
+                                        <div style={{ fontWeight: 700, color: "#0B1E5E" }}>{h.symbol}</div>
+                                        <div style={{ fontSize: 11, color: "#94a3b8" }}>{marketData.find((m) => m.symbol === h.symbol)?.name}</div>
+                                      </div>
+                                    </div>
+                                  </td>
+                                  <td style={{ padding: "16px" }}>
+                                    <span style={{ fontSize: 11, fontWeight: 600, padding: "4px 10px", borderRadius: 8, background: `${SECTOR_COLORS[sector]}15`, color: SECTOR_COLORS[sector] }}>{sector}</span>
+                                  </td>
+                                  <td style={{ padding: "16px", textAlign: "right", fontWeight: 600, color: "#1e293b" }}>{Number(h.quantity).toFixed(4)}</td>
+                                  <td style={{ padding: "16px", textAlign: "right", color: "#64748b" }}>bz {Math.round(Number(h.avg_cost)).toLocaleString()}</td>
+                                  <td style={{ padding: "16px", textAlign: "right", fontWeight: 600, color: isCrisis ? "#ef4444" : "#0B1E5E" }}>bz {Math.round(marketPriceBizcoins).toLocaleString()}</td>
+                                  <td style={{ padding: "16px", textAlign: "right" }}>
+                                    <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: 4, fontWeight: 700, color: ret >= 0 ? "#10b981" : "#ef4444" }}>
+                                      {ret >= 0 ? <ArrowUpRight size={14} /> : <ArrowDownRight size={14} />}
+                                      {Math.abs(ret).toFixed(2)}%
+                                    </div>
+                                  </td>
+                                </tr>
+                              );
+                            })}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
+
                   </div>
                 ) : (
                   <div
@@ -1926,6 +1913,30 @@ function StockSimulatorContent() {
                     Precios EOD de referencia
                   </span>
                 </div>
+
+                {/* Sector Filter Pills */}
+                <div style={{ display: "flex", gap: 8, marginBottom: 20, flexWrap: "wrap" }}>
+                  {["Todos", "Tecnología", "ETF/Índice", "Finanzas", "Consumo", "Energía", "Salud"].map(cat => {
+                    const isActive = sectorFilter === cat;
+                    const color = cat === "Todos" ? "#0B1E5E" : SECTOR_COLORS[cat] || "#64748b";
+                    return (
+                      <button
+                        key={cat}
+                        className="sector-pill"
+                        onClick={() => setSectorFilter(cat)}
+                        style={{
+                          background: isActive ? color : "#f8fafc",
+                          color: isActive ? "white" : "#475569",
+                          border: isActive ? `1.5px solid ${color}` : "1.5px solid #e2e8f0",
+                          boxShadow: isActive ? `0 4px 12px ${color}33` : "none",
+                        }}
+                      >
+                        {cat}
+                      </button>
+                    );
+                  })}
+                </div>
+
                 <div
                   style={{
                     display: "grid",
@@ -1940,7 +1951,7 @@ function StockSimulatorContent() {
                       Cargando datos del mercado...
                     </p>
                   )}
-                  {processedMarketData.map((s) => {
+                  {processedMarketData.filter(s => sectorFilter === "Todos" || (s.sector || SYMBOL_SECTORS[s.symbol]) === sectorFilter).map((s) => {
                     const isSelected = orderForm.symbol === s.symbol;
                     return (
                       <motion.div
@@ -2601,33 +2612,42 @@ function StockSimulatorContent() {
                           bz
                         </div>
                       </div>
-                      <div
-                        style={{
-                          marginTop: 10,
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 6,
-                          opacity: orderForm.qty > 0 ? 1 : 0,
-                          transition: "opacity 0.2s",
-                        }}
-                      >
-                        <Info size={12} color="rgba(255,255,255,0.4)" />
-                        <span
-                          style={{
-                            fontSize: 13,
-                            color: "rgba(255,255,255,0.5)",
-                            fontWeight: 500,
-                          }}
-                        >
-                          Estimado:{" "}
-                          <strong style={{ color: "#10b981" }}>
-                            {orderForm.qty.toLocaleString(undefined, {
-                              minimumFractionDigits: 4,
-                            })}
-                          </strong>{" "}
-                          acciones
-                        </span>
+
+                      {/* Quick preset buttons */}
+                      <div style={{ display: "flex", gap: 6, marginTop: 10 }}>
+                        {[{ label: "25%", pct: 0.25 }, { label: "50%", pct: 0.5 }, { label: "75%", pct: 0.75 }, { label: "Máx", pct: 1.0 }].map(({ label, pct }) => (
+                          <button
+                            key={label}
+                            onClick={() => setOrderForm(f => ({ ...f, amount: Math.floor(cash * pct) }))}
+                            style={{
+                              flex: 1, padding: "6px 0", borderRadius: 8, fontSize: 11, fontWeight: 700,
+                              cursor: "pointer", fontFamily: "inherit",
+                              background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.12)", color: "rgba(255,255,255,0.7)",
+                              transition: "all 0.15s"
+                            }}
+                          >
+                            {label}
+                          </button>
+                        ))}
                       </div>
+
+                      {/* Live cost estimator */}
+                      {orderForm.qty > 0 && (() => {
+                        const stockPrice = processedMarketData.find(s => s.symbol === orderForm.symbol)?.price ?? 0;
+                        const totalCost = orderForm.amount * 1.001;
+                        return (
+                          <div style={{ marginTop: 12, padding: "12px 14px", background: "rgba(16,185,129,0.08)", border: "1px solid rgba(16,185,129,0.2)", borderRadius: 12 }}>
+                            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
+                              <span style={{ fontSize: 12, color: "rgba(255,255,255,0.5)" }}>Recibirás ~</span>
+                              <span style={{ fontSize: 14, fontWeight: 800, color: "#10b981" }}>{orderForm.qty.toFixed(4)} {orderForm.symbol}</span>
+                            </div>
+                            <div style={{ display: "flex", justifyContent: "space-between" }}>
+                              <span style={{ fontSize: 12, color: "rgba(255,255,255,0.5)" }}>Total con comisión (0.1%)</span>
+                              <span style={{ fontSize: 12, fontWeight: 700, color: "rgba(255,255,255,0.7)" }}>bz {totalCost.toFixed(0)}</span>
+                            </div>
+                          </div>
+                        );
+                      })()}
                     </div>
                   </div>
 
