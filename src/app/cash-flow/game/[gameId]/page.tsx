@@ -857,22 +857,15 @@ export default function CashFlowGamePage() {
         * {
           box-sizing: border-box;
         }
-        /* Page root: clear left sidebar on tablet/desktop so content is never covered */
+        /* Full-screen immersive layout — sidebar is hidden via hide-sidebar body class */
         .cashflow-game-page {
-          width: 100% !important;
-          min-height: 100vh;
+          width: 100vw !important;
+          max-width: 100vw !important;
+          margin: 0 !important;
+          padding: 0 !important;
+          min-height: 100dvh;
           overflow-x: hidden !important;
-        }
-        @media (max-width: 767px) {
-          .cashflow-game-page {
-            margin-left: 0 !important;
-            padding-left: 0 !important;
-            width: 100% !important;
-            padding-bottom: 0;
-          }
-        }
-        @media (min-width: 768px) {
-          .cashflow-game-page { margin-left: 0 !important; width: 100% !important; max-width: 100% !important; }
+          position: relative;
         }
         .cashflow-game-container {
           width: 100% !important;

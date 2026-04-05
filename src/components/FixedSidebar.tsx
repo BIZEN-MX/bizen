@@ -300,11 +300,13 @@ export default function FixedSidebar() {
           overflowX: "hidden",
           borderRight: "1px solid rgba(15, 98, 254, 0.08)",
           boxSizing: "border-box",
-          display: isHiddenByGlobalClass ? "none" : "flex",
+          display: "flex",
           flexDirection: "column",
           opacity: isHiddenByGlobalClass ? 0 : 1,
           visibility: isHiddenByGlobalClass ? "hidden" : "visible",
-          transition: "all 0.3s ease-in-out"
+          transform: isHiddenByGlobalClass ? "translateX(-100%)" : "translateX(0)",
+          pointerEvents: isHiddenByGlobalClass ? "none" : "auto",
+          transition: "transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease, visibility 0.4s ease"
         }}>
         <div style={{ padding: "24px 20px 0 20px", overflowX: "hidden", maxWidth: "100%", boxSizing: "border-box", display: "flex", flexDirection: "column", height: "100%" }} className="sidebar-inner-container">
           {/* Bizen logo and brand name */}
@@ -640,94 +642,34 @@ export default function FixedSidebar() {
 
                 {/* ── SIMULADORES SECTION ── */}
                 {user && isStudentOrGuest && (
-                    <>
-                        <button
-                            data-tour-id="/market"
-                            onClick={() => navigateTo("/cash-flow?tab=market")}
-                            style={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: 12,
-                                padding: "12px 14px",
-                                background: isCompactSidebar ? "transparent" : (pathname.startsWith("/cash-flow") && (!window.location.search || window.location.search.includes("tab=market")) ? "rgba(16, 185, 129, 0.12)" : "transparent"),
-                                border: "none",
-                                borderRadius: 10,
-                                cursor: "pointer",
-                                transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
-                                fontSize: 13,
-                                fontWeight: (pathname.startsWith("/cash-flow") && (!window.location.search || window.location.search.includes("tab=market"))) ? 600 : 400,
-                                textAlign: "left",
-                                color: (pathname.startsWith("/cash-flow") && (!window.location.search || window.location.search.includes("tab=market"))) ? "#10b981" : "#64748B",
-                                ...compactButtonOverrides(pathname.startsWith("/cash-flow") && (!window.location.search || window.location.search.includes("tab=market"))),
-                                position: "relative",
-                                marginBottom: 4
-                            }}
-                        >
-                            {(pathname.startsWith("/cash-flow") && (!window.location.search || window.location.search.includes("tab=market"))) && (
-                                <div style={{ position: "absolute", left: 0, top: "15%", height: "70%", width: "4px", backgroundColor: "#10b981", borderRadius: "0 4px 4px 0" }} />
-                            )}
-                            <TrendingUp size={iconSize} strokeWidth={(pathname.startsWith("/cash-flow") && (!window.location.search || window.location.search.includes("tab=market"))) ? 2.5 : 2} color={(pathname.startsWith("/cash-flow") && (!window.location.search || window.location.search.includes("tab=market"))) ? "#10b981" : "#64748B"} />
-                            <span className="nav-item-label">Bizen Market</span>
-                        </button>
-
-                        <button
-                            data-tour-id="/simuladores"
-                            onClick={() => navigateTo("/cash-flow?tab=simulators")}
-                            style={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: 12,
-                                padding: "12px 14px",
-                                background: isCompactSidebar ? "transparent" : (pathname.startsWith("/cash-flow") && window.location.search.includes("tab=simulators") ? "rgba(11, 113, 254, 0.12)" : "transparent"),
-                                border: "none",
-                                borderRadius: 10,
-                                cursor: "pointer",
-                                transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
-                                fontSize: 13,
-                                fontWeight: (pathname.startsWith("/cash-flow") && window.location.search.includes("tab=simulators")) ? 600 : 400,
-                                textAlign: "left",
-                                color: (pathname.startsWith("/cash-flow") && window.location.search.includes("tab=simulators")) ? "#0B71FE" : "#64748B",
-                                ...compactButtonOverrides(pathname.startsWith("/cash-flow") && window.location.search.includes("tab=simulators")),
-                                position: "relative",
-                                marginBottom: 4
-                            }}
-                        >
-                            {(pathname.startsWith("/cash-flow") && window.location.search.includes("tab=simulators")) && (
-                                <div style={{ position: "absolute", left: 0, top: "15%", height: "70%", width: "4px", backgroundColor: "#0B71FE", borderRadius: "0 4px 4px 0" }} />
-                            )}
-                            <BarChart2 size={iconSize} strokeWidth={(pathname.startsWith("/cash-flow") && window.location.search.includes("tab=simulators")) ? 2.5 : 2} color={(pathname.startsWith("/cash-flow") && window.location.search.includes("tab=simulators")) ? "#0B71FE" : "#64748B"} />
-                            <span className="nav-item-label">Simuladores Financieros</span>
-                        </button>
-
-                        <button
-                            data-tour-id="/cash-flow"
-                            onClick={() => navigateTo("/cash-flow?tab=cashflow")}
-                            style={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: 12,
-                                padding: "12px 14px",
-                                background: isCompactSidebar ? "transparent" : (pathname.startsWith("/cash-flow") && window.location.search.includes("tab=cashflow") ? "rgba(79, 70, 229, 0.12)" : "transparent"),
-                                border: "none",
-                                borderRadius: 10,
-                                cursor: "pointer",
-                                transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
-                                fontSize: 13,
-                                fontWeight: (pathname.startsWith("/cash-flow") && window.location.search.includes("tab=cashflow")) ? 600 : 400,
-                                textAlign: "left",
-                                color: (pathname.startsWith("/cash-flow") && window.location.search.includes("tab=cashflow")) ? "#4F46E5" : "#64748B",
-                                ...compactButtonOverrides(pathname.startsWith("/cash-flow") && window.location.search.includes("tab=cashflow")),
-                                position: "relative",
-                                marginBottom: 12
-                            }}
-                        >
-                            {(pathname.startsWith("/cash-flow") && window.location.search.includes("tab=cashflow")) && (
-                                <div style={{ position: "absolute", left: 0, top: "15%", height: "70%", width: "4px", backgroundColor: "#4F46E5", borderRadius: "0 4px 4px 0" }} />
-                            )}
-                            <Gamepad2 size={iconSize} strokeWidth={(pathname.startsWith("/cash-flow") && window.location.search.includes("tab=cashflow")) ? 2.5 : 2} color={(pathname.startsWith("/cash-flow") && window.location.search.includes("tab=cashflow")) ? "#4F46E5" : "#64748B"} />
-                            <span className="nav-item-label">Cashflow Game</span>
-                        </button>
-                    </>
+                    <button
+                        data-tour-id="/simuladores"
+                        onClick={() => navigateTo("/cash-flow")}
+                        style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 12,
+                            padding: "12px 14px",
+                            background: isCompactSidebar ? "transparent" : (pathname.startsWith("/cash-flow") ? "rgba(11, 113, 254, 0.12)" : "transparent"),
+                            border: "none",
+                            borderRadius: 10,
+                            cursor: "pointer",
+                            transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
+                            fontSize: 13,
+                            fontWeight: pathname.startsWith("/cash-flow") ? 600 : 400,
+                            textAlign: "left",
+                            color: pathname.startsWith("/cash-flow") ? "#0B71FE" : "#64748B",
+                            ...compactButtonOverrides(pathname.startsWith("/cash-flow")),
+                            position: "relative",
+                            marginBottom: 12
+                        }}
+                    >
+                        {pathname.startsWith("/cash-flow") && (
+                            <div style={{ position: "absolute", left: 0, top: "15%", height: "70%", width: "4px", backgroundColor: "#0B71FE", borderRadius: "0 4px 4px 0" }} />
+                        )}
+                        <BarChart2 size={iconSize} strokeWidth={pathname.startsWith("/cash-flow") ? 2.5 : 2} color={pathname.startsWith("/cash-flow") ? "#0B71FE" : "#64748B"} />
+                        <span className="nav-item-label">Simuladores</span>
+                    </button>
                 )}
 
 

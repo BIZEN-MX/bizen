@@ -7,6 +7,17 @@ import { useAuth } from "@/contexts/AuthContext"
 import { ArrowLeft } from "lucide-react"
 import { IconBolt, IconGamepad } from "@/components/live/LiveIcons"
 import { AVATARS, AvatarSvg } from "@/components/live/LiveAvatars"
+import { QUIZ_CATALOG } from "@/data/live-quizzes"
+import { IconMoney, IconChart, IconCard, IconBriefcase, IconClock, IconQuestion, IconStar } from "@/components/live/LiveIcons"
+
+function QuizIcon({ icon, size = 32 }: { icon: string; size?: number }) {
+  const props = { size, color: "white" }
+  if (icon === "money") return <IconMoney {...props} />
+  if (icon === "chart") return <IconChart {...props} />
+  if (icon === "card") return <IconCard {...props} />
+  if (icon === "briefcase") return <IconBriefcase {...props} />
+  return <IconBolt {...props} />
+}
 
 // Floating particle component
 function Particle({ x, y, size, delay, duration, color }: { x: string; y: string; size: number; delay: number; duration: number; color: string }) {
@@ -211,9 +222,11 @@ export default function JoinPage() {
         background: "linear-gradient(135deg, #060c1d 0%, #0a0f28 50%, #060c1d 100%)",
         display: "flex",
         alignItems: "center",
-        justifyContent: "center",
-        overflow: "hidden",
+        justifyContent: "flex-start",
+        flexDirection: "column",
+        overflowY: "auto",
         position: "relative",
+        padding: "80px 20px"
       }}>
 
         {/* Back Button */}
@@ -559,6 +572,106 @@ export default function JoinPage() {
             )}
           </AnimatePresence>
         </motion.div>
+
+        {/* ─── OFFICIAL CATALOG SECTION ─── */}
+        {step === "pin" && (
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3, duration: 0.5 }}
+            style={{ marginTop: 64, width: "100%", maxWidth: 800, paddingBottom: 80 }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 24, paddingLeft: 12 }}>
+              <div style={{ padding: 10, borderRadius: 12, background: "rgba(15,98,254,0.1)", border: "1px solid rgba(15,98,254,0.2)" }}>
+                <IconGamepad size={20} color="#0f62fe" />
+              </div>
+              <div>
+                <h3 style={{ fontSize: 18, fontWeight: 700, margin: 0, color: "white" }}>Bizen Live: Quizzes Oficiales</h3>
+                <p style={{ fontSize: 13, color: "rgba(255,255,255,0.4)", margin: 0 }}>Lanza una sesión con contenido oficial de Bizen</p>
+              </div>
+            </div>
+
+            <div style={{ 
+              display: "grid", 
+              gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", 
+              gap: 16 
+            }}>
+              {QUIZ_CATALOG.map((quiz) => (
+                <motion.div
+                  key={quiz.id}
+                  whileHover={{ scale: 1.02, translateY: -4 }}
+                  onClick={() => router.push("/live/host")}
+                  style={{
+                    background: "rgba(255,255,255,0.03)",
+                    border: "1px solid rgba(255,255,255,0.06)",
+                    padding: 20,
+                    borderRadius: 20,
+                    cursor: "pointer",
+                    position: "relative",
+                    overflow: "hidden",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 12,
+                    transition: "all 0.3s ease"
+                  }}
+                >
+                  {/* Hover Gradient Overlay */}
+                  <div style={{ 
+                    position: "absolute", 
+                    inset: 0, 
+                    background: `linear-gradient(225deg, ${quiz.glow}10, transparent 60%)`, 
+                    pointerEvents: "none" 
+                  }} />
+
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+                    <div style={{ 
+                      width: 48, 
+                      height: 48, 
+                      borderRadius: 14, 
+                      background: quiz.gradient,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      boxShadow: `0 8px 16px ${quiz.glow}30`
+                    }}>
+                      <QuizIcon icon={quiz.icon} size={24} />
+                    </div>
+                    <div style={{ display: "flex", gap: 4 }}>
+                      {[...Array(quiz.difficulty)].map((_, i) => (
+                        <IconStar key={i} size={12} color="#fbbf24" />
+                      ))}
+                    </div>
+                  </div>
+
+                  <div>
+                    <h4 style={{ fontSize: 16, fontWeight: 700, marginBottom: 4 }}>{quiz.title}</h4>
+                    <p style={{ fontSize: 13, color: "rgba(255,255,255,0.5)", lineHeight: 1.4, margin: 0 }}>
+                      {quiz.description}
+                    </p>
+                  </div>
+
+                  <div style={{ 
+                    marginTop: "auto", 
+                    display: "flex", 
+                    alignItems: "center", 
+                    gap: 12, 
+                    paddingTop: 12,
+                    borderTop: "1px solid rgba(255,255,255,0.05)" 
+                  }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                      <IconClock size={14} color="rgba(255,255,255,0.3)" />
+                      <span style={{ fontSize: 12, color: "rgba(255,255,255,0.4)" }}>{quiz.estimatedMinutes} min</span>
+                    </div>
+                    <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                      <IconQuestion size={14} color="rgba(255,255,255,0.3)" />
+                      <span style={{ fontSize: 12, color: "rgba(255,255,255,0.4)" }}>{quiz.questionCount} q</span>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        )}
       </div>
     </>
   )

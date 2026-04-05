@@ -98,7 +98,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
         <div style={{ display: "flex", width: "100%", minHeight: "100%" }}>
           {/* Desktop Sidebar Gutter (invisible spacer) */}
           {showGutter && (
-            <div className="hidden md:block w-[280px] flex-shrink-0" aria-hidden="true" />
+            <div data-sidebar-gutter className="hidden md:block w-[280px] flex-shrink-0" aria-hidden="true" />
           )}
           
           <main className="app-main flex-1 flex flex-col items-center">
