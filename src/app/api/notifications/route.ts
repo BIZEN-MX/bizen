@@ -13,20 +13,33 @@ export async function GET() {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
-    const notifications = await prisma.forumNotification.findMany({
-      where: { userId: user.id },
-      orderBy: { createdAt: 'desc' },
-      take: 50
-    })
+    const [forumNotifs, systemNotifs] = await Promise.all([
+      prisma.forumNotification.findMany({
+        where: { userId: user.id },
+        orderBy: { createdAt: 'desc' },
+        take: 25
+      }),
+      prisma.notification.findMany({
+        where: { userId: user.id },
+        orderBy: { createdAt: 'desc' },
+        take: 25
+      })
+    ])
 
-    const unreadCount = await prisma.forumNotification.count({
-      where: {
-        userId: user.id,
-        readAt: null
-      }
-    })
+    const [forumUnread, systemUnread] = await Promise.all([
+      prisma.forumNotification.count({
+        where: { userId: user.id, readAt: null }
+      }),
+      prisma.notification.count({
+        where: { userId: user.id, readAt: null }
+      })
+    ])
 
-    return NextResponse.json({ notifications, unreadCount })
+    const notifications = [...forumNotifs, ...systemNotifs].sort((a, b) => 
+      (new Date(b.createdAt || 0).getTime()) - (new Date(a.createdAt || 0).getTime())
+    )
+
+    return NextResponse.json({ notifications, unreadCount: forumUnread + systemUnread })
   } catch (error) {
     console.error("Error fetching notifications:", error)
     return NextResponse.json({ error: "Failed to fetch notifications" }, { status: 500 })
@@ -48,27 +61,29 @@ export async function PATCH(request: NextRequest) {
     const { notificationId, markAllRead } = body
 
     if (markAllRead) {
-      // Mark all as read
-      await prisma.forumNotification.updateMany({
-        where: {
-          userId: user.id,
-          readAt: null
-        },
-        data: {
-          readAt: new Date()
-        }
-      })
+      await Promise.all([
+        prisma.forumNotification.updateMany({
+          where: { userId: user.id, readAt: null },
+          data: { readAt: new Date() }
+        }),
+        prisma.notification.updateMany({
+          where: { userId: user.id, readAt: null },
+          data: { readAt: new Date() }
+        })
+      ])
     } else if (notificationId) {
-      // Mark single notification as read
-      await prisma.forumNotification.update({
-        where: {
-          id: notificationId,
-          userId: user.id
-        },
-        data: {
-          readAt: new Date()
-        }
-      })
+      // Try forum first, then system
+      try {
+        await prisma.forumNotification.update({
+          where: { id: notificationId, userId: user.id },
+          data: { readAt: new Date() }
+        })
+      } catch (e) {
+        await prisma.notification.update({
+          where: { id: notificationId, userId: user.id },
+          data: { readAt: new Date() }
+        })
+      }
     }
 
     return NextResponse.json({ success: true })
