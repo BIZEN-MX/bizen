@@ -263,7 +263,7 @@ function InteractiveLessonContent() {
 
   if (!lessonSteps.length) {
     return (
-      <div style={{ minHeight: "100dvh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 24, padding: 24, background: "#f1f5f9" }}>
+      <div style={{ minHeight: "100dvh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 24, padding: 24, background: "#FBFAF5" }}>
         <p style={{ fontSize: 20, fontWeight: 500, color: "#334155", textAlign: "center" }}>Esta lección no tiene contenido disponible.</p>
         <button onClick={handleExit} style={{ padding: "14px 24px", background: "#0B71FE", color: "white", border: "none", borderRadius: 12, fontSize: 16, fontWeight: 500, cursor: "pointer" }}>Volver al curso</button>
       </div>
@@ -273,7 +273,7 @@ function InteractiveLessonContent() {
   return (
     <div className="lesson-interactive-outer" style={{ height: "100dvh", overflow: "hidden" }}>
         <style>{`
-            .lesson-interactive-outer { margin-left: 0 !important; width: 100% !important; background: white !important; }
+            .lesson-interactive-outer { margin-left: 0 !important; width: 100% !important; background: #FBFAF5 !important; }
             .lesson-screen-root, .lesson-container-no-scroll { overflow: hidden !important; flex: 1 !important; display: flex; flex-direction: column; }
         `}</style>
         <LessonEngine

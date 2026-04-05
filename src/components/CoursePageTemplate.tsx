@@ -228,12 +228,12 @@ export default function CoursePageTemplate({
         fetchInsight()
     }, [topicId, topic?.title])
 
-    // White background
+    // Background sync
     useEffect(() => {
         const html = document.documentElement
         const body = document.body
-        html.style.background = "#ffffff"
-        body.style.background = "#ffffff"
+        html.style.background = "#FBFAF5"
+        body.style.background = "#FBFAF5"
         return () => {
             html.style.background = ""
             body.style.background = ""
@@ -334,7 +334,7 @@ export default function CoursePageTemplate({
                     zIndex: 1,
                 }}
             >
-                <div style={{ width: "100%", maxWidth: "1280px", margin: "0 auto", position: "relative", zIndex: 1, padding: "0", boxSizing: "border-box", display: "flex", flexDirection: "column", alignItems: "stretch", gap: 0 }}>
+                <div style={{ width: "100%", maxWidth: "1600px", margin: "0 auto", position: "relative", zIndex: 1, padding: "0 24px", boxSizing: "border-box", display: "flex", flexDirection: "column", alignItems: "stretch", gap: 0 }}>
 
                     {/* ── HERO BANNER (mirrors /courses hero) ───────────────────────── */}
                     <div

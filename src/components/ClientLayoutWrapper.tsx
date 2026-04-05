@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef, Suspense } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
-// import NavigationLoading from './NavigationLoading';
+import NavigationLoading from './NavigationLoading';
 import TopNav from './TopNav';
 import MobileFooterNav from './MobileFooterNav';
 import GlobalLogo from './GlobalLogo';
@@ -33,7 +33,7 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
 }
 
 function InnerClientWrapper({ children }: { children: React.ReactNode }) {
-  // const [isNavigating, setIsNavigating] = useState(false);
+  const [isNavigating, setIsNavigating] = useState(false);
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const previousPathname = useRef(pathname);
@@ -153,6 +153,18 @@ function InnerClientWrapper({ children }: { children: React.ReactNode }) {
     }
   }, [hideAppNavigation, isMobile, isLessonInteractivePage])
 
+  // ── NAVIGATION LOADING LOGIC ──
+  useEffect(() => {
+    if (pathname !== previousPathname.current) {
+      setIsNavigating(true);
+      const timer = setTimeout(() => {
+        setIsNavigating(false);
+        previousPathname.current = pathname;
+      }, 450); // Premium transition duration
+      return () => clearTimeout(timer);
+    }
+  }, [pathname]);
+
   // Flag body on landing page so CSS can remove sidebar padding (no sidebar = no left gap)
   useEffect(() => {
     if (typeof document === "undefined") return
@@ -218,6 +230,9 @@ function InnerClientWrapper({ children }: { children: React.ReactNode }) {
       {!hideAppNavigation && isMobile && !isLessonInteractivePage && !isUnauthProtected && <MobileFooterNav />}
 
       {!hideAppNavigation && !isUnauthProtected && <GlobalLogo />}
+      
+      {isNavigating && <NavigationLoading isLoading={true} />}
+      
       {children}
       {!hideChat && <BillyChatbot />}
       

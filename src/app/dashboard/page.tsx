@@ -457,8 +457,8 @@ function DashboardContent() {
       <style>{`
         /* ── top-nav offsets (sidebar removed, nav is now 60px top bar) ── */
         @media (max-width:767px)              { .di { padding:74px 14px 100px !important; margin-left:0 !important; } }
-        @media (min-width:768px) and (max-width:1160px) { .di { margin-left:0 !important; padding:84px 28px 48px !important; max-width:1200px !important; margin-inline:auto !important; } }
-        @media (min-width:1161px)             { .di { margin-left:0 !important; padding:88px 56px 64px !important; max-width:1400px !important; margin-inline:auto !important; } }
+        @media (min-width:768px) and (max-width:1160px) { .di { margin-left:0 !important; padding:84px 32px 48px !important; max-width:100% !important; margin-inline:auto !important; } }
+        @media (min-width:1161px)             { .di { margin-left:0 !important; padding:88px 64px 64px !important; max-width:100% !important; margin-inline:auto !important; } }
 
         /* ── animations ── */
         @keyframes du { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }

@@ -217,19 +217,19 @@ export default function CoursesPage() {
   }, [willRedirect, nextTopicId, router])
 
   // Set body and html background for this page
-  useEffect(() => {
+    useEffect(() => {
     const htmlEl = document.documentElement
     const bodyEl = document.body
 
-    htmlEl.style.background = "#ffffff"
+    htmlEl.style.background = "#FBFAF5"
     htmlEl.style.backgroundAttachment = "scroll"
-    bodyEl.style.background = "#ffffff"
+    bodyEl.style.background = "#FBFAF5"
     bodyEl.style.backgroundAttachment = "scroll"
 
     return () => {
       htmlEl.style.background = ""
       htmlEl.style.backgroundAttachment = ""
-      bodyEl.style.background = "#fff"
+      bodyEl.style.background = "#FBFAF5"
       bodyEl.style.backgroundAttachment = "scroll"
     }
   }, [])

@@ -142,7 +142,7 @@ export default function LessonPage() {
     // Error State
     if (error || !lessonData || !lessonData.steps?.length) {
         return (
-            <div style={{ minHeight: "100dvh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 24, padding: 24, background: "#f1f5f9", }}>
+            <div style={{ minHeight: "100dvh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 24, padding: 24, background: "#FBFAF5", }}>
                 <p style={{ fontSize: 20, fontWeight: 500, color: "#334155", textAlign: "center" }}>
                     {error || "Esta lección no tiene contenido disponible."}
                 </p>
@@ -175,7 +175,7 @@ export default function LessonPage() {
           overflow: hidden !important;
           display: flex;
           flex-direction: column;
-          background: #f1f5f9 !important;
+          background: #FBFAF5 !important;
           margin-left: 0 !important;
           width: 100% !important;
         }
