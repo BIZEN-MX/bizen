@@ -268,8 +268,26 @@ export default function NewsPage() {
                     {filteredNews[0].fullDesc}
                   </p>
                   <div style={{ display: "flex", gap: 20 }}>
-                     <div className="news-featured-btn" style={{ display: "flex", alignItems: "center", gap: 10, padding: "14px 28px", background: "white", borderRadius: 14, color: "#0B1E5E", fontWeight: 800, fontSize: 15 }}>
-                       Leer Historia Completa <ChevronRight size={18} />
+                     <div 
+                       className="news-featured-btn" 
+                       onClick={(e) => {
+                         e.stopPropagation();
+                         router.push("/live/join");
+                       }}
+                       style={{ 
+                         display: "flex", 
+                         alignItems: "center", 
+                         gap: 10, 
+                         padding: "14px 28px", 
+                         background: "white", 
+                         borderRadius: 14, 
+                         color: "#0B1E5E", 
+                         fontWeight: 800, 
+                         fontSize: 15,
+                         cursor: "pointer"
+                       }}
+                     >
+                       Visitar BIZEN Live <ChevronRight size={18} />
                      </div>
                   </div>
                 </div>

@@ -46,6 +46,34 @@ export default function SimulatorPage() {
   const [simulator, setSimulator] = useState<Simulator | null>(null)
   const [loading, setLoading] = useState(true)
 
+  // Local fallbacks for metadata if not found in DB
+  const localMetadata: Record<string, { name: string; description: string }> = {
+    'monthly-budget': { 
+      name: 'BIZEN Plan (Presupuesto)', 
+      description: 'Analiza tu capacidad de ahorro usando la regla 50/30/20 y optimiza tus gastos mensuales.' 
+    },
+    'savings-goal': { 
+      name: 'BIZEN Saver (Metas de Ahorro)', 
+      description: 'Calcula cuánto tiempo o cuánto ahorro mensual necesitas para alcanzar tus objetivos financieros.' 
+    },
+    'credit-card-payoff': { 
+      name: 'BIZEN Card (Liquidación de Deuda)', 
+      description: 'Descubre la estrategia más rápida para pagar tus tarjetas de crédito y ahorrar en intereses.' 
+    },
+    'simple-loan': { 
+      name: 'BIZEN Loan (Préstamos y Créditos)', 
+      description: 'Calcula el costo real de un préstamo, incluyendo Cat, comisiones y tabla de amortización.' 
+    },
+    'investment-comparison': { 
+      name: 'BIZEN Invest (Comparador de Inversión)', 
+      description: 'Compara diferentes escenarios de inversión y descubre cuál te genera mejores rendimientos a largo plazo.' 
+    },
+    'inflation-calculator': { 
+      name: 'BIZEN Power (Calculadora de Inflación)', 
+      description: 'Entiende cómo la inflación afecta el poder adquisitivo de tu dinero con el paso de los años.' 
+    }
+  }
+
   useEffect(() => {
     const fetchSimulator = async () => {
       try {
@@ -57,14 +85,42 @@ export default function SimulatorPage() {
           .eq('is_active', true)
           .single()
 
-        if (error || !data) {
-          router.push('/cash-flow')
-        } else {
+        if (data) {
           setSimulator(data)
+        } else {
+          // If not in DB, use local fallback if available
+          const fallback = localMetadata[slug]
+          if (fallback) {
+            setSimulator({
+              id: slug,
+              slug: slug,
+              name: fallback.name,
+              description: fallback.description,
+              category: 'Finanzas',
+              icon: 'calculator',
+              sort_order: 0
+            })
+          } else {
+            router.push('/cash-flow')
+          }
         }
       } catch (err) {
         console.error('Error fetching simulator:', err)
-        router.push('/cash-flow')
+        // Try fallback before giving up
+        const fallback = localMetadata[slug]
+        if (fallback) {
+          setSimulator({
+            id: slug,
+            slug: slug,
+            name: fallback.name,
+            description: fallback.description,
+            category: 'Finanzas',
+            icon: 'calculator',
+            sort_order: 0
+          })
+        } else {
+          router.push('/cash-flow')
+        }
       } finally {
         setLoading(false)
       }

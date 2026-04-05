@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
 import { createClientMicrocred } from '@/lib/supabase/client-microcred'
-import { BarChart2, Briefcase, PiggyBank, CreditCard, TrendingUp, Percent, ChevronRight, Trash2, Play, Plus, MonitorSmartphone, Laptop, Sparkles, Brain } from "lucide-react"
+import { BarChart2, Briefcase, PiggyBank, CreditCard, TrendingUp, Percent, ChevronRight, Trash2, Play, Plus, MonitorSmartphone, Laptop, Sparkles, Brain, Rocket, Target } from "lucide-react"
 import StreakWidget from "@/components/StreakWidget"
 import PageLoader from "@/components/PageLoader"
 
@@ -89,7 +89,7 @@ export default function CombinedSimulatorsPage() {
   const streak = dbProfile?.currentStreak || 0
   const router = useRouter()
 
-  const [activeTab, setActiveTab] = useState<"simulators" | "cashflow">("simulators")
+  const [activeTab, setActiveTab] = useState<"simulators" | "cashflow" | "market">("market")
 
   const [simulatorsList, setSimulatorsList] = useState<Simulator[]>([])
   const [loadingSims, setLoadingSims] = useState(true)
@@ -130,6 +130,13 @@ export default function CombinedSimulatorsPage() {
 
   useEffect(() => {
     if (user) {
+      // Check for tab query param
+      const urlParams = new URLSearchParams(window.location.search)
+      const tab = urlParams.get('tab') as any
+      if (tab && ["market", "simulators", "cashflow"].includes(tab)) {
+        setActiveTab(tab)
+      }
+      
       fetchProfessions()
       fetchGames()
       // Fetch weekly active days for calendar
@@ -363,7 +370,6 @@ export default function CombinedSimulatorsPage() {
             </div>
           </div>
 
-          {/* Tab Selection - Dark Glassmorphism */}
           <div style={{
             display: "flex",
             marginBottom: "48px",
@@ -373,8 +379,12 @@ export default function CombinedSimulatorsPage() {
             borderRadius: 20,
             alignItems: "center",
             gap: 16,
-            boxShadow: "0 2px 10px rgba(0,0,0,0.02)"
+            boxShadow: "0 2px 10px rgba(0,0,0,0.02)",
+            overflowX: "auto"
           }}>
+            <button className={`tab-btn ${activeTab === "market" ? "active" : "inactive"}`} onClick={() => setActiveTab("market")}>
+              BIZEN Market
+            </button>
             <button className={`tab-btn ${activeTab === "simulators" ? "active" : "inactive"}`} onClick={() => setActiveTab("simulators")}>
               Simuladores Financieros
             </button>
@@ -385,7 +395,165 @@ export default function CombinedSimulatorsPage() {
 
           {/* Content */}
           <div style={{ minHeight: "50vh", position: "relative", zIndex: 1 }}>
+            
+            {/* ─── BIZEN MARKET (Dashboard de Inversión) ─── */}
+            {activeTab === "market" && (
+              <div style={{ animation: "fadeUp 0.4s ease both" }}>
+                {/* Market Hero Section */}
+                <div style={{
+                  position: "relative",
+                  background: "linear-gradient(135deg, #020b18 0%, #061440 100%)",
+                  borderRadius: 28,
+                  padding: "clamp(32px, 5vw, 64px) clamp(24px, 4vw, 56px)",
+                  marginBottom: 48,
+                  boxShadow: "0 20px 60px rgba(0,0,0,0.3)",
+                  overflow: "hidden",
+                  border: "1px solid rgba(255, 255, 255, 0.08)"
+                }}>
+                  {/* Glowing orbs decoration */}
+                  <div className="orb-1" style={{ position: "absolute", top: "-20%", left: "10%", width: "40%", height: "80%", background: "radial-gradient(circle, rgba(16,185,129,0.1) 0%, transparent 70%)", pointerEvents: "none" }} />
+                  <div className="orb-2" style={{ position: "absolute", bottom: "-30%", right: "0%", width: "50%", height: "100%", background: "radial-gradient(circle, rgba(15,98,254,0.15) 0%, transparent 70%)", pointerEvents: "none" }} />
+                  
+                  <div style={{ position: "relative", zIndex: 1, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 40 }}>
+                    {/* Left: Text Content */}
+                    <div style={{ flex: "1 1 500px" }}>
+                      <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(16,185,129,0.15)", border: "1px solid rgba(16,185,129,0.35)", borderRadius: 999, padding: "8px 18px", marginBottom: 20 }}>
+                        <TrendingUp size={16} color="#10b981" />
+                        <span style={{ fontSize: 13, fontWeight: 700, letterSpacing: "0.08em", color: "#10b981", textTransform: "uppercase" }}>Mercado en Tiempo Real</span>
+                      </div>
+                      
+                      <h2 style={{ fontSize: "clamp(32px, 5vw, 64px)", fontWeight: 600, color: "white", letterSpacing: "-0.04em", margin: "0 0 16px", lineHeight: 1.05 }}>
+                        BIZEN Market
+                      </h2>
+                      
+                      <p style={{ fontSize: "clamp(17px, 1.5vw, 22px)", color: "rgba(255,255,255,0.6)", lineHeight: 1.6, margin: "0 0 32px", maxWidth: 640 }}>
+                        Domina el arte de la inversión con precios reales de bolsa. Gana Bizcoins invirtiendo en tus marcas favoritas y ETFs globales.
+                      </p>
+                      
+                      <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
+                        <Link href="/simulators/stocks" style={{ textDecoration: "none" }}>
+                          <button style={{
+                            padding: "18px 36px",
+                            background: "linear-gradient(135deg, #0B71FE 0%, #1e40af 100%)",
+                            color: "white",
+                            border: "none",
+                            borderRadius: 16,
+                            fontSize: 16,
+                            fontWeight: 700,
+                            cursor: "pointer",
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 12,
+                            boxShadow: "0 12px 32px rgba(11,113,254,0.4)",
+                            transition: "all 0.3s cubic-bezier(0.16, 1, 0.3, 1)"
+                          }}
+                          onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-4px)"; e.currentTarget.style.boxShadow = "0 16px 40px rgba(11,113,254,0.5)"; }}
+                          onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 12px 32px rgba(11,113,254,0.4)"; }}
+                          >
+                            Entrar al Simulador
+                            <ChevronRight size={18} />
+                          </button>
+                        </Link>
+                        
+                        <Link href="/simulators/stocks?tab=rankings" style={{ textDecoration: "none" }}>
+                          <button style={{
+                            padding: "18px 32px",
+                            background: "rgba(255,255,255,0.06)",
+                            color: "white",
+                            border: "1px solid rgba(255,255,255,0.15)",
+                            borderRadius: 16,
+                            fontSize: 16,
+                            fontWeight: 600,
+                            cursor: "pointer",
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 12,
+                            backdropFilter: "blur(10px)",
+                            transition: "all 0.3s"
+                          }}
+                          onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.12)"; }}
+                          onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.06)"; }}
+                          >
+                            Ver Rankings
+                          </button>
+                        </Link>
+                      </div>
+                    </div>
+                    
+                    {/* Right: Abstract Card/Chart visualization */}
+                    <div style={{ flex: "1 1 300px", maxWidth: 460 }}>
+                      <div style={{ 
+                        background: "rgba(255,255,255,0.03)", 
+                        border: "1px solid rgba(255,255,255,0.08)",
+                        borderRadius: 24,
+                        padding: 24,
+                        backdropFilter: "blur(20px)"
+                      }}>
+                         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
+                            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                               <div style={{ width: 44, height: 44, borderRadius: 12, background: "rgba(16,185,129,0.15)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                                  <TrendingUp size={22} color="#10b981" />
+                               </div>
+                               <div>
+                                  <div style={{ fontSize: 13, color: "rgba(255,255,255,0.4)", fontWeight: 500 }}>Bono Diario</div>
+                                  <div style={{ fontSize: 16, color: "white", fontWeight: 700 }}>+1,000 bz <Sparkles size={14} color="#fbbf24" /></div>
+                               </div>
+                            </div>
+                         </div>
+                         
+                         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+                            <div style={{ height: 60, background: "rgba(255,255,255,0.05)", borderRadius: 16, border: "1px solid rgba(255,255,255,0.06)", padding: "0 16px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                               <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                                  <div style={{ width: 10, height: 10, borderRadius: "50%", background: "#4ade80" }} />
+                                  <span style={{ fontSize: 14, color: "white", fontWeight: 500 }}>Acciones (AAPL)</span>
+                               </div>
+                               <span style={{ fontSize: 14, color: "#4ade80", fontWeight: 700 }}>+2.45%</span>
+                            </div>
+                            <div style={{ height: 60, background: "rgba(255,255,255,0.05)", borderRadius: 16, border: "1px solid rgba(255,255,255,0.06)", padding: "0 16px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                               <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                                  <div style={{ width: 10, height: 10, borderRadius: "50%", background: "#38bdf8" }} />
+                                  <span style={{ fontSize: 14, color: "white", fontWeight: 500 }}>ETF (VOO)</span>
+                               </div>
+                               <span style={{ fontSize: 14, color: "#38bdf8", fontWeight: 700 }}>+1.12%</span>
+                            </div>
+                         </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
+                {/* Daily Mission Card Integrated */}
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 24, marginBottom: 48 }}>
+                  <div style={{ background: "white", border: "1px solid #f1f5f9", borderRadius: 24, padding: 24, display: "flex", gap: 20, boxShadow: "0 4px 20px rgba(0,0,0,0.03)" }}>
+                    <div style={{ width: 56, height: 56, borderRadius: 16, background: "rgba(11,113,254,0.1)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                      <Rocket size={24} color="#0B71FE" />
+                    </div>
+                    <div>
+                      <h3 style={{ fontSize: 18, fontWeight: 600, color: "#1e293b", margin: "0 0 4px" }}>Misión Diaria</h3>
+                      <p style={{ fontSize: 14, color: "#64748B", margin: "0 0 12px", lineHeight: 1.5 }}>Realiza una inversión hoy y gana 50 Bizcoins extra por consistencia.</p>
+                      <div style={{ height: 6, background: "#f1f5f9", borderRadius: 99, overflow: "hidden", position: "relative" }}>
+                        <div style={{ position: "absolute", inset: 0, width: "70%", background: "#0B71FE", borderRadius: 99 }} />
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div style={{ background: "white", border: "1px solid #f1f5f9", borderRadius: 24, padding: 24, display: "flex", gap: 20, boxShadow: "0 4px 20px rgba(0,0,0,0.03)" }}>
+                    <div style={{ width: 56, height: 56, borderRadius: 16, background: "rgba(139,92,246,0.1)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                      <Target size={24} color="#8b5cf6" />
+                    </div>
+                    <div>
+                      <h3 style={{ fontSize: 18, fontWeight: 600, color: "#1e293b", margin: "0 0 4px" }}>XP de Trading</h3>
+                      <p style={{ fontSize: 14, color: "#64748B", margin: "0 0 12px", lineHeight: 1.5 }}>Tu nivel de inversionista aumenta con cada operación exitosa.</p>
+                      <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                        <span style={{ fontSize: 12, fontWeight: 700, color: "#8b5cf6" }}>Nivel 4</span>
+                        <span style={{ fontSize: 12, color: "#94a3b8" }}>— 1,240 / 2,000 XP</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+            
             {/* ─── SIMULADORES ─── */}
             {activeTab === "simulators" && (
               <div>

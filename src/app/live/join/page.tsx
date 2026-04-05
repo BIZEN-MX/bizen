@@ -442,7 +442,7 @@ export default function JoinPage() {
                       transition: "all 0.2s"
                     }}
                   >
-                    🚀 Crear Nueva Sesión
+                    Explorar Catálogo y Lanzar Quiz
                   </button>
                 </div>
               </motion.div>

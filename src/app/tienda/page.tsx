@@ -1231,38 +1231,8 @@ export default function TiendaPage() {
                 ) : (
                     /* ── MIS BIZCOINS TAB CONTENT (PREMIUM DASHBOARD) ── */
                     <div style={{ animation: "tienda-fadeUp 0.6s ease both" }}>
-                        {/* Stats Summary Widgets */}
-                        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 24, marginBottom: 48 }}>
-                            {/* Level Card */}
-                            <div className="puntos-stat-card" style={{ background: "linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%)", borderRadius: 32, padding: "40px 24px", border: "1.5px solid #fde68a", textAlign: "center", boxShadow: "0 10px 30px rgba(217,119,6,0.08)" }}>
-                                <div style={{ fontSize: 13, fontWeight: 700, color: "#92400e", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 8 }}>Nivel Actual</div>
-                                <div style={{ fontSize: 64, fontWeight: 900, color: "#b45309", lineHeight: 1 }}>{stats?.level || (dbProfile as any)?.level || 1}</div>
-                                <div style={{ fontSize: 14, fontWeight: 700, color: "#d97706", marginTop: 8 }}>Bizen Explorer</div>
-                            </div>
+                        {/* Stats Summary Widgets removed per user request */}
 
-                            {/* Streak Card */}
-                            <div className="puntos-stat-card" style={{ background: "linear-gradient(135deg, #fffaf5 0%, #fff7ed 100%)", borderRadius: 32, padding: "40px 24px", border: "1.5px solid #ffedd5", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 10px 30px rgba(249,115,22,0.08)" }}>
-                                <StreakWidget
-                                    streak={stats?.currentStreak ?? (dbProfile as any)?.currentStreak ?? 0}
-                                    showCalendar={false}
-                                    iconSize={40}
-                                    fontSize={64}
-                                    badgeStyle={{ background: "transparent", border: "none", boxShadow: "none", padding: "0", gap: "16px" }}
-                                />
-                            </div>
-
-                            {/* XP Progress Card */}
-                            <div className="puntos-stat-card" style={{ background: "linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%)", borderRadius: 32, padding: "40px 24px", border: "1.5px solid #bae6fd", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", boxShadow: "0 10px 30px rgba(14,165,233,0.08)" }}>
-                                <div style={{ fontSize: 13, fontWeight: 700, color: "#0369a1", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12 }}>PROGRESO NIVEL {(stats?.level || (dbProfile as any)?.level || 1) + 1}</div>
-                                <div style={{ display: "flex", alignItems: "baseline", gap: 8, marginBottom: 16 }}>
-                                    <span style={{ fontSize: 44, fontWeight: 900, color: "#0c4a6e" }}>{stats?.xpInCurrentLevel || 0}</span>
-                                    <span style={{ fontSize: 16, fontWeight: 700, color: "#38bdf8" }}>/ {stats?.xpNeeded || 100} XP</span>
-                                </div>
-                                <div style={{ width: "85%", height: 10, background: "rgba(255,255,255,0.6)", borderRadius: 10, overflow: "hidden", border: "1px solid rgba(14,165,233,0.2)" }}>
-                                    <div style={{ width: `${Math.min(100, ((stats?.xpInCurrentLevel || 0) / (stats?.xpNeeded || 100)) * 100)}%`, height: "100%", background: "linear-gradient(90deg, #38bdf8, #0F62FE)", borderRadius: 10, transition: "width 1.5s cubic-bezier(0.34,1.56,0.64,1)" }} />
-                                </div>
-                            </div>
-                        </div>
 
                         {/* Gift Cards Section */}
                         <div style={{ marginBottom: 60 }}>

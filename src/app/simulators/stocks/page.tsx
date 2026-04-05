@@ -306,13 +306,39 @@ function StockSimulatorContent() {
     } catch {}
   };
 
+  // Load saved run if runId exists
   useEffect(() => {
-    if (!loading && user) {
+    async function fetchRun() {
+      if (!runId || !user) return;
+      try {
+        const response = await fetch(`/api/simuladores/runs/${runId}`);
+        const data = await response.json();
+        if (response.ok && data.run && (data.run.simulator_slug === 'stocks' || data.run.simulator_slug === 'bizen-market')) {
+          const { inputs } = data.run;
+          if (inputs.portfolio) setPortfolio(inputs.portfolio);
+          if (inputs.marketData) setMarketData(inputs.marketData);
+          if (inputs.portfolio?.starting_cash) setOrderForm(f => ({ ...f, amount: Number(inputs.portfolio.starting_cash) / 10 }));
+        }
+      } catch (err) {
+        console.error('Error loading saved stock simulation:', err);
+      }
+    }
+    
+    if (runId && !loading && user) {
+      fetchRun();
+    }
+  }, [runId, user, loading]);
+
+  useEffect(() => {
+    if (!loading && user && !runId) {
       Promise.all([fetchPortfolio(), fetchMarketData()]).finally(() =>
         setDataFetched(true),
       );
+    } else if (!loading && user && runId) {
+       // Data fetched via fetchRun
+       setDataFetched(true);
     }
-  }, [user, loading]);
+  }, [user, loading, runId]);
 
   useEffect(() => {
     if (activeTab === "portfolio" && portfolio) {

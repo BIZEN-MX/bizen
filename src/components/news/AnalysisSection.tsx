@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { 
   TrendingUp, 
@@ -29,6 +30,7 @@ interface AnalysisItem {
 export default function AnalysisSection() {
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchAnalysis = async () => {
@@ -233,6 +235,7 @@ export default function AnalysisSection() {
               "Viendo que el Bitcoin ha roto máximos y que las tasas de la Fed están en pausa, te sugiero revisar tu **Simulador de Ahorro**. Podrías estar dejando de ganar interés compuesto por no ajustar tu estrategia."
             </p>
             <button 
+              onClick={() => router.push("/cash-flow?tab=market")}
               style={{
                 width: "100%",
                 padding: "14px",
