@@ -18,7 +18,9 @@ import {
   Heart,
   Newspaper,
   ChevronDown,
-  Flame
+  Flame,
+  Search,
+  Bell
 } from "lucide-react"
 import BizcoinIcon from "@/components/BizcoinIcon"
 import { ShieldIcon } from "@/components/CustomIcons"
@@ -44,6 +46,7 @@ export default function TopNav() {
   const [isHiddenByGlobalClass, setIsHiddenByGlobalClass] = useState(false)
   const [showExitDialog, setShowExitDialog] = useState(false)
   const [pendingNavigation, setPendingNavigation] = useState<string | null>(null)
+  const [searchFocused, setSearchFocused] = useState(false)
   const profileRef = useRef<HTMLDivElement>(null)
 
   const isOnLessonPage = pathname?.includes('/learn/')
@@ -162,10 +165,24 @@ export default function TopNav() {
           box-shadow: 0 1px 0 rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04);
         }
         .topnav-bar.not-scrolled {
-          background: rgba(251, 250, 245, 0.8);
-          backdrop-filter: blur(12px);
-          -webkit-backdrop-filter: blur(12px);
-          box-shadow: 0 1px 0 rgba(0,0,0,0.05);
+          background: rgba(251, 250, 245, 0.7);
+          backdrop-filter: blur(16px);
+          -webkit-backdrop-filter: blur(16px);
+          box-shadow: 0 1px 0 rgba(0,0,0,0.04);
+        }
+        .topnav-bar::after {
+          content: "";
+          position: absolute;
+          bottom: 0;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 0%;
+          height: 1px;
+          background: linear-gradient(90deg, transparent, #0F62FE, transparent);
+          transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .topnav-bar.scrolled::after {
+          width: 100%;
         }
         .topnav-brand {
           display: flex;
@@ -178,21 +195,33 @@ export default function TopNav() {
           user-select: none;
         }
         .topnav-logo {
-          font-size: 20px;
-          font-weight: 500;
-          color: #1e293b;
-          letter-spacing: -0.04em;
+          font-size: 22px;
+          font-weight: 700;
+          background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          letter-spacing: -0.05em;
           line-height: 1;
           display: flex;
           align-items: baseline;
-          gap: 1px;
+          gap: 2px;
+          position: relative;
+        }
+        .topnav-logo:hover {
+          filter: brightness(1.2);
         }
         .topnav-logo-dot {
           width: 5px; height: 5px;
           border-radius: 50%;
           background: #0F62FE;
           display: inline-block;
-          margin-bottom: 2px;
+          box-shadow: 0 0 10px rgba(15, 98, 254, 0.5);
+          animation: topnav-dot-pulse 2s infinite;
+        }
+        @keyframes topnav-dot-pulse {
+          0% { transform: scale(1); opacity: 1; }
+          50% { transform: scale(1.4); opacity: 0.7; }
+          100% { transform: scale(1); opacity: 1; }
         }
         .topnav-links {
           display: flex;
@@ -227,6 +256,10 @@ export default function TopNav() {
           background: rgba(15, 98, 254, 0.1);
           color: #0F62FE;
           font-weight: 600;
+          box-shadow: inset 0 0 0 1px rgba(15, 98, 254, 0.1);
+        }
+        .topnav-link:active {
+          transform: scale(0.96);
         }
         .topnav-link.live-link {
           color: #92400e;
@@ -249,6 +282,79 @@ export default function TopNav() {
         }
         .topnav-link.active .topnav-link-dot {
           opacity: 1;
+          bottom: 4px;
+        }
+        
+        /* Search Bar */
+        .topnav-search {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          background: rgba(0,0,0,0.04);
+          border: 1px solid rgba(0,0,0,0.05);
+          border-radius: 12px;
+          padding: 0 12px;
+          height: 36px;
+          width: 180px;
+          transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+          margin: 0 16px;
+        }
+        .topnav-search.focused {
+          width: 280px;
+          background: #fff;
+          border-color: rgba(15, 98, 254, 0.4);
+          box-shadow: 0 4px 12px rgba(15, 98, 254, 0.08);
+        }
+        .topnav-search-input {
+          background: transparent;
+          border: none;
+          outline: none;
+          font-size: 13px;
+          color: #1e293b;
+          width: 100%;
+          font-family: inherit;
+        }
+        .topnav-search-input::placeholder {
+          color: #94a3b8;
+        }
+        .topnav-search-key {
+          font-size: 10px;
+          font-weight: 700;
+          color: #94a3b8;
+          background: rgba(0,0,0,0.05);
+          padding: 2px 5px;
+          border-radius: 4px;
+          border: 1px solid rgba(0,0,0,0.05);
+        }
+        
+        .topnav-icon-btn {
+          width: 36px;
+          height: 36px;
+          border-radius: 10px;
+          border: 1px solid rgba(0,0,0,0.05);
+          background: transparent;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #64748b;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          position: relative;
+        }
+        .topnav-icon-btn:hover {
+          background: rgba(15, 98, 254, 0.06);
+          color: #0F62FE;
+          border-color: rgba(15, 98, 254, 0.15);
+        }
+        .topnav-notif-dot {
+          position: absolute;
+          top: 8px;
+          right: 8px;
+          width: 6px;
+          height: 6px;
+          background: #EF4444;
+          border-radius: 50%;
+          border: 1.5px solid #fff;
         }
         .topnav-right {
           display: flex;
@@ -495,6 +601,19 @@ export default function TopNav() {
                 </button>
               )
             })}
+            
+            {/* Search Bar - Desktop Only */}
+            <div className={`topnav-search ${searchFocused ? 'focused' : ''}`}>
+              <Search size={14} color={searchFocused ? "#0F62FE" : "#94a3b8"} />
+              <input 
+                type="text" 
+                className="topnav-search-input" 
+                placeholder="Buscar en BIZEN..." 
+                onFocus={() => setSearchFocused(true)}
+                onBlur={() => setSearchFocused(false)}
+              />
+              {!searchFocused && <span className="topnav-search-key">⌘K</span>}
+            </div>
           </div>
         )}
 
@@ -516,6 +635,12 @@ export default function TopNav() {
                   {bizcoins.toLocaleString()}
                 </div>
               )}
+
+              {/* Action Buttons */}
+              <button className="topnav-icon-btn" aria-label="Notificaciones">
+                <Bell size={18} />
+                <span className="topnav-notif-dot" />
+              </button>
 
               {/* Avatar + dropdown */}
               <div style={{ position: 'relative' }} ref={profileRef}>

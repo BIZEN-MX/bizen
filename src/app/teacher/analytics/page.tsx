@@ -138,8 +138,8 @@ export default function TeacherAnalyticsPage() {
       fontFamily: 'inherit'
     }}>
       <style>{`
-        .admin-page-root { padding-left: 280px !important; }
-        @media (max-width: 1160px) { .admin-page-root { padding-left: 220px !important; } }
+        .admin-page-root { padding-left: 0 !important; }
+        @media (max-width: 1160px) { .admin-page-root { padding-left: 0 !important; } }
         @media (max-width: 767px) { .admin-page-root { padding-left: 0 !important; padding-bottom: 100px !important; } }
       `}</style>
       <div style={{ padding: "clamp(24px, 4vw, 48px)", maxWidth: 1200, margin: "0 auto", boxSizing: "border-box" }}>

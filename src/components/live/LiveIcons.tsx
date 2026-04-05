@@ -150,3 +150,40 @@ export const IconGamepad = ({ size = 24, color = "currentColor" }: { size?: numb
     <path d="M6 5h12a2 2 0 012 2v8a2 2 0 01-2 2H6a2 2 0 01-2-2V7a2 2 0 012-2z"/>
   </svg>
 )
+
+export const IconBitcoin = ({ size = 40, color = "white" }: { size?: number; color?: string }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <path d="M11.75 8a2.5 2.5 0 1 0-2.5 2.5M11.75 16a2.5 2.5 0 1 1-2.5-2.5" />
+    <path d="M9.25 10.5h3.5a2.5 2.5 0 0 1 0 5h-3.5" />
+    <path d="M9.25 10.5v-2.5h2.5" />
+    <path d="M9.25 16v-2.5h2.5" />
+    <path d="M12 2v2M12 20v2M10 2v2M10 20v2" />
+    <circle cx="12" cy="12" r="10" />
+  </svg>
+)
+
+export const IconFileText = ({ size = 40, color = "white" }: { size?: number; color?: string }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
+    <polyline points="14 2 14 8 20 8" />
+    <line x1="16" y1="13" x2="8" y2="13" />
+    <line x1="16" y1="17" x2="8" y2="17" />
+    <line x1="10" y1="9" x2="8" y2="9" />
+  </svg>
+)
+
+export const IconBrain = ({ size = 40, color = "white" }: { size?: number; color?: string }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 4.44-2.54Z" />
+    <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-4.44-2.54Z" />
+  </svg>
+)
+
+export const IconUmbrella = ({ size = 40, color = "white" }: { size?: number; color?: string }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <path d="M22 12a10.06 10.06 0 0 0-20 0Z" />
+    <path d="M12 12v8a2 2 0 0 0 4 0" />
+    <path d="M12 2v1" />
+  </svg>
+)
+

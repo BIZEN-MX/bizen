@@ -70,7 +70,7 @@ export default function SavingsGoalsPage() {
     <div style={{ minHeight: "100vh", background: "#f8fafc", padding: "40px 24px 100px" }}>
       <style>{`
         @media (min-width: 768px) {
-          .goals-container { margin-left: 280px; }
+          .goals-container { margin-left: 0; }
         }
         .goal-card {
           background: white;

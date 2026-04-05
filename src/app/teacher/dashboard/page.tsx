@@ -279,8 +279,8 @@ export default function AdminDashboardPage() {
     return (
         <div className="adm-root" style={{ minHeight: '100vh', background: '#f0f4f8' }}>
             <style>{`
-                .adm-root { padding-left: 280px !important; }
-                @media (max-width: 1160px) { .adm-root { padding-left: 220px !important; } }
+                .adm-root { padding-left: 0 !important; }
+                @media (max-width: 1160px) { .adm-root { padding-left: 0 !important; } }
                 @media (max-width: 767px) { .adm-root { padding-left: 0 !important; padding-bottom: 90px !important; } }
 
                 @keyframes fadeSlideUp {

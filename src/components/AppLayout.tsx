@@ -82,7 +82,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   const showGutter = false;
 
   return (
-    <div className="app-shell">
+    <div className="app-shell" data-topnav-active={!isLanding && !isSidebarHidden}>
       <div className="app-scroll">
         <div style={{ display: "flex", width: "100%", minHeight: "100%" }}>
           

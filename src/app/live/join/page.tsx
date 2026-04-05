@@ -8,7 +8,7 @@ import { ArrowLeft } from "lucide-react"
 import { IconBolt, IconGamepad } from "@/components/live/LiveIcons"
 import { AVATARS, AvatarSvg } from "@/components/live/LiveAvatars"
 import { QUIZ_CATALOG } from "@/data/live-quizzes"
-import { IconMoney, IconChart, IconCard, IconBriefcase, IconClock, IconQuestion, IconStar } from "@/components/live/LiveIcons"
+import { IconMoney, IconChart, IconCard, IconBriefcase, IconClock, IconQuestion, IconStar, IconBitcoin, IconFileText, IconBrain, IconUmbrella } from "@/components/live/LiveIcons"
 
 function QuizIcon({ icon, size = 32 }: { icon: string; size?: number }) {
   const props = { size, color: "white" }
@@ -16,6 +16,10 @@ function QuizIcon({ icon, size = 32 }: { icon: string; size?: number }) {
   if (icon === "chart") return <IconChart {...props} />
   if (icon === "card") return <IconCard {...props} />
   if (icon === "briefcase") return <IconBriefcase {...props} />
+  if (icon === "bitcoin") return <IconBitcoin {...props} />
+  if (icon === "file-text") return <IconFileText {...props} />
+  if (icon === "brain") return <IconBrain {...props} />
+  if (icon === "umbrella") return <IconUmbrella {...props} />
   return <IconBolt {...props} />
 }
 

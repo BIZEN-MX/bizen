@@ -195,15 +195,40 @@ a {
     }
 }
 
-/* App layout spacing for fixed headers */
+/* ─── Main Content Spacing ─────────────────────────────────────── */
 .app-main {
-    padding-top: 0;
-    /* Header height removed globally */
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-height: 100%;
+    position: relative;
     box-sizing: border-box;
+    transition: padding 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    
+    /* 1. Lateral Spacing: Fluid padding so content never touches screen edges */
+    padding-left: clamp(16px, 3.5vw, 48px);
+    padding-right: clamp(16px, 3.5vw, 48px);
 }
 
-/* On courses page, the header is not shown, so we remove padding */
-[data-no-sidebar] .app-main,
+/* 2. Top Offset: Compensate for the 60px floating top nav on desktop */
+@media (min-width: 768px) {
+    [data-topnav-active="true"] .app-main {
+        padding-top: 60px;
+    }
+}
+
+/* 3. Full-Width Exceptions: Games, Landing, and Immersive pages should NOT have lateral padding */
+[data-landing-page="true"] .app-main,
+[data-lesson-interactive="true"] .app-main,
+[data-no-sidebar="true"] .app-main,
+body.hide-sidebar .app-main,
+.cashflow-game-page {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+/* Also reset top padding if sidebar is hidden or it's a specific page */
+[data-no-sidebar="true"] .app-main,
 .courses-page-active .app-main {
     padding-top: 0;
 }
@@ -365,12 +390,6 @@ a {
 
 .app-main {
     flex: 1;
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    min-height: 100%;
-    position: relative;
-    transition: padding 0.3s ease;
 }
 
 /* ─── Full-Screen Immersive Mode (Cashflow Game) ───────────────── */
@@ -524,8 +543,10 @@ body.hide-sidebar .app-main {
     animation: shimmer 3s linear infinite;
 }
 
-/* ─── TopNav Body Offset ───────────────────────────────────────── */
-/* Pages that have the topnav automatically get 60px top padding */
-[data-topnav-active] {
-    padding-top: 60px;
+/* Ensure that app-main children occupy full width of its parent */
+.app-main > div {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    flex: 1;
 }
