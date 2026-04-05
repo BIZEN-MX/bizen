@@ -155,10 +155,10 @@ export default function ComunidadHubPage() {
           .com-top-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
         }
         @media (min-width:768px) and (max-width:1160px) {
-          .com-wrap { margin-left: 220px !important; }
+          .com-wrap { margin-left: 0 !important; }
         }
         @media (min-width:1161px) {
-          .com-wrap { margin-left: 280px !important; }
+          .com-wrap { margin-left: 0 !important; }
         }
         @keyframes fadeUp { from { opacity:0; transform:translateY(24px) } to { opacity:1; transform:translateY(0) } }
         @keyframes float { 0%, 100% { transform: translate(0,0) rotate(0) } 33% { transform: translate(10px, -20px) rotate(2deg) } 66% { transform: translate(-10px, 15px) rotate(-1deg) } }

@@ -246,7 +246,7 @@ export default function CombinedSimulatorsPage() {
           .simulador-main  { padding: 20px 16px !important; }
         }
         @media (min-width: 1161px) {
-          .simulador-outer { margin-left: 280px !important; width: calc(100% - 280px) !important; }
+          .simulador-outer { margin-left: 0 !important; width: 100% !important; }
         }
         @media (min-width: 768px) and (max-width: 1160px) {
           .simulador-outer { margin-left: 240px !important; width: calc(100% - 240px) !important; }

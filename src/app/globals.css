@@ -405,3 +405,127 @@ body.hide-sidebar .app-main {
     width: 100% !important;
     max-width: 100% !important;
 }
+
+/* ─── Page Enter Animation ─────────────────────────────────────── */
+@keyframes page-enter {
+    from {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.page-enter {
+    animation: page-enter 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ─── Premium Button Utilities ─────────────────────────────────── */
+.btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.18s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 16px rgba(11, 113, 254, 0.35);
+    white-space: nowrap;
+    text-decoration: none;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(11, 113, 254, 0.5);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+    box-shadow: 0 4px 12px rgba(11, 113, 254, 0.3);
+}
+
+/* Shine sweep on primary */
+.btn-primary::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    animation: btn-shine 3.5s ease-in-out infinite;
+}
+
+@keyframes btn-shine {
+    0%   { left: -100%; }
+    30%, 100% { left: 120%; }
+}
+
+.btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 11px 22px;
+    background: transparent;
+    color: var(--text-main);
+    border: 1.5px solid rgba(15, 98, 254, 0.2);
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+    white-space: nowrap;
+    text-decoration: none;
+}
+
+.btn-ghost:hover {
+    background: rgba(15, 98, 254, 0.06);
+    border-color: rgba(15, 98, 254, 0.45);
+    color: #0F62FE;
+    transform: translateY(-1px);
+}
+
+/* ─── Card Hover Utility ───────────────────────────────────────── */
+.card-hover {
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.card-hover:hover {
+    transform: translateY(-4px) !important;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* ─── Shimmer Utility ──────────────────────────────────────────── */
+@keyframes shimmer {
+    0%   { background-position: -200% center; }
+    100% { background-position: 200% center; }
+}
+
+.shimmer-text {
+    background: linear-gradient(90deg, currentColor 0%, rgba(255,255,255,0.8) 50%, currentColor 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shimmer 3s linear infinite;
+}
+
+/* ─── TopNav Body Offset ───────────────────────────────────────── */
+/* Pages that have the topnav automatically get 60px top padding */
+[data-topnav-active] {
+    padding-top: 60px;
+}

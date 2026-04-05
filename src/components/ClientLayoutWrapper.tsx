@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef, Suspense } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
 // import NavigationLoading from './NavigationLoading';
-import FixedSidebar from './FixedSidebar';
+import TopNav from './TopNav';
 import MobileFooterNav from './MobileFooterNav';
 import GlobalLogo from './GlobalLogo';
 import { useKeyboardHandler } from '@/hooks/useKeyboardHandler';
@@ -211,8 +211,8 @@ function InnerClientWrapper({ children }: { children: React.ReactNode }) {
 
   return (
     <>
-      {/* Show FixedSidebar only on larger screens (>767px), hidden during interactive lesson, hidden when unauth */}
-      {!hideAppNavigation && !isMobile && !isLessonInteractivePage && !isUnauthProtected && <FixedSidebar />}
+      {/* Show TopNav on desktop (>767px), hidden during interactive lesson, hidden when unauth */}
+      {!hideAppNavigation && !isMobile && !isLessonInteractivePage && !isUnauthProtected && <TopNav />}
 
       {/* Show MobileFooterNav only on mobile (≤767px), hidden on lesson interactive page, hidden when unauth */}
       {!hideAppNavigation && isMobile && !isLessonInteractivePage && !isUnauthProtected && <MobileFooterNav />}

@@ -120,8 +120,8 @@ export default function NewThreadPage() {
     return (
       <div className="fn-outer" style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "#FBFAF5" }}>
         <style>{`
-          @media (min-width: 768px) and (max-width: 1160px) { .fn-outer { margin-left: 220px !important; } }
-          @media (min-width: 1161px) { .fn-outer { margin-left: 280px !important; } }
+          @media (min-width: 768px) and (max-width: 1160px) { .fn-outer { margin-left: 0 !important; } }
+          @media (min-width: 1161px) { .fn-outer { margin-left: 0 !important; } }
         `}</style>
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 16 }}>
           <div style={{ width: 44, height: 44, border: "3px solid rgba(30,58,138,0.1)", borderTopColor: "#1e3a8a", borderRadius: "50%", animation: "spin 0.9s linear infinite" }} />
@@ -138,8 +138,8 @@ export default function NewThreadPage() {
     <div className="fn-outer" style={{ minHeight: "100vh", background: "#FBFAF5", }}>
       <style>{`
         @media (max-width: 767px) { .fn-outer { margin-left: 0 !important; } .fn-layout { flex-direction: column !important; } }
-        @media (min-width: 768px) and (max-width: 1160px) { .fn-outer { margin-left: 220px !important; } }
-        @media (min-width: 1161px) { .fn-outer { margin-left: 280px !important; } }
+        @media (min-width: 768px) and (max-width: 1160px) { .fn-outer { margin-left: 0 !important; } }
+        @media (min-width: 1161px) { .fn-outer { margin-left: 0 !important; } }
         @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
         .fn-input:focus { outline: none; border-color: ${accent} !important; box-shadow: 0 0 0 3px ${accent}18 !important; }
         .fn-tag-remove:hover { background: rgba(255,255,255,0.5) !important; }

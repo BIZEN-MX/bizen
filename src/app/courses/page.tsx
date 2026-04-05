@@ -278,11 +278,10 @@ export default function CoursesPage() {
       <div
         className="courses-main-content"
         style={{
-          flex: 1,
-          paddingTop: "clamp(8px, 1.5vw, 16px)",
+          paddingTop: "clamp(72px, 9vw, 88px)",
           paddingBottom: "clamp(40px, 8vw, 80px)",
-          paddingLeft: "312px", // Desktop default offset
-          paddingRight: "16px",
+          paddingLeft: "clamp(16px, 3vw, 56px)",
+          paddingRight: "clamp(16px, 3vw, 56px)",
           background: "transparent",
           position: "relative",
           display: "flex",
@@ -768,17 +767,20 @@ export default function CoursesPage() {
           }
         }
           
-        /* Responsive sidebar offsets */
+        /* Top nav aware offsets (sidebar removed)
+           all sizes now get consistent horizontal padding */
         @media (min-width: 1161px) {
           .courses-main-content {
-            padding-left: 312px !important;
-            padding-right: 32px !important;
+            padding-left: clamp(32px, 4vw, 56px) !important;
+            padding-right: clamp(32px, 4vw, 56px) !important;
+            padding-top: 88px !important;
           }
         }
         @media (min-width: 768px) and (max-width: 1160px) {
           .courses-main-content {
-            padding-left: 252px !important;
-            padding-right: 24px !important;
+            padding-left: 28px !important;
+            padding-right: 28px !important;
+            padding-top: 84px !important;
           }
         }
         /* RESTORED ANIMATIONS & HOVER EFFECTS */
@@ -837,9 +839,7 @@ export default function CoursesPage() {
 
         @media (max-width: 767px) {
           .courses-main-content {
-            padding-left: 16px !important;
-            padding-right: 16px !important;
-            padding-top: 14px !important; // Slightly reduced
+            padding-top: 74px !important;
             padding-bottom: calc(85px + env(safe-area-inset-bottom)) !important;
           }
           .courses-hero {

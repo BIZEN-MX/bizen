@@ -248,11 +248,11 @@ function SettingsContent() {
           .cfg-2col{grid-template-columns:1fr!important}
         }
         @media(min-width:768px) and (max-width:1160px){
-          .cfg-inner{margin-left:220px!important}
+          .cfg-inner{margin-left:0!important}
           .cfg-body{padding:0 20px 60px!important}
         }
         @media(min-width:1161px){
-          .cfg-inner{margin-left:280px!important}
+          .cfg-inner{margin-left:0!important}
           .cfg-body{padding:0 32px 80px!important}
         }
         @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}

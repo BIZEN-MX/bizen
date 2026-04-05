@@ -150,10 +150,10 @@ export default function TopicFeedPage() {
           .forum-topic-outer { margin-left: 0 !important; max-width: 100% !important; }
         }
         @media (min-width: 768px) and (max-width: 1160px) {
-          .forum-topic-outer { margin-left: 220px !important; max-width: calc(100% - 220px) !important; width: auto !important; }
+          .forum-topic-outer { margin-left: 0 !important; max-width: 100% !important; width: auto !important; }
         }
         @media (min-width: 1161px) {
-          .forum-topic-outer { margin-left: 280px !important; max-width: calc(100% - 280px) !important; width: auto !important; }
+          .forum-topic-outer { margin-left: 0 !important; max-width: 100% !important; width: auto !important; }
         }
         @keyframes fadeInUp {
           from { opacity: 0; transform: translateY(14px); }

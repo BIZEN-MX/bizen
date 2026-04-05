@@ -495,13 +495,13 @@ export default function ImpactoSocialPage() {
                 /* Desktop/Tablet - account for left sidebar */
                 @media (min-width: 768px) and (max-width: 1160px) {
                     .impacto-inner {
-                        margin-left: 220px !important;
+                        margin-left: 0 !important;
                         padding: 0 !important;
                     }
                 }
                 @media (min-width: 1161px) {
                     .impacto-inner {
-                        margin-left: 280px !important;
+                        margin-left: 0 !important;
                         padding: 0 !important;
                     }
                 }

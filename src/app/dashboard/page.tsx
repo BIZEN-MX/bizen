@@ -455,10 +455,10 @@ function DashboardContent() {
   return (
     <div style={{ minHeight: "100vh", background: "#FBFAF5", width: "100%", boxSizing: "border-box", fontFamily: '"SF Pro Display","SF Pro Text",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif' }}>
       <style>{`
-        /* ── sidebar offsets ── */
-        @media (max-width:767px)              { .di { padding:14px 12px 100px !important; margin-left:0 !important; } }
-        @media (min-width:768px) and (max-width:1160px) { .di { margin-left:220px !important; padding:24px 20px 48px !important; } }
-        @media (min-width:1161px)             { .di { margin-left:280px !important; padding:32px 48px 64px !important; max-width: 1600px !important; margin-right: auto !important; } }
+        /* ── top-nav offsets (sidebar removed, nav is now 60px top bar) ── */
+        @media (max-width:767px)              { .di { padding:74px 14px 100px !important; margin-left:0 !important; } }
+        @media (min-width:768px) and (max-width:1160px) { .di { margin-left:0 !important; padding:84px 28px 48px !important; max-width:1200px !important; margin-inline:auto !important; } }
+        @media (min-width:1161px)             { .di { margin-left:0 !important; padding:88px 56px 64px !important; max-width:1400px !important; margin-inline:auto !important; } }
 
         /* ── animations ── */
         @keyframes du { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }

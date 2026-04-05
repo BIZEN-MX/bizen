@@ -203,10 +203,10 @@ export default function MisionDiaPage() {
           .rd-outer { margin-left: 0 !important; padding-bottom: 100px !important; }
         }
         @media (min-width: 768px) and (max-width: 1160px) {
-          .rd-outer { margin-left: 220px !important; width: calc(100% - 220px) !important; }
+          .rd-outer { margin-left: 0 !important; width: 100% !important; }
         }
         @media (min-width: 1161px) {
-          .rd-outer { margin-left: 280px !important; width: calc(100% - 280px) !important; }
+          .rd-outer { margin-left: 0 !important; width: 100% !important; }
         }
 
         @keyframes fadeUp   { from { opacity:0; transform:translateY(22px) } to { opacity:1; transform:translateY(0) } }

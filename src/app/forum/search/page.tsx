@@ -117,10 +117,10 @@ function ForumSearchContent() {
           .forum-search-outer { margin-left: 0 !important; max-width: 100% !important; }
         }
         @media (min-width: 768px) and (max-width: 1160px) {
-          .forum-search-outer { margin-left: 220px !important; max-width: calc(100% - 220px) !important; width: auto !important; }
+          .forum-search-outer { margin-left: 0 !important; max-width: 100% !important; width: auto !important; }
         }
         @media (min-width: 1161px) {
-          .forum-search-outer { margin-left: 280px !important; max-width: calc(100% - 280px) !important; width: auto !important; }
+          .forum-search-outer { margin-left: 0 !important; max-width: 100% !important; width: auto !important; }
         }
       `}</style>
       <main style={{

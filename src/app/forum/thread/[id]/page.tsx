@@ -577,9 +577,9 @@ export default function ThreadDetailPage() {
         /* Tablet/iPad (768px-1160px): Account for left sidebar (220px text-only) */
         @media (min-width: 768px) and (max-width: 1160px) {
           .forum-thread-outer {
-            width: calc(100% - 220px) !important;
-            max-width: calc(100% - 220px) !important;
-            margin-left: 220px !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            margin-left: 0 !important;
           }
           .forum-thread-container {
             width: 100% !important;
@@ -592,9 +592,9 @@ export default function ThreadDetailPage() {
         /* Desktop (≥1161px): Account for left sidebar (full width 280px) */
         @media (min-width: 1161px) {
           .forum-thread-outer {
-            width: calc(100% - 280px) !important;
-            max-width: calc(100% - 280px) !important;
-            margin-left: 280px !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            margin-left: 0 !important;
           }
           .forum-thread-container {
             width: 100% !important;

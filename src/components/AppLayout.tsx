@@ -78,28 +78,13 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
     return <UnauthScreen />;
   }
 
-  const isNews = pathname?.startsWith("/news");
-  // Show sidebar ONLY on the exact /cash-flow hub, but hide on all its sub-pages or other simulators
-  const isSimulatorSubPage = (pathname?.startsWith("/cash-flow/") && pathname !== "/cash-flow") || pathname?.startsWith("/simulators") || pathname?.startsWith("/simulador");
-  const isSimulatorHub = pathname === "/cash-flow";
-  
-  const isInvestment = pathname?.startsWith("/investments") || pathname?.startsWith("/staking") || pathname?.startsWith("/metas");
-  const isLesson = pathname?.startsWith("/learn") || pathname?.startsWith("/diagnostic");
-  const isLive = pathname?.startsWith("/live");
-
-  const hasSidebar = !isLanding && !isPublicPath(pathname) && !isLesson && !isLive && !isNews && (isSimulatorHub || !isSimulatorSubPage) && !isInvestment;
-  
-  // Clean gutter logic
-  const showGutter = hasSidebar && !isSidebarHidden;
+  // No sidebar gutter needed — TopNav is at the top, not the left
+  const showGutter = false;
 
   return (
     <div className="app-shell">
       <div className="app-scroll">
         <div style={{ display: "flex", width: "100%", minHeight: "100%" }}>
-          {/* Desktop Sidebar Gutter (invisible spacer) */}
-          {showGutter && (
-            <div data-sidebar-gutter className="hidden md:block w-[280px] flex-shrink-0" aria-hidden="true" />
-          )}
           
           <main className="app-main flex-1 flex flex-col items-center">
             {/* Inner wrapper to ensure content is centered in the usable space */}

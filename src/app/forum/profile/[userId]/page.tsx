@@ -219,10 +219,10 @@ export default function ForumProfilePage() {
           .fp-follow-btns { justify-content: center !important; }
         }
         @media (min-width: 768px) and (max-width: 1160px) {
-          .fp-outer { width: calc(100% - 220px) !important; margin-left: 220px !important; }
+          .fp-outer { width: 100% !important; margin-left: 0 !important; }
         }
         @media (min-width: 1161px) {
-          .fp-outer { width: calc(100% - 280px) !important; margin-left: 280px !important; }
+          .fp-outer { width: 100% !important; margin-left: 0 !important; }
         }
 
         .fp-thread-card {

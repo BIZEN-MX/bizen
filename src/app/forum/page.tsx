@@ -582,10 +582,10 @@ function ForumContent() {
           .forum-container p { font-size: 13px !important; }
         }
         @media (min-width: 768px) and (max-width: 1160px) {
-          .forum-container { width: calc(100% - 220px) !important; max-width: calc(100% - 220px) !important; margin-left: 220px !important; padding: clamp(24px, 3vw, 40px) !important; }
+          .forum-container { width: 100% !important; max-width: 100% !important; margin-left: 0 !important; padding: clamp(24px, 3vw, 40px) !important; }
         }
         @media (min-width: 1161px) {
-          .forum-container { width: calc(100% - 280px) !important; max-width: calc(100% - 280px) !important; margin-left: 280px !important; padding: clamp(24px, 4vw, 40px) !important; }
+          .forum-container { width: 100% !important; max-width: 100% !important; margin-left: 0 !important; padding: clamp(24px, 4vw, 40px) !important; }
         }
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
 

@@ -198,16 +198,18 @@ export default function MobileFooterNav() {
           transform: "translate3d(0, 0, 0)",
           WebkitTransform: "translate3d(0, 0, 0)",
           display: "block",
-          background: "rgba(20, 25, 40, 0.95)",
+          background: "rgba(15, 18, 30, 0.96)",
           backdropFilter: "blur(24px)",
           WebkitBackdropFilter: "blur(24px)",
           borderRadius: 0,
           border: "none",
-          borderTop: "1px solid rgba(255, 255, 255, 0.1)",
-          boxShadow: "0 -4px 16px rgba(0, 0, 0, 0.2)",
+          borderTop: "1px solid rgba(255, 255, 255, 0.07)",
+          boxShadow: "0 -4px 24px rgba(0, 0, 0, 0.25), 0 -1px 0 rgba(255,255,255,0.04)",
           paddingBottom: "env(safe-area-inset-bottom, 0px)"
         }}
       >
+        {/* Premium gradient top line */}
+        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: 'linear-gradient(90deg, #0F62FE 0%, #4A9EFF 40%, #10B981 100%)', opacity: 0.7 }} />
         <div className="mobile-footer-inner">
           {navItems.map((item, index) => (
             <button
@@ -221,7 +223,16 @@ export default function MobileFooterNav() {
               }}
               className={`mobile-footer-btn ${item.active ? 'active' : ''}`}
             >
-              <div className="mobile-footer-icon-wrapper">
+              <div className="mobile-footer-icon-wrapper" style={{ position: 'relative' }}>
+                {/* Active dot indicator */}
+                {item.active && (
+                  <div style={{
+                    position: 'absolute', top: -6, left: '50%', transform: 'translateX(-50%)',
+                    width: 4, height: 4, borderRadius: '50%',
+                    background: 'linear-gradient(135deg, #4A9EFF, #10B981)',
+                    boxShadow: '0 0 8px rgba(74,158,255,0.7)',
+                  }} />
+                )}
                 {item.isProfileButton && user ? (
                   <div style={{
                     width: 32,

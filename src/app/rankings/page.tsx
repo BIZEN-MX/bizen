@@ -126,16 +126,16 @@ export default function RankingsPage() {
         }
         @media (min-width: 768px) and (max-width: 1160px) {
           .rankings-inner {
-            width: calc(100% - 220px) !important;
-            max-width: calc(100% - 220px) !important;
-            margin-left: 220px !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            margin-left: 0 !important;
           }
         }
         @media (min-width: 1161px) {
           .rankings-inner {
-            width: calc(100% - 280px) !important;
-            max-width: calc(100% - 280px) !important;
-            margin-left: 280px !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            margin-left: 0 !important;
           }
         }
 

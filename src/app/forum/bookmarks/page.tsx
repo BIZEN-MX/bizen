@@ -97,8 +97,8 @@ export default function BookmarksPage() {
       <div className="fb-outer" style={{ minHeight: "100vh", background: "#FBFAF5", }}>
         <style>{`
           @media (max-width: 767px) { .fb-outer { margin-left: 0 !important; } }
-          @media (min-width: 768px) and (max-width: 1160px) { .fb-outer { margin-left: 220px !important; } }
-          @media (min-width: 1161px) { .fb-outer { margin-left: 280px !important; } }
+          @media (min-width: 768px) and (max-width: 1160px) { .fb-outer { margin-left: 0 !important; } }
+          @media (min-width: 1161px) { .fb-outer { margin-left: 0 !important; } }
           @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
           .fb-card:hover { transform: translateX(4px) !important; }
           .fb-search:focus { outline: none; border-color: #0F62FE !important; box-shadow: 0 0 0 3px rgba(15,98,254,0.12) !important; }

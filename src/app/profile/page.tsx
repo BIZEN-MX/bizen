@@ -416,10 +416,10 @@ export default function ProfilePage() {
           .xp-card-body { padding: 12px 16px !important; }
         }
         @media (min-width: 768px) and (max-width: 1160px) {
-          .prof-outer { margin-left: 220px !important; padding: 40px 24px 80px !important; width: calc(100% - 220px) !important; }
+          .prof-outer { margin-left: 0 !important; padding: 40px 24px 80px !important; width: 100% !important; }
         }
         @media (min-width: 1161px) {
-          .prof-outer { margin-left: 280px !important; padding: 40px 48px 80px !important; width: calc(100% - 280px) !important; }
+          .prof-outer { margin-left: 0 !important; padding: 40px 48px 80px !important; width: 100% !important; }
         }
         .prof-card { background: white; border: 1.5px solid #e2e8f0; border-radius: 24px; box-shadow: 0 4px 20px rgba(15,23,42,0.03); transition: transform 0.2s; }
         .prof-card:hover { transform: translateY(-2px); }
