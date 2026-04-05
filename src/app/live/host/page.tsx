@@ -354,10 +354,10 @@ export default function HostPage() {
             <span style={{ fontSize: 12, fontWeight: 500, color: "#fbbf24", letterSpacing: "0.1em", textTransform: "uppercase" }}>BIZEN Live</span>
           </div>
           <h1 style={{ margin: 0, fontSize: "clamp(26px, 4vw, 44px)", fontWeight: 500, color: "white", letterSpacing: "-0.03em", lineHeight: 1.1 }}>
-            {isAdminOrTeacher ? "Lanza un Quiz" : "Crea tu propio Quiz"}
+            {isAdminOrTeacher ? "Iniciar Bizen Live" : "Nueva sesión Bizen Live"}
           </h1>
           <p style={{ margin: "12px auto 0", maxWidth: 460, fontSize: 15, color: "rgba(255,255,255,0.40)", lineHeight: 1.6 }}>
-            Usa nuestro catálogo oficial o crea un quiz personalizado para tus {isAdminOrTeacher ? "alumnos" : "compañeros"}.
+            Usa nuestro catálogo oficial o crea una sesión dinámica {isAdminOrTeacher ? "para tus alumnos" : "con tus compañeros"}.
           </p>
         </div>
 
@@ -437,7 +437,7 @@ export default function HostPage() {
               <div style={{ background: "rgba(10,20,40,0.95)", padding: "20px 24px 24px" }}>
                 <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 14, lineHeight: 1.55, margin: "0 0 20px" }}>Crea tus propias preguntas de opción múltiple con el tema y contenido que necesites.</p>
                 <button className="launch-btn" style={{ width: "100%", padding: "13px", background: "linear-gradient(135deg, #0d2a6b, #1a56db)", border: "none", borderRadius: 14, color: "white", fontSize: 15, fontWeight: 500, cursor: "pointer", boxShadow: "0 6px 20px rgba(15,98,254,0.4)", letterSpacing: "0.02em", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }} onClick={e => { e.stopPropagation(); setHostStatus("create") }}>
-                  <IconPlus size={16} color="white" /> Crear nuevo
+                  <IconPlus size={16} color="white" /> Crear Bizen Live
                 </button>
               </div>
             </div>
@@ -521,8 +521,8 @@ export default function HostPage() {
               {selectedQuiz && <QuizIcon icon={selectedQuiz.icon} size={52} />}
             </div>
             <div style={{ fontSize: 14, fontWeight: 700, letterSpacing: "0.15em", color: "rgba(255,255,255,0.35)", textTransform: "uppercase", marginBottom: 8, display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}><IconBolt size={12} color="rgba(255,255,255,0.35)" /> BIZEN Live</div>
-            <h1 style={{ fontSize: 28, fontWeight: 500, color: "white", margin: 0 }}>Configurar sesión</h1>
-            <p style={{ color: "rgba(255,255,255,0.4)", marginTop: 8, fontSize: 15 }}>Revisa las preguntas y lanza el quiz en vivo</p>
+            <h1 style={{ fontSize: 28, fontWeight: 500, color: "white", margin: 0 }}>Configurar Bizen Live</h1>
+            <p style={{ color: "rgba(255,255,255,0.4)", marginTop: 8, fontSize: 15 }}>Revisa el contenido y lanza la sesión en vivo</p>
           </div>
 
           <div style={{ marginBottom: 24 }}>
@@ -624,7 +624,7 @@ export default function HostPage() {
           </div>
         </div>
         <div style={{ padding: "24px 28px", borderTop: "1px solid rgba(255,255,255,0.06)", display: "flex", gap: 12, justifyContent: "flex-end" }}>
-          <button onClick={handleFinish} style={{ padding: "12px 24px", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, color: "rgba(255,255,255,0.5)", fontSize: 14, cursor: "pointer" }}>Terminar quiz</button>
+          <button onClick={handleFinish} style={{ padding: "12px 24px", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, color: "rgba(255,255,255,0.5)", fontSize: 14, cursor: "pointer" }}>Terminar sesión</button>
           <button onClick={handleShowResults} style={{ padding: "12px 28px", background: "linear-gradient(135deg, #0056E7, #1983FD)", border: "none", borderRadius: 12, color: "white", fontWeight: 700, fontSize: 15, cursor: "pointer", boxShadow: "0 4px 16px rgba(0,86,231,0.35)" }}>Ver respuestas →</button>
         </div>
       </div>
@@ -671,7 +671,7 @@ export default function HostPage() {
           </div>
         </div>
         <div style={{ padding: "24px 28px", borderTop: "1px solid rgba(255,255,255,0.06)", display: "flex", gap: 12, justifyContent: "flex-end" }}>
-          <button onClick={handleFinish} style={{ padding: "12px 24px", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, color: "rgba(255,255,255,0.5)", fontSize: 14, cursor: "pointer" }}>Terminar quiz</button>
+          <button onClick={handleFinish} style={{ padding: "12px 24px", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, color: "rgba(255,255,255,0.5)", fontSize: 14, cursor: "pointer" }}>Terminar sesión</button>
           <button onClick={handleNextQuestion} style={{ padding: "12px 28px", background: currentQIndex + 1 >= questions.length ? "linear-gradient(135deg, #059669, #10b981)" : "linear-gradient(135deg, #0056E7, #1983FD)", border: "none", borderRadius: 12, color: "white", fontWeight: 700, fontSize: 15, cursor: "pointer", boxShadow: "0 4px 16px rgba(0,86,231,0.35)" }}>
             {currentQIndex + 1 >= questions.length ? <><IconFlag size={16} color="white" /> Ver resultado final</> : "Siguiente pregunta →"}
           </button>
@@ -684,7 +684,7 @@ export default function HostPage() {
   if (hostStatus === "finished") {
     return (
       <div style={{ minHeight: "100dvh", background: "#060c1d", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: 40, textAlign: "center", marginLeft: sidebarOffset, transition: "margin-left 0.3s ease" }}>
-        <h1 style={{ color: "white", fontSize: 36, fontWeight: 500, marginBottom: 8, display: "flex", alignItems: "center", justifyContent: "center", gap: 12 }}><IconFlag size={32} color="#10b981" /> ¡Quiz terminado!</h1>
+        <h1 style={{ color: "white", fontSize: 36, fontWeight: 500, marginBottom: 8, display: "flex", alignItems: "center", justifyContent: "center", gap: 12 }}><IconFlag size={32} color="#10b981" /> ¡Sesión terminada!</h1>
         <p style={{ color: "rgba(255,255,255,0.4)", marginBottom: 40 }}>Resultados finales — {sessionTitle}</p>
         <div style={{ width: "100%", maxWidth: 480, marginBottom: 40 }}>
           {participants.slice(0, 5).map((p, i) => (
@@ -697,7 +697,7 @@ export default function HostPage() {
           ))}
         </div>
         <div style={{ display: "flex", gap: 12, flexWrap: "wrap", justifyContent: "center" }}>
-          <button onClick={() => setHostStatus("catalog")} style={{ padding: "14px 28px", background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 14, color: "white", fontWeight: 600, cursor: "pointer" }}>Nuevo quiz</button>
+          <button onClick={() => setHostStatus("catalog")} style={{ padding: "14px 28px", background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 14, color: "white", fontWeight: 600, cursor: "pointer" }}>Nueva sesión</button>
           <button onClick={() => { setSaveTitle(sessionTitle); setSaveModalOpen(true) }} style={{ padding: "14px 28px", background: "linear-gradient(135deg, #0d2a6b, #1a56db)", border: "none", borderRadius: 14, color: "white", fontWeight: 600, cursor: "pointer", boxShadow: "0 6px 20px rgba(15,98,254,0.35)", display: "flex", alignItems: "center", gap: 8 }}>
             <IconEdit size={15} color="white" /> Guardar como plantilla
           </button>
@@ -746,7 +746,7 @@ export default function HostPage() {
   return null
 }
 
-type CustomQ = { question_text: string; question_type: string; time_limit: number; points_base: number; image_url?: string; options: { id: string; text: string; isCorrect: boolean }[] }
+type CustomQ = { question_text: string; question_type: "mcq" | "code"; time_limit: number; points_base: number; image_url?: string; options: { id: string; text: string; isCorrect: boolean }[]; initial_code?: string }
 
 function CreateQuizForm({ onBack, onLaunch }: { onBack: () => void; onLaunch: (qs: CustomQ[], title: string) => void }) {
   const [title, setTitle] = useState("Mi Quiz")
@@ -758,14 +758,14 @@ function CreateQuizForm({ onBack, onLaunch }: { onBack: () => void; onLaunch: (q
   const updateOpt = (qi: number, oi: number, field: string, val: any) => setQuestions(prev => prev.map((q, idx) => idx !== qi ? q : { ...q, options: q.options.map((o, oidx) => oidx !== oi ? o : { ...o, [field]: val }) }))
   const setCorrect = (qi: number, oi: number) => setQuestions(prev => prev.map((q, idx) => idx !== qi ? q : { ...q, options: q.options.map((o, oidx) => ({ ...o, isCorrect: oidx === oi })) }))
 
-  const canLaunch = title.trim() && questions.every(q => q.question_text.trim() && q.options.every(o => o.text.trim()))
+  const canLaunch = title.trim() && questions.every(q => q.question_text.trim() && (q.question_type === "code" || q.options.every(o => o.text.trim())))
 
   return (
     <div style={{ minHeight: "100dvh", background: "linear-gradient(180deg, #060c1d 0%, #0a1428 100%)", padding: "40px 24px", fontFamily: "'Inter', system-ui, sans-serif" }}>
       <div style={{ maxWidth: 680, margin: "0 auto" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 32 }}>
           <button onClick={onBack} style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 10, padding: "8px 16px", color: "rgba(255,255,255,0.5)", fontSize: 13, cursor: "pointer" }}>← Volver</button>
-          <div style={{ display: "flex", alignItems: "center", gap: 8 }}><IconEdit size={18} color="#0056E7" /><span style={{ color: "white", fontWeight: 700, fontSize: 18 }}>Crear quiz personalizado</span></div>
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}><IconEdit size={18} color="#0056E7" /><span style={{ color: "white", fontWeight: 700, fontSize: 18 }}>Crear sesión Bizen Live</span></div>
         </div>
 
         <div style={{ marginBottom: 24 }}>
@@ -779,12 +779,31 @@ function CreateQuizForm({ onBack, onLaunch }: { onBack: () => void; onLaunch: (q
               <span style={{ color: "#0056E7", fontWeight: 800, fontSize: 14 }}>Pregunta {qi + 1}</span>
               {questions.length > 1 && <button onClick={() => removeQuestion(qi)} style={{ background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.2)", borderRadius: 8, padding: "4px 8px", cursor: "pointer", display: "flex", alignItems: "center", gap: 4, color: "#f87171", fontSize: 12 }}><IconTrash size={13} color="#f87171" /> Eliminar</button>}
             </div>
-            <input placeholder="Escribe la pregunta..." value={q.question_text} onChange={e => updateQ(qi, "question_text", e.target.value)} style={{ width: "100%", padding: "12px 16px", background: "rgba(255,255,255,0.06)", border: "1.5px solid rgba(255,255,255,0.1)", borderRadius: 12, color: "white", fontSize: 14, fontWeight: 600, outline: "none", boxSizing: "border-box", marginBottom: 12 }} />
+            <input placeholder="Escribe la pregunta o instrucción..." value={q.question_text} onChange={e => updateQ(qi, "question_text", e.target.value)} style={{ width: "100%", padding: "12px 16px", background: "rgba(255,255,255,0.06)", border: "1.5px solid rgba(255,255,255,0.1)", borderRadius: 12, color: "white", fontSize: 14, fontWeight: 600, outline: "none", boxSizing: "border-box", marginBottom: 12 }} />
+            
+            <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>
+              {(["mcq", "code"] as const).map(type => (
+                <button
+                  key={type}
+                  onClick={() => updateQ(qi, "question_type", type)}
+                  style={{
+                    flex: 1, padding: "8px", borderRadius: 10, fontSize: 12, fontWeight: 600, cursor: "pointer",
+                    background: q.question_type === type ? "rgba(15,98,254,0.15)" : "rgba(255,255,255,0.05)",
+                    border: `1.5px solid ${q.question_type === type ? "rgba(15,98,254,0.4)" : "rgba(255,255,255,0.08)"}`,
+                    color: q.question_type === type ? "#3B82F6" : "rgba(255,255,255,0.4)",
+                    transition: "all 0.2s"
+                  }}
+                >
+                  {type === "mcq" ? "Opción Múltiple" : "Código / Editor"}
+                </button>
+              ))}
+            </div>
+
             <div style={{ display: "flex", gap: 10, marginBottom: 14 }}>
               <div style={{ flex: 1 }}>
                 <label style={{ color: "rgba(255,255,255,0.4)", fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.06em", display: "flex", alignItems: "center", gap: 4, marginBottom: 6 }}><IconClock size={11} color="rgba(255,255,255,0.4)" /> Tiempo (seg)</label>
                 <select value={q.time_limit} onChange={e => updateQ(qi, "time_limit", Number(e.target.value))} style={{ width: "100%", padding: "10px 14px", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 10, color: "white", fontSize: 14, cursor: "pointer", outline: "none" }}>
-                  {[10, 15, 20, 25, 30, 45, 60].map(t => <option key={t} value={t} style={{ background: "#0a1428" }}>{t}s</option>)}
+                  {[10, 15, 20, 25, 30, 45, 60, 120, 300].map(t => <option key={t} value={t} style={{ background: "#0a1428" }}>{t >= 60 ? `${t/60}m` : `${t}s`}</option>)}
                 </select>
               </div>
               <div style={{ flex: 2 }}>
@@ -792,19 +811,35 @@ function CreateQuizForm({ onBack, onLaunch }: { onBack: () => void; onLaunch: (q
                 <input placeholder="https://ejemplo.com/imagen.png" value={q.image_url} onChange={e => updateQ(qi, "image_url", e.target.value)} style={{ width: "100%", padding: "10px 14px", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 10, color: "white", fontSize: 13, outline: "none" }} />
               </div>
             </div>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
-              {q.options.map((opt, oi) => {
-                const colors = ["rgba(15,98,254,0.2)", "rgba(5,150,105,0.2)", "rgba(232,93,74,0.2)", "rgba(245,166,35,0.2)"]
-                return (
-                  <div key={oi} style={{ background: opt.isCorrect ? "rgba(16,185,129,0.12)" : colors[oi], border: `2px solid ${opt.isCorrect ? "rgba(16,185,129,0.5)" : "rgba(255,255,255,0.06)"}`, borderRadius: 12, padding: "10px 12px", display: "flex", gap: 8, alignItems: "center" }}>
-                    <button onClick={() => setCorrect(qi, oi)} style={{ width: 20, height: 20, borderRadius: "50%", border: `2px solid ${opt.isCorrect ? "#10b981" : "rgba(255,255,255,0.2)"}`, background: opt.isCorrect ? "#10b981" : "transparent", cursor: "pointer", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                      {opt.isCorrect && <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="white" strokeWidth="1.8" strokeLinecap="round"/></svg>}
-                    </button>
-                    <input placeholder={`Opción ${["A","B","C","D"][oi]}`} value={opt.text} onChange={e => updateOpt(qi, oi, "text", e.target.value)} style={{ flex: 1, background: "transparent", border: "none", outline: "none", color: "white", fontSize: 13, fontWeight: 600 }} />
-                  </div>
-                )
-              })}
-            </div>
+
+            {q.question_type === "code" ? (
+              <div style={{ marginBottom: 4 }}>
+                <label style={{ color: "rgba(255,255,255,0.4)", fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.06em", display: "block", marginBottom: 6 }}>Código Inicial (opcional)</label>
+                <textarea
+                  placeholder="// Escribe el código base..."
+                  value={q.initial_code || ""}
+                  onChange={e => updateQ(qi, "initial_code", e.target.value)}
+                  style={{
+                    width: "100%", minHeight: 120, background: "rgba(10,20,40,0.5)", border: "1.5px solid rgba(255,255,255,0.1)",
+                    borderRadius: 12, padding: "12px", color: "#93c5fd", fontFamily: "monospace", fontSize: 13, outline: "none", resize: "vertical"
+                  }}
+                />
+              </div>
+            ) : (
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+                {q.options.map((opt, oi) => {
+                  const colors = ["rgba(15,98,254,0.2)", "rgba(5,150,105,0.2)", "rgba(232,93,74,0.2)", "rgba(245,166,35,0.2)"]
+                  return (
+                    <div key={oi} style={{ background: opt.isCorrect ? "rgba(16,185,129,0.12)" : colors[oi], border: `2px solid ${opt.isCorrect ? "rgba(16,185,129,0.5)" : "rgba(255,255,255,0.06)"}`, borderRadius: 12, padding: "10px 12px", display: "flex", gap: 8, alignItems: "center" }}>
+                      <button onClick={() => setCorrect(qi, oi)} style={{ width: 20, height: 20, borderRadius: "50%", border: `2px solid ${opt.isCorrect ? "#10b981" : "rgba(255,255,255,0.2)"}`, background: opt.isCorrect ? "#10b981" : "transparent", cursor: "pointer", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                        {opt.isCorrect && <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="white" strokeWidth="1.8" strokeLinecap="round"/></svg>}
+                      </button>
+                      <input placeholder={`Opción ${["A","B","C","D"][oi]}`} value={opt.text} onChange={e => updateOpt(qi, oi, "text", e.target.value)} style={{ flex: 1, background: "transparent", border: "none", outline: "none", color: "white", fontSize: 13, fontWeight: 600 }} />
+                    </div>
+                  )
+                })}
+              </div>
+            )}
           </div>
         ))}
 

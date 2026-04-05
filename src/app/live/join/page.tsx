@@ -313,7 +313,7 @@ export default function JoinPage() {
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.25 }}
               >
-                {step === "pin" ? "Únete al quiz" : `¡Hola, ${nickname || "jugador"}!`}
+                {step === "pin" ? "Únete a Bizen Live" : `¡Hola, ${nickname || "jugador"}!`}
               </motion.h1>
             </AnimatePresence>
             <AnimatePresence mode="wait">
@@ -325,7 +325,7 @@ export default function JoinPage() {
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.2 }}
               >
-                {step === "pin" ? "Ingresa el PIN de 6 dígitos que te dio tu profesor" : "Elige tu avatar y confirma tu nombre"}
+                {step === "pin" ? "Ingresa el PIN de 6 dígitos que te compartieron" : "Elige tu avatar y confirma tu nombre"}
               </motion.p>
             </AnimatePresence>
           </motion.div>
@@ -423,7 +423,7 @@ export default function JoinPage() {
                 </motion.button>
 
                 <p style={{ textAlign: "center", marginTop: 20, color: "rgba(255,255,255,0.25)", fontSize: 13 }}>
-                  El PIN lo da tu profesor antes del quiz
+                  El PIN lo da el anfitrión antes de iniciar
                 </p>
               </motion.div>
             )}
@@ -520,7 +520,7 @@ export default function JoinPage() {
                       <motion.span animate={{ rotate: 360 }} transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }} style={{ display: "inline-flex" }}><IconBolt size={16} color="white" /></motion.span>
                       Uniéndome...
                     </span>
-                  ) : <span style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}><IconGamepad size={18} color="white" /> ¡Entrar al quiz!</span>}
+                  ) : <span style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}><IconGamepad size={18} color="white" /> ¡Entrar a Bizen Live!</span>}
                 </motion.button>
 
                 <button

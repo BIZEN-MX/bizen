@@ -20,6 +20,7 @@ interface Question {
   time_limit: number
   points_base: number
   image_url?: string
+  initial_code?: string
 }
 
 interface LeaderEntry {
@@ -55,12 +56,13 @@ function PlayPageContent() {
 
   // Session state (from Supabase Realtime)
   const [gameStatus, setGameStatus] = useState<GameStatus>("loading")
-  const [sessionTitle, setSessionTitle] = useState("Quiz en vivo")
+  const [sessionTitle, setSessionTitle] = useState("Bizen Live")
   const [participants, setParticipants] = useState<any[]>([])
   const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null)
   const [questionIndex, setQuestionIndex] = useState(0)
   const [totalQuestions, setTotalQuestions] = useState(0)
   const [allQuestions, setAllQuestions] = useState<Question[]>([])
+  const [code, setCode] = useState("")
 
   // Player answer state
   const [selectedOptionId, setSelectedOptionId] = useState<string | null>(null)
@@ -195,6 +197,7 @@ function PlayPageContent() {
               setSelectedOptionId(null)
               setHasAnswered(false)
               setAnswerResult(null)
+              setCode(q.initial_code || "")
               answerStartTimeRef.current = Date.now()
             }
           }
@@ -346,7 +349,7 @@ function PlayPageContent() {
     return (
       <div style={{ minHeight: "100dvh", background: "linear-gradient(180deg, #08112a 0%, #0a1632 100%)", display: "flex", flexDirection: "column", alignItems: "center", padding: "48px 24px 32px", marginLeft: sidebarOffset, transition: "margin-left 0.3s ease" }}>
         <div style={{ textAlign: "center", marginBottom: 32, width: "100%", maxWidth: 400 }}>
-          <p style={{ color: "rgba(255,255,255,0.4)", fontSize: 12, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 8 }}>PIN del quiz</p>
+          <p style={{ color: "rgba(255,255,255,0.4)", fontSize: 12, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 8 }}>PIN de Bizen Live</p>
           <div style={{ fontSize: 52, fontWeight: 900, color: "white", letterSpacing: "0.12em", textShadow: "0 0 40px rgba(15,98,254,0.5)" }}>
             {sessionId ? "······" : "------"}
           </div>
@@ -452,53 +455,110 @@ function PlayPageContent() {
           </p>
         </div>
 
-        {/* Answer buttons */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, padding: "0 20px", flex: 1, alignContent: "start" }}>
-          {currentQuestion.options.map((opt, i) => {
-            const color = ANSWER_COLORS[i % 4]
-            const shape = ANSWER_SHAPES[i % 4]
-            const isSelected = selectedOptionId === opt.id
-            const showCorrect = hasAnswered && answerResult && opt.id === answerResult.correctOptionId
-            const showWrong = hasAnswered && isSelected && !answerResult?.isCorrect
-            let filterStyle = "none"
-            if (hasAnswered && !isSelected && opt.id !== answerResult?.correctOptionId) filterStyle = "brightness(0.4) saturate(0)"
-
-            return (
-              <motion.button
-                key={opt.id}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: i * 0.06, type: "spring", stiffness: 400 }}
-                onClick={() => handleOptionClick(opt.id)}
-                disabled={hasAnswered}
+        {/* Question Content: Code or MCQ */}
+        <div style={{ padding: "0 20px", flex: 1, display: "flex", flexDirection: "column" }}>
+          {currentQuestion.question_type === "code" ? (
+            <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 12 }}>
+              <div style={{ flex: 1, position: "relative", minHeight: 200 }}>
+                <textarea
+                  value={code}
+                  onChange={(e) => setCode(e.target.value)}
+                  disabled={hasAnswered}
+                  placeholder="// Escribe tu código aquí..."
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    background: "#0d1b36",
+                    border: "1.5px solid rgba(15, 98, 254, 0.3)",
+                    borderRadius: 16,
+                    padding: "20px",
+                    color: "#93c5fd",
+                    fontFamily: "'Fira Code', 'Monaco', 'Consolas', monospace",
+                    fontSize: 14,
+                    outline: "none",
+                    resize: "none",
+                    boxShadow: "inset 0 4px 12px rgba(0,0,0,0.4)",
+                    lineHeight: 1.6
+                  }}
+                />
+                <div style={{ position: "absolute", bottom: 12, right: 12, pointerEvents: "none", color: "rgba(15, 98, 254, 0.4)", fontSize: 11, fontWeight: 700, textTransform: "uppercase" }}>
+                  Bizen Code Editor
+                </div>
+              </div>
+              
+              <button
+                onClick={() => submitAnswer(code)}
+                disabled={hasAnswered || !code.trim()}
                 style={{
-                  border: showCorrect ? "3px solid #34d399" : showWrong ? "3px solid #ef4444" : "2px solid transparent",
-                  borderRadius: 20,
-                  padding: "20px 16px",
+                  width: "100%",
+                  padding: "16px",
+                  background: (hasAnswered || !code.trim()) ? "rgba(255,255,255,0.06)" : "linear-gradient(135deg, #0056E7, #1983FD)",
+                  border: "none",
+                  borderRadius: 16,
+                  color: "white",
+                  fontSize: 15,
+                  fontWeight: 700,
+                  cursor: (hasAnswered || !code.trim()) ? "not-allowed" : "pointer",
+                  boxShadow: (hasAnswered || !code.trim()) ? "none" : "0 8px 24px rgba(0,86,231,0.4)",
                   display: "flex",
-                  flexDirection: "column",
                   alignItems: "center",
-                  gap: 10,
-                  cursor: hasAnswered ? "default" : "pointer",
-                  background: color.bg,
-                  boxShadow: hasAnswered ? "none" : `0 6px 20px ${color.shadow}`,
-                  minHeight: 110,
                   justifyContent: "center",
-                  transform: hasAnswered && !isSelected && opt.id !== answerResult?.correctOptionId ? "scale(0.95)" : "scale(1)",
-                  filter: filterStyle,
-                  transition: "all 0.3s ease",
-                  outline: "none",
+                  gap: 8,
+                  transition: "all 0.3s ease"
                 }}
               >
-                <span style={{ fontSize: 24, color: "white", filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.4))" }}>
-                  {showCorrect ? <IconCheck size={24} /> : showWrong ? <IconX size={24} /> : shape}
-                </span>
-                <span style={{ color: "white", fontSize: 13, fontWeight: 700, textAlign: "center", lineHeight: 1.3, textShadow: "0 1px 2px rgba(0,0,0,0.3)" }}>
-                  {opt.text}
-                </span>
-              </motion.button>
-            )
-          })}
+                {hasAnswered ? <><IconCheck size={18} /> Código enviado</> : <><IconBolt size={18} /> Enviar código</>}
+              </button>
+            </div>
+          ) : (
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, flex: 1, alignContent: "start" }}>
+              {currentQuestion.options.map((opt, i) => {
+                const color = ANSWER_COLORS[i % 4]
+                const shape = ANSWER_SHAPES[i % 4]
+                const isSelected = selectedOptionId === opt.id
+                const showCorrect = hasAnswered && answerResult && opt.id === answerResult.correctOptionId
+                const showWrong = hasAnswered && isSelected && !answerResult?.isCorrect
+                let filterStyle = "none"
+                if (hasAnswered && !isSelected && opt.id !== answerResult?.correctOptionId) filterStyle = "brightness(0.4) saturate(0)"
+
+                return (
+                  <motion.button
+                    key={opt.id}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: i * 0.06, type: "spring", stiffness: 400 }}
+                    onClick={() => handleOptionClick(opt.id)}
+                    disabled={hasAnswered}
+                    style={{
+                      border: showCorrect ? "3px solid #34d399" : showWrong ? "3px solid #ef4444" : "2px solid transparent",
+                      borderRadius: 20,
+                      padding: "20px 16px",
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      gap: 10,
+                      cursor: hasAnswered ? "default" : "pointer",
+                      background: color.bg,
+                      boxShadow: hasAnswered ? "none" : `0 6px 20px ${color.shadow}`,
+                      minHeight: 110,
+                      justifyContent: "center",
+                      transform: hasAnswered && !isSelected && opt.id !== answerResult?.correctOptionId ? "scale(0.95)" : "scale(1)",
+                      filter: filterStyle,
+                      transition: "all 0.3s ease",
+                      outline: "none",
+                    }}
+                  >
+                    <span style={{ fontSize: 24, color: "white", filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.4))" }}>
+                      {showCorrect ? <IconCheck size={24} /> : showWrong ? <IconX size={24} /> : shape}
+                    </span>
+                    <span style={{ color: "white", fontSize: 13, fontWeight: 700, textAlign: "center", lineHeight: 1.3, textShadow: "0 1px 2px rgba(0,0,0,0.3)" }}>
+                      {opt.text}
+                    </span>
+                  </motion.button>
+                )
+              })}
+            </div>
+          )}
         </div>
 
         {/* Answered banner */}
@@ -614,7 +674,7 @@ function PlayPageContent() {
         <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", stiffness: 400 }} style={{ display: "flex", justifyContent: "center", marginBottom: 24 }}>
           <IconTrophy size={80} color="#fbbf24" />
         </motion.div>
-        <h1 style={{ color: "white", fontSize: 32, fontWeight: 900, marginBottom: 8 }}>¡Quiz terminado!</h1>
+        <h1 style={{ color: "white", fontSize: 32, fontWeight: 900, marginBottom: 8 }}>¡Sesión terminada!</h1>
         <p style={{ color: "#fbbf24", fontSize: 22, fontWeight: 800, marginBottom: 4 }}>
           Posición final: {myRank ? `${myRank}°` : "—"}
         </p>
