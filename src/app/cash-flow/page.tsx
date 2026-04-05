@@ -328,9 +328,9 @@ export default function CombinedSimulatorsPage() {
         <main className="simulador-main" style={{
           position: "relative",
           zIndex: 1,
-          padding: "clamp(24px, 4vw, 56px) clamp(16px, 4vw, 56px)",
-          maxWidth: "1800px",
-          margin: "0 auto",
+          padding: "clamp(24px, 4vw, 56px) 24px",
+          maxWidth: "100%",
+          margin: "0",
           width: "100%",
           boxSizing: "border-box"
         }}>
