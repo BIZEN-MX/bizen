@@ -2,6 +2,7 @@
 
 import React, { useState, useMemo, useRef, useEffect, useCallback } from "react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
 import { 
   ArrowLeft, Plus, Trash2, Sparkles, TrendingUp, TrendingDown, 
@@ -113,6 +114,7 @@ function SpreadsheetRow({
 // ─── Main Page ────────────────────────────────────────────────────────────────
 
 export default function AdvancedBudgetPage() {
+  const router = useRouter()
   const [income, setIncome] = useState<LineItem[]>([
     { id: uid(), label: "Salario Neto", amount: 15000 },
     { id: uid(), label: "Freelance", amount: 3000 },
@@ -127,7 +129,7 @@ export default function AdvancedBudgetPage() {
 
   const [aiAnalysis, setAiAnalysis] = useState("")
   const [aiLoading, setAiLoading] = useState(false)
-  const [aiAction, setAiAction] = useState<"analyze" | "forecast" | null>(null)
+  const [aiAction, setAiAction] = useState<"analyze" | null>(null)
   const analysisRef = useRef<HTMLDivElement>(null)
 
   const { user } = useAuth()
@@ -213,7 +215,7 @@ export default function AdvancedBudgetPage() {
     setter(list.filter(i => i.id !== id))
   }
 
-  const runAi = async (action: "analyze" | "forecast") => {
+  const runAi = async (action: "analyze") => {
     setAiLoading(true)
     setAiAction(action)
     setAiAnalysis("")
@@ -281,12 +283,12 @@ export default function AdvancedBudgetPage() {
       <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-slate-200/60">
         <div className="max-w-[1440px] mx-auto px-6 py-4 flex items-center justify-between gap-4">
           <div className="flex items-center gap-5">
-            <Link 
-              href="/dashboard" 
+            <button 
+              onClick={() => router.back()}
               className="p-2.5 rounded-xl border border-transparent hover:border-slate-200 hover:bg-slate-50 text-slate-400 hover:text-primary transition-all duration-200"
             >
               <ArrowLeft size={20} />
-            </Link>
+            </button>
 
             <div className="flex items-center gap-4">
               <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-primary to-[#1983FD] flex items-center justify-center shadow-lg shadow-primary/20">
@@ -328,14 +330,7 @@ export default function AdvancedBudgetPage() {
               <span>{aiLoading && aiAction === "analyze" ? "Billy pensando..." : "Analizar con IA"}</span>
             </PremiumButton>
 
-            <PremiumButton 
-              variant="primary"
-              onClick={() => runAi("forecast")}
-              disabled={aiLoading}
-              size="md"
-            >
-              <TrendingUp size={16} /> <span>Billy Forecast</span>
-            </PremiumButton>
+
           </div>
         </div>
       </header>
@@ -439,7 +434,7 @@ export default function AdvancedBudgetPage() {
                   </div>
                   <div>
                     <h3 className="text-[17px] font-bold text-white mb-0.5">
-                      {aiAction === "forecast" ? "Billy's Forecast" : "Análisis de Billy IA"}
+                      Análisis de Billy IA
                     </h3>
                     <div className="flex items-center gap-2">
                       <Badge variant="outline" className="bg-primary/10 border-primary/20 text-blue-400 py-0 h-5 px-1.5 text-[10px]">GEMINI PRO</Badge>

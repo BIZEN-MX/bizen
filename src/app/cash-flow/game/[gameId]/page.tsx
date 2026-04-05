@@ -1050,7 +1050,7 @@ export default function CashFlowGamePage() {
             >
               {/* EXIT BUTTON */}
               <button 
-                onClick={() => router.push("/dashboard")}
+                onClick={() => router.back()}
                 style={{ 
                   position: "absolute", 
                   top: 16, 

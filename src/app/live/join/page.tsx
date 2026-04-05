@@ -222,7 +222,7 @@ export default function JoinPage() {
           animate={{ opacity: 1, x: 0 }}
           whileHover={{ scale: 1.05, background: "rgba(255,255,255,0.12)" }}
           whileTap={{ scale: 0.95 }}
-          onClick={() => router.push("/dashboard")}
+          onClick={() => router.back()}
           style={{
             position: "fixed", 
             top: "clamp(16px, 4vw, 32px)", 
@@ -425,6 +425,26 @@ export default function JoinPage() {
                 <p style={{ textAlign: "center", marginTop: 20, color: "rgba(255,255,255,0.25)", fontSize: 13 }}>
                   El PIN lo da el anfitrión antes de iniciar
                 </p>
+
+                <div style={{ marginTop: 40, paddingTop: 32, borderTop: "1.5px solid rgba(255,255,255,0.06)", textAlign: "center" }}>
+                  <p style={{ color: "rgba(255,255,255,0.3)", fontSize: 13, marginBottom: 16 }}>¿Quieres ser el anfitrión?</p>
+                  <button 
+                    onClick={() => router.push("/live/host")}
+                    style={{
+                      background: "rgba(255,255,255,0.06)",
+                      border: "1px solid rgba(255,255,255,0.12)",
+                      padding: "12px 24px",
+                      borderRadius: 14,
+                      color: "white",
+                      fontSize: 14,
+                      fontWeight: 600,
+                      cursor: "pointer",
+                      transition: "all 0.2s"
+                    }}
+                  >
+                    🚀 Crear Nueva Sesión
+                  </button>
+                </div>
               </motion.div>
             )}
 

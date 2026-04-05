@@ -220,7 +220,7 @@ export default function InvestmentsPage() {
         <header style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 50 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
             <button 
-              onClick={() => router.push("/dashboard")}
+              onClick={() => router.back()}
               style={{ width: 48, height: 48, borderRadius: 16, background: "rgba(255,255,255,0.05)", border: "1.5px solid rgba(255,255,255,0.1)", color: "white", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", transition: "all 0.2s" }}
               onMouseEnter={e => e.currentTarget.style.background = "rgba(15, 98, 254, 0.2)"}
               onMouseLeave={e => e.currentTarget.style.background = "rgba(255,255,255,0.05)"}
@@ -275,7 +275,7 @@ export default function InvestmentsPage() {
 
               <div style={{ display: "flex", gap: 16 }}>
                 <button 
-                  onClick={() => router.push("/dashboard")}
+                  onClick={() => router.back()}
                   style={{ flex: 1, padding: "20px", borderRadius: 20, background: "white", color: "#0a0f2e", border: "none", fontSize: 16, fontWeight: 800, cursor: "pointer" }}
                 >
                   Volver al Dashboard

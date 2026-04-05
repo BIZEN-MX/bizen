@@ -89,7 +89,7 @@ export default function NewsPage() {
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 40, flexWrap: "wrap", gap: 20 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
             <button 
-              onClick={() => router.push("/dashboard")}
+              onClick={() => router.back()}
               style={{ 
                 width: 44, 
                 height: 44, 

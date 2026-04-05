@@ -149,7 +149,7 @@ export default function HistorialDeCuentaPage() {
         }}>
           <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
             <button 
-              onClick={() => router.push("/dashboard")}
+              onClick={() => router.back()}
               style={{ 
                 width: 48, 
                 height: 48, 

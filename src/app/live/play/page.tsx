@@ -704,10 +704,10 @@ function PlayPageContent() {
         </div>
 
         <button
-          onClick={() => router.push("/dashboard")}
+          onClick={() => router.back()}
           style={{ marginTop: 32, padding: "16px 32px", background: "linear-gradient(135deg, #0056E7, #1983FD)", border: "none", borderRadius: 16, color: "white", fontSize: 16, fontWeight: 700, cursor: "pointer", boxShadow: "0 8px 24px rgba(0,86,231,0.35)" }}
         >
-          Ir al dashboard →
+          Finalizar y Volver
         </button>
       </div>
     )

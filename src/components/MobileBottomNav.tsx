@@ -108,9 +108,9 @@ export default function MobileBottomNav() {
     },
     {
       id: "teacher-live",
-      label: "Lanzar Live",
+      label: "Bizen Live",
       icon: Zap,
-      path: "/live/host",
+      path: "/live/join",
       protected: true
     }
   ]
@@ -132,9 +132,9 @@ export default function MobileBottomNav() {
     ...(isStudentOrGuest ? [
       {
         id: 'live',
-        label: canHostLive ? 'Lanzar Live' : 'BIZEN Live',
+        label: 'Bizen Live',
         icon: Zap,
-        path: canHostLive ? '/live/host' : '/live/join',
+        path: '/live/join',
         protected: false
       },
       {

@@ -173,7 +173,7 @@ export default function BillyLabPage() {
                 Has completado tu Laboratorio Billy Delta. Tu perfil matemático ha sido actualizado con los nuevos datos de esta sesión.
               </p>
               <button 
-                onClick={() => router.push("/dashboard")}
+                onClick={() => router.back()}
                 style={{ background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)", padding: "16px 32px", borderRadius: 12, color: "#fff", fontWeight: 500, cursor: "pointer" }}
               >
                 Volver al Dashboard

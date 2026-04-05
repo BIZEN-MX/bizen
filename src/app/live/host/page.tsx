@@ -324,14 +324,14 @@ export default function HostPage() {
         {/* Top nav */}
         <div style={{ padding: "20px 32px 0", display: "flex", alignItems: "center", gap: 12 }}>
           <button 
-            onClick={() => router.push(isAdminOrTeacher ? "/teacher/dashboard" : "/dashboard")} 
+            onClick={() => router.back()} 
             style={{ 
               background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", 
               borderRadius: 10, padding: "8px 16px", color: "rgba(255,255,255,0.5)", 
               fontSize: 13, cursor: "pointer", display: "flex", alignItems: "center", gap: 6 
             }}
           >
-            ← {isAdminOrTeacher ? "Volver al panel docente" : "Volver a Inicio"}
+            ← Volver
           </button>
           
           <button 
@@ -701,7 +701,7 @@ export default function HostPage() {
           <button onClick={() => { setSaveTitle(sessionTitle); setSaveModalOpen(true) }} style={{ padding: "14px 28px", background: "linear-gradient(135deg, #0d2a6b, #1a56db)", border: "none", borderRadius: 14, color: "white", fontWeight: 600, cursor: "pointer", boxShadow: "0 6px 20px rgba(15,98,254,0.35)", display: "flex", alignItems: "center", gap: 8 }}>
             <IconEdit size={15} color="white" /> Guardar como plantilla
           </button>
-          <button onClick={() => router.push("/teacher/dashboard")} style={{ padding: "14px 28px", background: "linear-gradient(135deg, #0056E7, #1983FD)", border: "none", borderRadius: 14, color: "white", fontWeight: 700, cursor: "pointer", boxShadow: "0 6px 20px rgba(0,86,231,0.35)" }}>Ir al panel →</button>
+          <button onClick={() => router.back()} style={{ padding: "14px 28px", background: "linear-gradient(135deg, #0056E7, #1983FD)", border: "none", borderRadius: 14, color: "white", fontWeight: 700, cursor: "pointer", boxShadow: "0 6px 20px rgba(0,86,231,0.35)" }}>Finalizar y Volver</button>
         </div>
         {/* Save Template Modal */}
         {saveModalOpen && (

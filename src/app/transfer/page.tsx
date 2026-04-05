@@ -168,7 +168,7 @@ function TransferContent() {
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
           <button 
-            onClick={() => step === "amount" ? setStep("search") : router.push("/dashboard")}
+            onClick={() => step === "amount" ? setStep("search") : router.back()}
             style={{ 
               width: 44, 
               height: 44, 
@@ -411,7 +411,7 @@ function TransferContent() {
                 
                 <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
                   <button 
-                    onClick={() => router.push("/dashboard")}
+                    onClick={() => router.back()}
                     style={{ 
                       width: "100%", 
                       padding: "20px", 

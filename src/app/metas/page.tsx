@@ -92,7 +92,7 @@ export default function SavingsGoalsPage() {
           <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
             <motion.div 
               whileHover={{ x: -4 }}
-              onClick={() => router.push("/dashboard")}
+              onClick={() => router.back()}
               style={{ width: 44, height: 44, borderRadius: 14, background: "white", border: "1.5px solid #e2e8f0", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}
             >
               <ArrowLeft size={20} color="#64748b" />
