@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { createSupabaseServer } from "@/lib/supabase/server"
-import { PrismaClient } from "@prisma/client"
-
-const prisma = new PrismaClient()
+import { prisma } from "@/lib/prisma"
 
 export async function GET() {
   try {
@@ -43,8 +41,6 @@ export async function GET() {
   } catch (error) {
     console.error("Error fetching notifications:", error)
     return NextResponse.json({ error: "Failed to fetch notifications" }, { status: 500 })
-  } finally {
-    await prisma.$disconnect()
   }
 }
 
@@ -90,8 +86,6 @@ export async function PATCH(request: NextRequest) {
   } catch (error) {
     console.error("Error updating notifications:", error)
     return NextResponse.json({ error: "Failed to update notifications" }, { status: 500 })
-  } finally {
-    await prisma.$disconnect()
   }
 }
 
