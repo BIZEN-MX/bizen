@@ -61,7 +61,6 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "Failed to fetch bookmarks" }, { status: 500 })
   }
 }
-}
 
 export async function POST(request: NextRequest) {
   if (!prisma) {
@@ -115,7 +114,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Failed to bookmark", details: errorMessage }, { status: 500 })
   }
 }
-}
 
 export async function DELETE(request: NextRequest) {
   if (!prisma) {
@@ -150,3 +148,5 @@ export async function DELETE(request: NextRequest) {
   } catch (error) {
     console.error("Error removing bookmark:", error)
     return NextResponse.json({ error: "Failed to remove bookmark" }, { status: 500 })
+  }
+}

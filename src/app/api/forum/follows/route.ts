@@ -58,7 +58,6 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "Failed to fetch followed threads" }, { status: 500 })
   }
 }
-}
 
 export async function POST(request: NextRequest) {
   if (!prisma) {
@@ -114,7 +113,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Failed to follow", details: errorMessage }, { status: 500 })
   }
 }
-}
 
 export async function DELETE(request: NextRequest) {
   if (!prisma) {
@@ -149,3 +147,5 @@ export async function DELETE(request: NextRequest) {
   } catch (error) {
     console.error("Error unfollowing:", error)
     return NextResponse.json({ error: "Failed to unfollow" }, { status: 500 })
+  }
+}
