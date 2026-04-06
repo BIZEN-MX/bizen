@@ -612,8 +612,10 @@ function StockSimulatorContent() {
     if (typeof document !== "undefined") {
       if (orderForm.symbol) {
         document.body.style.overflow = "hidden";
+        document.documentElement.style.overflow = "hidden";
       } else {
         document.body.style.overflow = "";
+        document.documentElement.style.overflow = "";
       }
     }
   }, [orderForm.symbol]);
@@ -937,6 +939,15 @@ function StockSimulatorContent() {
         @keyframes staggerFadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
         @keyframes numberGlow { 0%,100%{opacity:1} 50%{opacity:0.6;filter:brightness(1.3)} }
         @keyframes ticker { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+        @keyframes tickerScroll { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+        .bizen-ticker-track { animation: tickerScroll 60s linear infinite; display:flex; gap:0; will-change:transform; }
+        .bizen-ticker-track:hover { animation-play-state: paused; }
+        .bizen-ticker-bar { overflow:hidden; position:relative; }
+        .bizen-ticker-bar::before, .bizen-ticker-bar::after {
+          content:''; position:absolute; top:0; bottom:0; width:48px; z-index:2; pointer-events:none;
+        }
+        .bizen-ticker-bar::before { left:0;  background: linear-gradient(to right,  #0B1E5E, transparent); }
+        .bizen-ticker-bar::after  { right:0; background: linear-gradient(to left,   #0B1E5E, transparent); }
 
         /* Price flash: green up */
         @keyframes priceUp {
@@ -1154,6 +1165,59 @@ function StockSimulatorContent() {
         .neon-cyan-card   { border: 1px solid #00e5ff !important; box-shadow: 0 4px 12px rgba(0,229,255,0.1); }
 
       `}</style>
+
+      {/* ══ TICKER BAR ══════════════════════════════════════════ */}
+      <div
+        className="bizen-ticker-bar"
+        style={{
+          background: "#0B1E5E",
+          height: 34,
+          display: "flex",
+          alignItems: "center",
+          borderBottom: "1px solid rgba(255,255,255,0.08)",
+          userSelect: "none",
+        }}
+      >
+        <div className="bizen-ticker-track" style={{ display: "flex", alignItems: "center" }}>
+          {[...processedMarketData, ...processedMarketData].map((s: any, i: number) => {
+            const chg = s.changePercent ?? 0;
+            const up = chg >= 0;
+            return (
+              <div
+                key={i}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 7,
+                  padding: "0 20px",
+                  borderRight: "1px solid rgba(255,255,255,0.07)",
+                  whiteSpace: "nowrap" as const,
+                  height: 34,
+                }}
+              >
+                <span style={{ fontSize: 11, fontWeight: 800, color: "rgba(255,255,255,0.9)", fontFamily: "'JetBrains Mono',monospace", letterSpacing: "0.04em" }}>
+                  {s.symbol}
+                </span>
+                <span style={{ fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.6)", fontFamily: "'JetBrains Mono',monospace", letterSpacing: "0.02em" }}>
+                  {s.price?.toFixed(0) ?? "—"}
+                </span>
+                <span style={{
+                  fontSize: 10,
+                  fontWeight: 700,
+                  color: up ? "#34d399" : "#f87171",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 2,
+                  fontFamily: "'JetBrains Mono',monospace",
+                }}>
+                  {up ? "▲" : "▼"}{Math.abs(chg).toFixed(2)}%
+                </span>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+      {/* ══ END TICKER BAR ══════════════════════════════════════ */}
 
       <div
         className="bizen-market-outer dot-grid-bg"
@@ -2544,8 +2608,8 @@ function StockSimulatorContent() {
                         position: "fixed",
                         top: 0,
                         left: 0,
-                        right: 0,
-                        bottom: 0,
+                        width: "100vw",
+                        height: "100dvh",
                         backgroundColor: "rgba(11, 30, 94, 0.4)",
                         backdropFilter: "blur(8px)",
                         zIndex: 99999,
@@ -2553,6 +2617,8 @@ function StockSimulatorContent() {
                         alignItems: "center",
                         justifyContent: "center",
                         padding: 0,
+                        margin: 0,
+                        overflow: "hidden",
                       }}
                       onClick={() => setOrderForm((f) => ({ ...f, symbol: "" }))}
                     >
@@ -2564,12 +2630,14 @@ function StockSimulatorContent() {
                         exit={{ opacity: 0, x: 40 }}
                         transition={{ type: "spring", stiffness: 280, damping: 30 }}
                         style={{
-                          width: "100%",
-                          height: "100%",
+                          width: "100vw",
+                          height: "100dvh",
+                          maxHeight: "100dvh",
                           background: "#060d1f",
                           display: "flex",
                           overflow: "hidden",
                           position: "relative",
+                          margin: 0,
                         }}
                         onClick={(e) => e.stopPropagation()}
                       >

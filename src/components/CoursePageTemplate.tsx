@@ -318,16 +318,31 @@ export default function CoursePageTemplate({
     const nextTopic = !isNaN(topicNum) ? ALL_TOPICS.find((t) => t.id === topicNum + 1) : null
 
     return (
-        <div style={{ position: "relative", width: "100%", maxWidth: "none", flex: 1, background: "#FBFAF5", boxSizing: "border-box" }}>
+        <div className="course-topic-page-layout courses-page-active font-educational" style={{
+            position: "relative",
+            top: 0,
+            left: 0,
+            width: "100%",
+            maxWidth: "100%",
+            flex: 1,
+            background: "#FBFAF5",
+            overflow: "visible",
+            boxSizing: "border-box",
+            marginBottom: 0,
+            margin: 0,
+            paddingTop: "84px", // Replaces AppLayout top padding
+            paddingBottom: 0,
+            paddingLeft: 0,
+            paddingRight: 0,
+        }}>
             {/* Decorative orbs (match /courses) */}
             <div style={{ position: "fixed", top: "10%", right: "6%", width: 350, height: 350, background: "radial-gradient(circle, rgba(59,130,246,0.18) 0%, transparent 70%)", borderRadius: "50%", filter: "blur(60px)", pointerEvents: "none", zIndex: 0 }} />
             <div style={{ position: "fixed", bottom: "10%", left: "5%", width: 400, height: 400, background: "radial-gradient(circle, rgba(34,197,94,0.12) 0%, transparent 70%)", borderRadius: "50%", filter: "blur(70px)", pointerEvents: "none", zIndex: 0 }} />
 
-            <main
+            <div
                 className="courses-main-content"
                 style={{
-                    flex: 1,
-                    paddingTop: "84px", // Compensates for the extracted frame
+                    paddingTop: "0",
                     paddingBottom: "clamp(40px, 8vw, 80px)",
                     paddingLeft: "0",
                     paddingRight: "0",
@@ -336,10 +351,10 @@ export default function CoursePageTemplate({
                     display: "flex",
                     flexDirection: "column",
                     justifyContent: "flex-start",
-                    alignItems: "stretch", // Use full width available
+                    alignItems: "stretch", // Stretch to truly fill width
+                    marginBottom: 0,
                     boxSizing: "border-box",
-                    width: "100%",
-                    zIndex: 1,
+                    width: "100%"
                 }}
             >
                 <div style={{ width: "100%", maxWidth: "none", margin: "0", position: "relative", zIndex: 1, padding: 0, boxSizing: "border-box", display: "flex", flexDirection: "column", alignItems: "stretch", gap: 0 }}>
@@ -885,7 +900,7 @@ export default function CoursePageTemplate({
                         })}
                     </div>
                 </div>
-            </main>
+            </div>
 
             {/* Modal removed as requested */}
 
