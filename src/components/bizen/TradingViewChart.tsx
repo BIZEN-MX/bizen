@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useMemo } from 'react';
+import React, { useEffect, useRef, useMemo, useState } from 'react';
 import { createChart, ColorType, CrosshairMode, CandlestickSeries, AreaSeries, LineSeries } from 'lightweight-charts';
 
 interface TVChartProps {
@@ -11,6 +11,8 @@ interface TVChartProps {
 export default function TradingViewChart({ data, chartType, showSMA, showEMA }: TVChartProps) {
   const chartContainerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<any>(null);
+  const seriesRef = useRef<any>(null);
+  const [lastLivePrice, setLastLivePrice] = useState<number | null>(null);
 
   // Process data for TV
   const { mainSeriesData, smaData, emaData } = useMemo(() => {
@@ -19,10 +21,7 @@ export default function TradingViewChart({ data, chartType, showSMA, showEMA }: 
     const ema: any[] = [];
 
     data.forEach((d, i) => {
-      // time must be YYYY-MM-DD or unix timestamp
-      // Assuming d.date is 'YYYY-MM-DD' or similar string/number representation.
       const time = d.date;
-
       const closeVal = d.bizcoins;
       const prevVal = i > 0 ? data[i - 1].bizcoins : closeVal * 0.999;
       
@@ -43,10 +42,10 @@ export default function TradingViewChart({ data, chartType, showSMA, showEMA }: 
     return { mainSeriesData: main, smaData: sma, emaData: ema };
   }, [data, chartType]);
 
+  // Initial chart setup
   useEffect(() => {
     if (!chartContainerRef.current) return;
 
-    // Remove existing chart on re-init
     if (chartRef.current) {
         chartRef.current.remove();
         chartRef.current = null;
@@ -66,6 +65,7 @@ export default function TradingViewChart({ data, chartType, showSMA, showEMA }: 
       },
       rightPriceScale: {
         borderColor: 'rgba(255, 255, 255, 0.1)',
+        autoScale: true,
       },
       timeScale: {
         borderColor: 'rgba(255, 255, 255, 0.1)',
@@ -77,43 +77,27 @@ export default function TradingViewChart({ data, chartType, showSMA, showEMA }: 
     chartRef.current = chart;
 
     let mainSeries: any;
-
     if (chartType === "candle") {
       mainSeries = chart.addSeries(CandlestickSeries, {
-        upColor: '#10b981',
-        downColor: '#ef4444',
-        borderVisible: false,
-        wickUpColor: '#10b981',
-        wickDownColor: '#ef4444',
+        upColor: '#10b981', downColor: '#ef4444', borderVisible: false,
+        wickUpColor: '#10b981', wickDownColor: '#ef4444',
       });
-      mainSeries.setData(mainSeriesData);
     } else {
       mainSeries = chart.addSeries(AreaSeries, {
-        lineColor: '#10b981',
-        topColor: 'rgba(16, 185, 129, 0.25)',
-        bottomColor: 'rgba(16, 185, 129, 0.0)',
-        lineWidth: 2,
+        lineColor: '#10b981', topColor: 'rgba(16, 185, 129, 0.25)',
+        bottomColor: 'rgba(16, 185, 129, 0.0)', lineWidth: 2,
       });
-      mainSeries.setData(mainSeriesData);
     }
+    mainSeries.setData(mainSeriesData);
+    seriesRef.current = mainSeries;
 
-    // Add Indicators
+    // Indicators
     if (showSMA) {
-      const smaSeries = chart.addSeries(LineSeries, {
-        color: '#fbbf24',
-        lineWidth: 1.5,
-        lineStyle: 1, // Dotted
-        crosshairMarkerVisible: false,
-      });
+      const smaSeries = chart.addSeries(LineSeries, { color: '#fbbf24', lineWidth: 1.5, lineStyle: 1, crosshairMarkerVisible: false });
       smaSeries.setData(smaData);
     }
-
     if (showEMA) {
-      const emaSeries = chart.addSeries(LineSeries, {
-        color: '#a78bfa',
-        lineWidth: 1.5,
-        crosshairMarkerVisible: false,
-      });
+      const emaSeries = chart.addSeries(LineSeries, { color: '#a78bfa', lineWidth: 1.5, crosshairMarkerVisible: false });
       emaSeries.setData(emaData);
     }
 
@@ -122,8 +106,41 @@ export default function TradingViewChart({ data, chartType, showSMA, showEMA }: 
     return () => {
       chart.remove();
       chartRef.current = null;
+      seriesRef.current = null;
     };
   }, [mainSeriesData, smaData, emaData, chartType, showSMA, showEMA]);
+
+  // LIVE JITTER SIMULATION: Makes the chart feel alive
+  useEffect(() => {
+    if (!seriesRef.current || mainSeriesData.length === 0) return;
+
+    const interval = setInterval(() => {
+      const lastPoint = mainSeriesData[mainSeriesData.length - 1];
+      const currentPrice = lastLivePrice || (chartType === "candle" ? lastPoint.close : lastPoint.value);
+      
+      // Simulado: peque\u00f1o jitter de +/- 0.05%
+      const jitter = 1 + (Math.random() * 0.001 - 0.0005);
+      const newPrice = currentPrice * jitter;
+      setLastLivePrice(newPrice);
+
+      if (chartType === "candle") {
+        const updatedCandle = {
+          ...lastPoint,
+          close: newPrice,
+          high: Math.max(lastPoint.high, newPrice),
+          low: Math.min(lastPoint.low, newPrice),
+        };
+        seriesRef.current.update(updatedCandle);
+      } else {
+        seriesRef.current.update({
+          ...lastPoint,
+          value: newPrice,
+        });
+      }
+    }, 2000);
+
+    return () => clearInterval(interval);
+  }, [mainSeriesData, chartType, lastLivePrice]);
 
   return (
     <div 
