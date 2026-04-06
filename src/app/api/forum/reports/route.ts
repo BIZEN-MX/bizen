@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { createSupabaseServer } from "@/lib/supabase/server"
-import { PrismaClient } from "@prisma/client"
-
-const prisma = new PrismaClient()
+import { prisma } from "@/lib/prisma"
 
 export async function POST(request: NextRequest) {
   try {
@@ -64,9 +62,5 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(report, { status: 201 })
   } catch (error) {
     console.error("Error creating report:", error)
-    return NextResponse.json({ error: "Failed to create report" }, { status: 500 })
-  } finally {
-    await prisma.$disconnect()
-  }
-}
+    return NextResponse.json({ error: "Failed to create report" }, { status: 500 })  }
 

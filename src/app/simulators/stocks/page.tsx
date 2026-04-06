@@ -56,7 +56,7 @@ import { SaveRunButton } from "@/components/simulators/SaveRunButton";
 import BizenVirtualCard from "@/components/BizenVirtualCard";
 import { STOCK_METADATA, STOCK_FUNDAMENTALS } from "@/data/simulators/stock-metadata";
 import BizcoinIcon from "@/components/BizcoinIcon";
-
+import TradingViewChart from "@/components/bizen/TradingViewChart";
 
 const SECTOR_COLORS: Record<string, string> = {
   Tecnología: "#3b82f6",
@@ -487,7 +487,7 @@ export function StockSimulatorContent({ tradeSymbol }: { tradeSymbol?: string })
 
   // --- Centralized stock selector: routes to standalone trade page ---
   const selectStock = (symbol: string) => {
-    router.push(`/simulators/stocks/trade/${symbol}`);
+    window.location.href = `http://localhost:3004/simulators/stocks/trade?symbol=${symbol}`;
   };
 
   const fetchRankings = async () => {
@@ -837,7 +837,8 @@ export function StockSimulatorContent({ tradeSymbol }: { tradeSymbol?: string })
           @keyframes ticker { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
           @keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
           @keyframes floatCard { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
-          .preview-ticker { animation: ticker 28s linear infinite; display:flex; white-space:nowrap; gap:32px; }
+          .preview-ticker { animation: ticker 60s linear infinite; display:flex; white-space:nowrap; gap:32px; }
+          .preview-ticker:hover { animation-play-state: paused; }
           .preview-card { animation: fadeUp 0.6s ease both; }
           .preview-float { animation: floatCard 4s ease-in-out infinite; }
         `}</style>
@@ -846,10 +847,11 @@ export function StockSimulatorContent({ tradeSymbol }: { tradeSymbol?: string })
         <div style={{ background: "#0B1E5E", padding: "10px 0", overflow: "hidden", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
           <div className="preview-ticker">
             {[...TICKER_STOCKS, ...TICKER_STOCKS].map((t, i) => (
-              <span key={i} style={{ display: "inline-flex", alignItems: "center", gap: 8, fontSize: 13, fontWeight: 700, color: "white", flexShrink: 0 }}>
-                <span style={{ color: "rgba(255,255,255,0.5)", fontWeight: 400 }}>{t.symbol}</span>
+              <span key={i} style={{ display: "inline-flex", alignItems: "center", gap: 10, fontSize: 13, fontWeight: 700, color: "white", flexShrink: 0 }}>
+                <StockLogo symbol={t.symbol} size={22} />
+                <span style={{ color: "rgba(255,255,255,0.85)", fontWeight: 600 }}>{t.symbol}</span>
                 <span style={{ color: t.change >= 0 ? "#34d399" : "#f87171" }}>{t.change >= 0 ? "▲" : "▼"} {Math.abs(t.change)}%</span>
-                <span style={{ color: "rgba(255,255,255,0.15)", margin: "0 8px" }}>|</span>
+                <span style={{ color: "rgba(255,255,255,0.15)", margin: "0 10px" }}>|</span>
               </span>
             ))}
           </div>
@@ -945,10 +947,10 @@ export function StockSimulatorContent({ tradeSymbol }: { tradeSymbol?: string })
                       exit={{ opacity: 0 }}
                       style={{
                         position: "fixed",
-                        top: 0,
+                        top: tradeSymbol ? 60 : 0,
                         left: 0,
                         width: "100vw",
-                        height: "100dvh",
+                        height: tradeSymbol ? "calc(100dvh - 60px)" : "100dvh",
                         backgroundColor: tradeSymbol ? "#060d1f" : "rgba(11, 30, 94, 0.4)",
                         backdropFilter: tradeSymbol ? "none" : "blur(8px)",
                         zIndex: 99999,
@@ -973,8 +975,8 @@ export function StockSimulatorContent({ tradeSymbol }: { tradeSymbol?: string })
                         transition={{ type: "spring", stiffness: 280, damping: 30 }}
                         style={{
                           width: "100vw",
-                          height: "100dvh",
-                          maxHeight: "100dvh",
+                          height: "100%",
+                          maxHeight: "100%",
                           background: "#060d1f",
                           display: "flex",
                           overflow: "hidden",
@@ -1387,114 +1389,14 @@ export function StockSimulatorContent({ tradeSymbol }: { tradeSymbol?: string })
 
                     {/* Chart */}
                     <div style={{ height: 220, width: "100%", opacity: fetchingHistory ? 0.3 : 1, transition: "opacity 0.2s" }}>
-                      <ResponsiveContainer width="100%" height="100%">
-                        <ComposedChart data={enrichedHistory}>
-                          <defs>
-                            <linearGradient id="colorPrice2" x1="0" y1="0" x2="0" y2="1">
-                              <stop offset="5%" stopColor="#10b981" stopOpacity={0.25}/>
-                              <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
-                            </linearGradient>
-                          </defs>
-                          <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" vertical={false} />
-                          <XAxis
-                            dataKey="date"
-                            axisLine={false}
-                            tickLine={false}
-                            tick={{ fill: "rgba(255,255,255,0.25)", fontSize: 10 }}
-                            minTickGap={30}
-                          />
-                          <YAxis
-                            domain={["auto", "auto"]}
-                            axisLine={false}
-                            tickLine={false}
-                            tick={{ fill: "rgba(255,255,255,0.25)", fontSize: 10 }}
-                            width={45}
-                            tickFormatter={(v: number) => `${v.toFixed(0)}`}
-                          />
-                          <Tooltip
-                            contentStyle={{ background: "#0f172a", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, fontSize: 12, color: "white" }}
-                            itemStyle={{ fontWeight: 700 }}
-                            labelStyle={{ color: "rgba(255,255,255,0.5)", marginBottom: 4 }}
-                            formatter={(v: any, name: string) => {
-                              if (name === "bizcoins") return [`${Number(v).toFixed(0)} bz`, "Precio"];
-                              if (name === "sma") return [`${Number(v).toFixed(0)} bz`, "SMA 20"];
-                              if (name === "ema") return [`${Number(v).toFixed(0)} bz`, "EMA 14"];
-                              return [v, name];
-                            }}
-                          />
-                          {/* Area or Candle */}
-                          {chartType === "area" ? (
-                            <Area
-                              type="monotone"
-                              dataKey="bizcoins"
-                              stroke="#10b981"
-                              strokeWidth={2}
-                              fillOpacity={1}
-                              fill="url(#colorPrice2)"
-                              dot={false}
-                            />
-                          ) : (
-                            <Bar
-                              dataKey="bizcoins"
-                              shape={((props: any): React.ReactElement => {
-                                const { x, width, value, index } = props;
-                                const prev = enrichedHistory[index - 1];
-                                const openVal = prev ? (prev.close ?? prev.bizcoins ?? value) : value * 0.999;
-                                const closeVal = value;
-                                const isUp = closeVal >= openVal;
-                                const barColor = isUp ? "#10b981" : "#ef4444";
-                                const highVal = closeVal * (1 + 0.002);
-                                const lowVal = openVal * (1 - 0.002);
-                                const yScale = props.yAxis?.scale;
-                                if (!yScale) return <g />;
-                                const pxHigh = yScale(highVal);
-                                const pxLow = yScale(lowVal);
-                                const pxOpen = yScale(openVal);
-                                const pxClose = yScale(closeVal);
-                                const pxBodyTop = Math.min(pxOpen, pxClose);
-                                const pxBodyBot = Math.max(pxOpen, pxClose);
-                                const midX = x + (width || 8) / 2;
-                                return (
-                                  <g>
-                                    <line x1={midX} y1={pxHigh} x2={midX} y2={pxLow} stroke={barColor} strokeWidth={1} />
-                                    <rect
-                                      x={x + (width || 8) * 0.15}
-                                      y={pxBodyTop}
-                                      width={Math.max((width || 8) * 0.7, 2)}
-                                      height={Math.max(pxBodyBot - pxBodyTop, 1)}
-                                      fill={barColor}
-                                      rx={1}
-                                    />
-                                  </g>
-                                );
-                              }) as any}
-                            />
-                          )}
-                          {/* SMA Line */}
-                          {showSMA && (
-                            <Line
-                              type="monotone"
-                              dataKey="sma"
-                              stroke="#fbbf24"
-                              strokeWidth={1.5}
-                              dot={false}
-                              strokeDasharray="4 2"
-                              connectNulls
-                            />
-                          )}
-                          {/* EMA Line */}
-                          {showEMA && (
-                            <Line
-                              type="monotone"
-                              dataKey="ema"
-                              stroke="#a78bfa"
-                              strokeWidth={1.5}
-                              dot={false}
-                              connectNulls
-                            />
-                          )}
-                        </ComposedChart>
-                      </ResponsiveContainer>
+                      {enrichedHistory.length > 0 && (
+                        <TradingViewChart 
+                          data={enrichedHistory} 
+                          chartType={chartType} 
+                          showSMA={showSMA} 
+                          showEMA={showEMA} 
+                        />
+                      )}
                     </div>
                   </div>
                   {/* ====== END CHART PANEL ====== */}
@@ -1630,7 +1532,7 @@ export function StockSimulatorContent({ tradeSymbol }: { tradeSymbol?: string })
                         <div
                           style={{
                             flex: "0 0 420px",
-                            overflowY: "auto",
+                            overflowY: "hidden",
                             padding: "28px 28px",
                             background: "linear-gradient(180deg,#0a1628 0%,#0d1b2e 100%)",
                             display: "flex",
@@ -2187,7 +2089,7 @@ export function StockSimulatorContent({ tradeSymbol }: { tradeSymbol?: string })
         @keyframes numberGlow { 0%,100%{opacity:1} 50%{opacity:0.6;filter:brightness(1.3)} }
         @keyframes ticker { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
         @keyframes tickerScroll { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
-        .bizen-ticker-track { animation: tickerScroll 60s linear infinite; display:flex; gap:0; will-change:transform; }
+        .bizen-ticker-track { animation: tickerScroll 90s linear infinite; display:flex; gap:0; will-change:transform; }
         .bizen-ticker-track:hover { animation-play-state: paused; }
         .bizen-ticker-bar { overflow:hidden; position:relative; }
         .bizen-ticker-bar::before, .bizen-ticker-bar::after {
@@ -2417,47 +2319,33 @@ export function StockSimulatorContent({ tradeSymbol }: { tradeSymbol?: string })
       <div
         className="bizen-ticker-bar"
         style={{
-          background: "#0B1E5E",
-          height: 34,
+          background: "linear-gradient(90deg,#071540 0%,#0d2275 50%,#071540 100%)",
+          height: 86,
           display: "flex",
           alignItems: "center",
-          borderBottom: "1px solid rgba(255,255,255,0.08)",
+          borderBottom: "2px solid rgba(255,255,255,0.07)",
           userSelect: "none",
+          boxShadow: "0 4px 20px rgba(0,0,0,0.35)",
+          zIndex: 10,
+          flexShrink: 0,
         }}
       >
         <div className="bizen-ticker-track" style={{ display: "flex", alignItems: "center" }}>
           {[...processedMarketData, ...processedMarketData].map((s: any, i: number) => {
             const chg = s.changePercent ?? 0;
-            const up = chg >= 0;
+            const up  = chg >= 0;
+            const dom = ((SYMBOL_DOMAINS as Record<string, string>)[s.symbol]) ?? (s.symbol.toLowerCase() + ".com");
             return (
-              <div
-                key={i}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 7,
-                  padding: "0 20px",
-                  borderRight: "1px solid rgba(255,255,255,0.07)",
-                  whiteSpace: "nowrap" as const,
-                  height: 34,
-                }}
-              >
-                <span style={{ fontSize: 11, fontWeight: 800, color: "rgba(255,255,255,0.9)", fontFamily: "'JetBrains Mono',monospace", letterSpacing: "0.04em" }}>
-                  {s.symbol}
-                </span>
-                <span style={{ fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.6)", fontFamily: "'JetBrains Mono',monospace", letterSpacing: "0.02em" }}>
-                  {s.price?.toFixed(0) ?? "—"}
-                </span>
-                <span style={{
-                  fontSize: 10,
-                  fontWeight: 700,
-                  color: up ? "#34d399" : "#f87171",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 2,
-                  fontFamily: "'JetBrains Mono',monospace",
-                }}>
-                  {up ? "▲" : "▼"}{Math.abs(chg).toFixed(2)}%
+              <div key={i} style={{ display: "flex", alignItems: "center", gap: 16, padding: "0 34px", borderRight: "1px solid rgba(255,255,255,0.06)", whiteSpace: "nowrap" as const, height: 86, cursor: "default" }}>
+                {/* Logo */}
+                <StockLogo symbol={s.symbol} size={36} />
+                {/* Symbol */}
+                <span style={{ fontSize: 16, fontWeight: 800, color: "rgba(255,255,255,0.93)", fontFamily: "'JetBrains Mono',monospace", letterSpacing: "0.05em" }}>{s.symbol}</span>
+                {/* Price */}
+                <span style={{ fontSize: 18, fontWeight: 700, color: "white", fontFamily: "'JetBrains Mono',monospace" }}>{s.price?.toFixed(0) ?? "—"}</span>
+                {/* Change */}
+                <span style={{ fontSize: 14, fontWeight: 700, color: up ? "#34d399" : "#f87171", background: up ? "rgba(52,211,153,0.13)" : "rgba(248,113,113,0.13)", border: "1px solid " + (up ? "rgba(52,211,153,0.3)" : "rgba(248,113,113,0.3)"), borderRadius: 8, padding: "4px 10px", display: "inline-flex", alignItems: "center", gap: 4, fontFamily: "'JetBrains Mono',monospace" }}>
+                  {up ? "▲" : "▼"} {Math.abs(chg).toFixed(2)}%
                 </span>
               </div>
             );
@@ -3845,8 +3733,6 @@ export function StockSimulatorContent({ tradeSymbol }: { tradeSymbol?: string })
                     );
                   })}
                 </div>
-
-                {renderBizenTerminal()}
               </div>
             )}
 

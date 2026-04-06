@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { createSupabaseServer } from "@/lib/supabase/server"
-import { PrismaClient } from "@prisma/client"
-
-const prisma = new PrismaClient()
+import { prisma } from "@/lib/prisma"
 
 export async function POST(request: NextRequest) {
   try {
@@ -116,9 +114,5 @@ export async function POST(request: NextRequest) {
     }
   } catch (error) {
     console.error("Error voting:", error)
-    return NextResponse.json({ error: "Failed to vote" }, { status: 500 })
-  } finally {
-    await prisma.$disconnect()
-  }
-}
+    return NextResponse.json({ error: "Failed to vote" }, { status: 500 })  }
 

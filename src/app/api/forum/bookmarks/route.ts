@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { createSupabaseServer } from "@/lib/supabase/server"
-import { PrismaClient } from "@prisma/client"
-
-const prisma = process.env.DATABASE_URL ? new PrismaClient() : null
+import { prisma } from "@/lib/prisma"
 
 export async function GET(request: NextRequest) {
   if (!prisma) {
@@ -60,12 +58,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(threads)
   } catch (error) {
     console.error("Error fetching bookmarks:", error)
-    return NextResponse.json({ error: "Failed to fetch bookmarks" }, { status: 500 })
-  } finally {
-    if (prisma) {
-      await prisma.$disconnect().catch(() => { })
-    }
-  }
+    return NextResponse.json({ error: "Failed to fetch bookmarks" }, { status: 500 })  }
 }
 
 export async function POST(request: NextRequest) {
@@ -117,12 +110,7 @@ export async function POST(request: NextRequest) {
     if (errorMessage.includes('Unique constraint') || errorMessage.includes('P2002')) {
       return NextResponse.json({ bookmarked: true })
     }
-    return NextResponse.json({ error: "Failed to bookmark", details: errorMessage }, { status: 500 })
-  } finally {
-    if (prisma) {
-      await prisma.$disconnect().catch(() => { })
-    }
-  }
+    return NextResponse.json({ error: "Failed to bookmark", details: errorMessage }, { status: 500 })  }
 }
 
 export async function DELETE(request: NextRequest) {
@@ -157,11 +145,6 @@ export async function DELETE(request: NextRequest) {
     return NextResponse.json({ bookmarked: false })
   } catch (error) {
     console.error("Error removing bookmark:", error)
-    return NextResponse.json({ error: "Failed to remove bookmark" }, { status: 500 })
-  } finally {
-    if (prisma) {
-      await prisma.$disconnect().catch(() => { })
-    }
-  }
+    return NextResponse.json({ error: "Failed to remove bookmark" }, { status: 500 })  }
 }
 

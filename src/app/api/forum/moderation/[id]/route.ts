@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { createSupabaseServer } from "@/lib/supabase/server"
-import { PrismaClient } from "@prisma/client"
-
-const prisma = new PrismaClient()
+import { prisma } from "@/lib/prisma"
 
 export async function PATCH(
   request: NextRequest,
@@ -95,9 +93,5 @@ export async function PATCH(
     return NextResponse.json({ success: true, action: actionTaken })
   } catch (error) {
     console.error("Error taking moderation action:", error)
-    return NextResponse.json({ error: "Failed to take action" }, { status: 500 })
-  } finally {
-    await prisma.$disconnect()
-  }
-}
+    return NextResponse.json({ error: "Failed to take action" }, { status: 500 })  }
 

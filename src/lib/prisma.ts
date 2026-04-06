@@ -1,38 +1,32 @@
 import { PrismaClient } from '@prisma/client'
 
-const globalForPrisma = globalThis as unknown as {
-  prisma: PrismaClient | undefined
-}
+const prismaClientSingleton = () => {
+  let customUrl = process.env.DATABASE_URL
 
-/**
- * Prisma Client Singleton
- * Prevents multiple instances in development and production.
- *
- * If you see "Error in PostgreSQL connection: Error { kind: Closed }" with Supabase
- * pooler (port 6543), add to your DATABASE_URL: &connection_limit=1
- * Example: ...?pgbouncer=true&sslmode=require&connection_limit=1
- */
-// Note: We used to automatically port-swap 5432 to 6543 here, but it can cause issues.
-// Better to configure the DATABASE_URL correctly in .env directly.
-let customUrl = process.env.DATABASE_URL
+  // Adjust connections to avoid exhausting the Supabase pooler on hot-reloads while still allowing concurrent requests
+  if (customUrl) {
+    if (customUrl.includes(':6543') && !customUrl.includes('pgbouncer=')) {
+      customUrl += (customUrl.includes('?') ? '&' : '?') + 'pgbouncer=true&pool_timeout=20'
+    }
+    if (process.env.NODE_ENV === 'development') {
+      if (customUrl.includes('connection_limit=')) {
+        customUrl = customUrl.replace(/connection_limit=\d+/, 'connection_limit=5')
+      } else {
+        customUrl += (customUrl.includes('?') ? '&' : '?') + 'connection_limit=5'
+      }
+    }
+  }
 
-console.log("🛠️ Initializing Prisma Client with URL:", customUrl ? customUrl.substring(0, 25) + "..." : "null")
-if (customUrl && !customUrl.includes("pgbouncer=true")) {
-  console.log("💡 Tip: If you see 'prepared statement already exists' in production, ensure pgbouncer=true is in your DATABASE_URL")
-}
-export const prisma = globalForPrisma.prisma ?? new PrismaClient({
-  log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
-  datasourceUrl: customUrl,
-})
-
-// Prevent multiple instances in all environments
-if (process.env.NODE_ENV !== 'production') {
-  globalForPrisma.prisma = prisma
-}
-
-// Ensure proper cleanup on process termination
-if (typeof process !== 'undefined') {
-  process.on('beforeExit', async () => {
-    await prisma.$disconnect()
+  return new PrismaClient({
+    log: process.env.NODE_ENV === 'development' ? ['error', 'warn'] : ['error'],
+    datasourceUrl: customUrl || process.env.DATABASE_URL,
   })
 }
+
+declare const globalThis: {
+  prismaGlobal: ReturnType<typeof prismaClientSingleton>;
+} & typeof global;
+
+export const prisma = globalThis.prismaGlobal ?? prismaClientSingleton()
+
+if (process.env.NODE_ENV !== 'production') globalThis.prismaGlobal = prisma

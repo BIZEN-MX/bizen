@@ -1,7 +1,5 @@
 import { NextResponse } from "next/server"
-import { PrismaClient } from "@prisma/client"
-
-const prisma = process.env.DATABASE_URL ? new PrismaClient() : null
+import { prisma } from "@/lib/prisma"
 
 export async function GET() {
   if (!prisma) {
@@ -23,11 +21,6 @@ export async function GET() {
   } catch (error: any) {
     console.warn("⚠️ Error fetching tags (returning empty list):", error.message || String(error))
     // Return empty array instead of error - tags will be created when threads are created
-    return NextResponse.json([])
-  } finally {
-    if (prisma) {
-      await prisma.$disconnect().catch(() => {})
-    }
-  }
+    return NextResponse.json([])  }
 }
 

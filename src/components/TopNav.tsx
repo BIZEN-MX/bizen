@@ -326,7 +326,7 @@ export default function TopNav() {
                 </button>
 
                 {profileOpen && (
-                  <div className="profile-dropdown-panel" ref={profileRef}>
+                  <div className="profile-dropdown-panel">
                     <div className="profile-dropdown-hero">
                       <div className="profile-dropdown-orb1" />
                       <div className="profile-dropdown-orb2" />

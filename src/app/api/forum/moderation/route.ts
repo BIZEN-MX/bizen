@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server"
 import { createSupabaseServer } from "@/lib/supabase/server"
-import { PrismaClient } from "@prisma/client"
-
-const prisma = new PrismaClient()
+import { prisma } from "@/lib/prisma"
 
 export async function GET() {
   try {
@@ -59,9 +57,5 @@ export async function GET() {
     return NextResponse.json({ reports: formatted })
   } catch (error) {
     console.error("Error fetching moderation queue:", error)
-    return NextResponse.json({ error: "Failed to fetch moderation queue" }, { status: 500 })
-  } finally {
-    await prisma.$disconnect()
-  }
-}
+    return NextResponse.json({ error: "Failed to fetch moderation queue" }, { status: 500 })  }
 

@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { createSupabaseServer } from "@/lib/supabase/server"
-import { PrismaClient } from "@prisma/client"
-
-const prisma = new PrismaClient()
+import { prisma } from "@/lib/prisma"
 
 export async function GET(request: NextRequest) {
   try {
@@ -52,9 +50,5 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ leaderboard: formatted })
   } catch (error) {
     console.error("Error fetching leaderboard:", error)
-    return NextResponse.json({ error: "Failed to fetch leaderboard" }, { status: 500 })
-  } finally {
-    await prisma.$disconnect()
-  }
-}
+    return NextResponse.json({ error: "Failed to fetch leaderboard" }, { status: 500 })  }
 
