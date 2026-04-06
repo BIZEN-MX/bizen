@@ -302,7 +302,7 @@ export default function TopNav() {
 
               <div style={{ position: 'relative' }} ref={profileRef}>
                 <button className="topnav-avatar-btn" onClick={() => setProfileOpen(!profileOpen)}>
-                  <AvatarDisplay avatar={dbProfile?.avatarUrl} size={34} />
+                  <AvatarDisplay avatar={dbProfile?.avatar} size={34} />
                   <span style={{ fontSize: 13.5, fontWeight: 600, color: '#1e293b', marginRight: 4 }}>{dbProfile?.fullName || user.email?.split('@')[0]}</span>
                   <ChevronDown size={14} style={{ transform: profileOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s ease', color: '#64748b' }} />
                 </button>
@@ -314,7 +314,7 @@ export default function TopNav() {
                       <div className="profile-dropdown-orb2" />
                       
                       <div style={{ position: 'relative', zIndex: 2, display: 'flex', alignItems: 'center', gap: '15px' }}>
-                        <AvatarDisplay avatar={dbProfile?.avatarUrl} size={54} />
+                        <AvatarDisplay avatar={dbProfile?.avatar} size={54} />
                         <div className="profile-dropdown-info">
                           <div className="profile-dropdown-name">
                             {dbProfile?.fullName || user.email?.split('@')[0]}
@@ -359,7 +359,7 @@ export default function TopNav() {
                       <div className="profile-dropdown-divider" />
                       
                       <button className="profile-dropdown-nav-item" onClick={() => navigateTo('/profile')}>
-                        <AvatarDisplay avatar={dbProfile?.avatarUrl} size={18} /> 
+                        <AvatarDisplay avatar={dbProfile?.avatar} size={18} /> 
                         <span className="profile-dropdown-nav-label">Mi Perfil</span>
                       </button>
                       <button className="profile-dropdown-nav-item" onClick={() => navigateTo('/configuracion')}>
