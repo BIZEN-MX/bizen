@@ -487,7 +487,7 @@ export function StockSimulatorContent({ tradeSymbol }: { tradeSymbol?: string })
 
   // --- Centralized stock selector: routes to standalone trade page ---
   const selectStock = (symbol: string) => {
-    window.location.href = `http://localhost:3004/simulators/stocks/trade?symbol=${symbol}`;
+    window.location.href = `/simulators/stocks/trade?symbol=${symbol}`;
   };
 
   const fetchRankings = async () => {
