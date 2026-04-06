@@ -52,9 +52,11 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   }, []);
 
   const isLanding = pathname === "/";
+  const isCoursesPage = pathname === "/courses" || pathname?.startsWith("/courses/");
   const isProtected = !isPublicPath(pathname) && !isLanding;
 
-  if (isLanding) {
+  // Render raw without frame for Landing and full-width Courses pages
+  if (isLanding || isCoursesPage) {
     return <>{children}</>;
   }
 
@@ -63,7 +65,6 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
     return (
       <div className="app-shell">
         <div style={{ display: "flex", width: "100%", height: "100%" }}>
-          {!isSidebarHidden && <div className="hidden md:block w-[280px] flex-shrink-0" />}
           <div className="flex-1 relative flex items-center justify-center">
             <PageLoader />
           </div>

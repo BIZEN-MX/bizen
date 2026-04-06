@@ -477,6 +477,13 @@ function StockSimulatorContent() {
     if (typeof window !== 'undefined') localStorage.setItem('bizen_journal', JSON.stringify(tradeJournal));
   }, [tradeJournal]);
 
+  // --- Centralized stock selector: sets symbol + scrolls to top so modal is visible ---
+  const selectStock = (symbol: string) => {
+    setOrderForm((f) => ({ ...f, symbol }));
+    setOrderMsg(null);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   const fetchRankings = async () => {
     if (leaderboard.length > 0) return;
     setFetchingRankings(true);
@@ -487,6 +494,7 @@ function StockSimulatorContent() {
       setFetchingRankings(false);
     }
   };
+
 
   useEffect(() => {
     if (activeTab === "rankings") fetchRankings();
@@ -1252,16 +1260,16 @@ function StockSimulatorContent() {
                     display: "inline-flex",
                     alignItems: "center",
                     gap: 8,
-                    background: "rgba(249,115,22,0.1)",
-                    border: "1px solid rgba(249,115,22,0.3)",
+                    background: "rgba(16,185,129,0.08)",
+                    border: "1px solid rgba(16,185,129,0.25)",
                     borderRadius: 99,
                     padding: "5px 14px",
-                    marginBottom: 14,
+                    marginBottom: 16,
                     alignSelf: "flex-start",
                     fontSize: 12,
                     fontWeight: 600,
-                    color: "#f97316",
-                    letterSpacing: "0.08em",
+                    color: "#059669",
+                    letterSpacing: "0.06em",
                     textTransform: "uppercase" as const,
                   }}
                 >
@@ -1270,38 +1278,50 @@ function StockSimulatorContent() {
                       width: 6,
                       height: 6,
                       borderRadius: "50%",
-                      background: "#f97316",
+                      background: "#10b981",
                       display: "inline-block",
-                      boxShadow: "0 0 6px #f97316",
+                      boxShadow: "0 0 6px #10b981",
                     }}
                   />
                   Simulador Educativo — Sin dinero real
                 </div>
+
               </div>
-              <h1
-                style={{
-                  fontSize: "clamp(26px,4.5vw,46px)",
-                  fontWeight: 800,
-                  margin: "0 0 10px",
-                  color: "#0B1E5E",
-                  letterSpacing: "-0.03em",
-                  lineHeight: 1.1,
-                }}
-              >
-                BIZEN <span style={{ color: "#3b82f6" }}>Market</span>
-              </h1>
-              <p
-                style={{
-                  fontSize: 15,
-                  color: "#64748b",
-                  margin: 0,
-                  lineHeight: 1.6,
-                  maxWidth: 580,
-                }}
-              >
-                Aprende a invertir con datos{" "}
-                <strong style={{ color: "#0B1E5E" }}>en tiempo real</strong>. 1 USD = 1 bizcoin. <BizcoinIcon size={14} />
-              </p>
+                <h1
+                  style={{
+                    fontSize: "clamp(32px, 5vw, 56px)",
+                    fontWeight: 900,
+                    margin: "0 0 12px",
+                    color: "#0B1E5E",
+                    letterSpacing: "-0.04em",
+                    lineHeight: 1.08,
+                  }}
+                >
+                  Aprende a invertir{" "}
+                  <span
+                    style={{
+                      background: "linear-gradient(135deg, #10b981, #059669)",
+                      WebkitBackgroundClip: "text",
+                      WebkitTextFillColor: "transparent",
+                      backgroundClip: "text",
+                    }}
+                  >
+                    en mercados reales
+                  </span>
+                </h1>
+                <p
+                  style={{
+                    fontSize: 16,
+                    color: "#64748b",
+                    margin: "0 0 20px",
+                    lineHeight: 1.6,
+                    maxWidth: 520,
+                    fontWeight: 400,
+                  }}
+                >
+                  Practica con <strong style={{ color: "#0B1E5E", fontWeight: 700 }}>Bizcoins</strong> en acciones del S&P 500, ETFs y más.
+                  Compite contra el mercado sin arriesgar dinero real.
+                </p>
             </div>
 
             {/* Black Swan Button — Educational Feature */}
@@ -1478,104 +1498,77 @@ function StockSimulatorContent() {
             </p>
           </div>
 
-          {/* Balance Cards */}
+          {/* ── Stat Row — landing page style ──────────────── */}
           <div
             style={{
-              display: "grid",
-              gridTemplateColumns: isMobile ? "repeat(2, 1fr)" : "repeat(auto-fit, minmax(min(100%, 180px), 1fr))",
-              gap: isMobile ? 10 : "clamp(10px, 2vw, 14px)",
-              marginBottom: 24,
+              display: "flex",
+              alignItems: "center",
+              gap: 0,
+              marginBottom: 28,
+              flexWrap: "wrap" as const,
             }}
           >
             {[
               {
-                label: "Poder de Compra",
-                value: `bz ${cash.toLocaleString("es-MX", { minimumFractionDigits: 0 })}`,
-                sub: "Bizcoins disponibles",
-                bg: "white",
-                tc: "#0B1E5E",
-                subtc: "#64748b",
-                border: "1.5px solid #e2e8f0",
-                shadow: "0 4px 12px rgba(0,0,0,0.02)",
-                accent: "#3b82f6",
+                value: `bz ${cash.toLocaleString("es-MX", { maximumFractionDigits: 0 })}`,
+                label: "Saldo disponible",
+                color: "#0B1E5E",
               },
               {
-                label: "Valor del Portafolio",
-                value: `bz ${totalValue.toLocaleString("es-MX", { minimumFractionDigits: 0 })}`,
-                sub: "Efectivo + Mercado",
-                bg: "white",
-                tc: "#0B1E5E",
-                subtc: "#64748b",
-                border: "1.5px solid #e2e8f0",
-                shadow: "0 4px 12px rgba(0,0,0,0.02)",
-                accent: "#10b981",
+                value: `bz ${totalValue.toLocaleString("es-MX", { maximumFractionDigits: 0 })}`,
+                label: "Valor Total",
+                color: "#0B1E5E",
               },
               {
-                label: "Rendimiento Global",
-                value: `${returns > 0 ? "+" : ""}${returns.toFixed(2)}%`,
-                sub: "Desde el inicio",
-                bg: returns >= 0 ? "#f0fdf4" : "#fef2f2",
-                tc: returns >= 0 ? "#166534" : "#991b1b",
-                subtc: returns >= 0 ? "#15803d" : "#b91c1c",
-                border: returns >= 0 ? "1.5px solid #bbf7d0" : "1.5px solid #fecaca",
-                shadow: "none",
-                accent: returns >= 0 ? "#166534" : "#991b1b",
+                value: `${returns >= 0 ? "+" : ""}${returns.toFixed(2)}%`,
+                label: returns >= 0 ? "Rendimiento" : "Pérdida",
+                color: returns >= 0 ? "#10b981" : "#ef4444",
               },
               {
-                label: "Activos en Cartera",
                 value: String(portfolio?.holdings?.length ?? 0),
-                sub: "Posiciones abiertas",
-                bg: "white",
-                tc: "#0B1E5E",
-                subtc: "#64748b",
-                border: "1.5px solid #e2e8f0",
-                shadow: "none",
-                accent: "#64748b",
+                label: "Activos en cartera",
+                color: "#0B1E5E",
               },
-            ].map((s: any, i) => (
-              <motion.div
-                whileHover={{ y: -4, boxShadow: "0 12px 24px rgba(0,0,0,0.06)" }}
-                key={i}
-                style={{
-                  background: s.bg,
-                  borderRadius: 20,
-                  padding: "20px 22px",
-                  border: s.border,
-                  boxShadow: s.shadow,
-                  cursor: "default"
-                }}
-              >
-                <p
-                  style={{
-                    fontSize: 10,
-                    fontWeight: 700,
-                    color: s.tc,
-                    textTransform: "uppercase" as const,
-                    letterSpacing: "0.1em",
-                    margin: "0 0 8px",
-                    opacity: 0.6
-                  }}
-                >
-                  {s.label}
-                </p>
-                <p
-                  style={{
-                    fontSize: 24,
-                    fontWeight: 800,
-                    color: s.tc,
-                    margin: "0 0 4px",
-                    letterSpacing: "-0.02em",
-                    lineHeight: 1.1,
-                  }}
-                >
-                  {s.value}
-                </p>
-                <p
-                  style={{ fontSize: 12, color: s.subtc, margin: 0, fontWeight: 500 }}
-                >
-                  {s.sub}
-                </p>
-              </motion.div>
+            ].map((s, i, arr) => (
+              <div key={i} style={{ display: "flex", alignItems: "center" }}>
+                <div style={{ paddingRight: i < arr.length - 1 ? 28 : 0 }}>
+                  <div
+                    style={{
+                      fontSize: "clamp(22px, 3vw, 32px)",
+                      fontWeight: 900,
+                      color: s.color,
+                      letterSpacing: "-0.03em",
+                      lineHeight: 1,
+                      fontFamily: "'Inter', sans-serif",
+                    }}
+                  >
+                    {s.value}
+                  </div>
+                  <div
+                    style={{
+                      fontSize: 10,
+                      fontWeight: 700,
+                      color: "#94a3b8",
+                      textTransform: "uppercase" as const,
+                      letterSpacing: "0.12em",
+                      marginTop: 4,
+                    }}
+                  >
+                    {s.label}
+                  </div>
+                </div>
+                {i < arr.length - 1 && (
+                  <div
+                    style={{
+                      width: 1,
+                      height: 36,
+                      background: "#e2e8f0",
+                      marginRight: 28,
+                      flexShrink: 0,
+                    }}
+                  />
+                )}
+              </div>
             ))}
           </div>
 
@@ -2138,7 +2131,7 @@ function StockSimulatorContent() {
                           const sector = SYMBOL_SECTORS[h.symbol] || "Otros";
                           const positionValue = Number(h.quantity) * marketPriceBizcoins;
                           return (
-                            <motion.div key={h.symbol} whileHover={{ y: -2 }} style={{ background: "white", borderRadius: 20, border: `1.5px solid ${ret >= 0 ? "rgba(16,185,129,0.2)" : "rgba(239,68,68,0.2)"}`, padding: "16px 18px", boxShadow: "0 2px 8px rgba(0,0,0,0.04)" }}>
+                            <motion.div key={h.symbol} whileHover={{ y: -2 }} onClick={() => selectStock(h.symbol)} style={{ cursor: "pointer", background: "white", borderRadius: 20, border: `1.5px solid ${ret >= 0 ? "rgba(16,185,129,0.2)" : "rgba(239,68,68,0.2)"}`, padding: "16px 18px", boxShadow: "0 2px 8px rgba(0,0,0,0.04)" }}>
                               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
                                 <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                                   <StockLogo symbol={h.symbol} size={38} />
@@ -2189,7 +2182,7 @@ function StockSimulatorContent() {
                               const ret = ((marketPriceBizcoins - Number(h.avg_cost)) / Number(h.avg_cost)) * 100;
                               const sector = SYMBOL_SECTORS[h.symbol] || "Otros";
                               return (
-                                <tr key={h.symbol} className="sim-row-table" style={{ borderBottom: "1px solid #f8fafc" }}>
+                                <tr key={h.symbol} className="sim-row-table" onClick={() => selectStock(h.symbol)} style={{ borderBottom: "1px solid #f8fafc", cursor: "pointer" }}>
                                   <td style={{ padding: "16px" }}>
                                     <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
                                       <StockLogo symbol={h.symbol} size={36} />
@@ -2383,10 +2376,7 @@ function StockSimulatorContent() {
                         key={s.symbol}
                         className="sim-stock-row"
                         whileHover={{ y: -4, boxShadow: "0 12px 24px rgba(0,0,0,0.06)" }}
-                        onClick={() => {
-                          setOrderForm((f) => ({ ...f, symbol: s.symbol }));
-                          setOrderMsg(null);
-                        }}
+                        onClick={() => selectStock(s.symbol)}
                         style={{
                           borderColor: isSelected ? "#10b981" : "#e2e8f0",
                           background: isSelected ? "#f0fdf4" : "white",
@@ -4138,7 +4128,7 @@ function StockSimulatorContent() {
                             {/* Action Buttons */}
                             <div style={{ display: "flex", gap: 6, flexShrink: 0 }}>
                               <button
-                                onClick={() => { setOrderForm(f => ({ ...f, symbol: sym, side: "buy" })); setActiveTab("market"); }}
+                                onClick={() => { selectStock(sym); }}
                                 style={{
                                   padding: "6px 12px", borderRadius: 8, border: "none",
                                   background: "rgba(16,185,129,0.1)", color: "#10b981",

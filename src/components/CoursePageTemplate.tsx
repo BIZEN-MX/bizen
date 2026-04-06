@@ -336,24 +336,24 @@ export default function CoursePageTemplate({
                     display: "flex",
                     flexDirection: "column",
                     justifyContent: "flex-start",
-                    alignItems: "center", // Center content correctly
+                    alignItems: "stretch", // Use full width available
                     boxSizing: "border-box",
                     width: "100%",
                     zIndex: 1,
                 }}
             >
-                <div style={{ width: "100%", maxWidth: "1000px", margin: "0 auto", position: "relative", zIndex: 1, padding: 0, boxSizing: "border-box", display: "flex", flexDirection: "column", alignItems: "stretch", gap: 0 }}>
+                <div style={{ width: "100%", maxWidth: "none", margin: "0", position: "relative", zIndex: 1, padding: 0, boxSizing: "border-box", display: "flex", flexDirection: "column", alignItems: "center", gap: 0 }}>
 
                     {/* ── HERO BANNER (mirrors /courses hero) ───────────────────────── */}
                     <div
                         className="cpt-hero"
                         style={{
                             background: "linear-gradient(135deg, #0f2a6e 0%, #1e3a8a 45%, #2563eb 100%)",
-                            borderRadius: "48px", // Reduced from 80px to make it look tighter
-                            padding: "clamp(32px, 5vw, 48px) clamp(24px, 4vw, 40px)",
-                            width: "calc(100% - 32px)",
-                            maxWidth: "1000px",
-                            margin: "32px auto 48px",
+                            borderRadius: "40px",
+                            padding: "clamp(24px, 4vw, 36px) clamp(32px, 5vw, 64px)", // drastically reduced height
+                            width: "calc(100% - 64px)",
+                            maxWidth: "none", // FULL WIDTH
+                            margin: "24px auto 40px",
                             position: "relative",
                             overflow: "hidden",
                             boxShadow: "0 24px 70px rgba(15,98,254,0.35)",
@@ -461,11 +461,11 @@ export default function CoursePageTemplate({
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.3 }}
                             style={{ 
-                                width: "100%", 
-                                maxWidth: "1000px", 
+                                width: "calc(100% - 64px)", 
+                                maxWidth: "none", 
                                 margin: "0 auto 32px", 
                                 boxSizing: "border-box",
-                                padding: "0 16px",
+                                padding: "0",
                             }}
                         >
                             <div style={{ 
@@ -529,7 +529,7 @@ export default function CoursePageTemplate({
                     )}
 
                     {/* ── SUBTEMAS ──────────────────────────────────────────────────── */}
-                    <div style={{ width: "100%", maxWidth: "1000px", margin: "0 auto", display: "flex", flexDirection: "column", gap: "clamp(24px, 4vw, 36px)", padding: "0 16px", paddingBottom: 40, boxSizing: "border-box" }}>
+                    <div style={{ width: "calc(100% - 64px)", maxWidth: "none", margin: "0 auto", display: "flex", flexDirection: "column", gap: "clamp(24px, 4vw, 36px)", padding: "0", paddingBottom: 40, boxSizing: "border-box" }}>
                         {subtemas.length === 0 ? (
                             <div style={{ 
                                 textAlign: "center", 

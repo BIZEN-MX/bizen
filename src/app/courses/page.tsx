@@ -294,7 +294,7 @@ export default function CoursesPage() {
           display: "flex",
           flexDirection: "column",
           justifyContent: "flex-start",
-          alignItems: "center", // Centered to fix left gap perceptions
+          alignItems: "stretch", // Stretch to truly fill width
           marginBottom: 0,
           boxSizing: "border-box",
           width: "100%"
@@ -318,11 +318,11 @@ export default function CoursesPage() {
             className="courses-hero"
             style={{
               background: "linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #1d4ed8 100%)",
-              borderRadius: "48px", // Slightly less aggressive rounding for a smaller card
-              padding: "clamp(32px, 5vw, 48px) clamp(24px, 4vw, 40px)",
-              width: "calc(100% - 32px)",
-              maxWidth: "1000px", // Shrunk main title card
-              margin: "32px auto 48px",
+              borderRadius: "40px", // Flatter curves for shorter card
+              padding: "clamp(24px, 4vw, 36px) clamp(32px, 5vw, 64px)", // drastically reduced vertical padding
+              width: "calc(100% - 64px)",
+              maxWidth: "none", // FULL WIDTH
+              margin: "24px auto 40px",
               position: "relative",
               overflow: "hidden",
               boxShadow: "0 24px 70px rgba(15, 98, 254, 0.35)",
@@ -594,10 +594,9 @@ export default function CoursesPage() {
                                 }
                               }}
                               style={{
-                                gridColumn: gridColValue,
-                                justifySelf: isOrphan ? "center" : "stretch",
-                                width: "240px",
-                                height: "240px",
+                                justifySelf: "center",
+                                width: "260px",
+                                height: "260px",
                                 aspectRatio: "1 / 1",
                                 cursor: "pointer",
                                 borderRadius: "50%",
