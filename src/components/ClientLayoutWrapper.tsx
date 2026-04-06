@@ -137,7 +137,7 @@ function InnerClientWrapper({ children }: { children: React.ReactNode }) {
   const isBudgetTool = pathname?.startsWith('/tools/budget')
   const isVisionTool = pathname?.startsWith('/tools/vision')
   const isToolsPageExclude = isBudgetTool || isVisionTool
-  const hideAppNavigation = isAuthPage || isNewsPage || isDiagnosticPage || onboardingActive || isLessonInteractivePage || isTransferPage || isHistoryPage || isInvestmentsPage || isToolsPageExclude;
+  const hideAppNavigation = isAuthPage || isNewsPage || isDiagnosticPage || onboardingActive || isLessonInteractivePage || isTransferPage || isHistoryPage || isInvestmentsPage || isToolsPageExclude || isLivePage;
 
   const hideChat = isAuthPage || isDiagnosticPage || onboardingActive || isLessonInteractivePage || isCourseTopicPage || isLivePage || isSimulatorPage;
 

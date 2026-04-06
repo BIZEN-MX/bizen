@@ -240,6 +240,13 @@ export default function CoursePageTemplate({
         }
     }, [])
 
+    useEffect(() => {
+        document.body.classList.add('hide-sidebar');
+        return () => {
+            document.body.classList.remove('hide-sidebar');
+        };
+    }, []);
+
     // ─── Hide Sidebar on Flashcard Activity ──────────────────────────────────
     useEffect(() => {
         if (flashcardSet) {
@@ -327,29 +334,30 @@ export default function CoursePageTemplate({
                     background: "transparent",
                     position: "relative",
                     display: "flex",
+                    flexDirection: "column",
                     justifyContent: "flex-start",
-                    alignItems: "flex-start",
+                    alignItems: "center", // Center content correctly
                     boxSizing: "border-box",
                     width: "100%",
                     zIndex: 1,
                 }}
             >
-                <div style={{ width: "100%", maxWidth: "none", margin: "0", position: "relative", zIndex: 1, padding: 0, boxSizing: "border-box", display: "flex", flexDirection: "column", alignItems: "stretch", gap: 0 }}>
+                <div style={{ width: "100%", maxWidth: "1000px", margin: "0 auto", position: "relative", zIndex: 1, padding: 0, boxSizing: "border-box", display: "flex", flexDirection: "column", alignItems: "stretch", gap: 0 }}>
 
                     {/* ── HERO BANNER (mirrors /courses hero) ───────────────────────── */}
                     <div
                         className="cpt-hero"
                         style={{
                             background: "linear-gradient(135deg, #0f2a6e 0%, #1e3a8a 45%, #2563eb 100%)",
-                            borderRadius: 28,
-                            padding: "clamp(24px, 4vw, 40px) 32px",
-                            width: "100%",
-                            maxWidth: "none",
-                            margin: "0 0 clamp(20px, 4vw, 32px)",
+                            borderRadius: "48px", // Reduced from 80px to make it look tighter
+                            padding: "clamp(32px, 5vw, 48px) clamp(24px, 4vw, 40px)",
+                            width: "calc(100% - 32px)",
+                            maxWidth: "1000px",
+                            margin: "32px auto 48px",
                             position: "relative",
                             overflow: "hidden",
-                            boxShadow: "0 20px 60px rgba(15,98,254,0.3)",
-                            boxSizing: "border-box"
+                            boxShadow: "0 24px 70px rgba(15,98,254,0.35)",
+                            boxSizing: "border-box",
                         }}
                     >
                         {/* Orbs inside hero */}
@@ -454,7 +462,7 @@ export default function CoursePageTemplate({
                             transition={{ delay: 0.3 }}
                             style={{ 
                                 width: "100%", 
-                                maxWidth: "100%", 
+                                maxWidth: "1000px", 
                                 margin: "0 auto 32px", 
                                 boxSizing: "border-box",
                                 padding: "0 16px",
@@ -521,7 +529,7 @@ export default function CoursePageTemplate({
                     )}
 
                     {/* ── SUBTEMAS ──────────────────────────────────────────────────── */}
-                    <div style={{ width: "100%", maxWidth: "100%", margin: "0 auto", display: "flex", flexDirection: "column", gap: "clamp(24px, 4vw, 36px)", padding: "0 16px", paddingBottom: 40, boxSizing: "border-box" }}>
+                    <div style={{ width: "100%", maxWidth: "1000px", margin: "0 auto", display: "flex", flexDirection: "column", gap: "clamp(24px, 4vw, 36px)", padding: "0 16px", paddingBottom: 40, boxSizing: "border-box" }}>
                         {subtemas.length === 0 ? (
                             <div style={{ 
                                 textAlign: "center", 
@@ -581,8 +589,8 @@ export default function CoursePageTemplate({
                                             overflowY: "visible", // Enforced for the aura/glow shadows
                                             paddingBottom: "60px",
                                             paddingTop: "48px",
-                                            paddingLeft: "60px",
-                                            paddingRight: "60px",
+                                            paddingLeft: "0",
+                                            paddingRight: "0",
                                             marginTop: "-32px", // Compensate the extra top padding
                                             scrollSnapType: "x mandatory",
                                             WebkitOverflowScrolling: "touch",
@@ -646,16 +654,20 @@ export default function CoursePageTemplate({
                                                         }}
                                                         className={`cpt-lesson-card ${lesson.slug === nextLessonSlug ? "next-lesson-to-complete" : ""} ${isExam ? "is-exam-card" : ""}`}
                                                         style={{
-                                                            width: "clamp(180px, 65vw, 320px)",
-                                                            minWidth: "initial",
+                                                            width: "220px",
+                                                            height: "220px",
+                                                            aspectRatio: "1/1",
                                                             flexShrink: 0,
                                                             display: "flex",
                                                             flexDirection: "column",
-                                                            padding: "clamp(18px, 3.5vw, 36px) clamp(14px, 3vw, 32px)",
+                                                            justifyContent: "center",
+                                                            alignItems: "center",
+                                                            textAlign: "center",
+                                                            padding: "24px",
                                                             background: isExam 
                                                                 ? "linear-gradient(135deg, #0f172a 0%, #1e293b 100%)" 
                                                                 : (isDone ? "#f0f7ff" : "#ffffff"),
-                                                            borderRadius: 24,
+                                                            borderRadius: "50%",
                                                             border: isLocked
                                                                 ? "2px dashed #cbd5e1"
                                                                 : (isExam ? "2.5px solid #3b82f6" : (isDone ? "2.5px solid #2563eb" : "2.5px solid #ffffff")),
@@ -665,7 +677,7 @@ export default function CoursePageTemplate({
                                                             boxShadow: isExam 
                                                                 ? "0 15px 40px rgba(15,98,254,0.15), inset 0 0 0 1px rgba(255,255,255,0.05)"
                                                                 : (isLocked ? "none" : "0 8px 20px rgba(0,0,0,0.04), inset 0 0 0 1px rgba(255,255,255,0.8)"),
-                                                            gap: "clamp(8px, 2vw, 12px)",
+                                                            gap: "8px",
                                                             transition: "all 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
                                                             position: "relative",
                                                             overflow: "hidden",
@@ -721,22 +733,22 @@ export default function CoursePageTemplate({
                                                         </div>
 
                                                         <div style={{ 
-                                                            fontSize: "clamp(14px, 3.5vw, 17px)", 
+                                                            fontSize: "14px", 
                                                             fontWeight: isExam ? 700 : 500, 
                                                             color: isExam ? "#fff" : "#1e293b", 
-                                                            lineHeight: 1.35, 
+                                                            lineHeight: 1.3, 
                                                             overflow: "hidden", 
                                                             display: "-webkit-box", 
                                                             WebkitLineClamp: 3, 
-                                                            WebkitBoxOrient: "vertical", 
-                                                            flex: 1 
+                                                            WebkitBoxOrient: "vertical",
+                                                            maxWidth: "160px"
                                                         }}>
                                                             {isExam ? "EXAMEN: " : ""}{lesson.title}
                                                         </div>
 
-                                                        <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", marginTop: "auto" }}>
+                                                        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", marginTop: 4 }}>
                                                             {isLocked ? (
-                                                                <div style={{ fontSize: 11, fontWeight: 500, color: "#64748b", background: "#f1f5f9", padding: "4px 10px", borderRadius: 999, textTransform: "uppercase" }}>
+                                                                <div style={{ fontSize: 10, fontWeight: 500, color: "#64748b", background: "#f1f5f9", padding: "3px 8px", borderRadius: 999, textTransform: "uppercase" }}>
                                                                     {isPaywalled ? "Premium" : "Bloqueado"}
                                                                 </div>
                                                             ) : (
@@ -744,7 +756,7 @@ export default function CoursePageTemplate({
                                                                     {[1, 2, 3].map((i) => (
                                                                         <StarIcon
                                                                             key={i}
-                                                                            size={18}
+                                                                            size={16}
                                                                             filled={i <= stars}
                                                                         />
                                                                     ))}

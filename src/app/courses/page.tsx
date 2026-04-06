@@ -237,6 +237,13 @@ export default function CoursesPage() {
 
   // Show loading placeholder if data is missing OR if we are about to redirect
   // This prevents the "Overview" page from blinking for one frame before jumping to the topic.
+  useEffect(() => {
+    document.body.classList.add('hide-sidebar');
+    return () => {
+      document.body.classList.remove('hide-sidebar');
+    };
+  }, []);
+
   if (loading || loadingData || !user || (willRedirect && nextTopicId)) {
     return <PageLoader />
   }
@@ -278,15 +285,16 @@ export default function CoursesPage() {
       <div
         className="courses-main-content"
         style={{
-          paddingTop: "clamp(24px, 4vw, 40px)",
+          paddingTop: "0",
           paddingBottom: "clamp(40px, 8vw, 80px)",
           paddingLeft: "0",
           paddingRight: "0",
           background: "transparent",
           position: "relative",
           display: "flex",
-          justifyContent: "flex-start", // User wants full width, so align to left/top and take all space
-          alignItems: "flex-start",
+          flexDirection: "column",
+          justifyContent: "flex-start",
+          alignItems: "center", // Centered to fix left gap perceptions
           marginBottom: 0,
           boxSizing: "border-box",
           width: "100%"
@@ -310,14 +318,14 @@ export default function CoursesPage() {
             className="courses-hero"
             style={{
               background: "linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #1d4ed8 100%)",
-              borderRadius: 28,
-              padding: "clamp(24px, 4vw, 40px) 32px",
-              width: "100%",
-              maxWidth: "100%",
-              margin: "0 0 clamp(20px, 4vw, 32px)",
+              borderRadius: "48px", // Slightly less aggressive rounding for a smaller card
+              padding: "clamp(32px, 5vw, 48px) clamp(24px, 4vw, 40px)",
+              width: "calc(100% - 32px)",
+              maxWidth: "1000px", // Shrunk main title card
+              margin: "32px auto 48px",
               position: "relative",
               overflow: "hidden",
-              boxShadow: "0 20px 60px rgba(15, 98, 254, 0.25)",
+              boxShadow: "0 24px 70px rgba(15, 98, 254, 0.35)",
               boxSizing: "border-box",
               display: "flex",
               flexDirection: "column"
@@ -408,9 +416,10 @@ export default function CoursesPage() {
               transition={{ delay: 0.3 }}
               style={{ 
                 width: "100%", 
-                maxWidth: "100%", 
+                maxWidth: "none", 
                 margin: "0 auto 32px", 
                 boxSizing: "border-box",
+                padding: "0 24px",
               }}
             >
               <div style={{ 
@@ -477,8 +486,8 @@ export default function CoursesPage() {
           <section
             style={{
               width: "100%",
-              maxWidth: "100%",
-              margin: "0 auto",
+              maxWidth: "none",
+              margin: "0",
               marginBottom: "clamp(32px, 6vw, 48px)",
               paddingBottom: 40,
               display: "flex",
@@ -526,13 +535,14 @@ export default function CoursesPage() {
 
                     <div style={{
                       display: "grid",
-                      gridTemplateColumns: "repeat(2, 1fr)",
-                      gap: "40px 60px",
+                      gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+                      justifyItems: "center",
+                      gap: "60px 40px",
                       width: "100%",
-                      maxWidth: "100%",
+                      maxWidth: "none",
                       margin: "0 auto",
                       position: "relative",
-                      padding: "0 20px"
+                      padding: "0 24px"
                     }}>
                       {topics.map((topic, idx) => {
                         const globalIdx = startIndex + idx;
@@ -586,12 +596,11 @@ export default function CoursesPage() {
                               style={{
                                 gridColumn: gridColValue,
                                 justifySelf: isOrphan ? "center" : "stretch",
-                                width: isOrphan ? "100%" : "auto",
-                                maxWidth: isOrphan ? "550px" : "100%",
-                                gridRow: rowIdx + 1,
-                                minHeight: 180,
+                                width: "240px",
+                                height: "240px",
+                                aspectRatio: "1 / 1",
                                 cursor: "pointer",
-                                borderRadius: "24px",
+                                borderRadius: "50%",
                                 background: isLocked 
                                   ? `linear-gradient(135deg, rgba(241, 245, 249, 0.8), rgba(241, 245, 249, 0.4))`
                                   : (isDnaRecommended 
@@ -612,6 +621,9 @@ export default function CoursesPage() {
                                 overflow: "hidden",
                                 display: "flex",
                                 flexDirection: "column",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                textAlign: "center",
                                 position: "relative",
                                 opacity: isDnaSkipped ? 0.6 : (isLocked ? 0.8 : 1),
                                 pointerEvents: "auto",
@@ -619,42 +631,36 @@ export default function CoursesPage() {
                               }}
                               className={topic.id === nextTopicId && !isDnaRecommended ? "next-topic-glow" : (isDnaRecommended ? "dna-glow-pulse" : "")}
                             >
-                              <div style={{ padding: "22px 24px", height: "100%", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-                                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 16 }}>
-                                  <div style={{ fontSize: 11, fontWeight: 400, color: isDnaRecommended ? "#93c5fd" : "#94a3b8", letterSpacing: "0.08em", textTransform: "uppercase" }}>
-                                    TEMA {topic.displayOrder.toString().padStart(2, "0")}
-                                  </div>
-                                  <div style={{ 
-                                    fontSize: 10, 
-                                    fontWeight: 400, 
-                                    color: isDnaRecommended ? "#fff" : (isLocked ? '#64748b' : topic.catColor), 
-                                    background: isDnaRecommended ? "rgba(255,255,255,0.2)" : (isLocked ? 'rgba(255,255,255,0.4)' : `${topic.catColor}15`), 
-                                    padding: "4px 10px", 
-                                    borderRadius: 999, 
-                                    textTransform: "uppercase",
-                                    border: `1px solid ${isDnaRecommended ? "rgba(255,255,255,0.3)" : (isLocked ? 'rgba(0,0,0,0.05)' : `${topic.catColor}30`)}`,
-                                    backdropFilter: "blur(10px)",
-                                    display: "flex",
-                                    alignItems: "center",
-                                    gap: 6
-                                  }}>
-                                    {isDnaRecommended && <Dna size={12} color="#60a5fa" />}
-                                    {isDnaRecommended ? "Billy DNA Recomendado" : (isPaywalled ? 'Premium' : topic.category)}
-                                  </div>
+                              <div style={{ padding: "24px", height: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", gap: 8 }}>
+                                <div style={{ fontSize: 10, fontWeight: 400, color: isDnaRecommended ? "#93c5fd" : "#94a3b8", letterSpacing: "0.08em", textTransform: "uppercase" }}>
+                                  TEMA {topic.displayOrder.toString().padStart(2, "0")}
                                 </div>
                                 
-                                <h3 style={{ fontSize: 22, fontWeight: 500, color: isDnaRecommended ? "#fff" : "#1e293b", margin: 0, lineHeight: 1.3 }}>{topic.title}</h3>
+                                <h3 style={{ fontSize: 18, fontWeight: 600, color: isDnaRecommended ? "#fff" : "#1e293b", margin: 0, lineHeight: 1.2, maxWidth: "180px" }}>{topic.title}</h3>
+                                
                                 {isDnaSkipped && (
-                                  <div style={{ fontSize: 11, fontWeight: 400, color: "#64748b", marginTop: 8, display: "flex", alignItems: "center", gap: 4 }}>
-                                    <Sparkles size={12} color={topic.catColor} /> BILLY DNA: NIVEL DOMINADO
+                                  <div style={{ fontSize: 10, fontWeight: 400, color: "#64748b", marginTop: 4, display: "flex", alignItems: "center", gap: 4 }}>
+                                    <Sparkles size={11} color={topic.catColor} /> BILLY DNA
                                   </div>
                                 )}
                                 
-                                <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 24, fontSize: 13, color: isDnaRecommended ? "rgba(255,255,255,0.8)" : "#64748b" }}>
-                                  <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 28, height: 28, borderRadius: 8, background: isDnaRecommended ? "rgba(255,255,255,0.15)" : (isLocked ? "rgba(255,255,255,0.4)" : `${topic.catColor}15`), border: `1px solid ${isDnaRecommended ? "rgba(255,255,255,0.2)" : (isLocked ? 'rgba(0,0,0,0.05)' : `${topic.catColor}30`)}` }}>
-                                    <BookOpen size={16} color={isDnaRecommended ? "#fff" : (isLocked ? "#94a3b8" : topic.catColor)} />
-                                  </div>
-                                  <span style={{ fontWeight: 400 }}>{topic.lessons} cursos disponibles</span>
+                                <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 8, fontSize: 11, color: isDnaRecommended ? "rgba(255,255,255,0.8)" : "#64748b" }}>
+                                  <BookOpen size={14} color={isDnaRecommended ? "#fff" : (isLocked ? "#94a3b8" : topic.catColor)} />
+                                  <span style={{ fontWeight: 400 }}>{topic.lessons} cursos</span>
+                                </div>
+
+                                <div style={{ 
+                                  marginTop: 10,
+                                  fontSize: 9, 
+                                  fontWeight: 600, 
+                                  color: isDnaRecommended ? "#fff" : (isLocked ? '#64748b' : topic.catColor), 
+                                  background: isDnaRecommended ? "rgba(255,255,255,0.2)" : (isLocked ? 'rgba(255,255,255,0.4)' : `${topic.catColor}15`), 
+                                  padding: "3px 8px", 
+                                  borderRadius: 999, 
+                                  textTransform: "uppercase",
+                                  border: `1px solid ${isDnaRecommended ? "rgba(255,255,255,0.3)" : (isLocked ? 'rgba(0,0,0,0.05)' : `${topic.catColor}30`)}`,
+                                }}>
+                                  {isDnaRecommended ? "Recomendado" : (isPaywalled ? 'Premium' : topic.category)}
                                 </div>
                               </div>
                               {isLocked && (
@@ -677,7 +683,7 @@ export default function CoursesPage() {
                                 return (
                                   <div style={{
                                     position: "absolute",
-                                    top: `calc(${rowIdx * 220}px + 90px)`, // Rough center of card
+                                    top: `calc(${rowIdx * 280}px + 120px)`, // Perfect center of 240px circle
                                     left: "50%",
                                     transform: "translateX(-50%)",
                                     width: 60,
@@ -708,7 +714,7 @@ export default function CoursesPage() {
                                 return (
                                   <div style={{
                                     position: "absolute",
-                                    top: `calc(${rowIdx * 220}px + 180px)`,
+                                    top: `calc(${rowIdx * 280}px + 240px)`, // Bottom of 240px circle
                                     left: isNextOrphan ? "50%" : (isArrowOnRight ? "calc(75% + 10px)" : "calc(25% - 10px)"),
                                     transform: "translateX(-50%)",
                                     height: 40,

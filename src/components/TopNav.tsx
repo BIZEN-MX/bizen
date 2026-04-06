@@ -247,55 +247,70 @@ export default function TopNav() {
                 </button>
 
                 {notifsOpen && (
-                  <div className="topnav-dropdown" style={{ width: 320, top: 'calc(100% + 10px)', right: 0 }}>
-                    <div className="topnav-dropdown-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <span style={{ fontSize: 14, fontWeight: 800, color: '#1e293b' }}>Notificaciones</span>
+                  <div className="notif-dropdown-panel">
+                    <div className="notif-header">
+                      <span className="notif-header-title">Notificaciones</span>
                       {unreadNotifs > 0 && (
-                        <button onClick={markAllRead} style={{ fontSize: 11, fontWeight: 600, color: '#0F62FE', border: 'none', background: 'transparent', cursor: 'pointer' }}>Marcar todo como leído</button>
+                        <button onClick={markAllRead} className="notif-mark-read">
+                          Marcar todo como leído
+                        </button>
                       )}
                     </div>
                     
-                    <div style={{ maxHeight: 360, overflowY: 'auto' }}>
+                    <div className="notif-list">
                       {loadingNotifs && notifications.length === 0 ? (
-                        <div style={{ padding: 32, textAlign: 'center', color: '#64748b', fontSize: 13 }}>Cargando...</div>
+                        <div className="notif-empty">
+                          <div className="animate-pulse flex flex-col items-center">
+                            <div className="w-10 h-10 bg-slate-100 rounded-full mb-3" />
+                            <div className="h-2 w-24 bg-slate-100 rounded" />
+                          </div>
+                        </div>
                       ) : notifications.length === 0 ? (
-                        <div style={{ padding: 40, textAlign: 'center' }}>
-                          <Bell size={24} color="#cbd5e1" style={{ margin: '0 auto 12px' }} />
-                          <div style={{ fontSize: 13, color: '#64748b' }}>No tienes notificaciones aún</div>
+                        <div className="notif-empty">
+                          <div className="notif-empty-icon">
+                            <Bell size={24} />
+                          </div>
+                          <div style={{ fontSize: 13, color: '#64748b', fontWeight: 500 }}>No tienes notificaciones aún</div>
                         </div>
                       ) : (
-                        notifications.map((n) => (
-                          <button 
-                            key={n.id} 
-                            className="topnav-dropdown-item" 
-                            style={{ 
-                              opacity: n.readAt ? 0.6 : 1, 
-                              borderLeft: n.readAt ? 'none' : '3px solid #0F62FE',
-                              background: n.readAt ? 'transparent' : 'rgba(15,98,254,0.02)',
-                              marginTop: 2
-                            }}
-                            onClick={() => {
-                              if (n.data?.url || n.link) navigateTo(n.data?.url || n.link)
-                              setNotifsOpen(false)
-                            }}
-                          >
-                            <div style={{ flex: 1 }}>
-                              <div style={{ fontSize: 13, fontWeight: n.readAt ? 500 : 700, color: '#1e293b', marginBottom: 4, lineHeight: 1.4 }}>
-                                {n.title || n.message}
+                        notifications.map((n) => {
+                          const isUnread = !n.readAt
+                          return (
+                            <button 
+                              key={n.id} 
+                              className={`notif-item ${isUnread ? 'unread' : ''}`}
+                              onClick={() => {
+                                if (n.data?.url || n.link) navigateTo(n.data?.url || n.link)
+                                setNotifsOpen(false)
+                              }}
+                            >
+                              <div className="notif-icon-box">
+                                {n.title?.toLowerCase().includes('reto') || n.title?.toLowerCase().includes('zap') ? <Zap size={18} /> : 
+                                 n.title?.toLowerCase().includes('trofeo') || n.title?.toLowerCase().includes('award') ? <Trophy size={18} /> :
+                                 n.title?.toLowerCase().includes('coment') || n.title?.toLowerCase().includes('foro') ? <MessageSquare size={18} /> :
+                                 <Bell size={18} />}
                               </div>
-                              <div style={{ fontSize: 11, color: '#94a3b8' }}>
-                                {n.createdAt ? new Date(n.createdAt).toLocaleDateString() : 'Hace poco'}
+                              <div className="notif-body">
+                                <div className="notif-text">
+                                  {n.title || n.message}
+                                </div>
+                                <div className="notif-meta">
+                                  <span>{n.createdAt ? new Date(n.createdAt).toLocaleDateString(undefined, { day: 'numeric', month: 'short' }) : 'Reciente'}</span>
+                                  {isUnread && <span className="topnav-plan-dot" style={{ background: '#0F62FE', width: 4, height: 4 }} />}
+                                </div>
                               </div>
-                            </div>
-                          </button>
-                        ))
+                              {isUnread && <div className="notif-unread-indicator" />}
+                            </button>
+                          )
+                        })
                       )}
                     </div>
                     
-                    <div className="topnav-dropdown-divider" />
-                    <button className="topnav-dropdown-item" style={{ justifyContent: 'center', color: '#64748b', fontSize: 12 }} onClick={() => navigateTo('/comunidad/notificaciones')}>
-                      Ver todas las notificaciones
-                    </button>
+                    <div className="notif-footer">
+                      <button className="notif-see-all" onClick={() => navigateTo('/comunidad/notificaciones')}>
+                        Ver todas las notificaciones
+                      </button>
+                    </div>
                   </div>
                 )}
               </div>

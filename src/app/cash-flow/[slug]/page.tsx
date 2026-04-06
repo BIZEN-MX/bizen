@@ -8,7 +8,6 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { MonthlyBudgetSimulator } from '@/components/simulators/MonthlyBudgetSimulator';
 import { SavingsGoalSimulator } from '@/components/simulators/SavingsGoalSimulator';
 import { CreditCardPayoffSimulator } from '@/components/simulators/CreditCardPayoffSimulator';
 import { SimpleLoanSimulator } from '@/components/simulators/SimpleLoanSimulator';
@@ -30,7 +29,6 @@ interface Simulator {
 }
 
 const simulatorComponents: Record<string, React.ComponentType> = {
-  'monthly-budget': MonthlyBudgetSimulator,
   'savings-goal': SavingsGoalSimulator,
   'credit-card-payoff': CreditCardPayoffSimulator,
   'simple-loan': SimpleLoanSimulator,
@@ -48,10 +46,6 @@ export default function SimulatorPage() {
 
   // Local fallbacks for metadata if not found in DB
   const localMetadata: Record<string, { name: string; description: string }> = {
-    'monthly-budget': { 
-      name: 'BIZEN Plan (Presupuesto)', 
-      description: 'Analiza tu capacidad de ahorro usando la regla 50/30/20 y optimiza tus gastos mensuales.' 
-    },
     'savings-goal': { 
       name: 'BIZEN Saver (Metas de Ahorro)', 
       description: 'Calcula cuánto tiempo o cuánto ahorro mensual necesitas para alcanzar tus objetivos financieros.' 

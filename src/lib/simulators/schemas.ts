@@ -6,52 +6,6 @@
 import { z } from 'zod';
 
 // =====================================================
-// 1. Monthly Budget 50/30/20
-// =====================================================
-
-export const expenseItemSchema = z.object({
-  name: z.string().min(1, 'El nombre es requerido').max(100, 'Nombre muy largo'),
-  amount: z.number().min(0, 'El monto debe ser positivo').max(1_000_000, 'Monto demasiado alto'),
-});
-
-export const monthlyBudgetSchema = z.object({
-  monthlyIncome: z.number()
-    .min(0, 'El ingreso debe ser positivo')
-    .max(1_000_000, 'Ingreso demasiado alto'),
-  fixedExpenses: z.array(expenseItemSchema)
-    .min(0, 'Agrega al menos un gasto fijo'),
-  variableExpenses: z.array(expenseItemSchema)
-    .min(0, 'Agrega al menos un gasto variable'),
-  savingsGoal: z.number()
-    .min(0, 'La meta debe ser positiva')
-    .max(1_000_000, 'Meta demasiado alta'),
-  mode: z.enum(['50/30/20', 'custom'], {
-    errorMap: () => ({ message: 'Modo inválido' }),
-  }),
-});
-
-export type MonthlyBudgetInput = z.infer<typeof monthlyBudgetSchema>;
-
-export interface MonthlyBudgetOutput {
-  totalFixed: number;
-  totalVariable: number;
-  totalExpenses: number;
-  actualSavings: number;
-  remainingIncome: number;
-  meetsGoal: boolean;
-  gapToGoal: number;
-  recommendations: string[];
-  breakdown?: {
-    essentialTarget?: number;
-    wantsTarget?: number;
-    savingsTarget?: number;
-    essentialActual: number;
-    wantsActual: number;
-    savingsActual: number;
-  };
-}
-
-// =====================================================
 // 2. Savings Goal & Compound Interest
 // =====================================================
 
@@ -311,21 +265,6 @@ export type SimulatorRun = z.infer<typeof simulatorRunSchema>;
 // =====================================================
 
 export const PRESET_VALUES = {
-  monthlyBudget: {
-    monthlyIncome: 10000,
-    fixedExpenses: [
-      { name: 'Renta', amount: 2000 },
-      { name: 'Transporte', amount: 500 },
-      { name: 'Servicios', amount: 500 },
-    ],
-    variableExpenses: [
-      { name: 'Comida', amount: 1500 },
-      { name: 'Entretenimiento', amount: 500 },
-      { name: 'Ropa', amount: 500 },
-    ],
-    savingsGoal: 2000,
-    mode: '50/30/20' as const,
-  },
   savingsGoal: {
     initial: 1000,
     monthlyContribution: 500,

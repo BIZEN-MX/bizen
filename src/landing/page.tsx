@@ -466,8 +466,8 @@ const defaultCourses: Course[] = [
     url: "#ver-curso-1",
   },
   {
-    title: "Presupuesto 50/30/20 en la vida real",
-    duration: "2h",
+    title: "Gestión de presupuesto y flujo de caja",
+    duration: "2.5h",
     image:
       "https://images.unsplash.com/photo-1559066653-e8b5f22f1f83?q=80&w=1200&auto=format&fit=crop",
     url: "#ver-curso-2",

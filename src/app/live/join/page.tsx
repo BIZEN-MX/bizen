@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react"
 import { useRouter } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
 import { useAuth } from "@/contexts/AuthContext"
-import { ArrowLeft } from "lucide-react"
+import { ArrowLeft, ChevronDown } from "lucide-react"
 import { IconBolt, IconGamepad } from "@/components/live/LiveIcons"
 import { AVATARS, AvatarSvg } from "@/components/live/LiveAvatars"
 import { QUIZ_CATALOG } from "@/data/live-quizzes"
@@ -230,7 +230,7 @@ export default function JoinPage() {
         flexDirection: "column",
         overflowY: "auto",
         position: "relative",
-        padding: "clamp(24px, 6vw, 64px) 20px"
+        padding: "0 20px clamp(40px, 8vw, 84px)"
       }}>
 
         {/* Back Button */}
@@ -443,25 +443,7 @@ export default function JoinPage() {
                   El PIN lo da el anfitrión antes de iniciar
                 </p>
 
-                <div style={{ marginTop: 40, paddingTop: 32, borderTop: "1.5px solid rgba(255,255,255,0.06)", textAlign: "center" }}>
-                  <p style={{ color: "rgba(255,255,255,0.3)", fontSize: 13, marginBottom: 16 }}>¿Quieres ser el anfitrión?</p>
-                  <button 
-                    onClick={() => router.push("/live/host")}
-                    style={{
-                      background: "rgba(255,255,255,0.06)",
-                      border: "1px solid rgba(255,255,255,0.12)",
-                      padding: "12px 24px",
-                      borderRadius: 14,
-                      color: "white",
-                      fontSize: 14,
-                      fontWeight: 600,
-                      cursor: "pointer",
-                      transition: "all 0.2s"
-                    }}
-                  >
-                    Explorar Catálogo y Lanzar Quiz
-                  </button>
-                </div>
+
               </motion.div>
             )}
 
@@ -576,6 +558,38 @@ export default function JoinPage() {
             )}
           </AnimatePresence>
         </motion.div>
+
+        {/* Scroll Indicator */}
+        {step === "pin" && (
+          <motion.div
+            initial={{ opacity: 0, y: 0 }}
+            animate={{ opacity: [0, 1, 0.6], y: [0, 8, 0] }}
+            transition={{ 
+              opacity: { delay: 1, duration: 1 },
+              y: { repeat: Infinity, duration: 2, ease: "easeInOut" }
+            }}
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: 4,
+              marginTop: 20,
+              color: "#fbbf24",
+              opacity: 0.6,
+              cursor: "pointer",
+              zIndex: 10
+            }}
+            onClick={() => {
+              window.scrollTo({
+                top: 600,
+                behavior: "smooth"
+              })
+            }}
+          >
+            <span style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase" }}>Desliza</span>
+            <ChevronDown size={20} />
+          </motion.div>
+        )}
 
         {/* ─── OFFICIAL CATALOG SECTION ─── */}
         {step === "pin" && (

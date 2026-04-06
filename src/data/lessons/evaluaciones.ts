@@ -154,7 +154,7 @@ export const lessonEvaluacionBloque3Steps: LessonStep[] = [
 
   { id: "eval-3-9", stepType: "blitz_challenge", question: "¿Qué regla BIZEN vence al impulso inmediato?", options: [
     {id:"o1", label:"Regla de las 48 Horas", isCorrect:true}, 
-    {id:"o2", label:"Regla del 50/30/20", isCorrect:false}
+    {id:"o2", label:"Regla de la Gratificación Pospuesta", isCorrect:false}
   ], timeLimit: 10, isAssessment: true, fullScreen: true },
 
   { id: "eval-3-10", stepType: "summary", title: "Certificación: Consumo", body: "Examen finalizado. Has demostrado que el control de tus salidas de capital es una ventaja competitiva.", fullScreen: true },

@@ -41,12 +41,6 @@ interface SimulatorRun {
 }
 
 const simulatorConfig: Record<string, { name: string; icon: any; color: string; bg: string }> = {
-  'monthly-budget': { 
-    name: 'BIZEN Plan (Presupuesto)', 
-    icon: Wallet, 
-    color: '#059669', 
-    bg: '#f0fdf4' 
-  },
   'savings-goal': { 
     name: 'BIZEN Saver (Ahorro)', 
     icon: Target, 

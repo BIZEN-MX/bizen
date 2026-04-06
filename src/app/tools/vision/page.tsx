@@ -28,6 +28,7 @@ interface CanvasCard {
   body: string
   x: number
   y: number
+  zIndex: number
   priority?: Priority
   progress?: number
   deadline?: string
@@ -41,11 +42,11 @@ const CARD_CONFIG: Record<CardType, {
   label: string; Icon: React.ElementType
   bg: string; border: string; accent: string; titleColor: string
 }> = {
-  goal:    { label: "Meta",     Icon: Target,      bg: "linear-gradient(145deg,#faf5ff,#ede9fe)", border: "#c4b5fd", accent: "#7c3aed", titleColor: "#5b21b6" },
-  savings: { label: "Ahorro",   Icon: PiggyBank,   bg: "linear-gradient(145deg,#f0fdf4,#dcfce7)", border: "#86efac", accent: "#059669", titleColor: "#065f46" },
-  debt:    { label: "Deuda",    Icon: TrendingDown, bg: "linear-gradient(145deg,#fff1f2,#ffe4e6)", border: "#fca5a5", accent: "#dc2626", titleColor: "#991b1b" },
-  note:    { label: "Nota",     Icon: StickyNote,   bg: "linear-gradient(145deg,#fefce8,#fef9c3)", border: "#fde68a", accent: "#d97706", titleColor: "#78350f" },
-  income:  { label: "Ingreso",  Icon: TrendingUp,   bg: "linear-gradient(145deg,#eff6ff,#dbeafe)", border: "#93c5fd", accent: "#0F62FE", titleColor: "#1e40af" },
+  goal:    { label: "Meta",     Icon: Target,      bg: "white", border: "#e2e8f0", accent: "#7c3aed", titleColor: "#2d06ff" },
+  savings: { label: "Ahorro",   Icon: PiggyBank,   bg: "white", border: "#e2e8f0", accent: "#059669", titleColor: "#059669" },
+  debt:    { label: "Deuda",    Icon: TrendingDown, bg: "white", border: "#e2e8f0", accent: "#dc2626", titleColor: "#dc2626" },
+  note:    { label: "Nota",     Icon: StickyNote,   bg: "#fef9c3", border: "#fde047", accent: "#a16207", titleColor: "#713f12" },
+  income:  { label: "Ingreso",  Icon: TrendingUp,   bg: "white", border: "#e2e8f0", accent: "#0F62FE", titleColor: "#0F62FE" },
 }
 
 const PRIORITY_CONFIG: Record<Priority, { label: string; color: string; bg: string }> = {
@@ -67,12 +68,12 @@ const AI_ACTIONS = [
 const uid = () => Math.random().toString(36).slice(2, 9)
 
 const INITIAL_CARDS: CanvasCard[] = [
-  { id: uid(), type: "goal",    title: "Comprar mi depa",      body: "Juntar $300,000 de enganche en 5 años", x: 80,  y: 80,  priority: "alta",  progress: 15, amount: 300000 },
-  { id: uid(), type: "savings", title: "Fondo de emergencia",  body: "Meta: $30,000 (3 meses de gastos)",     x: 360, y: 80,  priority: "alta",  amount: 30000 },
-  { id: uid(), type: "debt",    title: "Tarjeta de crédito",   body: "$8,000 al 18% anual — eliminar en 12 meses", x: 640, y: 80, priority: "alta", amount: 8000 },
-  { id: uid(), type: "goal",    title: "Viaje a Japón",        body: "Presupuesto $60,000 — en 18 meses",    x: 80,  y: 340, priority: "media", progress: 5,  amount: 60000 },
-  { id: uid(), type: "income",  title: "Freelance",            body: "Ingresos adicionales proyectados",      x: 360, y: 340, priority: "media", amount: 5000 },
-  { id: uid(), type: "note",    title: "Regla de oro",         body: "Pagar primero, luego gastar. Nunca al revés.", x: 640, y: 340 },
+  { id: uid(), type: "goal",    title: "Comprar mi depa",      body: "Juntar $300,000 de enganche en 5 años", x: 100,  y: 100, zIndex: 1, priority: "alta",  progress: 15, amount: 300000 },
+  { id: uid(), type: "savings", title: "Fondo de emergencia",  body: "Meta: $30,000 (3 meses de gastos)",     x: 420, y: 100, zIndex: 2, priority: "alta",  amount: 30000 },
+  { id: uid(), type: "debt",    title: "Tarjeta de crédito",   body: "$8,000 al 18% anual — eliminar en 12 meses", x: 740, y: 100, zIndex: 3, priority: "alta", amount: 8000 },
+  { id: uid(), type: "goal",    title: "Viaje a Japón",        body: "Presupuesto $60,000 — en 18 meses",    x: 100,  y: 420, zIndex: 4, priority: "media", progress: 5,  amount: 60000 },
+  { id: uid(), type: "income",  title: "Freelance",            body: "Ingresos adicionales proyectados",      x: 420, y: 420, zIndex: 5, priority: "media", amount: 5000 },
+  { id: uid(), type: "note",    title: "Regla de oro",         body: "Pagar primero, luego gastar. Nunca al revés.", x: 740, y: 420, zIndex: 6, },
 ]
 
 // ─── Progress Ring ────────────────────────────────────────────────────────────
@@ -98,11 +99,12 @@ function ProgressRing({ pct, color, size = 32 }: { pct: number; color: string; s
 
 // ─── Canvas Card ─────────────────────────────────────────────────────────────
 
-function CanvasCardComponent({ card, onUpdate, onDelete, onDrag, isMobile }: {
+function CanvasCardComponent({ card, onUpdate, onDelete, onDrag, onFocus, isMobile }: {
   card: CanvasCard
   onUpdate: (id: string, u: Partial<CanvasCard>) => void
   onDelete: (id: string) => void
   onDrag: (id: string, x: number, y: number) => void
+  onFocus: (id: string) => void
   isMobile: boolean
 }) {
   const cfg = CARD_CONFIG[card.type]
@@ -139,54 +141,56 @@ function CanvasCardComponent({ card, onUpdate, onDelete, onDrag, isMobile }: {
   return (
     <motion.div
       drag dragMomentum={false} dragElastic={0}
+      onDragStart={() => onFocus(card.id)}
       onDragEnd={(_, info) => onDrag(card.id, card.x + info.offset.x, card.y + info.offset.y)}
+      onPointerDown={() => onFocus(card.id)}
       initial={{ x: card.x, y: card.y, opacity: 0, scale: 0.88 }}
-      animate={{ opacity: 1, scale: 1 }}
-      whileDrag={{ scale: 1.03, zIndex: 100, boxShadow: "0 24px 48px rgba(0,0,0,0.18)" }}
+      animate={{ opacity: 1, scale: 1, x: card.x, y: card.y, zIndex: card.zIndex }}
+      whileDrag={{ scale: 1.03, zIndex: 1000, boxShadow: "0 24px 60px rgba(0,0,0,0.22)" }}
       style={{
         position: "absolute", width: isMobile ? (card.type === "note" ? 180 : 220) : (card.type === "note" ? 215 : 255),
         cursor: "grab", borderRadius: 18,
-        border: `1.5px solid ${cfg.border}`,
+        border: `1px solid ${cfg.border}`,
         background: cardBg,
-        boxShadow: "0 4px 20px rgba(0,0,0,0.07), 0 1px 4px rgba(0,0,0,0.05)",
+        boxShadow: "0 4px 18px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04)",
         userSelect: "none",
         display: "flex",
         flexDirection: "column",
         height: "auto",
         minHeight: "fit-content",
+        zIndex: card.zIndex,
       }}
     >
       {/* Header */}
       <div style={{
         display: "flex", alignItems: "center", gap: 6,
         padding: "10px 11px 8px",
-        borderBottom: `1px solid ${cfg.border}`,
-        background: "rgba(255,255,255,0.55)",
+        borderBottom: `1px solid ${cfg.border}80`,
+        background: "rgba(255,255,255,0.45)",
         borderRadius: "17px 17px 0 0",
       }}>
-        <div style={{ width: 24, height: 24, borderRadius: 6, background: `${cfg.accent}18`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-          <Icon size={12} color={cfg.accent} />
+        <div style={{ width: 22, height: 22, borderRadius: 6, background: `${cfg.accent}12`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+          <Icon size={11} color={cfg.accent} />
         </div>
-        <span style={{ fontSize: 9, fontWeight: 800, color: cfg.accent, textTransform: "uppercase", letterSpacing: "0.08em", flex: 1 }}>
+        <span style={{ fontSize: 9, fontWeight: 800, color: cfg.accent, textTransform: "uppercase", letterSpacing: "0.1em", flex: 1 }}>
           {cfg.label}
         </span>
 
-        {/* Priority badge */}
+        {/* Priority badge - Dot style */}
         {card.priority && card.type !== "note" && (
           <div style={{ position: "relative" }}>
             <button
               onPointerDown={e => e.stopPropagation()}
               onClick={e => { e.stopPropagation(); setShowPriorityPicker(p => !p) }}
               style={{
-                background: PRIORITY_CONFIG[card.priority!].bg, border: "none", borderRadius: 5,
-                padding: "2px 6px", fontSize: 9, fontWeight: 700, cursor: "pointer",
-                color: PRIORITY_CONFIG[card.priority!].color, fontFamily: "inherit",
-                display: "flex", alignItems: "center", gap: 3,
+                background: "rgba(0,0,0,0.03)", border: "none", borderRadius: 99,
+                padding: "2px 8px", fontSize: 9, fontWeight: 800, cursor: "pointer",
+                color: "#64748b", fontFamily: "inherit",
+                display: "flex", alignItems: "center", gap: 4,
               }}
             >
-              <Circle size={5} fill={PRIORITY_CONFIG[card.priority!].color} color={PRIORITY_CONFIG[card.priority!].color} />
+              <div style={{ width: 6, height: 6, borderRadius: "50%", background: PRIORITY_CONFIG[card.priority!].color }} />
               {PRIORITY_CONFIG[card.priority!].label}
-              <ChevronDown size={8} />
             </button>
             {showPriorityPicker && (
               <div onPointerDown={e => e.stopPropagation()} style={{
@@ -251,8 +255,8 @@ function CanvasCardComponent({ card, onUpdate, onDelete, onDrag, isMobile }: {
 
       {/* Amount badge */}
       {card.amount != null && card.amount > 0 && card.type !== "note" && (
-        <div style={{ padding: "6px 11px 0", display: "flex", alignItems: "center", gap: 5 }}>
-          <span style={{ fontSize: 15, fontWeight: 800, color: cfg.titleColor, letterSpacing: "-0.03em" }}>
+        <div style={{ padding: "12px 14px 0", display: "flex", alignItems: "center", gap: 5 }}>
+          <span style={{ fontSize: 18, fontWeight: 900, color: cfg.titleColor, letterSpacing: "-0.04em" }}>
             ${card.amount.toLocaleString()}
           </span>
         </div>
@@ -385,7 +389,13 @@ export default function VisionCanvasPage() {
   const [showAddMenu, setShowAddMenu] = useState(false)
   const [showToolsMenu, setShowToolsMenu] = useState(false)
   const canvasRef = useRef<HTMLDivElement>(null)
-  
+  const highZ = useRef(10)
+
+  const focusCard = useCallback((id: string) => {
+    highZ.current += 1
+    setCards(prev => prev.map(c => c.id === id ? { ...c, zIndex: highZ.current } : c))
+  }, [])
+
   const { user } = useAuth()
   const [saveLoading, setSaveLoading] = useState(false)
   const [saveSuccess, setSaveSuccess] = useState(false)
@@ -457,24 +467,30 @@ export default function VisionCanvasPage() {
   };
 
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
-    // Pan with Left Click (0) on background, Middle Click (1), or Alt+Click
-    const isBackground = e.target === e.currentTarget || (e.target as HTMLElement).classList.contains('canvas-stage')
+    const isBackground = e.target === e.currentTarget || (e.target as HTMLElement).classList.contains('canvas-stage') || (e.target as HTMLElement).classList.contains('canvas-area')
     
-    if (e.button === 1 || e.altKey || (e.button === 0 && isBackground)) {
+    // Pan with Left Click on background, or any button if Alt is held
+    if (e.altKey || (e.button === 0 && isBackground)) {
       setIsPanning(true)
       panStart.current = { x: e.clientX, y: e.clientY, px: pan.x, py: pan.y }
-      e.preventDefault()
+      // Change body cursor while panning
+      document.body.style.cursor = 'grabbing'
     }
   }, [pan])
 
   const handleMouseMove = useCallback((e: MouseEvent) => {
-    if (isPanning) setPan({
-      x: panStart.current.px + (e.clientX - panStart.current.x),
-      y: panStart.current.py + (e.clientY - panStart.current.y),
-    })
+    if (isPanning) {
+      setPan({
+        x: panStart.current.px + (e.clientX - panStart.current.x),
+        y: panStart.current.py + (e.clientY - panStart.current.y),
+      })
+    }
   }, [isPanning])
 
-  const handleMouseUp = useCallback(() => setIsPanning(false), [])
+  const handleMouseUp = useCallback(() => {
+    setIsPanning(false)
+    document.body.style.cursor = 'default'
+  }, [])
 
   useEffect(() => {
     window.addEventListener("mousemove", handleMouseMove)
@@ -486,15 +502,48 @@ export default function VisionCanvasPage() {
   }, [handleMouseMove, handleMouseUp])
 
   const handleWheel = useCallback((e: React.WheelEvent) => {
-    e.preventDefault()
-    setScale(s => Math.min(2, Math.max(0.3, s - e.deltaY * 0.001)))
-  }, [])
+    if (e.ctrlKey || e.metaKey || e.altKey) {
+      e.preventDefault()
+      const zoomSpeed = 0.001
+      const delta = -e.deltaY * zoomSpeed
+      const newScale = Math.min(2, Math.max(0.2, scale + delta))
+      
+      // Zoom into pointer
+      if (canvasRef.current) {
+        const rect = canvasRef.current.getBoundingClientRect()
+        const mouseX = e.clientX - rect.left
+        const mouseY = e.clientY - rect.top
+        
+        const newPanX = mouseX - (mouseX - pan.x) * (newScale / scale)
+        const newPanY = mouseY - (mouseY - pan.y) * (newScale / scale)
+        
+        setScale(newScale)
+        setPan({ x: newPanX, y: newPanY })
+      }
+    } else {
+      // Normal scroll translates
+      setPan(p => ({ x: p.x - e.deltaX, y: p.y - e.deltaY }))
+    }
+  }, [scale, pan])
 
   const addCard = (type: CardType) => {
+    highZ.current += 1
+    
+    // Spawn in the current viewport center
+    const viewportWidth = window.innerWidth
+    const viewportHeight = window.innerHeight
+    
+    // Calculate world coordinates for the center of current view
+    const centerX = (viewportWidth / 2 - pan.x) / scale - 120
+    const centerY = (viewportHeight / 2 - pan.y) / scale - 100
+
     setCards(prev => [...prev, {
       id: uid(), type,
       title: type === "goal" ? "Nueva meta" : type === "savings" ? "Nuevo ahorro" : type === "debt" ? "Nueva deuda" : type === "income" ? "Nuevo ingreso" : "Nueva nota",
-      body: "", x: 200 + Math.random() * 400, y: 150 + Math.random() * 250,
+      body: "", 
+      x: centerX + (Math.random() * 40 - 20), 
+      y: centerY + (Math.random() * 40 - 20),
+      zIndex: highZ.current,
       priority: type !== "note" ? "media" : undefined,
       progress: type === "goal" ? 0 : undefined,
       amount: 0,
@@ -520,8 +569,8 @@ export default function VisionCanvasPage() {
     const newCards: CanvasCard[] = []
     let col = 0
     for (const type of types) {
-      grouped[type].forEach((card, row) => newCards.push({ ...card, x: col * 290 + 60, y: row * 280 + 80 }))
-      if (grouped[type].length > 0) col++
+    grouped.goal.forEach((card, row) => newCards.push({ ...card, x: col * 290 + 100, y: row * 280 + 100 }))
+    if (grouped[type].length > 0) col++
     }
     setCards(newCards)
   }
@@ -780,9 +829,9 @@ export default function VisionCanvasPage() {
         /* ── Canvas ── */
         .canvas-bg {
           flex: 1; position: relative; overflow: hidden;
-          background-color: #edf0f7;
-          background-image: radial-gradient(rgba(15,98,254,0.18) 1px, transparent 1px);
-          background-size: 22px 22px;
+          background-color: #f1f3f7;
+          background-image: radial-gradient(rgba(15,98,254,0.12) 1px, transparent 1px);
+          background-size: 24px 24px;
         }
         .canvas-stage { position: absolute; top: 0; left: 0; width: 3000px; height: 2000px; }
 
@@ -1051,6 +1100,7 @@ export default function VisionCanvasPage() {
                   onUpdate={updateCard}
                   onDelete={deleteCard}
                   onDrag={onDrag}
+                  onFocus={focusCard}
                   isMobile={isMobile}
                 />
               ))}
@@ -1241,7 +1291,7 @@ export default function VisionCanvasPage() {
             display: isMobile ? "none" : "flex", alignItems: "center", gap: 8
           }}>
             <Move size={14} color="#0F62FE" />
-            <span style={{ fontSize: 11, fontWeight: 700, color: "#64748b" }}>Alt + Drag para mover</span>
+            <span style={{ fontSize: 11, fontWeight: 700, color: "#64748b" }}>Arrastra fondo para mover | Use scroll para zoom</span>
           </div>
         </div>
 

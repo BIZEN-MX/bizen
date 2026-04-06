@@ -88,12 +88,19 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
     !pathname?.startsWith('/login') &&
     !pathname?.startsWith('/signup') &&
     !pathname?.startsWith('/onboarding') &&
+    !pathname?.startsWith('/live') &&
     !pathname?.includes('/auth/') &&
     !pathname?.startsWith('/impacto-social') &&
     pathname !== '/payment';
 
   return (
-    <div className="app-shell" data-topnav-active={isTopNavActive}>
+    <div className="app-shell" data-topnav-active={isTopNavActive} data-is-live={pathname?.startsWith('/live')}>
+      {pathname?.startsWith('/live') && (
+        <style>{`
+          body { background: #060c1d !important; }
+          .app-shell { background: #060c1d !important; }
+        `}</style>
+      )}
       <div className="app-scroll">
         <div style={{ display: "flex", width: "100%", minHeight: "100%" }}>
           
@@ -102,7 +109,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
             style={{ 
               maxWidth: "none", 
               boxSizing: "border-box",
-              paddingTop: isTopNavActive ? "110px" : "0"
+              paddingTop: isTopNavActive ? "84px" : "0"
             }}
           >
             {/* Inner wrapper to ensure content is full width in the usable space */}

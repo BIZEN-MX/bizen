@@ -126,7 +126,7 @@ export default function BillyChatbot() {
       const response = data?.response || "¡Ups! Tuvimos un hipo creativo. Intenta de nuevo."
       
       let suggestions: string[] = []
-      if (response.toLowerCase().includes("ahorro")) suggestions = ["¿Cómo hago un presupuesto?", "Regla 50/30/20"]
+      if (response.toLowerCase().includes("ahorro")) suggestions = ["¿Cómo hago un presupuesto?", "¿Cómo ahorrar más?"]
       if (response.toLowerCase().includes("inver")) suggestions = ["¿Qué son los CETES?", "Empezar a invertir"]
 
       setMessages((p) => [...p, { role: "assistant", content: response, timestamp: new Date(), suggestions }])

@@ -92,13 +92,25 @@ function Slider({ label, value, onChange, min, max, step = 1, prefix = '', suffi
 }) {
   const pct = ((value - min) / (max - min)) * 100
   return (
-    <div style={{ marginBottom: 20, userSelect: 'none' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
-        <span style={{ fontSize: 13, fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.06em' }}>{label}</span>
-        <span style={{ fontSize: 18, fontWeight: 700, color, background: `${color}12`, padding: '2px 12px', borderRadius: 8 }}>{prefix}{value.toLocaleString('es-MX')}{suffix}</span>
+    <div style={{ marginBottom: 24, userSelect: 'none' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 10, alignItems: 'baseline' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+          <span style={{ fontSize: 13, fontWeight: 700, color: '#475569', textTransform: 'uppercase', letterSpacing: '0.06em' }}>{label}</span>
+          <div style={{ width: 6, height: 6, borderRadius: '50%', background: color, animation: 'pulse 2s infinite' }} />
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+          <span style={{ fontSize: 20, fontWeight: 800, color, background: `${color}12`, padding: '2px 14px', borderRadius: 10 }}>{prefix}{value.toLocaleString('es-MX')}{suffix}</span>
+        </div>
       </div>
-      <div style={{ position: 'relative', height: 8, borderRadius: 99, background: '#e2e8f0' }}>
-        <div style={{ position: 'absolute', left: 0, top: 0, height: '100%', width: `${pct}%`, background: `linear-gradient(90deg,${color}88,${color})`, borderRadius: 99 }} />
+      
+      <div style={{ position: 'relative', height: 40, display: 'flex', alignItems: 'center' }}>
+        {/* Track Background */}
+        <div style={{ position: 'absolute', left: 0, right: 0, height: 8, borderRadius: 99, background: '#e2e8f0', zIndex: 1 }}>
+          {/* Active Fill */}
+          <div style={{ position: 'absolute', left: 0, top: 0, height: '100%', width: `${pct}%`, background: `linear-gradient(90deg,${color}88,${color})`, borderRadius: 99 }} />
+        </div>
+        
+        {/* Native Input (Invisible but captures all interactions) */}
         <input 
           type="range" 
           min={min} 
@@ -108,56 +120,102 @@ function Slider({ label, value, onChange, min, max, step = 1, prefix = '', suffi
           onChange={e => onChange(Number(e.target.value))}
           style={{ 
             position: 'absolute', 
-            inset: '-12px 0', 
+            inset: 0, 
             width: '100%', 
-            height: 32, 
+            height: '100%', 
             opacity: 0, 
             cursor: 'pointer', 
             margin: 0,
             zIndex: 10,
-            touchAction: 'none' // Important for touch devices
+            appearance: 'none',
+            WebkitAppearance: 'none'
           }} 
         />
+        
+        {/* Visual Thumb (Follows the value but ignores pointer events) */}
         <div style={{ 
           position: 'absolute', 
           top: '50%', 
           left: `${pct}%`, 
           transform: 'translate(-50%,-50%)', 
-          width: 22, 
-          height: 22, 
+          width: 24, 
+          height: 24, 
           borderRadius: '50%', 
           background: color, 
-          border: '3.5px solid white', 
-          boxShadow: `0 3px 12px ${color}50`, 
+          border: '4px solid white', 
+          boxShadow: `0 4px 14px ${color}60`, 
           pointerEvents: 'none',
-          zIndex: 5
+          zIndex: 5,
+          transition: 'left 0.1s ease-out'
         }} />
       </div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 6 }}>
-        <span style={{ fontSize: 12, color: '#94a3b8' }}>{prefix}{min}{suffix}</span>
-        <span style={{ fontSize: 12, color: '#94a3b8' }}>{prefix}{max}{suffix}</span>
+
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 4 }}>
+        <span style={{ fontSize: 11, fontWeight: 700, color: '#94a3b8' }}>{prefix}{min}{suffix}</span>
+        <span style={{ fontSize: 11, fontWeight: 700, color: '#94a3b8' }}>{prefix}{max}{suffix}</span>
       </div>
-      {hint && <p style={{ fontSize: 13, color: '#94a3b8', margin: '6px 0 0', lineHeight: 1.5 }}>{hint}</p>}
+      {hint && (
+        <div style={{ display: 'flex', gap: 6, marginTop: 8 }}>
+          <div style={{ width: 4, height: 4, borderRadius: '50%', background: '#cbd5e1', marginTop: 6, flexShrink: 0 }} />
+          <p style={{ fontSize: 12, color: '#64748b', margin: 0, lineHeight: 1.4, fontWeight: 500 }}>{hint}</p>
+        </div>
+      )}
     </div>
   )
 }
 
 // ── Factor Bar ─────────────────────────────────────────────────────────────
-function FactorBar({ label, pct, weight, color, icon: Icon, tip }: { label: string; pct: number; weight: string; color: string; icon: any; tip: string }) {
+function FactorBar({ label, pct, weight, color, icon: Icon, tip, onChange, min = 0, max = 100 }: { 
+  label: string; pct: number; weight: string; color: string; icon: any; tip: string;
+  onChange?: (v: number) => void; min?: number; max?: number
+}) {
+  const isInteractive = !!onChange
   return (
-    <div style={{ marginBottom: 18 }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <Icon size={14} color={color} />
-          <span style={{ fontSize: 13, fontWeight: 600, color: '#334155' }}>{label}</span>
-          <span style={{ fontSize: 12, color: '#94a3b8' }}>({weight})</span>
+    <div style={{ marginBottom: 20, position: 'relative' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <div style={{ width: 32, height: 32, borderRadius: 10, background: `${color}15`, display: 'flex', alignItems: 'center', justifyContent: 'center', color }}>
+            <Icon size={16} />
+          </div>
+          <div>
+            <span style={{ fontSize: 13.5, fontWeight: 700, color: '#334155', display: 'block', lineHeight: 1 }}>{label}</span>
+            <span style={{ fontSize: 10, fontWeight: 800, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Impacto: {weight}</span>
+          </div>
         </div>
-        <span style={{ fontSize: 14, fontWeight: 700, color }}>{Math.round(pct)}%</span>
+        <span style={{ fontSize: 16, fontWeight: 800, color, fontFamily: 'monospace' }}>{Math.round(pct)}%</span>
       </div>
-      <div style={{ height: 8, borderRadius: 99, background: '#f1f5f9' }}>
-        <div style={{ height: '100%', width: `${pct}%`, background: color, borderRadius: 99, transition: 'width 0.5s ease' }} />
+      
+      <div style={{ position: 'relative', height: 16, borderRadius: 99, background: '#f1f5f9', overflow: 'hidden', border: '1px solid #e2e8f0' }}>
+        <motion.div 
+          initial={{ width: 0 }}
+          animate={{ width: `${pct}%` }}
+          style={{ position: 'absolute', left: 0, top: 0, height: '100%', background: `linear-gradient(90deg, ${color}cc, ${color})`, borderRadius: 99 }} 
+        />
+        
+        {isInteractive && (
+          <input 
+            type="range"
+            min={min}
+            max={max}
+            value={pct}
+            onChange={(e) => onChange(Number(e.target.value))}
+            onPointerDown={(e) => e.stopPropagation()}
+            style={{
+              position: 'absolute',
+              inset: 0,
+              width: '100%',
+              height: '100%',
+              opacity: 0,
+              cursor: 'grab',
+              zIndex: 10,
+              appearance: 'none',
+              WebkitAppearance: 'none'
+            }}
+          />
+        )}
       </div>
-      <p style={{ fontSize: 12, color: '#94a3b8', margin: '6px 0 0', lineHeight: 1.5 }}>{tip}</p>
+
+      {tip && <p style={{ fontSize: 11.5, color: '#64748b', marginTop: 8, marginLeft: 42, lineHeight: 1.4, fontWeight: 500 }}>{tip}</p>}
     </div>
   )
 }
@@ -533,8 +591,20 @@ function CreditSimulatorContent() {
         }
         @media(max-width:767px){.bizen-score-outer{padding-bottom:65px!important}}
         .credit-tab-btn:hover{background:#e8eef8!important;color:#1e293b!important;}
-        input[type=range]::-webkit-slider-thumb{-webkit-appearance:none}
-        input[type=range]::-moz-range-thumb{border:none;background:transparent}
+        input[type=range]::-webkit-slider-thumb{
+          -webkit-appearance:none;
+          width: 32px;
+          height: 32px;
+          background: transparent;
+          cursor: pointer;
+        }
+        input[type=range]::-moz-range-thumb{
+          border:none;
+          width: 32px;
+          height: 32px;
+          background:transparent;
+          cursor: pointer;
+        }
         .scenario-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,0.10)!important;}
       `}</style>
       <div className="bizen-score-outer">
@@ -663,11 +733,11 @@ function CreditSimulatorContent() {
 
                     {/* Factor breakdown */}
                     <p style={{ fontSize: 11, fontWeight: 500, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 14 }}>Desglose de Factores</p>
-                    <FactorBar label="Historial de Pagos" pct={payPct} weight="35%" color="#0B71FE" icon={BadgeCheck} tip={payPct < 80 ? 'Pagar tarde es el error más costoso en crédito.' : 'Excelente. El factor más importante en tu score.'} />
-                    <FactorBar label="Uso del Crédito" pct={utilPct} weight="30%" color="#f97316" icon={Percent} tip={util > 50 ? 'Usa menos del 30% de tu límite para mejorar.' : util > 30 ? 'Reduciéndolo debajo del 30% ganarás puntos.' : 'Uso saludable. Tu score te lo agradece.'} />
-                    <FactorBar label="Antigüedad" pct={histPct} weight="15%" color="#0d9488" icon={History} tip={yrHist < 3 ? 'Con el tiempo mejora solo — no cierres tarjetas viejas.' : 'Buena antigüedad. Protege tus cuentas más antiguas.'} />
-                    <FactorBar label="Mezcla de Crédito" pct={mixPct} weight="10%" color="#8b5cf6" icon={Layers} tip="Tener crédito revolvente y a plazo ayuda a tu perfil." />
-                    <FactorBar label="Nuevas Solicitudes" pct={inqPct} weight="10%" color="#ef4444" icon={FileText} tip={inquiries > 3 ? 'Evita solicitar muchos créditos en poco tiempo.' : 'Bien. Poco impacto por solicitudes recientes.'} />
+                    <FactorBar label="Historial de Pagos" pct={payPct} weight="35%" color="#0B71FE" icon={BadgeCheck} onChange={setOnTime} min={0} max={100} tip={payPct < 80 ? 'Pagar tarde es el error más costoso en crédito.' : 'Excelente. El factor más importante en tu score.'} />
+                    <FactorBar label="Uso del Crédito" pct={utilPct} weight="30%" color="#f97316" icon={Percent} onChange={(v) => setUtil(Math.round((100 - v) / 1.2))} min={0} max={100} tip={util > 50 ? 'Usa menos del 30% de tu límite para mejorar.' : util > 30 ? 'Reduciéndolo debajo del 30% ganarás puntos.' : 'Uso saludable. Tu score te lo agradece.'} />
+                    <FactorBar label="Antigüedad" pct={histPct} weight="15%" color="#0d9488" icon={History} onChange={(v) => setYrHist(v / 10)} min={0} max={100} tip={yrHist < 3 ? 'Con el tiempo mejora solo — no cierres tarjetas viejas.' : 'Buena antigüedad. Protege tus cuentas más antiguas.'} />
+                    <FactorBar label="Mezcla de Crédito" pct={mixPct} weight="10%" color="#8b5cf6" icon={Layers} onChange={(v) => setMixCount(Math.round(v / 33))} min={0} max={100} tip="Tener crédito revolvente y a plazo ayuda a tu perfil." />
+                    <FactorBar label="Nuevas Solicitudes" pct={inqPct} weight="10%" color="#ef4444" icon={FileText} onChange={(v) => setInquiries(Math.round((100 - v) / 17))} min={0} max={100} tip={inquiries > 3 ? 'Evita solicitar muchos créditos en poco tiempo.' : 'Bien. Poco impacto por solicitudes recientes.'} />
 
                     {/* Predictive Timeline */}
                     <div style={{ marginTop: 24, padding: '20px', background: '#f8fafc', borderRadius: 20, border: '1px solid #e2e8f0' }}>
