@@ -237,7 +237,7 @@ export default function CombinedSimulatorsPage() {
         .simulador-outer {
           width: 100%;
           min-height: 100vh;
-          background: linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%);
+          background: var(--bg-main);
           font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
           overflow-x: hidden;
         }

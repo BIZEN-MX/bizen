@@ -621,7 +621,7 @@ function StockSimulatorContent() {
         </div>
 
         {/* Hero */}
-        <div style={{ maxWidth: 1100, margin: "0 auto", padding: "clamp(32px,5vw,80px) clamp(20px,4vw,40px)", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 60, alignItems: "center" }}>
+        <div style={{ maxWidth: "100%", margin: "0", padding: "clamp(24px, 4vw, 48px) clamp(20px,4vw,40px)", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 60, alignItems: "center" }}>
           <div className="preview-card" style={{ animationDelay: "0.1s" }}>
             <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(16,185,129,0.1)", border: "1px solid rgba(16,185,129,0.3)", borderRadius: 99, padding: "5px 14px", marginBottom: 20, fontSize: 12, fontWeight: 700, color: "#059669", letterSpacing: "0.06em", textTransform: "uppercase" as const }}>
               <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#10b981", display: "inline-block" }} />
@@ -702,49 +702,61 @@ function StockSimulatorContent() {
   return (
     <>
       <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap');
         @keyframes spin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
         @keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
         @keyframes staggerFadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
         @keyframes numberGlow { 0%,100%{opacity:1} 50%{opacity:0.6;filter:brightness(1.3)} }
         @keyframes crisisPulse {
-          0%,100% { box-shadow: 0 0 0 0 rgba(239,68,68,0.4); }
-          70% { box-shadow: 0 0 0 10px rgba(239,68,68,0); }
+          0%,100% { box-shadow: 0 0 0 0 rgba(239,68,68,0.5); }
+          70% { box-shadow: 0 0 0 12px rgba(239,68,68,0); }
         }
         @keyframes ticker { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
-        .sim-stock-row{transition:all 0.25s cubic-bezier(0.4,0,0.2,1);cursor:pointer;border-radius:20px;padding:18px;border:1.5px solid #e2e8f0;background:white;display:flex;justify-content:space-between;align-items:center;}
-        .sim-stock-row:hover{background:#f0fdf4;border-color:#6ee7b7;box-shadow:0 8px 24px rgba(16,185,129,0.12);transform:translateY(-2px);}
-        .sim-row-table:hover{background:#f8fafc;}
+        @keyframes neonPulse {
+          0%,100% { box-shadow: 0 0 8px rgba(249,115,22,0.4), 0 0 20px rgba(249,115,22,0.2); }
+          50% { box-shadow: 0 0 16px rgba(249,115,22,0.7), 0 0 40px rgba(249,115,22,0.4); }
+        }
+        .sim-stock-row{transition:all 0.25s cubic-bezier(0.4,0,0.2,1);cursor:pointer;border-radius:16px;padding:18px;border:1px solid #2a2a2a;background:#111111;display:flex;justify-content:space-between;align-items:center;}
+        .sim-stock-row:hover{background:#1a1a1a;border-color:#f97316;box-shadow:0 0 20px rgba(249,115,22,0.15);transform:translateY(-2px);}
+        .sim-row-table:hover{background:#1a1a1a;}
         .sim-row-table{transition:background 0.15s;}
         @media(max-width:767px){.bizen-market-outer{padding-bottom:80px!important}}
         @keyframes pulseGlow {
-          0% { transform: scale(1); box-shadow: 0 4px 14px rgba(16,185,129,0.35); }
-          50% { transform: scale(1.05); box-shadow: 0 6px 25px rgba(16,185,129,0.6); }
-          100% { transform: scale(1); box-shadow: 0 4px 14px rgba(16,185,129,0.35); }
+          0% { transform: scale(1); box-shadow: 0 0 10px rgba(249,115,22,0.5), 0 4px 14px rgba(249,115,22,0.3); }
+          50% { transform: scale(1.03); box-shadow: 0 0 24px rgba(249,115,22,0.8), 0 6px 25px rgba(249,115,22,0.5); }
+          100% { transform: scale(1); box-shadow: 0 0 10px rgba(249,115,22,0.5), 0 4px 14px rgba(249,115,22,0.3); }
         }
         .pulsing-order-btn { 
           animation: pulseGlow 1.5s ease-in-out infinite;
-          border: 2px solid #fff !important;
+          border: 2px solid rgba(249,115,22,0.6) !important;
         }
-        .sector-pill { transition: all 0.2s; cursor: pointer; border: none; border-radius: 99px; font-family: inherit; font-weight: 600; font-size: 12px; padding: 7px 16px; }
-        .sector-pill:hover { transform: translateY(-1px); }
+        .sector-pill { transition: all 0.2s; cursor: pointer; border: 1px solid #2a2a2a !important; border-radius: 99px; font-family: inherit; font-weight: 600; font-size: 12px; padding: 7px 16px; }
+        .sector-pill:hover { transform: translateY(-1px); border-color: #f97316 !important; }
         .crisis-btn { animation: crisisPulse 2s ease-in-out infinite; }
         .balance-card { transition: all 0.3s; }
         .balance-card:hover { transform: translateY(-3px) !important; }
+        /* Dot grid background */
+        .dot-grid-bg {
+          background-image: radial-gradient(circle, #2a2a2a 1px, transparent 1px);
+          background-size: 24px 24px;
+        }
+        /* Neon border card */
+        .neon-orange-card { border: 1px solid rgba(249,115,22,0.4) !important; box-shadow: 0 0 0 1px rgba(249,115,22,0.1), inset 0 0 20px rgba(249,115,22,0.03); }
+        .neon-cyan-card { border: 1px solid rgba(0,229,255,0.4) !important; box-shadow: 0 0 0 1px rgba(0,229,255,0.1), inset 0 0 20px rgba(0,229,255,0.03); }
       `}</style>
       <div
         className="bizen-market-outer"
         style={{
           minHeight: "100vh",
-          background: "linear-gradient(170deg,#f8fafc 0%,#f1f5f9 100%)",
-          fontFamily:
-            '-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text",Helvetica,Arial,sans-serif',
+          background: "#000000",
+          fontFamily: "'Poppins', -apple-system, sans-serif",
         }}
       >
         <div
           style={{
-            maxWidth: 1240,
-            margin: "0 auto",
-            padding: "clamp(24px,4vw,48px) clamp(16px,4vw,40px)",
+            maxWidth: "100%",
+            margin: "0",
+            padding: "clamp(12px, 2.5vw, 24px) clamp(16px, 2.5vw, 32px)",
             paddingBottom: 64,
           }}
         >
@@ -845,16 +857,16 @@ function StockSimulatorContent() {
                     display: "inline-flex",
                     alignItems: "center",
                     gap: 8,
-                    background: "rgba(16,185,129,0.1)",
-                    border: "1px solid rgba(16,185,129,0.25)",
+                    background: "rgba(249,115,22,0.1)",
+                    border: "1px solid rgba(249,115,22,0.3)",
                     borderRadius: 99,
                     padding: "5px 14px",
                     marginBottom: 14,
                     alignSelf: "flex-start",
                     fontSize: 12,
-                    fontWeight: 500,
-                    color: "#059669",
-                    letterSpacing: "0.06em",
+                    fontWeight: 600,
+                    color: "#f97316",
+                    letterSpacing: "0.08em",
                     textTransform: "uppercase" as const,
                   }}
                 >
@@ -863,8 +875,9 @@ function StockSimulatorContent() {
                       width: 6,
                       height: 6,
                       borderRadius: "50%",
-                      background: "#10b981",
+                      background: "#f97316",
                       display: "inline-block",
+                      boxShadow: "0 0 6px #f97316",
                     }}
                   />
                   Simulador Educativo — Sin dinero real
@@ -873,26 +886,26 @@ function StockSimulatorContent() {
               <h1
                 style={{
                   fontSize: "clamp(26px,4.5vw,46px)",
-                  fontWeight: 600,
+                  fontWeight: 800,
                   margin: "0 0 10px",
-                  color: "#0B1E5E",
+                  color: "white",
                   letterSpacing: "-0.03em",
                   lineHeight: 1.1,
                 }}
               >
-                BIZEN Market
+                BIZEN <span style={{ color: "#f97316" }}>Market</span>
               </h1>
               <p
                 style={{
                   fontSize: 15,
-                  color: "#64748b",
+                  color: "rgba(255,255,255,0.5)",
                   margin: 0,
                   lineHeight: 1.6,
                   maxWidth: 580,
                 }}
               >
                 Aprende a invertir en acciones y ETFs reales usando tus{" "}
-                <strong>Bizcoins</strong>. 1 USD = 1 bizcoin. <BizcoinIcon size={14} />
+                <strong style={{ color: "rgba(255,255,255,0.8)" }}>Bizcoins</strong>. 1 USD = 1 bizcoin. <BizcoinIcon size={14} />
               </p>
             </div>
 
@@ -1042,10 +1055,10 @@ function StockSimulatorContent() {
           {/* Disclaimer */}
           <div
             style={{
-              background: "linear-gradient(135deg,#fffbeb,#fef3c7)",
-              border: "1px solid #fde68a",
-              borderRadius: 16,
-              padding: "14px 20px",
+              background: "rgba(249,115,22,0.06)",
+              border: "1px solid rgba(249,115,22,0.25)",
+              borderRadius: 12,
+              padding: "12px 18px",
               display: "flex",
               alignItems: "flex-start",
               gap: 12,
@@ -1054,13 +1067,13 @@ function StockSimulatorContent() {
           >
             <AlertTriangle
               size={17}
-              color="#d97706"
+              color="#f97316"
               style={{ flexShrink: 0, marginTop: 2 }}
             />
             <p
               style={{
-                fontSize: 13,
-                color: "#92400e",
+                fontSize: 12,
+                color: "rgba(255,255,255,0.5)",
                 lineHeight: 1.6,
                 margin: 0,
               }}
@@ -1085,66 +1098,74 @@ function StockSimulatorContent() {
                 label: "Poder de Compra",
                 value: `bz ${cash.toLocaleString("es-MX", { minimumFractionDigits: 0 })}`,
                 sub: "Bizcoins disponibles",
-                bg: "linear-gradient(145deg, #0B1E5E 0%, #173896 100%)",
+                bg: "#111111",
                 tc: "white",
-                subtc: "rgba(255,255,255,0.7)"
+                subtc: "rgba(255,255,255,0.4)",
+                border: "1px solid rgba(249,115,22,0.4)",
+                shadow: "0 0 0 1px rgba(249,115,22,0.1)",
+                accent: "#f97316",
               },
               {
                 label: "Valor del Portafolio",
                 value: `bz ${totalValue.toLocaleString("es-MX", { minimumFractionDigits: 0 })}`,
                 sub: "Efectivo + Mercado",
-                bg: "white",
-                tc: "#0B1E5E",
-                subtc: "#64748b",
-                border: "1.5px solid #e2e8f0"
+                bg: "#111111",
+                tc: "white",
+                subtc: "rgba(255,255,255,0.4)",
+                border: "1px solid rgba(0,229,255,0.3)",
+                shadow: "0 0 0 1px rgba(0,229,255,0.08)",
+                accent: "#00e5ff",
               },
               {
                 label: "Rendimiento Global",
                 value: `${returns > 0 ? "+" : ""}${returns.toFixed(2)}%`,
                 sub: "Desde el inicio",
-                bg: returns >= 0 ? "linear-gradient(145deg, #f0fdf4 0%, #dcfce7 100%)" : "linear-gradient(145deg, #fef2f2 0%, #fee2e2 100%)",
-                tc: returns >= 0 ? "#166534" : "#991b1b",
-                subtc: returns >= 0 ? "#15803d" : "#b91c1c",
-                border: returns >= 0 ? "1.5px solid #bbf7d0" : "1.5px solid #fecaca"
+                bg: "#111111",
+                tc: returns >= 0 ? "#4ade80" : "#f87171",
+                subtc: "rgba(255,255,255,0.4)",
+                border: returns >= 0 ? "1px solid rgba(74,222,128,0.35)" : "1px solid rgba(248,113,113,0.35)",
+                shadow: returns >= 0 ? "0 0 0 1px rgba(74,222,128,0.08)" : "0 0 0 1px rgba(248,113,113,0.08)",
+                accent: returns >= 0 ? "#4ade80" : "#f87171",
               },
               {
                 label: "Activos en Cartera",
                 value: String(portfolio?.holdings?.length ?? 0),
                 sub: "Posiciones abiertas",
-                bg: "white",
-                tc: "#0B1E5E",
-                subtc: "#64748b",
-                border: "1.5px solid #e2e8f0"
+                bg: "#111111",
+                tc: "white",
+                subtc: "rgba(255,255,255,0.4)",
+                border: "1px solid #2a2a2a",
+                shadow: "none",
+                accent: "#94a3b8",
               },
-            ].map((s, i) => (
+            ].map((s: any, i) => (
               <motion.div
-                whileHover={{ y: -4, boxShadow: "0 12px 24px rgba(0,0,0,0.06)" }}
+                whileHover={{ y: -4 }}
                 key={i}
                 style={{
                   background: s.bg,
-                  borderRadius: 24,
-                  padding: "22px 24px",
-                  border: s.border || "1.5px solid transparent",
-                  boxShadow: "0 4px 12px rgba(0,0,0,0.03)",
+                  borderRadius: 16,
+                  padding: "20px 22px",
+                  border: s.border,
+                  boxShadow: s.shadow,
                   cursor: "default"
                 }}
               >
                 <p
                   style={{
-                    fontSize: 11,
+                    fontSize: 10,
                     fontWeight: 700,
-                    color: s.tc,
+                    color: "rgba(255,255,255,0.35)",
                     textTransform: "uppercase" as const,
-                    letterSpacing: "0.06em",
+                    letterSpacing: "0.1em",
                     margin: "0 0 8px",
-                    opacity: 0.8,
                   }}
                 >
                   {s.label}
                 </p>
                 <p
                   style={{
-                    fontSize: 26,
+                    fontSize: 24,
                     fontWeight: 800,
                     color: s.tc,
                     margin: "0 0 4px",
@@ -1155,7 +1176,7 @@ function StockSimulatorContent() {
                   {s.value}
                 </p>
                 <p
-                  style={{ fontSize: 13, color: s.subtc, margin: 0, fontWeight: 500 }}
+                  style={{ fontSize: 12, color: s.subtc, margin: 0, fontWeight: 500 }}
                 >
                   {s.sub}
                 </p>
@@ -1181,26 +1202,26 @@ function StockSimulatorContent() {
                   key={t.id}
                   onClick={() => setActiveTab(t.id)}
                   style={{
-                    border: active ? "none" : "1px solid #e2e8f0",
+                    border: active ? "1px solid rgba(249,115,22,0.5)" : "1px solid #2a2a2a",
                     cursor: "pointer",
                     display: "flex",
                     alignItems: "center",
                     gap: 8,
-                    fontWeight: 500,
-                    fontSize: 14,
-                    borderRadius: 12,
-                    padding: "10px 18px",
+                    fontWeight: 600,
+                    fontSize: 13,
+                    borderRadius: 99,
+                    padding: "9px 18px",
                     transition: "all 0.2s",
                     whiteSpace: "nowrap",
                     fontFamily: "inherit",
-                    background: active ? "#0B1E5E" : "white",
-                    color: active ? "white" : "#64748b",
+                    background: active ? "rgba(249,115,22,0.12)" : "#111111",
+                    color: active ? "#f97316" : "rgba(255,255,255,0.4)",
                     boxShadow: active
-                      ? "0 4px 14px rgba(11,30,94,0.25)"
+                      ? "0 0 12px rgba(249,115,22,0.2)"
                       : "none",
                   }}
                 >
-                  <Icon size={15} />
+                  <Icon size={14} />
                   {t.label}
                 </button>
               );
@@ -1210,10 +1231,9 @@ function StockSimulatorContent() {
           {/* Panel */}
           <div
             style={{
-              background: "white",
-              borderRadius: 24,
-              border: "1px solid #e2e8f0",
-              boxShadow: "0 4px 24px rgba(0,0,0,0.04)",
+              background: "#111111",
+              borderRadius: 20,
+              border: "1px solid #2a2a2a",
               overflow: "hidden",
             }}
           >
@@ -1399,11 +1419,11 @@ function StockSimulatorContent() {
                               dx={-10}
                               tickFormatter={(v: number) => `${v > 0 ? "+" : ""}${v}%`}
                             />
-                            <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
+                            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
                             <Tooltip 
-                               contentStyle={{ background: '#fff', border: '1.5px solid #e2e8f0', borderRadius: 16, boxShadow: '0 10px 25px rgba(0,0,0,0.05)', fontSize: 12 }}
-                               itemStyle={{ fontWeight: 700 }}
-                               labelStyle={{ fontWeight: 800, color: '#0B1E5E', marginBottom: 6 }}
+                               contentStyle={{ background: '#1a1a1a', border: '1px solid #2a2a2a', borderRadius: 16, boxShadow: '0 10px 25px rgba(0,0,0,0.3)', fontSize: 12 }}
+                               itemStyle={{ fontWeight: 700, color: 'white' }}
+                               labelStyle={{ fontWeight: 800, color: 'rgba(255,255,255,0.7)', marginBottom: 6 }}
                                formatter={(v: number, name: string) => [
                                  `${v > 0 ? "+" : ""}${v}%`, 
                                  name === 'portfolioYield' ? 'Tú (Portafolio)' : 
@@ -1903,9 +1923,9 @@ function StockSimulatorContent() {
                   <span
                     style={{
                       fontSize: 12,
-                      color: "#94a3b8",
-                      background: "#f8fafc",
-                      border: "1px solid #e2e8f0",
+                      color: "rgba(255,255,255,0.3)",
+                      background: "#1a1a1a",
+                      border: "1px solid #2a2a2a",
                       borderRadius: 8,
                       padding: "4px 10px",
                     }}
@@ -1925,10 +1945,10 @@ function StockSimulatorContent() {
                         className="sector-pill"
                         onClick={() => setSectorFilter(cat)}
                         style={{
-                          background: isActive ? color : "#f8fafc",
-                          color: isActive ? "white" : "#475569",
-                          border: isActive ? `1.5px solid ${color}` : "1.5px solid #e2e8f0",
-                          boxShadow: isActive ? `0 4px 12px ${color}33` : "none",
+                          background: isActive ? color : "#1a1a1a",
+                          color: isActive ? "white" : "rgba(255,255,255,0.4)",
+                          border: isActive ? `1px solid ${color}` : "1px solid #2a2a2a",
+                          boxShadow: isActive ? `0 0 16px ${color}44` : "none",
                         }}
                       >
                         {cat}
@@ -2939,71 +2959,73 @@ function StockSimulatorContent() {
 
             {activeTab === "rankings" && (
               <div style={{ padding: "28px clamp(16px, 4vw, 32px)" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 6 }}>
-                  <Flame size={24} color="#f59e0b" style={{ flexShrink: 0 }} />
-                  <h2
-                    style={{
-                      fontSize: 20,
-                      fontWeight: 600,
-                      color: "#0B1E5E",
-                      margin: 0,
-                    }}
-                  >
-                    Top Inversionistas
+                {/* Rankings Header - Reto Actinver Style */}
+                <div style={{ marginBottom: 28 }}>
+                  <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(249,115,22,0.1)", border: "1px solid rgba(249,115,22,0.25)", borderRadius: 99, padding: "4px 14px", marginBottom: 14 }}>
+                    <Flame size={12} color="#f97316" />
+                    <span style={{ fontSize: 11, fontWeight: 700, color: "#f97316", textTransform: "uppercase" as const, letterSpacing: "0.08em" }}>Leaderboard Global</span>
+                  </div>
+                  <h2 style={{ fontSize: 22, fontWeight: 800, color: "white", margin: "0 0 6px", letterSpacing: "-0.02em" }}>
+                    Top <span style={{ color: "#f97316" }}>Inversionistas</span>
                   </h2>
+                  <p style={{ fontSize: 13, color: "rgba(255,255,255,0.4)", margin: 0 }}>
+                    Los mejores retornos de la comunidad evaluados en tiempo real contra el mercado.
+                  </p>
                 </div>
-                <p
-                  style={{ fontSize: 13, color: "#64748b", margin: "0 0 28px" }}
-                >
-                  Los mejores retornos de la comunidad evaluados en tiempo real contra el mercado.
-                </p>
+                {/* Column headers like Actinver */}
+                <div style={{ display: "flex", gap: 8, marginBottom: 14 }}>
+                  <span style={{ fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.25)", background: "#1a1a1a", border: "1px solid #2a2a2a", padding: "4px 12px", borderRadius: 6 }}>Lugar</span>
+                  <span style={{ fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.25)", background: "#1a1a1a", border: "1px solid #2a2a2a", padding: "4px 12px", borderRadius: 6 }}>Participante</span>
+                  <span style={{ fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.25)", background: "#1a1a1a", border: "1px solid #2a2a2a", padding: "4px 12px", borderRadius: 6 }}>Rendimiento</span>
+                </div>
                 
                 {fetchingRankings ? (
-                   <div style={{ padding: "40px", textAlign: "center", color: "#64748b" }}>
+                   <div style={{ padding: "40px", textAlign: "center", color: "rgba(255,255,255,0.3)" }}>
                      Cargando leaderboard mundial...
                    </div>
                 ) : (
-                  <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
                     {leaderboard.map((user, i) => (
                       <div
                         key={i}
                         style={{
-                          border: "1px solid #e2e8f0",
-                          borderRadius: 20,
-                          padding: "16px 24px",
-                          background: i === 0 ? "linear-gradient(to right, rgba(245,158,11,0.1), white)" : "white",
-                          boxShadow: "0 2px 8px rgba(0,0,0,0.03)",
+                          border: i === 0 ? "1px solid rgba(249,115,22,0.5)" : i === 1 ? "1px solid rgba(0,229,255,0.3)" : "1px solid #2a2a2a",
+                          borderRadius: 14,
+                          padding: "14px 20px",
+                          background: i === 0 ? "rgba(249,115,22,0.06)" : i === 1 ? "rgba(0,229,255,0.04)" : "#1a1a1a",
+                          boxShadow: i === 0 ? "0 0 20px rgba(249,115,22,0.1)" : "none",
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "space-between",
                           transition: "all 0.2s",
                         }}
                       >
-                        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
                           <div style={{ 
-                            width: 32, 
-                            height: 32, 
-                            borderRadius: "50%", 
-                            background: i === 0 ? "#f59e0b" : i === 1 ? "#94a3b8" : i === 2 ? "#d97706" : "#f1f5f9", 
-                            color: i <= 2 ? "white" : "#64748b", 
+                            width: 36, 
+                            height: 36, 
+                            borderRadius: 10, 
+                            background: i === 0 ? "#f97316" : i === 1 ? "rgba(0,229,255,0.15)" : "rgba(255,255,255,0.05)", 
+                            border: i === 0 ? "1px solid #f97316" : i === 1 ? "1px solid rgba(0,229,255,0.4)" : "1px solid #2a2a2a",
+                            color: "white", 
                             display: "flex", 
                             alignItems: "center", 
                             justifyContent: "center", 
                             fontWeight: 800, 
-                            fontSize: 14 
+                            fontSize: 16,
                           }}>
-                            {i + 1}
+                            {i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : i + 1}
                           </div>
                           {user.userPicture ? (
-                            <img src={user.userPicture} alt="User" style={{ width: 40, height: 40, borderRadius: "50%" }} />
+                            <img src={user.userPicture} alt="User" style={{ width: 36, height: 36, borderRadius: "50%", border: "2px solid #2a2a2a" }} />
                           ) : (
-                            <div style={{ width: 40, height: 40, borderRadius: "50%", background: "#e2e8f0" }} />
+                            <div style={{ width: 36, height: 36, borderRadius: "50%", background: "#2a2a2a", border: "2px solid #333" }} />
                           )}
                           <div>
-                            <p style={{ fontWeight: 600, color: "#0B1E5E", fontSize: 15, margin: "0 0 2px" }}>
-                              {user.userName}
+                            <p style={{ fontWeight: 700, color: "white", fontSize: 15, margin: "0 0 2px" }}>
+                              @{(user.userName || "usuario").toLowerCase().replace(/\s+/g, "")}
                             </p>
-                            <p style={{ fontSize: 12, color: "#64748b", margin: 0 }}>
+                            <p style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", margin: 0, fontWeight: 500 }}>
                               Total BIZ: {Math.round(user.totalValue).toLocaleString()}
                             </p>
                           </div>
@@ -3013,23 +3035,24 @@ function StockSimulatorContent() {
                             style={{
                               fontSize: 14,
                               fontWeight: 700,
-                              color: user.yield >= 0 ? "#10b981" : "#ef4444",
-                              background: user.yield >= 0 ? "rgba(16,185,129,0.1)" : "rgba(239,68,68,0.1)",
-                              padding: "6px 12px",
-                              borderRadius: 12,
+                              color: user.yield >= 0 ? "#4ade80" : "#f87171",
+                              background: "transparent",
+                              border: `1px solid ${user.yield >= 0 ? "rgba(74,222,128,0.35)" : "rgba(248,113,113,0.35)"}`,
+                              padding: "5px 14px",
+                              borderRadius: 99,
                               display: "inline-flex",
                               alignItems: "center",
                               gap: 4
                             }}
                           >
-                            {user.yield >= 0 ? <TrendingUp size={14} /> : <TrendingDown size={14} />}
+                            {user.yield >= 0 ? <TrendingUp size={13} /> : <TrendingDown size={13} />}
                             {user.yield > 0 ? "+" : ""}{user.yield.toFixed(2)}%
                           </span>
                         </div>
                       </div>
                     ))}
                     {leaderboard.length === 0 && (
-                      <div style={{ padding: "40px", textAlign: "center", color: "#64748b" }}>
+                      <div style={{ padding: "40px", textAlign: "center", color: "rgba(255,255,255,0.3)" }}>
                         Aún no hay inversionistas registrados con Bizcoins. ¡Sé el primero!
                       </div>
                     )}

@@ -54,6 +54,21 @@ export const AvatarDisplay = ({ avatar, size = 64, frame }: { avatar: any; size?
       return <UserIcon size={size * 0.6} />
     }
 
+    // Direct Image URL (Profile Photo)
+    if (typeof avatar === 'string') {
+      return (
+        <img 
+          src={avatar} 
+          alt="Avatar" 
+          style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+          onError={(e) => {
+            // Fallback if image fails to load
+            (e.target as any).src = 'data:image/svg+xml;charset=utf-8,%3Csvg xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22 width%3D%2224%22 height%3D%2224%22 viewBox%3D%220 0 24 24%22 fill%3D%22none%22 stroke%3D%22%2364748b%22 stroke-width%3D%222%22 stroke-linecap%3D%22round%22 stroke-linejoin%3D%22round%22%3E%3Cpath d%3D%22M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2%22%3E%3C%2Fpath%3E%3Ccircle cx%3D%2212%22 cy%3D%227%22 r%3D%224%22%3E%3C%2Fcircle%3E%3C%2Fsvg%3E';
+          }}
+        />
+      )
+    }
+
     // ── DiceBear illustrated avatars
     if (avatar.type === "dicebear") {
       const url = dicebearUrl(avatar, Math.max(128, size * 2))

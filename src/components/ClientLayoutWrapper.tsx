@@ -125,8 +125,9 @@ function InnerClientWrapper({ children }: { children: React.ReactNode }) {
     pathname === '/bizen/terminos' // Terms page
   const isDiagnosticPage = pathname?.startsWith('/diagnostic')
   const isLessonInteractivePage = pathname?.startsWith('/learn/')
-  const isCourseTopicPage = pathname?.startsWith('/courses/tema-')
+  const isCourseTopicPage = pathname?.startsWith('/courses/') && pathname !== '/courses'
   const isCourseListPage = pathname === '/courses'
+  const isForumPage = pathname?.startsWith('/forum')
   const isTransferPage = pathname === '/transfer' || isTransfer
   const isNewsPage = pathname?.startsWith('/news')
   const isLivePage = pathname?.startsWith('/live')
@@ -136,7 +137,7 @@ function InnerClientWrapper({ children }: { children: React.ReactNode }) {
   const isBudgetTool = pathname?.startsWith('/tools/budget')
   const isVisionTool = pathname?.startsWith('/tools/vision')
   const isToolsPageExclude = isBudgetTool || isVisionTool
-  const hideAppNavigation = isAuthPage || isNewsPage || isDiagnosticPage || onboardingActive || isLessonInteractivePage || isTransferPage || isHistoryPage || isInvestmentsPage || isSimulatorPage || isLivePage || isToolsPageExclude;
+  const hideAppNavigation = isAuthPage || isNewsPage || isDiagnosticPage || onboardingActive || isLessonInteractivePage || isTransferPage || isHistoryPage || isInvestmentsPage || isToolsPageExclude;
 
   const hideChat = isAuthPage || isDiagnosticPage || onboardingActive || isLessonInteractivePage || isCourseTopicPage || isLivePage || isSimulatorPage;
 
@@ -196,7 +197,7 @@ function InnerClientWrapper({ children }: { children: React.ReactNode }) {
   // Pages where nav is hidden run as a standalone flow without sidebar/nav chrome.
   useEffect(() => {
     if (typeof document === "undefined") return
-    if (hideAppNavigation || isCourseTopicPage || isCourseListPage) {
+    if (hideAppNavigation || isCourseTopicPage || isCourseListPage || isForumPage) {
       document.body.setAttribute("data-no-sidebar", "true")
       document.body.classList.add("hide-sidebar")
     } else {
@@ -204,7 +205,7 @@ function InnerClientWrapper({ children }: { children: React.ReactNode }) {
       document.body.classList.remove("hide-sidebar")
     }
 
-    if (isCourseTopicPage || isCourseListPage) {
+    if (isCourseTopicPage || isCourseListPage || isForumPage) {
       document.body.setAttribute("data-topic-page", "true")
       document.body.setAttribute("data-no-padding", "true")
     } else {

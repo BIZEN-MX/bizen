@@ -230,7 +230,7 @@ export default function JoinPage() {
         flexDirection: "column",
         overflowY: "auto",
         position: "relative",
-        padding: "80px 20px"
+        padding: "clamp(24px, 6vw, 64px) 20px"
       }}>
 
         {/* Back Button */}

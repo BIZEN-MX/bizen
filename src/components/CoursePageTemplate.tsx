@@ -311,7 +311,7 @@ export default function CoursePageTemplate({
     const nextTopic = !isNaN(topicNum) ? ALL_TOPICS.find((t) => t.id === topicNum + 1) : null
 
     return (
-        <div style={{ position: "relative", width: "100%", maxWidth: "100%", flex: 1, background: "#FBFAF5", boxSizing: "border-box" }}>
+        <div style={{ position: "relative", width: "100%", maxWidth: "none", flex: 1, background: "#FBFAF5", boxSizing: "border-box" }}>
             {/* Decorative orbs (match /courses) */}
             <div style={{ position: "fixed", top: "10%", right: "6%", width: 350, height: 350, background: "radial-gradient(circle, rgba(59,130,246,0.18) 0%, transparent 70%)", borderRadius: "50%", filter: "blur(60px)", pointerEvents: "none", zIndex: 0 }} />
             <div style={{ position: "fixed", bottom: "10%", left: "5%", width: 400, height: 400, background: "radial-gradient(circle, rgba(34,197,94,0.12) 0%, transparent 70%)", borderRadius: "50%", filter: "blur(70px)", pointerEvents: "none", zIndex: 0 }} />
@@ -327,14 +327,14 @@ export default function CoursePageTemplate({
                     background: "transparent",
                     position: "relative",
                     display: "flex",
-                    justifyContent: "center",
+                    justifyContent: "flex-start",
                     alignItems: "flex-start",
                     boxSizing: "border-box",
                     width: "100%",
                     zIndex: 1,
                 }}
             >
-                <div style={{ width: "100%", maxWidth: "100%", margin: "0 auto", position: "relative", zIndex: 1, padding: 0, boxSizing: "border-box", display: "flex", flexDirection: "column", alignItems: "stretch", gap: 0 }}>
+                <div style={{ width: "100%", maxWidth: "none", margin: "0", position: "relative", zIndex: 1, padding: 0, boxSizing: "border-box", display: "flex", flexDirection: "column", alignItems: "stretch", gap: 0 }}>
 
                     {/* ── HERO BANNER (mirrors /courses hero) ───────────────────────── */}
                     <div
@@ -344,7 +344,7 @@ export default function CoursePageTemplate({
                             borderRadius: 28,
                             padding: "clamp(24px, 4vw, 40px) 32px",
                             width: "100%",
-                            maxWidth: "100%",
+                            maxWidth: "none",
                             margin: "0 0 clamp(20px, 4vw, 32px)",
                             position: "relative",
                             overflow: "hidden",

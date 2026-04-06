@@ -280,12 +280,12 @@ export default function CoursesPage() {
         style={{
           paddingTop: "clamp(24px, 4vw, 40px)",
           paddingBottom: "clamp(40px, 8vw, 80px)",
-          paddingLeft: "clamp(16px, 3vw, 56px)",
-          paddingRight: "clamp(16px, 3vw, 56px)",
+          paddingLeft: "0",
+          paddingRight: "0",
           background: "transparent",
           position: "relative",
           display: "flex",
-          justifyContent: "center", // Changed from flex-start to center for better mobile alignment
+          justifyContent: "flex-start", // User wants full width, so align to left/top and take all space
           alignItems: "flex-start",
           marginBottom: 0,
           boxSizing: "border-box",
@@ -294,7 +294,7 @@ export default function CoursesPage() {
         {/* Same width as course bars (800px) - progress at top, then course list */}
         <section style={{
           width: "100%",
-          maxWidth: "100%",
+          maxWidth: "none",
           margin: "0",
           position: "relative",
           zIndex: 1,

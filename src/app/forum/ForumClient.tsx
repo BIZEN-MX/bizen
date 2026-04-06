@@ -400,7 +400,7 @@ export default function ForumContent() {
   const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    document.body.style.background = "#FBFAF5"
+    document.body.style.background = "var(--bg-main)"
     return () => { document.body.style.background = "" }
   }, [])
 
@@ -574,17 +574,17 @@ export default function ForumContent() {
       <LoadingBar />
       <style>{`
         @media (max-width: 767px) {
-          .forum-outer { position: relative !important; z-index: 1 !important; overflow-x: hidden !important; background: #f8fafc !important; min-height: 100vh !important; }
+          .forum-outer { position: relative !important; z-index: 1 !important; overflow-x: hidden !important; background: var(--bg-main) !important; min-height: 100vh !important; }
           .forum-container { padding-top: 14px !important; padding-bottom: calc(90px + env(safe-area-inset-bottom)) !important; }
           .forum-container main { padding: 16px !important; }
           .forum-container h1 { font-size: 28px !important; margin-bottom: 6px !important; }
           .forum-container p { font-size: 13px !important; }
         }
         @media (min-width: 768px) and (max-width: 1160px) {
-          .forum-container { width: 100% !important; max-width: 100% !important; margin-left: 0 !important; padding: clamp(24px, 3vw, 40px) !important; }
+          .forum-container { width: 100% !important; max-width: 100% !important; margin-left: 0 !important; margin-right: 0 !important; padding: 0 !important; }
         }
         @media (min-width: 1161px) {
-          .forum-container { width: 100% !important; max-width: 100% !important; margin-left: 0 !important; padding: clamp(24px, 4vw, 40px) !important; }
+          .forum-container { width: 100% !important; max-width: 100% !important; margin-left: 0 !important; margin-right: 0 !important; padding: 0 !important; }
         }
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -632,7 +632,7 @@ export default function ForumContent() {
         }
       `}</style>
 
-      <div className="forum-outer" style={{ position: "relative", flex: 1, background: "#FBFAF5", width: "100%", boxSizing: "border-box", minHeight: "100vh" }}>
+      <div className="forum-outer" style={{ position: "relative", flex: 1, background: "var(--bg-main)", width: "100%", boxSizing: "border-box", minHeight: "100vh" }}>
         <div ref={containerRef} className="forum-container" style={{ position: "relative", flex: 1, paddingTop: 32, paddingBottom: 80, boxSizing: "border-box", width: "100%" }}>
           <main style={{ position: "relative", margin: 0, padding: "clamp(16px, 4vw, 40px)", width: "100%", boxSizing: "border-box" }}>
 

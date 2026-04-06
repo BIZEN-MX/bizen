@@ -538,7 +538,13 @@ function CreditSimulatorContent() {
         .scenario-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,0.10)!important;}
       `}</style>
       <div className="bizen-score-outer">
-        <div style={{ maxWidth: 1200, margin: '0 auto', padding: 'clamp(24px,4vw,56px) clamp(16px,4vw,56px)', paddingBottom: 80, boxSizing: 'border-box' }}>
+        <div style={{ 
+          maxWidth: '100%', 
+          margin: '0', 
+          padding: 'clamp(12px, 2.5vw, 24px) clamp(16px, 2.5vw, 32px)', 
+          paddingBottom: 80, 
+          boxSizing: 'border-box' 
+        }}>
 
           {/* Header */}
           <div style={{ marginBottom: 32, animation: 'fadeUp 0.5s ease' }}>

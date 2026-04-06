@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { createSupabaseServer } from "@/lib/supabase/server"
-import { PrismaClient } from "@prisma/client"
+import { prisma } from "@/lib/prisma"
 import { calculateLevel } from "@/lib/xp"
-
-const prisma = new PrismaClient()
 
 export async function POST(request: NextRequest) {
   try {
@@ -58,12 +56,27 @@ export async function POST(request: NextRequest) {
     const newLevel = calculateLevel(newXp)
     const leveledUp = newLevel > profile.level
 
-    // Update profile
-    await prisma.profile.update({
-      where: { userId: user.id },
-      data: {
-        xp: newXp,
-        level: newLevel
+    // Update profile and create notification if leveled up
+    await prisma.$transaction(async (tx) => {
+      await tx.profile.update({
+        where: { userId: user.id },
+        data: {
+          xp: newXp,
+          level: newLevel
+        }
+      })
+
+      if (leveledUp) {
+        await tx.notification.create({
+          data: {
+            userId: user.id,
+            title: "¡Has subido de nivel!",
+            message: `Felicidades, has alcanzado el Nivel ${newLevel}. Sigue así para desbloquear nuevas recompensas.`,
+            type: "achievement",
+            priority: "high",
+            link: "/profile"
+          }
+        })
       }
     })
 
@@ -84,8 +97,6 @@ export async function POST(request: NextRequest) {
       { error: "Failed to award XP" },
       { status: 500 }
     )
-  } finally {
-    await prisma.$disconnect()
   }
 }
 

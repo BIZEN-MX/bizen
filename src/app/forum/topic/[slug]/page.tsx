@@ -141,9 +141,10 @@ export default function TopicFeedPage() {
     <div style={{
       position: "relative",
       minHeight: "100vh",
-      paddingTop: 40,
+      paddingTop: 0,
       paddingBottom: 80,
       background: "#FBFAF5",
+      width: "100%",
     }} className="forum-topic-outer">
       <style>{`
         @media (max-width: 767px) {
@@ -168,9 +169,10 @@ export default function TopicFeedPage() {
       `}</style>
       <main style={{
         position: "relative",
-        maxWidth: 900,
-        margin: "0 auto",
+        maxWidth: "none",
+        margin: 0,
         padding: "clamp(20px, 4vw, 40px)",
+        width: "100%",
         zIndex: 1
       }}>
         {/* Breadcrumb */}

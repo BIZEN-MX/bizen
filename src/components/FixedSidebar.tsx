@@ -139,7 +139,7 @@ export default function FixedSidebar() {
         sidebar.style.setProperty('z-index', '10001', 'important') // Lower than hamburger button (10002)
         sidebar.style.setProperty('padding-top', '70px', 'important') // Extra padding to avoid hamburger button
         sidebar.style.setProperty('flex-direction', 'column', 'important')
-        sidebar.style.setProperty('background', '#ffffff', 'important')
+        sidebar.style.setProperty('background', '#FBFAF5', 'important')
         sidebar.style.setProperty('padding', '70px 16px 32px 16px', 'important') // Extra padding at top (70px) to avoid hamburger button
         sidebar.style.setProperty('overflow-y', 'auto', 'important')
         sidebar.style.setProperty('overflow-x', 'hidden', 'important')
@@ -293,7 +293,7 @@ export default function FixedSidebar() {
           left: 0,
           width: isCompactSidebar ? "220px" : "280px",
           height: "100vh",
-          background: "linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%)",
+          background: "var(--bg-main)",
           boxShadow: "4px 0 24px rgba(0, 0, 0, 0.03)",
           zIndex: 1000,
           overflowY: "hidden",

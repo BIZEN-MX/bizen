@@ -82,16 +82,31 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   const showGutter = false;
 
   // TopNav is active unless we are on landing or a page that explicitly hides all app navigation
-  const isTopNavActive = !isLanding && !pathname?.startsWith('/learn/') && !pathname?.startsWith('/diagnostic');
+  const isTopNavActive = !isLanding && 
+    !pathname?.startsWith('/learn/') && 
+    !pathname?.startsWith('/diagnostic') &&
+    !pathname?.startsWith('/login') &&
+    !pathname?.startsWith('/signup') &&
+    !pathname?.startsWith('/onboarding') &&
+    !pathname?.includes('/auth/') &&
+    !pathname?.startsWith('/impacto-social') &&
+    pathname !== '/payment';
 
   return (
     <div className="app-shell" data-topnav-active={isTopNavActive}>
       <div className="app-scroll">
         <div style={{ display: "flex", width: "100%", minHeight: "100%" }}>
           
-          <main className="app-main flex-1 flex flex-col">
-            {/* Inner wrapper to ensure content is centered in the usable space */}
-            <div className="w-full flex-1 flex flex-col">
+          <main 
+            className="app-main flex-1 flex flex-col" 
+            style={{ 
+              maxWidth: "none", 
+              boxSizing: "border-box",
+              paddingTop: isTopNavActive ? "110px" : "0"
+            }}
+          >
+            {/* Inner wrapper to ensure content is full width in the usable space */}
+            <div className="w-full flex-1 flex flex-col" style={{ maxWidth: "none" }}>
               <React.Suspense fallback={<PageLoader />}>
                 {children}
               </React.Suspense>
