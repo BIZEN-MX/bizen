@@ -126,6 +126,7 @@ function InnerClientWrapper({ children }: { children: React.ReactNode }) {
   const isDiagnosticPage = pathname?.startsWith('/diagnostic')
   const isLessonInteractivePage = pathname?.startsWith('/learn/')
   const isCourseTopicPage = pathname?.startsWith('/courses/tema-')
+  const isCourseListPage = pathname === '/courses'
   const isTransferPage = pathname === '/transfer' || isTransfer
   const isNewsPage = pathname?.startsWith('/news')
   const isLivePage = pathname?.startsWith('/live')
@@ -195,13 +196,29 @@ function InnerClientWrapper({ children }: { children: React.ReactNode }) {
   // Pages where nav is hidden run as a standalone flow without sidebar/nav chrome.
   useEffect(() => {
     if (typeof document === "undefined") return
-    if (hideAppNavigation) {
+    if (hideAppNavigation || isCourseTopicPage || isCourseListPage) {
       document.body.setAttribute("data-no-sidebar", "true")
+      document.body.classList.add("hide-sidebar")
     } else {
       document.body.removeAttribute("data-no-sidebar")
+      document.body.classList.remove("hide-sidebar")
     }
-    return () => document.body.removeAttribute("data-no-sidebar")
-  }, [hideAppNavigation])
+
+    if (isCourseTopicPage || isCourseListPage) {
+      document.body.setAttribute("data-topic-page", "true")
+      document.body.setAttribute("data-no-padding", "true")
+    } else {
+      document.body.removeAttribute("data-topic-page")
+      document.body.removeAttribute("data-no-padding")
+    }
+
+    return () => {
+      document.body.removeAttribute("data-no-sidebar")
+      document.body.classList.remove("hide-sidebar")
+      document.body.removeAttribute("data-topic-page")
+      document.body.removeAttribute("data-no-padding")
+    }
+  }, [hideAppNavigation, isCourseTopicPage, isCourseListPage])
 
   // Flag html on lesson/diagnostic page so CSS can lock scroll and hide app chrome
   useEffect(() => {

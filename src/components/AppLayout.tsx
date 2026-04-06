@@ -81,12 +81,15 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   // No sidebar gutter needed — TopNav is at the top, not the left
   const showGutter = false;
 
+  // TopNav is active unless we are on landing or a page that explicitly hides all app navigation
+  const isTopNavActive = !isLanding && !pathname?.startsWith('/learn/') && !pathname?.startsWith('/diagnostic');
+
   return (
-    <div className="app-shell" data-topnav-active={!isLanding && !isSidebarHidden}>
+    <div className="app-shell" data-topnav-active={isTopNavActive}>
       <div className="app-scroll">
         <div style={{ display: "flex", width: "100%", minHeight: "100%" }}>
           
-          <main className="app-main flex-1 flex flex-col items-center">
+          <main className="app-main flex-1 flex flex-col">
             {/* Inner wrapper to ensure content is centered in the usable space */}
             <div className="w-full flex-1 flex flex-col">
               <React.Suspense fallback={<PageLoader />}>

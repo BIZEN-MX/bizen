@@ -322,8 +322,8 @@ export default function CoursePageTemplate({
                     flex: 1,
                     paddingTop: "clamp(8px, 1.5vw, 16px)",
                     paddingBottom: "clamp(40px, 8vw, 80px)",
-                    paddingLeft: "4px",
-                    paddingRight: "4px",
+                    paddingLeft: "0",
+                    paddingRight: "0",
                     background: "transparent",
                     position: "relative",
                     display: "flex",
@@ -334,18 +334,18 @@ export default function CoursePageTemplate({
                     zIndex: 1,
                 }}
             >
-                <div style={{ width: "100%", maxWidth: "1600px", margin: "0 auto", position: "relative", zIndex: 1, padding: "0 24px", boxSizing: "border-box", display: "flex", flexDirection: "column", alignItems: "stretch", gap: 0 }}>
+                <div style={{ width: "100%", maxWidth: "100%", margin: "0 auto", position: "relative", zIndex: 1, padding: 0, boxSizing: "border-box", display: "flex", flexDirection: "column", alignItems: "stretch", gap: 0 }}>
 
                     {/* ── HERO BANNER (mirrors /courses hero) ───────────────────────── */}
                     <div
                         className="cpt-hero"
                         style={{
                             background: "linear-gradient(135deg, #0f2a6e 0%, #1e3a8a 45%, #2563eb 100%)",
-                            borderRadius: 28,
-                            padding: "clamp(28px, 4vw, 48px) clamp(24px, 4vw, 44px)",
+                            borderRadius: 0,
+                            padding: "clamp(28px, 4vw, 48px) clamp(24px, 5vw, 64px)",
                             width: "100%",
                             maxWidth: "100%",
-                            margin: "0 auto clamp(20px, 4vw, 32px)",
+                            margin: "0 0 clamp(20px, 4vw, 32px)",
                             position: "relative",
                             overflow: "hidden",
                             boxShadow: "0 20px 60px rgba(15,98,254,0.3)",
@@ -457,6 +457,7 @@ export default function CoursePageTemplate({
                                 maxWidth: "100%", 
                                 margin: "0 auto 32px", 
                                 boxSizing: "border-box",
+                                padding: "0 clamp(16px, 5vw, 48px)",
                             }}
                         >
                             <div style={{ 
@@ -505,7 +506,7 @@ export default function CoursePageTemplate({
                     )}
 
                     {/* ── SUBTEMAS ──────────────────────────────────────────────────── */}
-                    <div style={{ width: "100%", maxWidth: "100%", margin: "0 auto", display: "flex", flexDirection: "column", gap: "clamp(28px, 5vw, 44px)", paddingBottom: 40, boxSizing: "border-box" }}>
+                    <div style={{ width: "100%", maxWidth: "100%", margin: "0 auto", display: "flex", flexDirection: "column", gap: "clamp(28px, 5vw, 44px)", padding: "0 clamp(16px, 5vw, 48px)", paddingBottom: 40, boxSizing: "border-box" }}>
                         {subtemas.map((sub, subIdx) => {
                             const subCompleted = sub.lessons.filter((l) => completedLessons.includes(l.slug)).length
                             const subTotal = sub.lessons.length

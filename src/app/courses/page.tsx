@@ -310,11 +310,11 @@ export default function CoursesPage() {
             className="courses-hero"
             style={{
               background: "linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #1d4ed8 100%)",
-              borderRadius: 28,
-              padding: "clamp(24px, 4vw, 40px) clamp(22px, 4vw, 36px)",
+              borderRadius: 0,
+              padding: "clamp(24px, 4vw, 40px) clamp(22px, 5vw, 64px)",
               width: "100%",
-              maxWidth: 1188,
-              margin: "0 auto clamp(20px, 4vw, 32px)",
+              maxWidth: "100%",
+              margin: "0 0 clamp(20px, 4vw, 32px)",
               position: "relative",
               overflow: "hidden",
               boxShadow: "0 20px 60px rgba(15, 98, 254, 0.25)",
@@ -408,7 +408,7 @@ export default function CoursesPage() {
               transition={{ delay: 0.3 }}
               style={{ 
                 width: "100%", 
-                maxWidth: 1188, 
+                maxWidth: "100%", 
                 margin: "0 auto 32px", 
                 boxSizing: "border-box",
               }}
@@ -514,7 +514,7 @@ export default function CoursesPage() {
                       gridTemplateColumns: "repeat(2, 1fr)",
                       gap: "40px 60px",
                       width: "100%",
-                      maxWidth: "1100px",
+                      maxWidth: "100%",
                       margin: "0 auto",
                       position: "relative",
                       padding: "0 20px"
