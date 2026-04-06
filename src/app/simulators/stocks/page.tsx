@@ -934,6 +934,1242 @@ export function StockSimulatorContent({ tradeSymbol }: { tradeSymbol?: string })
       </div>
     );
 
+  const renderBizenTerminal = () => (
+    <>
+                
+                <AnimatePresence>
+                  {orderForm.symbol && (
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      style={{
+                        position: "fixed",
+                        top: 0,
+                        left: 0,
+                        width: "100vw",
+                        height: "100dvh",
+                        backgroundColor: tradeSymbol ? "#060d1f" : "rgba(11, 30, 94, 0.4)",
+                        backdropFilter: tradeSymbol ? "none" : "blur(8px)",
+                        zIndex: 99999,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        padding: 0,
+                        margin: 0,
+                        overflow: "hidden",
+                      }}
+                      onClick={() => {
+                        if (tradeSymbol) { router.push("/simulators/stocks"); }
+                        else { setOrderForm((f) => ({ ...f, symbol: "" })); }
+                      }}
+                    >
+                      <motion.div
+                        ref={orderFormRef}
+                        className="order-panel"
+                        initial={{ opacity: 0, x: 40 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: 40 }}
+                        transition={{ type: "spring", stiffness: 280, damping: 30 }}
+                        style={{
+                          width: "100vw",
+                          height: "100dvh",
+                          maxHeight: "100dvh",
+                          background: "#060d1f",
+                          display: "flex",
+                          overflow: "hidden",
+                          position: "relative",
+                          margin: 0,
+                        }}
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        {/* ── CLOSE BUTTON ─────────────────────────── */}
+                        <button
+                          onClick={() => {
+                            if (tradeSymbol) { router.push("/simulators/stocks"); }
+                            else { setOrderForm((f) => ({ ...f, symbol: "" })); }
+                          }}
+                          style={{
+                            position: "absolute",
+                            top: 18,
+                            right: 22,
+                            zIndex: 100,
+                            width: 36,
+                            height: 36,
+                            borderRadius: 10,
+                            border: "1.5px solid rgba(255,255,255,0.12)",
+                            background: "rgba(255,255,255,0.06)",
+                            color: "rgba(255,255,255,0.7)",
+                            cursor: "pointer",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            transition: "all 0.15s ease",
+                          }}
+                          onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = "rgba(239,68,68,0.2)"; (e.currentTarget as HTMLElement).style.color = "#ef4444"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(239,68,68,0.4)"; }}
+                          onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.06)"; (e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.7)"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.12)"; }}
+                        >
+                          <X size={16} />
+                        </button>
+
+                        {/* ── LEFT COLUMN: Market Data ─────────────── */}
+                        <div
+                          style={{
+                            flex: "1 1 60%",
+                            overflowY: "auto",
+                            padding: "28px 32px",
+                            borderRight: "1px solid rgba(255,255,255,0.07)",
+                          }}
+                        >
+
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 12,
+                            marginBottom: 28,
+                          }}
+                        >
+                          {/* BIZEN Terminal branding */}
+                          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                            <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#10b981", boxShadow: "0 0 8px #10b981" }} />
+                            <span style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.35)", textTransform: "uppercase" as const, letterSpacing: "0.12em" }}>BIZEN Terminal</span>
+                          </div>
+                          <div style={{ flex: 1 }} />
+                          {/* Stock badge */}
+                          {orderForm.symbol && (() => {
+                            const s = processedMarketData.find((st: any) => st.symbol === orderForm.symbol);
+                            if (!s) return null;
+                            const chg = s.changePercent ?? 0;
+                            return (
+                              <div style={{ display: "flex", alignItems: "center", gap: 10, background: "rgba(255,255,255,0.05)", padding: "8px 14px", borderRadius: 12, border: "1px solid rgba(255,255,255,0.1)" }}>
+                                <StockLogo symbol={s.symbol} size={22} />
+                                <span style={{ fontSize: 14, fontWeight: 800, color: "white" }}>{s.symbol}</span>
+                                <span style={{ fontSize: 20, fontWeight: 900, color: "white", fontFamily: "'JetBrains Mono',monospace", letterSpacing: "-0.03em" }}>
+                                  ${(s.price / 10).toFixed(2)}
+                                </span>
+                                <span style={{ fontSize: 12, fontWeight: 700, color: chg >= 0 ? "#10b981" : "#ef4444", padding: "3px 8px", background: chg >= 0 ? "rgba(16,185,129,0.15)" : "rgba(239,68,68,0.15)", borderRadius: 6 }}>
+                                  {chg >= 0 ? "+" : ""}{chg.toFixed(2)}%
+                                </span>
+                              </div>
+                            );
+                          })()}
+                        </div>
+
+
+                        {orderForm.symbol && (
+                          <div
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 12,
+                              background: "rgba(255,255,255,0.05)",
+                              padding: "10px 16px",
+                              borderRadius: 16,
+                              border: "1px solid rgba(255,255,255,0.1)",
+                              marginBottom: 24,
+                            }}
+                          >
+                        {(() => {
+                          const s = processedMarketData.find(
+                            (st) => st.symbol === orderForm.symbol,
+                          );
+                          if (!s) return null;
+                          return (
+                            <>
+                              <StockLogo symbol={s.symbol} size={28} />
+                              <span
+                                style={{
+                                  fontSize: 13,
+                                  color: "rgba(255,255,255,0.6)",
+                                }}
+                              >
+                                {s.name}
+                              </span>
+                              <span
+                                style={{
+                                  fontSize: 18,
+                                  fontWeight: 700,
+                                  color: isCrisis ? "#ef4444" : "#10b981",
+                                }}
+                              >
+                                    bz {(s.price * 1).toFixed(0)} <BizcoinIcon size={18} style={{ marginLeft: 4 }} />
+                              </span>
+                            </>
+                          );
+                        })()}
+                      </div>
+                    )}
+
+                  {/* ====== PILAR 2: ANÁLISIS FUNDAMENTAL ====== */}
+                  {orderForm.symbol && (() => {
+                    const meta = STOCK_METADATA[orderForm.symbol] || {
+                      desc: `Estás analizando ${orderForm.symbol}. Investiga el activo y diversifica tu portafolio.`,
+                      sector: "Mercado Global", risk: "Variable", stats: "—"
+                    };
+                    const fund = STOCK_FUNDAMENTALS[orderForm.symbol] ?? null;
+                    const currentPrice = processedMarketData.find(s => s.symbol === orderForm.symbol)?.price ?? 0;
+
+                    // Rating colour helper
+                    const ratingColor = (score: number) =>
+                      score >= 5 ? "#10b981" : score >= 4 ? "#3b82f6" : score >= 3 ? "#f59e0b" : "#ef4444";
+
+                    // 52W progress %
+                    const rangePos = fund && fund.week52Low < fund.week52High && currentPrice > 0
+                      ? Math.min(100, Math.max(0, ((currentPrice / 10 - fund.week52Low) / (fund.week52High - fund.week52Low)) * 100))
+                      : null;
+
+                    return (
+                      <div style={{ marginBottom: 24 }}>
+                        {/* Header row */}
+                        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
+                          <BarChart3 size={16} color="#3b82f6" />
+                          <h4 style={{ margin: 0, fontSize: 12, fontWeight: 800, color: "#3b82f6", textTransform: "uppercase" as const, letterSpacing: "0.08em" }}>
+                            Análisis Fundamental
+                          </h4>
+                          <span style={{ marginLeft: "auto", fontSize: 10, color: "rgba(255,255,255,0.35)", fontWeight: 600 }}>
+                            {meta.sector}
+                          </span>
+                        </div>
+
+                        {/* Description */}
+                        <p style={{ margin: "0 0 16px", fontSize: 13, color: "rgba(255,255,255,0.75)", lineHeight: 1.6 }}>
+                          {meta.desc}
+                        </p>
+
+                        {fund ? (
+                          <>
+                            {/* ---- Row 1: Key Metrics Grid ---- */}
+                            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8, marginBottom: 10 }}>
+                              {/* Market Cap */}
+                              <div style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 12, padding: "12px 14px" }}>
+                                <div style={{ fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase" as const, letterSpacing: "0.08em", marginBottom: 6 }}>Cap. Mercado</div>
+                                <div style={{ fontSize: 16, fontWeight: 800, color: "white" }}>{fund.marketCap}</div>
+                                <div style={{ fontSize: 9, color: "rgba(255,255,255,0.3)", marginTop: 2 }}>USD</div>
+                              </div>
+                              {/* P/E Ratio */}
+                              <div style={{
+                                background: fund.pe === null ? "rgba(255,255,255,0.03)" : fund.pe > 40 ? "rgba(239,68,68,0.08)" : fund.pe > 25 ? "rgba(245,158,11,0.08)" : "rgba(16,185,129,0.08)",
+                                border: `1px solid ${fund.pe === null ? "rgba(255,255,255,0.06)" : fund.pe > 40 ? "rgba(239,68,68,0.25)" : fund.pe > 25 ? "rgba(245,158,11,0.25)" : "rgba(16,185,129,0.25)"}`,
+                                borderRadius: 12, padding: "12px 14px"
+                              }}>
+                                <div style={{ fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase" as const, letterSpacing: "0.08em", marginBottom: 6 }}>P/E Ratio</div>
+                                <div style={{ fontSize: 16, fontWeight: 800, color: fund.pe === null ? "rgba(255,255,255,0.3)" : fund.pe > 40 ? "#fca5a5" : fund.pe > 25 ? "#fcd34d" : "#6ee7b7" }}>
+                                  {fund.pe !== null ? fund.pe.toFixed(1) : "N/A"}
+                                </div>
+                                <div style={{ fontSize: 9, color: "rgba(255,255,255,0.3)", marginTop: 2 }}>
+                                  {fund.pe === null ? "No aplica" : fund.pe > 40 ? "Caro" : fund.pe > 25 ? "Moderado" : "Barato"}
+                                </div>
+                              </div>
+                              {/* Dividend Yield */}
+                              <div style={{
+                                background: fund.divYield && fund.divYield > 2 ? "rgba(59,130,246,0.08)" : "rgba(255,255,255,0.03)",
+                                border: `1px solid ${fund.divYield && fund.divYield > 2 ? "rgba(59,130,246,0.25)" : "rgba(255,255,255,0.06)"}`,
+                                borderRadius: 12, padding: "12px 14px"
+                              }}>
+                                <div style={{ fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase" as const, letterSpacing: "0.08em", marginBottom: 6 }}>Dividendo</div>
+                                <div style={{ fontSize: 16, fontWeight: 800, color: fund.divYield ? "#93c5fd" : "rgba(255,255,255,0.3)" }}>
+                                  {fund.divYield !== null ? `${fund.divYield}%` : "—"}
+                                </div>
+                                <div style={{ fontSize: 9, color: "rgba(255,255,255,0.3)", marginTop: 2 }}>Yield Anual</div>
+                              </div>
+                            </div>
+
+                            {/* ---- Row 2: Beta, EPS, Revenue Growth ---- */}
+                            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8, marginBottom: 14 }}>
+                              {/* Beta */}
+                              <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 12, padding: "12px 14px" }}>
+                                <div style={{ fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase" as const, letterSpacing: "0.08em", marginBottom: 6 }}>Beta</div>
+                                <div style={{ fontSize: 16, fontWeight: 800, color: Math.abs(fund.beta) > 1.5 ? "#fca5a5" : Math.abs(fund.beta) > 1.0 ? "#fcd34d" : "#6ee7b7" }}>
+                                  {fund.beta.toFixed(2)}
+                                </div>
+                                <div style={{ fontSize: 9, color: "rgba(255,255,255,0.3)", marginTop: 2 }}>
+                                  {Math.abs(fund.beta) > 1.5 ? "Muy Volátil" : Math.abs(fund.beta) > 1.0 ? "Volátil" : fund.beta < 0 ? "Inverso" : "Estable"}
+                                </div>
+                              </div>
+                              {/* EPS */}
+                              <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 12, padding: "12px 14px" }}>
+                                <div style={{ fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase" as const, letterSpacing: "0.08em", marginBottom: 6 }}>EPS</div>
+                                <div style={{ fontSize: 16, fontWeight: 800, color: fund.eps !== null ? (fund.eps > 0 ? "#a78bfa" : "#fca5a5") : "rgba(255,255,255,0.3)" }}>
+                                  {fund.eps !== null ? `$${fund.eps.toFixed(2)}` : "N/A"}
+                                </div>
+                                <div style={{ fontSize: 9, color: "rgba(255,255,255,0.3)", marginTop: 2 }}>Ganancia/Acción</div>
+                              </div>
+                              {/* Revenue Growth */}
+                              <div style={{
+                                background: fund.revenueGrowthYoY === null ? "rgba(255,255,255,0.03)" : fund.revenueGrowthYoY > 10 ? "rgba(16,185,129,0.08)" : fund.revenueGrowthYoY > 0 ? "rgba(245,158,11,0.05)" : "rgba(239,68,68,0.07)",
+                                border: `1px solid ${fund.revenueGrowthYoY === null ? "rgba(255,255,255,0.06)" : fund.revenueGrowthYoY > 10 ? "rgba(16,185,129,0.25)" : fund.revenueGrowthYoY > 0 ? "rgba(245,158,11,0.2)" : "rgba(239,68,68,0.25)"}`,
+                                borderRadius: 12, padding: "12px 14px"
+                              }}>
+                                <div style={{ fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase" as const, letterSpacing: "0.08em", marginBottom: 6 }}>Ingresos YoY</div>
+                                <div style={{ fontSize: 16, fontWeight: 800, color: fund.revenueGrowthYoY === null ? "rgba(255,255,255,0.3)" : fund.revenueGrowthYoY > 10 ? "#6ee7b7" : fund.revenueGrowthYoY > 0 ? "#fcd34d" : "#fca5a5", display: "flex", alignItems: "center", gap: 4 }}>
+                                  {fund.revenueGrowthYoY !== null
+                                    ? <>{fund.revenueGrowthYoY > 0 ? <ArrowUp size={12} /> : <ArrowDown size={12} />} {Math.abs(fund.revenueGrowthYoY)}%</>
+                                    : "N/A"
+                                  }
+                                </div>
+                                <div style={{ fontSize: 9, color: "rgba(255,255,255,0.3)", marginTop: 2 }}>Crecimiento</div>
+                              </div>
+                            </div>
+
+                            {/* ---- 52-Week Range Bar ---- */}
+                            <div style={{ marginBottom: 14, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 12, padding: "12px 14px" }}>
+                              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+                                <span style={{ fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase" as const, letterSpacing: "0.08em" }}>Rango 52 Semanas (USD)</span>
+                                <span style={{ fontSize: 11, fontWeight: 700, color: "white" }}>
+                                  ${fund.week52Low.toFixed(2)} — ${fund.week52High.toFixed(2)}
+                                </span>
+                              </div>
+                              <div style={{ position: "relative", height: 6, background: "rgba(255,255,255,0.08)", borderRadius: 4 }}>
+                                <div style={{ position: "absolute", left: 0, top: 0, height: "100%", width: `${rangePos ?? 50}%`, background: "linear-gradient(90deg, #ef4444, #f59e0b, #10b981)", borderRadius: 4, transition: "width 0.5s ease" }} />
+                                {rangePos !== null && (
+                                  <div style={{ position: "absolute", top: "50%", left: `${rangePos}%`, transform: "translate(-50%, -50%)", width: 12, height: 12, background: "white", borderRadius: "50%", border: "2px solid #0f172a", boxShadow: "0 0 6px rgba(255,255,255,0.4)" }} />
+                                )}
+                              </div>
+                              <div style={{ display: "flex", justifyContent: "space-between", marginTop: 6 }}>
+                                <span style={{ fontSize: 9, color: "#ef4444", fontWeight: 700 }}>MIN</span>
+                                <span style={{ fontSize: 9, color: "rgba(255,255,255,0.35)" }}>Precio actual en rango anual</span>
+                                <span style={{ fontSize: 9, color: "#10b981", fontWeight: 700 }}>MAX</span>
+                              </div>
+                            </div>
+
+                            {/* ---- Analyst Rating ---- */}
+                            <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 12, padding: "12px 14px" }}>
+                              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+                                <span style={{ fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase" as const, letterSpacing: "0.08em" }}>Consenso Analistas</span>
+                                <span style={{ fontSize: 12, fontWeight: 800, color: ratingColor(fund.ratingScore) }}>{fund.ratingLabel}</span>
+                              </div>
+                              <div style={{ display: "flex", gap: 4 }}>
+                                {[1, 2, 3, 4, 5].map(i => (
+                                  <div key={i} style={{ flex: 1, height: 6, borderRadius: 3, background: i <= fund.ratingScore ? ratingColor(fund.ratingScore) : "rgba(255,255,255,0.08)", transition: "background 0.3s" }} />
+                                ))}
+                              </div>
+                              <div style={{ display: "flex", justifyContent: "space-between", marginTop: 5 }}>
+                                <span style={{ fontSize: 9, color: "rgba(255,255,255,0.25)" }}>Venta</span>
+                                <span style={{ fontSize: 9, color: "rgba(255,255,255,0.25)" }}>Compra Fuerte</span>
+                              </div>
+                            </div>
+                          </>
+                        ) : (
+                          /* Fallback if no fundamentals data */
+                          <div style={{ display: "flex", flexWrap: "wrap" as const, gap: 8 }}>
+                            <span style={{ fontSize: 11, background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.1)", padding: "5px 12px", borderRadius: 8, color: "rgba(255,255,255,0.7)" }}>
+                              Sector: {meta.sector}
+                            </span>
+                            <span style={{ fontSize: 11, background: "rgba(245,158,11,0.1)", border: "1px solid rgba(245,158,11,0.2)", padding: "5px 12px", borderRadius: 8, color: "#fcd34d" }}>
+                              Riesgo: {meta.risk}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })()}
+                  {/* ====== END PILAR 2 ====== */}
+
+                  {/* ====== PROFESSIONAL CHART PANEL ====== */}
+                  <div
+                    style={{
+                      marginBottom: 24,
+                      background: "#0f172a",
+                      borderRadius: 20,
+                      padding: 20,
+                      border: "1px solid rgba(255,255,255,0.07)",
+                    }}
+                  >
+                    {/* Chart Header Controls */}
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14, flexWrap: "wrap", gap: 10 }}>
+                      {/* Time Range */}
+                      <div style={{ display: "flex", gap: 4, background: "rgba(255,255,255,0.05)", borderRadius: 10, padding: 3 }}>
+                        {["1d", "5d", "1m", "6m", "max"].map((r) => (
+                          <button
+                            key={r}
+                            onClick={() => setHistoryRange(r)}
+                            style={{
+                              padding: "5px 12px",
+                              borderRadius: 7,
+                              fontSize: 11,
+                              fontWeight: 700,
+                              cursor: "pointer",
+                              border: "none",
+                              textTransform: "uppercase" as const,
+                              background: historyRange === r ? "#10b981" : "transparent",
+                              color: historyRange === r ? "white" : "rgba(255,255,255,0.4)",
+                              transition: "all 0.2s",
+                              fontFamily: "inherit",
+                            }}
+                          >
+                            {r}
+                          </button>
+                        ))}
+                      </div>
+
+                      {/* Chart Type + Indicators */}
+                      <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                        {/* Area / Candle toggle */}
+                        <div style={{ display: "flex", background: "rgba(255,255,255,0.05)", borderRadius: 8, padding: 2 }}>
+                          {(["area", "candle"] as const).map(type => (
+                            <button
+                              key={type}
+                              onClick={() => setChartType(type)}
+                              style={{
+                                padding: "4px 12px",
+                                borderRadius: 6,
+                                fontSize: 11,
+                                fontWeight: 700,
+                                cursor: "pointer",
+                                border: "none",
+                                fontFamily: "inherit",
+                                background: chartType === type ? "rgba(59,130,246,0.3)" : "transparent",
+                                color: chartType === type ? "#93c5fd" : "rgba(255,255,255,0.35)",
+                              }}
+                            >
+                              <span style={{ display: "flex", alignItems: "center", gap: 5 }}>
+                                {type === "area" ? <LineChart size={12} /> : <CandlestickChart size={12} />}
+                                {type === "area" ? "Área" : "Velas"}
+                              </span>
+                            </button>
+                          ))}
+                        </div>
+                        {/* SMA Toggle */}
+                        <button
+                          onClick={() => setShowSMA(v => !v)}
+                          style={{
+                            padding: "4px 12px",
+                            borderRadius: 8,
+                            fontSize: 11,
+                            fontWeight: 700,
+                            cursor: "pointer",
+                            border: `1px solid ${showSMA ? "rgba(251,191,36,0.6)" : "rgba(255,255,255,0.1)"}`,
+                            background: showSMA ? "rgba(251,191,36,0.15)" : "transparent",
+                            color: showSMA ? "#fbbf24" : "rgba(255,255,255,0.4)",
+                            fontFamily: "inherit",
+                          }}
+                        >
+                          SMA 20
+                        </button>
+                        {/* EMA Toggle */}
+                        <button
+                          onClick={() => setShowEMA(v => !v)}
+                          style={{
+                            padding: "4px 12px",
+                            borderRadius: 8,
+                            fontSize: 11,
+                            fontWeight: 700,
+                            cursor: "pointer",
+                            border: `1px solid ${showEMA ? "rgba(167,139,250,0.6)" : "rgba(255,255,255,0.1)"}`,
+                            background: showEMA ? "rgba(167,139,250,0.15)" : "transparent",
+                            color: showEMA ? "#a78bfa" : "rgba(255,255,255,0.4)",
+                            fontFamily: "inherit",
+                          }}
+                        >
+                          EMA 14
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Legend */}
+                    {(showSMA || showEMA) && (
+                      <div style={{ display: "flex", gap: 16, marginBottom: 12 }}>
+                        {showSMA && (
+                          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                            <div style={{ width: 24, height: 2, background: "#fbbf24", borderRadius: 2 }} />
+                            <span style={{ fontSize: 10, color: "#fbbf24", fontWeight: 700 }}>SMA 20</span>
+                          </div>
+                        )}
+                        {showEMA && (
+                          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                            <div style={{ width: 24, height: 2, background: "#a78bfa", borderRadius: 2 }} />
+                            <span style={{ fontSize: 10, color: "#a78bfa", fontWeight: 700 }}>EMA 14</span>
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    {/* Chart */}
+                    <div style={{ height: 220, width: "100%", opacity: fetchingHistory ? 0.3 : 1, transition: "opacity 0.2s" }}>
+                      <ResponsiveContainer width="100%" height="100%">
+                        <ComposedChart data={enrichedHistory}>
+                          <defs>
+                            <linearGradient id="colorPrice2" x1="0" y1="0" x2="0" y2="1">
+                              <stop offset="5%" stopColor="#10b981" stopOpacity={0.25}/>
+                              <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
+                            </linearGradient>
+                          </defs>
+                          <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" vertical={false} />
+                          <XAxis
+                            dataKey="date"
+                            axisLine={false}
+                            tickLine={false}
+                            tick={{ fill: "rgba(255,255,255,0.25)", fontSize: 10 }}
+                            minTickGap={30}
+                          />
+                          <YAxis
+                            domain={["auto", "auto"]}
+                            axisLine={false}
+                            tickLine={false}
+                            tick={{ fill: "rgba(255,255,255,0.25)", fontSize: 10 }}
+                            width={45}
+                            tickFormatter={(v: number) => `${v.toFixed(0)}`}
+                          />
+                          <Tooltip
+                            contentStyle={{ background: "#0f172a", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, fontSize: 12, color: "white" }}
+                            itemStyle={{ fontWeight: 700 }}
+                            labelStyle={{ color: "rgba(255,255,255,0.5)", marginBottom: 4 }}
+                            formatter={(v: any, name: string) => {
+                              if (name === "bizcoins") return [`${Number(v).toFixed(0)} bz`, "Precio"];
+                              if (name === "sma") return [`${Number(v).toFixed(0)} bz`, "SMA 20"];
+                              if (name === "ema") return [`${Number(v).toFixed(0)} bz`, "EMA 14"];
+                              return [v, name];
+                            }}
+                          />
+                          {/* Area or Candle */}
+                          {chartType === "area" ? (
+                            <Area
+                              type="monotone"
+                              dataKey="bizcoins"
+                              stroke="#10b981"
+                              strokeWidth={2}
+                              fillOpacity={1}
+                              fill="url(#colorPrice2)"
+                              dot={false}
+                            />
+                          ) : (
+                            <Bar
+                              dataKey="bizcoins"
+                              shape={((props: any): React.ReactElement => {
+                                const { x, width, value, index } = props;
+                                const prev = enrichedHistory[index - 1];
+                                const openVal = prev ? (prev.close ?? prev.bizcoins ?? value) : value * 0.999;
+                                const closeVal = value;
+                                const isUp = closeVal >= openVal;
+                                const barColor = isUp ? "#10b981" : "#ef4444";
+                                const highVal = closeVal * (1 + 0.002);
+                                const lowVal = openVal * (1 - 0.002);
+                                const yScale = props.yAxis?.scale;
+                                if (!yScale) return <g />;
+                                const pxHigh = yScale(highVal);
+                                const pxLow = yScale(lowVal);
+                                const pxOpen = yScale(openVal);
+                                const pxClose = yScale(closeVal);
+                                const pxBodyTop = Math.min(pxOpen, pxClose);
+                                const pxBodyBot = Math.max(pxOpen, pxClose);
+                                const midX = x + (width || 8) / 2;
+                                return (
+                                  <g>
+                                    <line x1={midX} y1={pxHigh} x2={midX} y2={pxLow} stroke={barColor} strokeWidth={1} />
+                                    <rect
+                                      x={x + (width || 8) * 0.15}
+                                      y={pxBodyTop}
+                                      width={Math.max((width || 8) * 0.7, 2)}
+                                      height={Math.max(pxBodyBot - pxBodyTop, 1)}
+                                      fill={barColor}
+                                      rx={1}
+                                    />
+                                  </g>
+                                );
+                              }) as any}
+                            />
+                          )}
+                          {/* SMA Line */}
+                          {showSMA && (
+                            <Line
+                              type="monotone"
+                              dataKey="sma"
+                              stroke="#fbbf24"
+                              strokeWidth={1.5}
+                              dot={false}
+                              strokeDasharray="4 2"
+                              connectNulls
+                            />
+                          )}
+                          {/* EMA Line */}
+                          {showEMA && (
+                            <Line
+                              type="monotone"
+                              dataKey="ema"
+                              stroke="#a78bfa"
+                              strokeWidth={1.5}
+                              dot={false}
+                              connectNulls
+                            />
+                          )}
+                        </ComposedChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </div>
+                  {/* ====== END CHART PANEL ====== */}
+
+
+
+                  {/* ====== PILAR 3: ORDER BOOK ====== */}
+                  {orderBook.length > 0 && (() => {
+                    const asks = orderBook.filter(o => o.type === 'ask');
+                    const bids = orderBook.filter(o => o.type === 'bid');
+                    const maxTotal = Math.max(...orderBook.map(o => o.total));
+                    const totalBidVol = bids.reduce((s, b) => s + b.size, 0);
+                    const totalAskVol = asks.reduce((s, a) => s + a.size, 0);
+                    const buyPressure = Math.round((totalBidVol / (totalBidVol + totalAskVol)) * 100);
+                    const midPrice = asks.length > 0 && bids.length > 0
+                      ? ((asks[asks.length - 1].price + bids[0].price) / 2)
+                      : 0;
+                    const spread = asks.length > 0 && bids.length > 0
+                      ? (asks[asks.length - 1].price - bids[0].price)
+                      : 0;
+                    return (
+                      <div style={{ marginBottom: 24, background: "#0a0f1e", borderRadius: 16, border: "1px solid rgba(255,255,255,0.06)", overflow: "hidden" }}>
+                        {/* Header */}
+                        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 16px", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+                          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                            <BarChart2 size={13} color="#64748b" />
+                            <span style={{ fontSize: 11, fontWeight: 700, color: "#64748b", textTransform: "uppercase" as const, letterSpacing: "0.08em" }}>Libro de Órdenes</span>
+                          </div>
+                          <div style={{ display: "flex", gap: 16, fontSize: 10, color: "rgba(255,255,255,0.4)" }}>
+                            <span>Spread: <strong style={{ color: "#f59e0b" }}>{spread.toFixed(2)}</strong></span>
+                            <span>Mid: <strong style={{ color: "white" }}>${midPrice.toFixed(2)}</strong></span>
+                          </div>
+                        </div>
+
+                        {/* Column Headers */}
+                        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", padding: "6px 16px", borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
+                          <span style={{ fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.25)", textTransform: "uppercase" as const }}>Precio (USD)</span>
+                          <span style={{ fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.25)", textTransform: "uppercase" as const, textAlign: "center" as const }}>Tamaño</span>
+                          <span style={{ fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.25)", textTransform: "uppercase" as const, textAlign: "right" as const }}>Acumulado</span>
+                        </div>
+
+                        {/* Ask rows (sell orders — red) */}
+                        <div>
+                          {asks.map((row, i) => (
+                            <div key={`ask-${i}`} style={{ position: "relative", display: "grid", gridTemplateColumns: "1fr 1fr 1fr", padding: "5px 16px", alignItems: "center" }}>
+                              <div style={{ position: "absolute", right: 0, top: 0, height: "100%", width: `${(row.total / maxTotal) * 100}%`, background: "rgba(239,68,68,0.08)", transition: "width 0.4s ease" }} />
+                              <span style={{ fontSize: 11, fontWeight: 700, color: "#ef4444", fontVariantNumeric: "tabular-nums", zIndex: 1 }}>{row.price.toFixed(2)}</span>
+                              <span style={{ fontSize: 11, color: "rgba(239,68,68,0.8)", textAlign: "center" as const, fontVariantNumeric: "tabular-nums", zIndex: 1 }}>{row.size.toFixed(1)}</span>
+                              <span style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", textAlign: "right" as const, fontVariantNumeric: "tabular-nums", zIndex: 1 }}>{row.total.toFixed(1)}</span>
+                            </div>
+                          ))}
+                        </div>
+
+                        {/* Mid price separator */}
+                        <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "8px 16px", background: "rgba(255,255,255,0.03)", borderTop: "1px solid rgba(255,255,255,0.04)", borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
+                          <div style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.06)" }} />
+                          <span style={{ fontSize: 13, fontWeight: 800, color: "white", letterSpacing: "0.02em" }}>${midPrice.toFixed(2)}</span>
+                          <span style={{ fontSize: 10, color: spread > 0 ? "#10b981" : "#ef4444", fontWeight: 700 }}>Spread {spread.toFixed(3)}</span>
+                          <div style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.06)" }} />
+                        </div>
+
+                        {/* Bid rows (buy orders — green) */}
+                        <div>
+                          {bids.map((row, i) => (
+                            <div key={`bid-${i}`} style={{ position: "relative", display: "grid", gridTemplateColumns: "1fr 1fr 1fr", padding: "5px 16px", alignItems: "center" }}>
+                              <div style={{ position: "absolute", right: 0, top: 0, height: "100%", width: `${(row.total / maxTotal) * 100}%`, background: "rgba(16,185,129,0.08)", transition: "width 0.4s ease" }} />
+                              <span style={{ fontSize: 11, fontWeight: 700, color: "#10b981", fontVariantNumeric: "tabular-nums", zIndex: 1 }}>{row.price.toFixed(2)}</span>
+                              <span style={{ fontSize: 11, color: "rgba(16,185,129,0.8)", textAlign: "center" as const, fontVariantNumeric: "tabular-nums", zIndex: 1 }}>{row.size.toFixed(1)}</span>
+                              <span style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", textAlign: "right" as const, fontVariantNumeric: "tabular-nums", zIndex: 1 }}>{row.total.toFixed(1)}</span>
+                            </div>
+                          ))}
+                        </div>
+
+                        {/* Buy/Sell Pressure Bar */}
+                        <div style={{ padding: "10px 16px", borderTop: "1px solid rgba(255,255,255,0.04)" }}>
+                          <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 5 }}>
+                            <span style={{ fontSize: 9, fontWeight: 700, color: "#10b981" }}>Compra {buyPressure}%</span>
+                            <span style={{ fontSize: 9, fontWeight: 700, color: "#ef4444" }}>Venta {100 - buyPressure}%</span>
+                          </div>
+                          <div style={{ display: "flex", height: 4, borderRadius: 4, overflow: "hidden" }}>
+                            <div style={{ width: `${buyPressure}%`, background: "#10b981", transition: "width 0.6s ease" }} />
+                            <div style={{ flex: 1, background: "#ef4444" }} />
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })()}
+                  {/* ====== END PILAR 3 ====== */}
+
+                  {/* Company News Section */}
+                  <div style={{ marginBottom: 28 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
+                      <Newspaper size={18} color="#94a3b8" />
+                      <h4 style={{ margin: 0, fontSize: 13, fontWeight: 800, color: "rgba(255,255,255,0.6)", textTransform: "uppercase", letterSpacing: "0.06em" }}>
+                        Noticias Recientes de {orderForm.symbol}
+                      </h4>
+                    </div>
+                    {fetchingStockNews ? (
+                        <div style={{ height: 80, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                            <div style={{ width: 24, height: 24, border: "2px solid rgba(255,255,255,0.1)", borderTopColor: "#10b981", borderRadius: "50%", animation: "spin 1s linear infinite" }} />
+                        </div>
+                    ) : (
+                        <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 12 }}>
+                            {stockNews.map((n) => (
+                                <motion.div
+                                    key={n.id}
+                                    whileHover={{ background: "rgba(255,255,255,0.05)" }}
+                                    style={{
+                                        display: "flex",
+                                        gap: 14,
+                                        padding: 12,
+                                        borderRadius: 16,
+                                        background: "rgba(255,255,255,0.02)",
+                                        border: "1px solid rgba(255,255,255,0.05)",
+                                        cursor: "pointer",
+                                        transition: "all 0.2s"
+                                    }}
+                                    onClick={() => window.open(n.url, "_blank")}
+                                >
+                                    <img src={n.image} alt={n.title} style={{ width: 60, height: 60, borderRadius: 10, objectFit: "cover" }} />
+                                    <div style={{ flex: 1 }}>
+                                        <div style={{ fontSize: 10, fontWeight: 800, color: "#10b981", marginBottom: 4 }}>{n.category} • {n.time}</div>
+                                        <h5 style={{ margin: 0, fontSize: 14, fontWeight: 700, color: "white", lineHeight: 1.3 }}>{n.title}</h5>
+                                    </div>
+                                </motion.div>
+                            ))}
+                        </div>
+                    )}
+                  </div>
+                        </div>
+
+                        {/* ── RIGHT COLUMN: Order Form ─────────────── */}
+                        <div
+                          style={{
+                            flex: "0 0 420px",
+                            overflowY: "auto",
+                            padding: "28px 28px",
+                            background: "linear-gradient(180deg,#0a1628 0%,#0d1b2e 100%)",
+                            display: "flex",
+                            flexDirection: "column" as const,
+                            gap: 0,
+                          }}
+                        >
+                          {/* Right column header */}
+                          <div style={{ marginBottom: 24, paddingRight: 44 }}>
+                            <div style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.35)", textTransform: "uppercase" as const, letterSpacing: "0.12em", marginBottom: 6 }}>Nueva Orden</div>
+                            <div style={{ fontSize: 22, fontWeight: 900, color: "white", letterSpacing: "-0.03em" }}>
+                              {orderForm.symbol || "—"}
+                              {(() => {
+                                const d = processedMarketData.find((s: any) => s.symbol === orderForm.symbol);
+                                if (!d) return null;
+                                const chg = d.changePercent ?? 0;
+                                return (
+                                  <span style={{ fontSize: 13, fontWeight: 600, color: chg >= 0 ? "#10b981" : "#ef4444", marginLeft: 10 }}>
+                                    {chg >= 0 ? "+" : ""}{chg.toFixed(2)}%
+                                  </span>
+                                );
+                              })()}
+                            </div>
+                            {(() => {
+                              const d = processedMarketData.find((s: any) => s.symbol === orderForm.symbol);
+                              if (!d) return null;
+                              return <div style={{ fontSize: 13, color: "rgba(255,255,255,0.45)", marginTop: 2 }}>{d.name}</div>;
+                            })()}
+                          </div>
+
+                          <div
+                            style={{
+                              display: "grid",
+                              gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 160px), 1fr))",
+                              gap: 16,
+                              marginBottom: 20,
+                            }}
+                          >
+                    {/* Symbol */}
+
+                    <div>
+                      <label
+                        style={{
+                          fontSize: 10,
+                          fontWeight: 500,
+                          color: "#64748b",
+                          textTransform: "uppercase" as const,
+                          letterSpacing: "0.07em",
+                          display: "block",
+                          marginBottom: 8,
+                        }}
+                      >
+                        Símbolo
+                      </label>
+                      <select
+                        value={orderForm.symbol}
+                        onChange={(e) =>
+                          setOrderForm((f) => ({
+                            ...f,
+                            symbol: e.target.value,
+                          }))
+                        }
+                        style={{
+                          width: "100%",
+                          height: 48,
+                          padding: "0 14px",
+                          background: "rgba(255,255,255,0.07)",
+                          border: "1.5px solid rgba(255,255,255,0.12)",
+                          borderRadius: 12,
+                          color: "white",
+                          fontSize: 15,
+                          fontWeight: 500,
+                          fontFamily: "inherit",
+                          outline: "none",
+                          cursor: "pointer",
+                          transition: "border-color 0.2s",
+                        }}
+                        onFocus={(e) =>
+                          (e.target.style.borderColor = "#10b981")
+                        }
+                        onBlur={(e) =>
+                          (e.target.style.borderColor =
+                            "rgba(255,255,255,0.12)")
+                        }
+                      >
+                        {processedMarketData.map((s) => (
+                          <option
+                            key={s.symbol}
+                            value={s.symbol}
+                            style={{ background: "#1e293b", color: "white" }}
+                          >
+                            {s.symbol} — {s.name?.slice(0, 22)}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    {/* Side */}
+                    <div>
+                      <label
+                        style={{
+                          fontSize: 10,
+                          fontWeight: 500,
+                          color: "#64748b",
+                          textTransform: "uppercase" as const,
+                          letterSpacing: "0.07em",
+                          display: "block",
+                          marginBottom: 8,
+                        }}
+                      >
+                        Dirección
+                      </label>
+                      <div style={{ display: "flex", gap: 8, height: 48 }}>
+                        {(["buy", "sell"] as const).map((side) => (
+                          <button
+                            key={side}
+                            onClick={() =>
+                              setOrderForm((f) => ({ ...f, side }))
+                            }
+                            style={{
+                              flex: 1,
+                              border: "none",
+                              borderRadius: 12,
+                              fontWeight: 500,
+                              fontSize: 13,
+                              cursor: "pointer",
+                              fontFamily: "inherit",
+                              height: "100%",
+                              transition: "all 0.2s",
+                              background:
+                                orderForm.side === side
+                                  ? side === "buy"
+                                    ? "linear-gradient(135deg,#10b981,#059669)"
+                                    : "linear-gradient(135deg,#ef4444,#dc2626)"
+                                  : "rgba(255,255,255,0.07)",
+                              color:
+                                orderForm.side === side ? "white" : "#64748b",
+                              boxShadow:
+                                orderForm.side === side
+                                  ? side === "buy"
+                                    ? "0 4px 12px rgba(16,185,129,0.4)"
+                                    : "0 4px 12px rgba(239,68,68,0.4)"
+                                  : "none",
+                            }}
+                          >
+                            {side === "buy" ? "▲ Comprar" : "▼ Vender"}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Amount to Invest */}
+                    <div>
+                      <label
+                        style={{
+                          fontSize: 10,
+                          fontWeight: 500,
+                          color: "#64748b",
+                          textTransform: "uppercase" as const,
+                          letterSpacing: "0.07em",
+                          display: "block",
+                          marginBottom: 8,
+                        }}
+                      >
+                        {orderForm.side === "buy"
+                          ? "Monto a Invertir (bz)"
+                          : "Monto a Vender (equiv. bz)"}
+                      </label>
+                      <div style={{ position: "relative" }}>
+                        <input
+                          type="number"
+                          min={1}
+                          step={100}
+                          value={orderForm.amount}
+                          onChange={(e) =>
+                            setOrderForm((f) => ({
+                              ...f,
+                              amount: Number(e.target.value),
+                            }))
+                          }
+                          style={{
+                            width: "100%",
+                            boxSizing: "border-box" as const,
+                            height: 48,
+                            padding: "0 14px",
+                            background: "rgba(255,255,255,0.07)",
+                            border: "1.5px solid rgba(255,255,255,0.12)",
+                            borderRadius: 12,
+                            color: "white",
+                            fontSize: 18,
+                            fontWeight: 700,
+                            fontFamily: "inherit",
+                            outline: "none",
+                            transition: "all 0.2s",
+                          }}
+                          onFocus={(e) => {
+                            e.target.style.borderColor = "#10b981";
+                            e.target.style.boxShadow =
+                              "0 0 0 3px rgba(16,185,129,0.15)";
+                          }}
+                          onBlur={(e) => {
+                            e.target.style.borderColor =
+                              "rgba(255,255,255,0.12)";
+                            e.target.style.boxShadow = "none";
+                          }}
+                        />
+                        <div
+                          style={{
+                            position: "absolute",
+                            right: 14,
+                            top: "50%",
+                            transform: "translateY(-50%)",
+                            color: "rgba(255,255,255,0.3)",
+                            pointerEvents: "none",
+                            fontWeight: 800,
+                          }}
+                        >
+                          bz
+                        </div>
+                      </div>
+
+                      {/* Quick preset buttons */}
+                      <div style={{ display: "flex", gap: 6, marginTop: 10 }}>
+                        {[{ label: "25%", pct: 0.25 }, { label: "50%", pct: 0.5 }, { label: "75%", pct: 0.75 }, { label: "Máx", pct: 1.0 }].map(({ label, pct }) => (
+                          <button
+                            key={label}
+                            onClick={() => setOrderForm(f => ({ ...f, amount: Math.floor(cash * pct) }))}
+                            style={{
+                              flex: 1, padding: "6px 0", borderRadius: 8, fontSize: 11, fontWeight: 700,
+                              cursor: "pointer", fontFamily: "inherit",
+                              background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.12)", color: "rgba(255,255,255,0.7)",
+                              transition: "all 0.15s"
+                            }}
+                          >
+                            {label}
+                          </button>
+                        ))}
+                      </div>
+
+                      {/* Live cost estimator */}
+                      {orderForm.qty > 0 && (() => {
+                        const stockPrice = processedMarketData.find(s => s.symbol === orderForm.symbol)?.price ?? 0;
+                        const totalCost = orderForm.amount * 1.001;
+                        return (
+                          <div style={{ marginTop: 12, padding: "12px 14px", background: "rgba(16,185,129,0.08)", border: "1px solid rgba(16,185,129,0.2)", borderRadius: 12 }}>
+                            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
+                              <span style={{ fontSize: 12, color: "rgba(255,255,255,0.5)" }}>Recibirás ~</span>
+                              <span style={{ fontSize: 14, fontWeight: 800, color: "#10b981" }}>{orderForm.qty.toFixed(4)} {orderForm.symbol}</span>
+                            </div>
+                            <div style={{ display: "flex", justifyContent: "space-between" }}>
+                              <span style={{ fontSize: 12, color: "rgba(255,255,255,0.5)" }}>Total con comisión (0.1%)</span>
+                              <span style={{ fontSize: 12, fontWeight: 700, color: "rgba(255,255,255,0.7)" }}>bz {totalCost.toFixed(0)}</span>
+                            </div>
+                          </div>
+                        );
+                      })()}
+                    </div>
+                  </div>
+
+                  {/* ====== STOP-LOSS / TAKE-PROFIT PANEL ====== */}
+                  {orderForm.side === "buy" && (() => {
+                    const currentPrice = processedMarketData.find(s => s.symbol === orderForm.symbol)?.price ?? 0;
+                    const slVal = parseFloat(stopLoss);
+                    const tpVal = parseFloat(takeProfit);
+                    const slPct = currentPrice > 0 && slVal > 0 ? ((slVal - currentPrice) / currentPrice * 100).toFixed(1) : null;
+                    const tpPct = currentPrice > 0 && tpVal > 0 ? ((tpVal - currentPrice) / currentPrice * 100).toFixed(1) : null;
+                    return (
+                      <div style={{ marginBottom: 20, background: "rgba(255,255,255,0.04)", borderRadius: 16, padding: "16px 18px", border: "1px solid rgba(255,255,255,0.08)" }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
+                          <Shield size={14} color="#94a3b8" />
+                          <span style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.5)", textTransform: "uppercase" as const, letterSpacing: "0.08em" }}>
+                            Protección: Stop-Loss / Take-Profit
+                          </span>
+                          <span style={{ fontSize: 10, color: "#94a3b8", marginLeft: "auto" }}>(Opcional)</span>
+                        </div>
+                        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+                          {/* Stop-Loss */}
+                          <div>
+                            <label style={{ fontSize: 10, fontWeight: 700, color: "#ef4444", textTransform: "uppercase" as const, letterSpacing: "0.06em", display: "flex", alignItems: "center", gap: 5, marginBottom: 6 }}>
+                              <AlertCircle size={11} /> Stop-Loss (bz)
+                            </label>
+                            <div style={{ position: "relative" }}>
+                              <input
+                                type="number"
+                                min={0}
+                                step={1}
+                                placeholder={currentPrice > 0 ? `ej. ${(currentPrice * 0.95).toFixed(0)}` : "Precio"}
+                                value={stopLoss}
+                                onChange={e => setStopLoss(e.target.value)}
+                                style={{
+                                  width: "100%", boxSizing: "border-box" as const, height: 44, padding: "0 12px",
+                                  background: stopLoss ? "rgba(239,68,68,0.08)" : "rgba(255,255,255,0.05)",
+                                  border: stopLoss ? "1.5px solid rgba(239,68,68,0.4)" : "1.5px solid rgba(255,255,255,0.1)",
+                                  borderRadius: 10, color: "white", fontSize: 14, fontWeight: 600,
+                                  fontFamily: "inherit", outline: "none",
+                                }}
+                              />
+                            </div>
+                            {slPct && (
+                              <div style={{ fontSize: 10, color: parseFloat(slPct) < 0 ? "#ef4444" : "#f59e0b", marginTop: 5, fontWeight: 700, display: "flex", alignItems: "center", gap: 4 }}>
+                                {parseFloat(slPct) < 0
+                                  ? <><ArrowDown size={10} /> Pérdida máx: {slPct}%</>
+                                  : <><AlertTriangle size={10} /> S/L está por encima del precio actual</>
+                                }
+                              </div>
+                            )}
+                            <div style={{ fontSize: 10, color: "rgba(255,255,255,0.3)", marginTop: 4, lineHeight: 1.4, display: "flex", alignItems: "flex-start", gap: 5 }}>
+                              <Info size={10} style={{ flexShrink: 0, marginTop: 1 }} /> Venta automática si el precio cae para limitar pérdidas
+                            </div>
+                          </div>
+                          {/* Take-Profit */}
+                          <div>
+                            <label style={{ fontSize: 10, fontWeight: 700, color: "#10b981", textTransform: "uppercase" as const, letterSpacing: "0.06em", display: "flex", alignItems: "center", gap: 5, marginBottom: 6 }}>
+                              <Target size={11} /> Take-Profit (bz)
+                            </label>
+                            <div style={{ position: "relative" }}>
+                              <input
+                                type="number"
+                                min={0}
+                                step={1}
+                                placeholder={currentPrice > 0 ? `ej. ${(currentPrice * 1.10).toFixed(0)}` : "Precio"}
+                                value={takeProfit}
+                                onChange={e => setTakeProfit(e.target.value)}
+                                style={{
+                                  width: "100%", boxSizing: "border-box" as const, height: 44, padding: "0 12px",
+                                  background: takeProfit ? "rgba(16,185,129,0.08)" : "rgba(255,255,255,0.05)",
+                                  border: takeProfit ? "1.5px solid rgba(16,185,129,0.4)" : "1.5px solid rgba(255,255,255,0.1)",
+                                  borderRadius: 10, color: "white", fontSize: 14, fontWeight: 600,
+                                  fontFamily: "inherit", outline: "none",
+                                }}
+                              />
+                            </div>
+                            {tpPct && (
+                              <div style={{ fontSize: 10, color: parseFloat(tpPct) > 0 ? "#10b981" : "#f59e0b", marginTop: 5, fontWeight: 700, display: "flex", alignItems: "center", gap: 4 }}>
+                                {parseFloat(tpPct) > 0
+                                  ? <><ArrowUp size={10} /> Ganancia objetivo: +{tpPct}%</>
+                                  : <><AlertTriangle size={10} /> T/P está por debajo del precio actual</>
+                                }
+                              </div>
+                            )}
+                            <div style={{ fontSize: 10, color: "rgba(255,255,255,0.3)", marginTop: 4, lineHeight: 1.4, display: "flex", alignItems: "flex-start", gap: 5 }}>
+                              <Info size={10} style={{ flexShrink: 0, marginTop: 1 }} /> Venta automática al alcanzar tu objetivo de ganancia
+                            </div>
+                          </div>
+                        </div>
+                        {/* Risk/Reward Ratio */}
+                        {slVal > 0 && tpVal > 0 && currentPrice > 0 && (
+                          <div style={{ marginTop: 12, padding: "10px 14px", background: "rgba(59,130,246,0.08)", border: "1px solid rgba(59,130,246,0.2)", borderRadius: 10 }}>
+                            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                              <span style={{ fontSize: 11, color: "rgba(255,255,255,0.5)" }}>Ratio Riesgo/Beneficio</span>
+                              <span style={{ fontSize: 13, fontWeight: 800, color: (() => {
+                                const risk = Math.abs(currentPrice - slVal);
+                                const reward = Math.abs(tpVal - currentPrice);
+                                const ratio = risk > 0 ? reward / risk : 0;
+                                return ratio >= 2 ? "#10b981" : ratio >= 1 ? "#f59e0b" : "#ef4444";
+                              })() }}>
+                                1 : {(() => {
+                                  const risk = Math.abs(currentPrice - slVal);
+                                  const reward = Math.abs(tpVal - currentPrice);
+                                  return risk > 0 ? (reward / risk).toFixed(2) : "—";
+                                })()}
+                              </span>
+                            </div>
+                            <div style={{ fontSize: 10, color: "rgba(255,255,255,0.3)", marginTop: 4 }}>
+                              Los profesionales buscan un ratio mínimo de 1:2 (ganar el doble de lo que arrriesgan)
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })()}
+                  {/* ====== END SL/TP PANEL ====== */}
+
+                  <div
+                    style={{
+                      marginTop: 12,
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: 14,
+                    }}
+                  >
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 6,
+                        fontSize: 11,
+                        fontWeight: 700,
+                        color: "rgba(255,255,255,0.4)",
+                        textTransform: "uppercase",
+                        letterSpacing: "0.08em",
+                      }}
+                    >
+                      <div
+                        style={{
+                          width: 16,
+                          height: 1.5,
+                          background: "currentColor",
+                        }}
+                      />
+                      Paso Final: Confirma tu operación
+                    </div>
+                    {/* Journal Note */}
+                    <div style={{ marginBottom: 20 }}>
+                      <label style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase" as const, letterSpacing: "0.08em", display: "flex", alignItems: "center", gap: 6, marginBottom: 8 }}>
+                        <Info size={11} /> Bitácora — ¿Por qué haces esta operación? (opcional)
+                      </label>
+                      <textarea
+                        value={journalNote}
+                        onChange={e => setJournalNote(e.target.value)}
+                        placeholder="Ej: NVDA tiene catalizadores de IA, el P/E bajó a 54x y el soporte técnico aguantó…"
+                        rows={2}
+                        style={{
+                          width: "100%", boxSizing: "border-box" as const,
+                          background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)",
+                          borderRadius: 10, color: "rgba(255,255,255,0.8)", fontSize: 12,
+                          padding: "10px 14px", fontFamily: "inherit", outline: "none",
+                          resize: "vertical" as const, lineHeight: 1.5,
+                        }}
+                      />
+                    </div>
+
+                    <button
+                      onClick={placeOrder}
+
+                      disabled={placing}
+                      className={
+                        !placing && orderForm.qty > 0 ? "pulsing-order-btn" : ""
+                      }
+                      style={{
+                        width: "100%",
+                        padding: "18px 32px",
+                        background: placing
+                          ? "#334155"
+                          : orderForm.side === "buy"
+                            ? "linear-gradient(135deg,#10b981,#059669)"
+                            : "linear-gradient(135deg,#ef4444,#dc2626)",
+                        color: "white",
+                        border: "none",
+                        borderRadius: 16,
+                        fontWeight: 800,
+                        cursor: placing ? "not-allowed" : "pointer",
+                        fontSize: 16,
+                        fontFamily: "inherit",
+                        display: "inline-flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        gap: 12,
+                        boxShadow: placing
+                          ? "none"
+                          : orderForm.side === "buy"
+                            ? "0 10px 25px rgba(16,185,129,0.35)"
+                            : "0 10px 25px rgba(239,68,68,0.35)",
+                        transition: "all 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
+                      }}
+                      onMouseEnter={(e) => {
+                        if (!placing) {
+                          (e.currentTarget as HTMLElement).style.transform =
+                            "translateY(-2px)";
+                          (e.currentTarget as HTMLElement).style.filter =
+                            "brightness(1.1)";
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        (e.currentTarget as HTMLElement).style.transform =
+                          "translateY(0)";
+                        (e.currentTarget as HTMLElement).style.filter = "none";
+                      }}
+                    >
+                      {placing ? (
+                        <>
+                          <RefreshCw
+                            size={20}
+                            style={{ animation: "spin 1s linear infinite" }}
+                          />{" "}
+                          Enviando orden...
+                        </>
+                      ) : (
+                        <>
+                          <Zap size={20} />
+                          {orderForm.side === "buy"
+                            ? `Confirmar Compra de ${orderForm.symbol} ahora`
+                            : `Confirmar Venta de ${orderForm.symbol} ahora`}
+                        </>
+                      )}
+                    </button>
+                  </div>
+
+                  {orderMsg && (
+                    <div
+                      style={{
+                        marginTop: 16,
+                        padding: "14px 18px",
+                        borderRadius: 12,
+                        background:
+                          orderMsg.type === "ok"
+                            ? "rgba(16,185,129,0.12)"
+                            : "rgba(239,68,68,0.12)",
+                        border: `1.5px solid ${orderMsg.type === "ok" ? "rgba(16,185,129,0.3)" : "rgba(239,68,68,0.3)"}`,
+                        display: "flex",
+                        gap: 10,
+                        alignItems: "flex-start",
+                      }}
+                    >
+                      {orderMsg.type === "ok" ? (
+                        <CheckCircle2
+                          size={16}
+                          color="#10b981"
+                          style={{ flexShrink: 0, marginTop: 1 }}
+                        />
+                      ) : (
+                        <AlertTriangle
+                          size={16}
+                          color="#ef4444"
+                          style={{ flexShrink: 0, marginTop: 1 }}
+                        />
+                      )}
+                      <p
+                        style={{
+                          margin: 0,
+                          fontSize: 13,
+                          color: orderMsg.type === "ok" ? "#6ee7b7" : "#fca5a5",
+                          lineHeight: 1.6,
+                        }}
+                      >
+                        {orderMsg.text}
+                      </p>
+                    </div>
+                  )}
+                        </div>
+                      </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+    </>
+  );
+
+  if (tradeSymbol) return renderBizenTerminal();
+
   return (
     <>
       <style>{`
@@ -2610,1235 +3846,7 @@ export function StockSimulatorContent({ tradeSymbol }: { tradeSymbol?: string })
                   })}
                 </div>
 
-                {/* Quick Order Form Modal */}
-                <AnimatePresence>
-                  {orderForm.symbol && (
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      style={{
-                        position: "fixed",
-                        top: 0,
-                        left: 0,
-                        width: "100vw",
-                        height: "100dvh",
-                        backgroundColor: "rgba(11, 30, 94, 0.4)",
-                        backdropFilter: "blur(8px)",
-                        zIndex: 99999,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        padding: 0,
-                        margin: 0,
-                        overflow: "hidden",
-                      }}
-                      onClick={() => {
-                        if (tradeSymbol) { router.push("/simulators/stocks"); }
-                        else { setOrderForm((f) => ({ ...f, symbol: "" })); }
-                      }}
-                    >
-                      <motion.div
-                        ref={orderFormRef}
-                        className="order-panel"
-                        initial={{ opacity: 0, x: 40 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: 40 }}
-                        transition={{ type: "spring", stiffness: 280, damping: 30 }}
-                        style={{
-                          width: "100vw",
-                          height: "100dvh",
-                          maxHeight: "100dvh",
-                          background: "#060d1f",
-                          display: "flex",
-                          overflow: "hidden",
-                          position: "relative",
-                          margin: 0,
-                        }}
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        {/* ── CLOSE BUTTON ─────────────────────────── */}
-                        <button
-                          onClick={() => {
-                            if (tradeSymbol) { router.push("/simulators/stocks"); }
-                            else { setOrderForm((f) => ({ ...f, symbol: "" })); }
-                          }}
-                          style={{
-                            position: "absolute",
-                            top: 18,
-                            right: 22,
-                            zIndex: 100,
-                            width: 36,
-                            height: 36,
-                            borderRadius: 10,
-                            border: "1.5px solid rgba(255,255,255,0.12)",
-                            background: "rgba(255,255,255,0.06)",
-                            color: "rgba(255,255,255,0.7)",
-                            cursor: "pointer",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            transition: "all 0.15s ease",
-                          }}
-                          onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = "rgba(239,68,68,0.2)"; (e.currentTarget as HTMLElement).style.color = "#ef4444"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(239,68,68,0.4)"; }}
-                          onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.06)"; (e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.7)"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.12)"; }}
-                        >
-                          <X size={16} />
-                        </button>
-
-                        {/* ── LEFT COLUMN: Market Data ─────────────── */}
-                        <div
-                          style={{
-                            flex: "1 1 60%",
-                            overflowY: "auto",
-                            padding: "28px 32px",
-                            borderRight: "1px solid rgba(255,255,255,0.07)",
-                          }}
-                        >
-
-                        <div
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: 12,
-                            marginBottom: 28,
-                          }}
-                        >
-                          {/* BIZEN Terminal branding */}
-                          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                            <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#10b981", boxShadow: "0 0 8px #10b981" }} />
-                            <span style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.35)", textTransform: "uppercase" as const, letterSpacing: "0.12em" }}>BIZEN Terminal</span>
-                          </div>
-                          <div style={{ flex: 1 }} />
-                          {/* Stock badge */}
-                          {orderForm.symbol && (() => {
-                            const s = processedMarketData.find((st: any) => st.symbol === orderForm.symbol);
-                            if (!s) return null;
-                            const chg = s.changePercent ?? 0;
-                            return (
-                              <div style={{ display: "flex", alignItems: "center", gap: 10, background: "rgba(255,255,255,0.05)", padding: "8px 14px", borderRadius: 12, border: "1px solid rgba(255,255,255,0.1)" }}>
-                                <StockLogo symbol={s.symbol} size={22} />
-                                <span style={{ fontSize: 14, fontWeight: 800, color: "white" }}>{s.symbol}</span>
-                                <span style={{ fontSize: 20, fontWeight: 900, color: "white", fontFamily: "'JetBrains Mono',monospace", letterSpacing: "-0.03em" }}>
-                                  ${(s.price / 10).toFixed(2)}
-                                </span>
-                                <span style={{ fontSize: 12, fontWeight: 700, color: chg >= 0 ? "#10b981" : "#ef4444", padding: "3px 8px", background: chg >= 0 ? "rgba(16,185,129,0.15)" : "rgba(239,68,68,0.15)", borderRadius: 6 }}>
-                                  {chg >= 0 ? "+" : ""}{chg.toFixed(2)}%
-                                </span>
-                              </div>
-                            );
-                          })()}
-                        </div>
-
-
-                        {orderForm.symbol && (
-                          <div
-                            style={{
-                              display: "flex",
-                              alignItems: "center",
-                              gap: 12,
-                              background: "rgba(255,255,255,0.05)",
-                              padding: "10px 16px",
-                              borderRadius: 16,
-                              border: "1px solid rgba(255,255,255,0.1)",
-                              marginBottom: 24,
-                            }}
-                          >
-                        {(() => {
-                          const s = processedMarketData.find(
-                            (st) => st.symbol === orderForm.symbol,
-                          );
-                          if (!s) return null;
-                          return (
-                            <>
-                              <StockLogo symbol={s.symbol} size={28} />
-                              <span
-                                style={{
-                                  fontSize: 13,
-                                  color: "rgba(255,255,255,0.6)",
-                                }}
-                              >
-                                {s.name}
-                              </span>
-                              <span
-                                style={{
-                                  fontSize: 18,
-                                  fontWeight: 700,
-                                  color: isCrisis ? "#ef4444" : "#10b981",
-                                }}
-                              >
-                                    bz {(s.price * 1).toFixed(0)} <BizcoinIcon size={18} style={{ marginLeft: 4 }} />
-                              </span>
-                            </>
-                          );
-                        })()}
-                      </div>
-                    )}
-
-                  {/* ====== PILAR 2: ANÁLISIS FUNDAMENTAL ====== */}
-                  {orderForm.symbol && (() => {
-                    const meta = STOCK_METADATA[orderForm.symbol] || {
-                      desc: `Estás analizando ${orderForm.symbol}. Investiga el activo y diversifica tu portafolio.`,
-                      sector: "Mercado Global", risk: "Variable", stats: "—"
-                    };
-                    const fund = STOCK_FUNDAMENTALS[orderForm.symbol] ?? null;
-                    const currentPrice = processedMarketData.find(s => s.symbol === orderForm.symbol)?.price ?? 0;
-
-                    // Rating colour helper
-                    const ratingColor = (score: number) =>
-                      score >= 5 ? "#10b981" : score >= 4 ? "#3b82f6" : score >= 3 ? "#f59e0b" : "#ef4444";
-
-                    // 52W progress %
-                    const rangePos = fund && fund.week52Low < fund.week52High && currentPrice > 0
-                      ? Math.min(100, Math.max(0, ((currentPrice / 10 - fund.week52Low) / (fund.week52High - fund.week52Low)) * 100))
-                      : null;
-
-                    return (
-                      <div style={{ marginBottom: 24 }}>
-                        {/* Header row */}
-                        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
-                          <BarChart3 size={16} color="#3b82f6" />
-                          <h4 style={{ margin: 0, fontSize: 12, fontWeight: 800, color: "#3b82f6", textTransform: "uppercase" as const, letterSpacing: "0.08em" }}>
-                            Análisis Fundamental
-                          </h4>
-                          <span style={{ marginLeft: "auto", fontSize: 10, color: "rgba(255,255,255,0.35)", fontWeight: 600 }}>
-                            {meta.sector}
-                          </span>
-                        </div>
-
-                        {/* Description */}
-                        <p style={{ margin: "0 0 16px", fontSize: 13, color: "rgba(255,255,255,0.75)", lineHeight: 1.6 }}>
-                          {meta.desc}
-                        </p>
-
-                        {fund ? (
-                          <>
-                            {/* ---- Row 1: Key Metrics Grid ---- */}
-                            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8, marginBottom: 10 }}>
-                              {/* Market Cap */}
-                              <div style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 12, padding: "12px 14px" }}>
-                                <div style={{ fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase" as const, letterSpacing: "0.08em", marginBottom: 6 }}>Cap. Mercado</div>
-                                <div style={{ fontSize: 16, fontWeight: 800, color: "white" }}>{fund.marketCap}</div>
-                                <div style={{ fontSize: 9, color: "rgba(255,255,255,0.3)", marginTop: 2 }}>USD</div>
-                              </div>
-                              {/* P/E Ratio */}
-                              <div style={{
-                                background: fund.pe === null ? "rgba(255,255,255,0.03)" : fund.pe > 40 ? "rgba(239,68,68,0.08)" : fund.pe > 25 ? "rgba(245,158,11,0.08)" : "rgba(16,185,129,0.08)",
-                                border: `1px solid ${fund.pe === null ? "rgba(255,255,255,0.06)" : fund.pe > 40 ? "rgba(239,68,68,0.25)" : fund.pe > 25 ? "rgba(245,158,11,0.25)" : "rgba(16,185,129,0.25)"}`,
-                                borderRadius: 12, padding: "12px 14px"
-                              }}>
-                                <div style={{ fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase" as const, letterSpacing: "0.08em", marginBottom: 6 }}>P/E Ratio</div>
-                                <div style={{ fontSize: 16, fontWeight: 800, color: fund.pe === null ? "rgba(255,255,255,0.3)" : fund.pe > 40 ? "#fca5a5" : fund.pe > 25 ? "#fcd34d" : "#6ee7b7" }}>
-                                  {fund.pe !== null ? fund.pe.toFixed(1) : "N/A"}
-                                </div>
-                                <div style={{ fontSize: 9, color: "rgba(255,255,255,0.3)", marginTop: 2 }}>
-                                  {fund.pe === null ? "No aplica" : fund.pe > 40 ? "Caro" : fund.pe > 25 ? "Moderado" : "Barato"}
-                                </div>
-                              </div>
-                              {/* Dividend Yield */}
-                              <div style={{
-                                background: fund.divYield && fund.divYield > 2 ? "rgba(59,130,246,0.08)" : "rgba(255,255,255,0.03)",
-                                border: `1px solid ${fund.divYield && fund.divYield > 2 ? "rgba(59,130,246,0.25)" : "rgba(255,255,255,0.06)"}`,
-                                borderRadius: 12, padding: "12px 14px"
-                              }}>
-                                <div style={{ fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase" as const, letterSpacing: "0.08em", marginBottom: 6 }}>Dividendo</div>
-                                <div style={{ fontSize: 16, fontWeight: 800, color: fund.divYield ? "#93c5fd" : "rgba(255,255,255,0.3)" }}>
-                                  {fund.divYield !== null ? `${fund.divYield}%` : "—"}
-                                </div>
-                                <div style={{ fontSize: 9, color: "rgba(255,255,255,0.3)", marginTop: 2 }}>Yield Anual</div>
-                              </div>
-                            </div>
-
-                            {/* ---- Row 2: Beta, EPS, Revenue Growth ---- */}
-                            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8, marginBottom: 14 }}>
-                              {/* Beta */}
-                              <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 12, padding: "12px 14px" }}>
-                                <div style={{ fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase" as const, letterSpacing: "0.08em", marginBottom: 6 }}>Beta</div>
-                                <div style={{ fontSize: 16, fontWeight: 800, color: Math.abs(fund.beta) > 1.5 ? "#fca5a5" : Math.abs(fund.beta) > 1.0 ? "#fcd34d" : "#6ee7b7" }}>
-                                  {fund.beta.toFixed(2)}
-                                </div>
-                                <div style={{ fontSize: 9, color: "rgba(255,255,255,0.3)", marginTop: 2 }}>
-                                  {Math.abs(fund.beta) > 1.5 ? "Muy Volátil" : Math.abs(fund.beta) > 1.0 ? "Volátil" : fund.beta < 0 ? "Inverso" : "Estable"}
-                                </div>
-                              </div>
-                              {/* EPS */}
-                              <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 12, padding: "12px 14px" }}>
-                                <div style={{ fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase" as const, letterSpacing: "0.08em", marginBottom: 6 }}>EPS</div>
-                                <div style={{ fontSize: 16, fontWeight: 800, color: fund.eps !== null ? (fund.eps > 0 ? "#a78bfa" : "#fca5a5") : "rgba(255,255,255,0.3)" }}>
-                                  {fund.eps !== null ? `$${fund.eps.toFixed(2)}` : "N/A"}
-                                </div>
-                                <div style={{ fontSize: 9, color: "rgba(255,255,255,0.3)", marginTop: 2 }}>Ganancia/Acción</div>
-                              </div>
-                              {/* Revenue Growth */}
-                              <div style={{
-                                background: fund.revenueGrowthYoY === null ? "rgba(255,255,255,0.03)" : fund.revenueGrowthYoY > 10 ? "rgba(16,185,129,0.08)" : fund.revenueGrowthYoY > 0 ? "rgba(245,158,11,0.05)" : "rgba(239,68,68,0.07)",
-                                border: `1px solid ${fund.revenueGrowthYoY === null ? "rgba(255,255,255,0.06)" : fund.revenueGrowthYoY > 10 ? "rgba(16,185,129,0.25)" : fund.revenueGrowthYoY > 0 ? "rgba(245,158,11,0.2)" : "rgba(239,68,68,0.25)"}`,
-                                borderRadius: 12, padding: "12px 14px"
-                              }}>
-                                <div style={{ fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase" as const, letterSpacing: "0.08em", marginBottom: 6 }}>Ingresos YoY</div>
-                                <div style={{ fontSize: 16, fontWeight: 800, color: fund.revenueGrowthYoY === null ? "rgba(255,255,255,0.3)" : fund.revenueGrowthYoY > 10 ? "#6ee7b7" : fund.revenueGrowthYoY > 0 ? "#fcd34d" : "#fca5a5", display: "flex", alignItems: "center", gap: 4 }}>
-                                  {fund.revenueGrowthYoY !== null
-                                    ? <>{fund.revenueGrowthYoY > 0 ? <ArrowUp size={12} /> : <ArrowDown size={12} />} {Math.abs(fund.revenueGrowthYoY)}%</>
-                                    : "N/A"
-                                  }
-                                </div>
-                                <div style={{ fontSize: 9, color: "rgba(255,255,255,0.3)", marginTop: 2 }}>Crecimiento</div>
-                              </div>
-                            </div>
-
-                            {/* ---- 52-Week Range Bar ---- */}
-                            <div style={{ marginBottom: 14, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 12, padding: "12px 14px" }}>
-                              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
-                                <span style={{ fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase" as const, letterSpacing: "0.08em" }}>Rango 52 Semanas (USD)</span>
-                                <span style={{ fontSize: 11, fontWeight: 700, color: "white" }}>
-                                  ${fund.week52Low.toFixed(2)} — ${fund.week52High.toFixed(2)}
-                                </span>
-                              </div>
-                              <div style={{ position: "relative", height: 6, background: "rgba(255,255,255,0.08)", borderRadius: 4 }}>
-                                <div style={{ position: "absolute", left: 0, top: 0, height: "100%", width: `${rangePos ?? 50}%`, background: "linear-gradient(90deg, #ef4444, #f59e0b, #10b981)", borderRadius: 4, transition: "width 0.5s ease" }} />
-                                {rangePos !== null && (
-                                  <div style={{ position: "absolute", top: "50%", left: `${rangePos}%`, transform: "translate(-50%, -50%)", width: 12, height: 12, background: "white", borderRadius: "50%", border: "2px solid #0f172a", boxShadow: "0 0 6px rgba(255,255,255,0.4)" }} />
-                                )}
-                              </div>
-                              <div style={{ display: "flex", justifyContent: "space-between", marginTop: 6 }}>
-                                <span style={{ fontSize: 9, color: "#ef4444", fontWeight: 700 }}>MIN</span>
-                                <span style={{ fontSize: 9, color: "rgba(255,255,255,0.35)" }}>Precio actual en rango anual</span>
-                                <span style={{ fontSize: 9, color: "#10b981", fontWeight: 700 }}>MAX</span>
-                              </div>
-                            </div>
-
-                            {/* ---- Analyst Rating ---- */}
-                            <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 12, padding: "12px 14px" }}>
-                              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
-                                <span style={{ fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase" as const, letterSpacing: "0.08em" }}>Consenso Analistas</span>
-                                <span style={{ fontSize: 12, fontWeight: 800, color: ratingColor(fund.ratingScore) }}>{fund.ratingLabel}</span>
-                              </div>
-                              <div style={{ display: "flex", gap: 4 }}>
-                                {[1, 2, 3, 4, 5].map(i => (
-                                  <div key={i} style={{ flex: 1, height: 6, borderRadius: 3, background: i <= fund.ratingScore ? ratingColor(fund.ratingScore) : "rgba(255,255,255,0.08)", transition: "background 0.3s" }} />
-                                ))}
-                              </div>
-                              <div style={{ display: "flex", justifyContent: "space-between", marginTop: 5 }}>
-                                <span style={{ fontSize: 9, color: "rgba(255,255,255,0.25)" }}>Venta</span>
-                                <span style={{ fontSize: 9, color: "rgba(255,255,255,0.25)" }}>Compra Fuerte</span>
-                              </div>
-                            </div>
-                          </>
-                        ) : (
-                          /* Fallback if no fundamentals data */
-                          <div style={{ display: "flex", flexWrap: "wrap" as const, gap: 8 }}>
-                            <span style={{ fontSize: 11, background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.1)", padding: "5px 12px", borderRadius: 8, color: "rgba(255,255,255,0.7)" }}>
-                              Sector: {meta.sector}
-                            </span>
-                            <span style={{ fontSize: 11, background: "rgba(245,158,11,0.1)", border: "1px solid rgba(245,158,11,0.2)", padding: "5px 12px", borderRadius: 8, color: "#fcd34d" }}>
-                              Riesgo: {meta.risk}
-                            </span>
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })()}
-                  {/* ====== END PILAR 2 ====== */}
-
-                  {/* ====== PROFESSIONAL CHART PANEL ====== */}
-                  <div
-                    style={{
-                      marginBottom: 24,
-                      background: "#0f172a",
-                      borderRadius: 20,
-                      padding: 20,
-                      border: "1px solid rgba(255,255,255,0.07)",
-                    }}
-                  >
-                    {/* Chart Header Controls */}
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14, flexWrap: "wrap", gap: 10 }}>
-                      {/* Time Range */}
-                      <div style={{ display: "flex", gap: 4, background: "rgba(255,255,255,0.05)", borderRadius: 10, padding: 3 }}>
-                        {["1d", "5d", "1m", "6m", "max"].map((r) => (
-                          <button
-                            key={r}
-                            onClick={() => setHistoryRange(r)}
-                            style={{
-                              padding: "5px 12px",
-                              borderRadius: 7,
-                              fontSize: 11,
-                              fontWeight: 700,
-                              cursor: "pointer",
-                              border: "none",
-                              textTransform: "uppercase" as const,
-                              background: historyRange === r ? "#10b981" : "transparent",
-                              color: historyRange === r ? "white" : "rgba(255,255,255,0.4)",
-                              transition: "all 0.2s",
-                              fontFamily: "inherit",
-                            }}
-                          >
-                            {r}
-                          </button>
-                        ))}
-                      </div>
-
-                      {/* Chart Type + Indicators */}
-                      <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
-                        {/* Area / Candle toggle */}
-                        <div style={{ display: "flex", background: "rgba(255,255,255,0.05)", borderRadius: 8, padding: 2 }}>
-                          {(["area", "candle"] as const).map(type => (
-                            <button
-                              key={type}
-                              onClick={() => setChartType(type)}
-                              style={{
-                                padding: "4px 12px",
-                                borderRadius: 6,
-                                fontSize: 11,
-                                fontWeight: 700,
-                                cursor: "pointer",
-                                border: "none",
-                                fontFamily: "inherit",
-                                background: chartType === type ? "rgba(59,130,246,0.3)" : "transparent",
-                                color: chartType === type ? "#93c5fd" : "rgba(255,255,255,0.35)",
-                              }}
-                            >
-                              <span style={{ display: "flex", alignItems: "center", gap: 5 }}>
-                                {type === "area" ? <LineChart size={12} /> : <CandlestickChart size={12} />}
-                                {type === "area" ? "Área" : "Velas"}
-                              </span>
-                            </button>
-                          ))}
-                        </div>
-                        {/* SMA Toggle */}
-                        <button
-                          onClick={() => setShowSMA(v => !v)}
-                          style={{
-                            padding: "4px 12px",
-                            borderRadius: 8,
-                            fontSize: 11,
-                            fontWeight: 700,
-                            cursor: "pointer",
-                            border: `1px solid ${showSMA ? "rgba(251,191,36,0.6)" : "rgba(255,255,255,0.1)"}`,
-                            background: showSMA ? "rgba(251,191,36,0.15)" : "transparent",
-                            color: showSMA ? "#fbbf24" : "rgba(255,255,255,0.4)",
-                            fontFamily: "inherit",
-                          }}
-                        >
-                          SMA 20
-                        </button>
-                        {/* EMA Toggle */}
-                        <button
-                          onClick={() => setShowEMA(v => !v)}
-                          style={{
-                            padding: "4px 12px",
-                            borderRadius: 8,
-                            fontSize: 11,
-                            fontWeight: 700,
-                            cursor: "pointer",
-                            border: `1px solid ${showEMA ? "rgba(167,139,250,0.6)" : "rgba(255,255,255,0.1)"}`,
-                            background: showEMA ? "rgba(167,139,250,0.15)" : "transparent",
-                            color: showEMA ? "#a78bfa" : "rgba(255,255,255,0.4)",
-                            fontFamily: "inherit",
-                          }}
-                        >
-                          EMA 14
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* Legend */}
-                    {(showSMA || showEMA) && (
-                      <div style={{ display: "flex", gap: 16, marginBottom: 12 }}>
-                        {showSMA && (
-                          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                            <div style={{ width: 24, height: 2, background: "#fbbf24", borderRadius: 2 }} />
-                            <span style={{ fontSize: 10, color: "#fbbf24", fontWeight: 700 }}>SMA 20</span>
-                          </div>
-                        )}
-                        {showEMA && (
-                          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                            <div style={{ width: 24, height: 2, background: "#a78bfa", borderRadius: 2 }} />
-                            <span style={{ fontSize: 10, color: "#a78bfa", fontWeight: 700 }}>EMA 14</span>
-                          </div>
-                        )}
-                      </div>
-                    )}
-
-                    {/* Chart */}
-                    <div style={{ height: 220, width: "100%", opacity: fetchingHistory ? 0.3 : 1, transition: "opacity 0.2s" }}>
-                      <ResponsiveContainer width="100%" height="100%">
-                        <ComposedChart data={enrichedHistory}>
-                          <defs>
-                            <linearGradient id="colorPrice2" x1="0" y1="0" x2="0" y2="1">
-                              <stop offset="5%" stopColor="#10b981" stopOpacity={0.25}/>
-                              <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
-                            </linearGradient>
-                          </defs>
-                          <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" vertical={false} />
-                          <XAxis
-                            dataKey="date"
-                            axisLine={false}
-                            tickLine={false}
-                            tick={{ fill: "rgba(255,255,255,0.25)", fontSize: 10 }}
-                            minTickGap={30}
-                          />
-                          <YAxis
-                            domain={["auto", "auto"]}
-                            axisLine={false}
-                            tickLine={false}
-                            tick={{ fill: "rgba(255,255,255,0.25)", fontSize: 10 }}
-                            width={45}
-                            tickFormatter={(v: number) => `${v.toFixed(0)}`}
-                          />
-                          <Tooltip
-                            contentStyle={{ background: "#0f172a", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, fontSize: 12, color: "white" }}
-                            itemStyle={{ fontWeight: 700 }}
-                            labelStyle={{ color: "rgba(255,255,255,0.5)", marginBottom: 4 }}
-                            formatter={(v: any, name: string) => {
-                              if (name === "bizcoins") return [`${Number(v).toFixed(0)} bz`, "Precio"];
-                              if (name === "sma") return [`${Number(v).toFixed(0)} bz`, "SMA 20"];
-                              if (name === "ema") return [`${Number(v).toFixed(0)} bz`, "EMA 14"];
-                              return [v, name];
-                            }}
-                          />
-                          {/* Area or Candle */}
-                          {chartType === "area" ? (
-                            <Area
-                              type="monotone"
-                              dataKey="bizcoins"
-                              stroke="#10b981"
-                              strokeWidth={2}
-                              fillOpacity={1}
-                              fill="url(#colorPrice2)"
-                              dot={false}
-                            />
-                          ) : (
-                            <Bar
-                              dataKey="bizcoins"
-                              shape={((props: any): React.ReactElement => {
-                                const { x, width, value, index } = props;
-                                const prev = enrichedHistory[index - 1];
-                                const openVal = prev ? (prev.close ?? prev.bizcoins ?? value) : value * 0.999;
-                                const closeVal = value;
-                                const isUp = closeVal >= openVal;
-                                const barColor = isUp ? "#10b981" : "#ef4444";
-                                const highVal = closeVal * (1 + 0.002);
-                                const lowVal = openVal * (1 - 0.002);
-                                const yScale = props.yAxis?.scale;
-                                if (!yScale) return <g />;
-                                const pxHigh = yScale(highVal);
-                                const pxLow = yScale(lowVal);
-                                const pxOpen = yScale(openVal);
-                                const pxClose = yScale(closeVal);
-                                const pxBodyTop = Math.min(pxOpen, pxClose);
-                                const pxBodyBot = Math.max(pxOpen, pxClose);
-                                const midX = x + (width || 8) / 2;
-                                return (
-                                  <g>
-                                    <line x1={midX} y1={pxHigh} x2={midX} y2={pxLow} stroke={barColor} strokeWidth={1} />
-                                    <rect
-                                      x={x + (width || 8) * 0.15}
-                                      y={pxBodyTop}
-                                      width={Math.max((width || 8) * 0.7, 2)}
-                                      height={Math.max(pxBodyBot - pxBodyTop, 1)}
-                                      fill={barColor}
-                                      rx={1}
-                                    />
-                                  </g>
-                                );
-                              }) as any}
-                            />
-                          )}
-                          {/* SMA Line */}
-                          {showSMA && (
-                            <Line
-                              type="monotone"
-                              dataKey="sma"
-                              stroke="#fbbf24"
-                              strokeWidth={1.5}
-                              dot={false}
-                              strokeDasharray="4 2"
-                              connectNulls
-                            />
-                          )}
-                          {/* EMA Line */}
-                          {showEMA && (
-                            <Line
-                              type="monotone"
-                              dataKey="ema"
-                              stroke="#a78bfa"
-                              strokeWidth={1.5}
-                              dot={false}
-                              connectNulls
-                            />
-                          )}
-                        </ComposedChart>
-                      </ResponsiveContainer>
-                    </div>
-                  </div>
-                  {/* ====== END CHART PANEL ====== */}
-
-
-
-                  {/* ====== PILAR 3: ORDER BOOK ====== */}
-                  {orderBook.length > 0 && (() => {
-                    const asks = orderBook.filter(o => o.type === 'ask');
-                    const bids = orderBook.filter(o => o.type === 'bid');
-                    const maxTotal = Math.max(...orderBook.map(o => o.total));
-                    const totalBidVol = bids.reduce((s, b) => s + b.size, 0);
-                    const totalAskVol = asks.reduce((s, a) => s + a.size, 0);
-                    const buyPressure = Math.round((totalBidVol / (totalBidVol + totalAskVol)) * 100);
-                    const midPrice = asks.length > 0 && bids.length > 0
-                      ? ((asks[asks.length - 1].price + bids[0].price) / 2)
-                      : 0;
-                    const spread = asks.length > 0 && bids.length > 0
-                      ? (asks[asks.length - 1].price - bids[0].price)
-                      : 0;
-                    return (
-                      <div style={{ marginBottom: 24, background: "#0a0f1e", borderRadius: 16, border: "1px solid rgba(255,255,255,0.06)", overflow: "hidden" }}>
-                        {/* Header */}
-                        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 16px", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
-                          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                            <BarChart2 size={13} color="#64748b" />
-                            <span style={{ fontSize: 11, fontWeight: 700, color: "#64748b", textTransform: "uppercase" as const, letterSpacing: "0.08em" }}>Libro de Órdenes</span>
-                          </div>
-                          <div style={{ display: "flex", gap: 16, fontSize: 10, color: "rgba(255,255,255,0.4)" }}>
-                            <span>Spread: <strong style={{ color: "#f59e0b" }}>{spread.toFixed(2)}</strong></span>
-                            <span>Mid: <strong style={{ color: "white" }}>${midPrice.toFixed(2)}</strong></span>
-                          </div>
-                        </div>
-
-                        {/* Column Headers */}
-                        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", padding: "6px 16px", borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
-                          <span style={{ fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.25)", textTransform: "uppercase" as const }}>Precio (USD)</span>
-                          <span style={{ fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.25)", textTransform: "uppercase" as const, textAlign: "center" as const }}>Tamaño</span>
-                          <span style={{ fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.25)", textTransform: "uppercase" as const, textAlign: "right" as const }}>Acumulado</span>
-                        </div>
-
-                        {/* Ask rows (sell orders — red) */}
-                        <div>
-                          {asks.map((row, i) => (
-                            <div key={`ask-${i}`} style={{ position: "relative", display: "grid", gridTemplateColumns: "1fr 1fr 1fr", padding: "5px 16px", alignItems: "center" }}>
-                              <div style={{ position: "absolute", right: 0, top: 0, height: "100%", width: `${(row.total / maxTotal) * 100}%`, background: "rgba(239,68,68,0.08)", transition: "width 0.4s ease" }} />
-                              <span style={{ fontSize: 11, fontWeight: 700, color: "#ef4444", fontVariantNumeric: "tabular-nums", zIndex: 1 }}>{row.price.toFixed(2)}</span>
-                              <span style={{ fontSize: 11, color: "rgba(239,68,68,0.8)", textAlign: "center" as const, fontVariantNumeric: "tabular-nums", zIndex: 1 }}>{row.size.toFixed(1)}</span>
-                              <span style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", textAlign: "right" as const, fontVariantNumeric: "tabular-nums", zIndex: 1 }}>{row.total.toFixed(1)}</span>
-                            </div>
-                          ))}
-                        </div>
-
-                        {/* Mid price separator */}
-                        <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "8px 16px", background: "rgba(255,255,255,0.03)", borderTop: "1px solid rgba(255,255,255,0.04)", borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
-                          <div style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.06)" }} />
-                          <span style={{ fontSize: 13, fontWeight: 800, color: "white", letterSpacing: "0.02em" }}>${midPrice.toFixed(2)}</span>
-                          <span style={{ fontSize: 10, color: spread > 0 ? "#10b981" : "#ef4444", fontWeight: 700 }}>Spread {spread.toFixed(3)}</span>
-                          <div style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.06)" }} />
-                        </div>
-
-                        {/* Bid rows (buy orders — green) */}
-                        <div>
-                          {bids.map((row, i) => (
-                            <div key={`bid-${i}`} style={{ position: "relative", display: "grid", gridTemplateColumns: "1fr 1fr 1fr", padding: "5px 16px", alignItems: "center" }}>
-                              <div style={{ position: "absolute", right: 0, top: 0, height: "100%", width: `${(row.total / maxTotal) * 100}%`, background: "rgba(16,185,129,0.08)", transition: "width 0.4s ease" }} />
-                              <span style={{ fontSize: 11, fontWeight: 700, color: "#10b981", fontVariantNumeric: "tabular-nums", zIndex: 1 }}>{row.price.toFixed(2)}</span>
-                              <span style={{ fontSize: 11, color: "rgba(16,185,129,0.8)", textAlign: "center" as const, fontVariantNumeric: "tabular-nums", zIndex: 1 }}>{row.size.toFixed(1)}</span>
-                              <span style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", textAlign: "right" as const, fontVariantNumeric: "tabular-nums", zIndex: 1 }}>{row.total.toFixed(1)}</span>
-                            </div>
-                          ))}
-                        </div>
-
-                        {/* Buy/Sell Pressure Bar */}
-                        <div style={{ padding: "10px 16px", borderTop: "1px solid rgba(255,255,255,0.04)" }}>
-                          <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 5 }}>
-                            <span style={{ fontSize: 9, fontWeight: 700, color: "#10b981" }}>Compra {buyPressure}%</span>
-                            <span style={{ fontSize: 9, fontWeight: 700, color: "#ef4444" }}>Venta {100 - buyPressure}%</span>
-                          </div>
-                          <div style={{ display: "flex", height: 4, borderRadius: 4, overflow: "hidden" }}>
-                            <div style={{ width: `${buyPressure}%`, background: "#10b981", transition: "width 0.6s ease" }} />
-                            <div style={{ flex: 1, background: "#ef4444" }} />
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })()}
-                  {/* ====== END PILAR 3 ====== */}
-
-                  {/* Company News Section */}
-                  <div style={{ marginBottom: 28 }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
-                      <Newspaper size={18} color="#94a3b8" />
-                      <h4 style={{ margin: 0, fontSize: 13, fontWeight: 800, color: "rgba(255,255,255,0.6)", textTransform: "uppercase", letterSpacing: "0.06em" }}>
-                        Noticias Recientes de {orderForm.symbol}
-                      </h4>
-                    </div>
-                    {fetchingStockNews ? (
-                        <div style={{ height: 80, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                            <div style={{ width: 24, height: 24, border: "2px solid rgba(255,255,255,0.1)", borderTopColor: "#10b981", borderRadius: "50%", animation: "spin 1s linear infinite" }} />
-                        </div>
-                    ) : (
-                        <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 12 }}>
-                            {stockNews.map((n) => (
-                                <motion.div
-                                    key={n.id}
-                                    whileHover={{ background: "rgba(255,255,255,0.05)" }}
-                                    style={{
-                                        display: "flex",
-                                        gap: 14,
-                                        padding: 12,
-                                        borderRadius: 16,
-                                        background: "rgba(255,255,255,0.02)",
-                                        border: "1px solid rgba(255,255,255,0.05)",
-                                        cursor: "pointer",
-                                        transition: "all 0.2s"
-                                    }}
-                                    onClick={() => window.open(n.url, "_blank")}
-                                >
-                                    <img src={n.image} alt={n.title} style={{ width: 60, height: 60, borderRadius: 10, objectFit: "cover" }} />
-                                    <div style={{ flex: 1 }}>
-                                        <div style={{ fontSize: 10, fontWeight: 800, color: "#10b981", marginBottom: 4 }}>{n.category} • {n.time}</div>
-                                        <h5 style={{ margin: 0, fontSize: 14, fontWeight: 700, color: "white", lineHeight: 1.3 }}>{n.title}</h5>
-                                    </div>
-                                </motion.div>
-                            ))}
-                        </div>
-                    )}
-                  </div>
-                        </div>
-
-                        {/* ── RIGHT COLUMN: Order Form ─────────────── */}
-                        <div
-                          style={{
-                            flex: "0 0 420px",
-                            overflowY: "auto",
-                            padding: "28px 28px",
-                            background: "linear-gradient(180deg,#0a1628 0%,#0d1b2e 100%)",
-                            display: "flex",
-                            flexDirection: "column" as const,
-                            gap: 0,
-                          }}
-                        >
-                          {/* Right column header */}
-                          <div style={{ marginBottom: 24, paddingRight: 44 }}>
-                            <div style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.35)", textTransform: "uppercase" as const, letterSpacing: "0.12em", marginBottom: 6 }}>Nueva Orden</div>
-                            <div style={{ fontSize: 22, fontWeight: 900, color: "white", letterSpacing: "-0.03em" }}>
-                              {orderForm.symbol || "—"}
-                              {(() => {
-                                const d = processedMarketData.find((s: any) => s.symbol === orderForm.symbol);
-                                if (!d) return null;
-                                const chg = d.changePercent ?? 0;
-                                return (
-                                  <span style={{ fontSize: 13, fontWeight: 600, color: chg >= 0 ? "#10b981" : "#ef4444", marginLeft: 10 }}>
-                                    {chg >= 0 ? "+" : ""}{chg.toFixed(2)}%
-                                  </span>
-                                );
-                              })()}
-                            </div>
-                            {(() => {
-                              const d = processedMarketData.find((s: any) => s.symbol === orderForm.symbol);
-                              if (!d) return null;
-                              return <div style={{ fontSize: 13, color: "rgba(255,255,255,0.45)", marginTop: 2 }}>{d.name}</div>;
-                            })()}
-                          </div>
-
-                          <div
-                            style={{
-                              display: "grid",
-                              gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 160px), 1fr))",
-                              gap: 16,
-                              marginBottom: 20,
-                            }}
-                          >
-                    {/* Symbol */}
-
-                    <div>
-                      <label
-                        style={{
-                          fontSize: 10,
-                          fontWeight: 500,
-                          color: "#64748b",
-                          textTransform: "uppercase" as const,
-                          letterSpacing: "0.07em",
-                          display: "block",
-                          marginBottom: 8,
-                        }}
-                      >
-                        Símbolo
-                      </label>
-                      <select
-                        value={orderForm.symbol}
-                        onChange={(e) =>
-                          setOrderForm((f) => ({
-                            ...f,
-                            symbol: e.target.value,
-                          }))
-                        }
-                        style={{
-                          width: "100%",
-                          height: 48,
-                          padding: "0 14px",
-                          background: "rgba(255,255,255,0.07)",
-                          border: "1.5px solid rgba(255,255,255,0.12)",
-                          borderRadius: 12,
-                          color: "white",
-                          fontSize: 15,
-                          fontWeight: 500,
-                          fontFamily: "inherit",
-                          outline: "none",
-                          cursor: "pointer",
-                          transition: "border-color 0.2s",
-                        }}
-                        onFocus={(e) =>
-                          (e.target.style.borderColor = "#10b981")
-                        }
-                        onBlur={(e) =>
-                          (e.target.style.borderColor =
-                            "rgba(255,255,255,0.12)")
-                        }
-                      >
-                        {processedMarketData.map((s) => (
-                          <option
-                            key={s.symbol}
-                            value={s.symbol}
-                            style={{ background: "#1e293b", color: "white" }}
-                          >
-                            {s.symbol} — {s.name?.slice(0, 22)}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-
-                    {/* Side */}
-                    <div>
-                      <label
-                        style={{
-                          fontSize: 10,
-                          fontWeight: 500,
-                          color: "#64748b",
-                          textTransform: "uppercase" as const,
-                          letterSpacing: "0.07em",
-                          display: "block",
-                          marginBottom: 8,
-                        }}
-                      >
-                        Dirección
-                      </label>
-                      <div style={{ display: "flex", gap: 8, height: 48 }}>
-                        {(["buy", "sell"] as const).map((side) => (
-                          <button
-                            key={side}
-                            onClick={() =>
-                              setOrderForm((f) => ({ ...f, side }))
-                            }
-                            style={{
-                              flex: 1,
-                              border: "none",
-                              borderRadius: 12,
-                              fontWeight: 500,
-                              fontSize: 13,
-                              cursor: "pointer",
-                              fontFamily: "inherit",
-                              height: "100%",
-                              transition: "all 0.2s",
-                              background:
-                                orderForm.side === side
-                                  ? side === "buy"
-                                    ? "linear-gradient(135deg,#10b981,#059669)"
-                                    : "linear-gradient(135deg,#ef4444,#dc2626)"
-                                  : "rgba(255,255,255,0.07)",
-                              color:
-                                orderForm.side === side ? "white" : "#64748b",
-                              boxShadow:
-                                orderForm.side === side
-                                  ? side === "buy"
-                                    ? "0 4px 12px rgba(16,185,129,0.4)"
-                                    : "0 4px 12px rgba(239,68,68,0.4)"
-                                  : "none",
-                            }}
-                          >
-                            {side === "buy" ? "▲ Comprar" : "▼ Vender"}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Amount to Invest */}
-                    <div>
-                      <label
-                        style={{
-                          fontSize: 10,
-                          fontWeight: 500,
-                          color: "#64748b",
-                          textTransform: "uppercase" as const,
-                          letterSpacing: "0.07em",
-                          display: "block",
-                          marginBottom: 8,
-                        }}
-                      >
-                        {orderForm.side === "buy"
-                          ? "Monto a Invertir (bz)"
-                          : "Monto a Vender (equiv. bz)"}
-                      </label>
-                      <div style={{ position: "relative" }}>
-                        <input
-                          type="number"
-                          min={1}
-                          step={100}
-                          value={orderForm.amount}
-                          onChange={(e) =>
-                            setOrderForm((f) => ({
-                              ...f,
-                              amount: Number(e.target.value),
-                            }))
-                          }
-                          style={{
-                            width: "100%",
-                            boxSizing: "border-box" as const,
-                            height: 48,
-                            padding: "0 14px",
-                            background: "rgba(255,255,255,0.07)",
-                            border: "1.5px solid rgba(255,255,255,0.12)",
-                            borderRadius: 12,
-                            color: "white",
-                            fontSize: 18,
-                            fontWeight: 700,
-                            fontFamily: "inherit",
-                            outline: "none",
-                            transition: "all 0.2s",
-                          }}
-                          onFocus={(e) => {
-                            e.target.style.borderColor = "#10b981";
-                            e.target.style.boxShadow =
-                              "0 0 0 3px rgba(16,185,129,0.15)";
-                          }}
-                          onBlur={(e) => {
-                            e.target.style.borderColor =
-                              "rgba(255,255,255,0.12)";
-                            e.target.style.boxShadow = "none";
-                          }}
-                        />
-                        <div
-                          style={{
-                            position: "absolute",
-                            right: 14,
-                            top: "50%",
-                            transform: "translateY(-50%)",
-                            color: "rgba(255,255,255,0.3)",
-                            pointerEvents: "none",
-                            fontWeight: 800,
-                          }}
-                        >
-                          bz
-                        </div>
-                      </div>
-
-                      {/* Quick preset buttons */}
-                      <div style={{ display: "flex", gap: 6, marginTop: 10 }}>
-                        {[{ label: "25%", pct: 0.25 }, { label: "50%", pct: 0.5 }, { label: "75%", pct: 0.75 }, { label: "Máx", pct: 1.0 }].map(({ label, pct }) => (
-                          <button
-                            key={label}
-                            onClick={() => setOrderForm(f => ({ ...f, amount: Math.floor(cash * pct) }))}
-                            style={{
-                              flex: 1, padding: "6px 0", borderRadius: 8, fontSize: 11, fontWeight: 700,
-                              cursor: "pointer", fontFamily: "inherit",
-                              background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.12)", color: "rgba(255,255,255,0.7)",
-                              transition: "all 0.15s"
-                            }}
-                          >
-                            {label}
-                          </button>
-                        ))}
-                      </div>
-
-                      {/* Live cost estimator */}
-                      {orderForm.qty > 0 && (() => {
-                        const stockPrice = processedMarketData.find(s => s.symbol === orderForm.symbol)?.price ?? 0;
-                        const totalCost = orderForm.amount * 1.001;
-                        return (
-                          <div style={{ marginTop: 12, padding: "12px 14px", background: "rgba(16,185,129,0.08)", border: "1px solid rgba(16,185,129,0.2)", borderRadius: 12 }}>
-                            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
-                              <span style={{ fontSize: 12, color: "rgba(255,255,255,0.5)" }}>Recibirás ~</span>
-                              <span style={{ fontSize: 14, fontWeight: 800, color: "#10b981" }}>{orderForm.qty.toFixed(4)} {orderForm.symbol}</span>
-                            </div>
-                            <div style={{ display: "flex", justifyContent: "space-between" }}>
-                              <span style={{ fontSize: 12, color: "rgba(255,255,255,0.5)" }}>Total con comisión (0.1%)</span>
-                              <span style={{ fontSize: 12, fontWeight: 700, color: "rgba(255,255,255,0.7)" }}>bz {totalCost.toFixed(0)}</span>
-                            </div>
-                          </div>
-                        );
-                      })()}
-                    </div>
-                  </div>
-
-                  {/* ====== STOP-LOSS / TAKE-PROFIT PANEL ====== */}
-                  {orderForm.side === "buy" && (() => {
-                    const currentPrice = processedMarketData.find(s => s.symbol === orderForm.symbol)?.price ?? 0;
-                    const slVal = parseFloat(stopLoss);
-                    const tpVal = parseFloat(takeProfit);
-                    const slPct = currentPrice > 0 && slVal > 0 ? ((slVal - currentPrice) / currentPrice * 100).toFixed(1) : null;
-                    const tpPct = currentPrice > 0 && tpVal > 0 ? ((tpVal - currentPrice) / currentPrice * 100).toFixed(1) : null;
-                    return (
-                      <div style={{ marginBottom: 20, background: "rgba(255,255,255,0.04)", borderRadius: 16, padding: "16px 18px", border: "1px solid rgba(255,255,255,0.08)" }}>
-                        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
-                          <Shield size={14} color="#94a3b8" />
-                          <span style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.5)", textTransform: "uppercase" as const, letterSpacing: "0.08em" }}>
-                            Protección: Stop-Loss / Take-Profit
-                          </span>
-                          <span style={{ fontSize: 10, color: "#94a3b8", marginLeft: "auto" }}>(Opcional)</span>
-                        </div>
-                        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-                          {/* Stop-Loss */}
-                          <div>
-                            <label style={{ fontSize: 10, fontWeight: 700, color: "#ef4444", textTransform: "uppercase" as const, letterSpacing: "0.06em", display: "flex", alignItems: "center", gap: 5, marginBottom: 6 }}>
-                              <AlertCircle size={11} /> Stop-Loss (bz)
-                            </label>
-                            <div style={{ position: "relative" }}>
-                              <input
-                                type="number"
-                                min={0}
-                                step={1}
-                                placeholder={currentPrice > 0 ? `ej. ${(currentPrice * 0.95).toFixed(0)}` : "Precio"}
-                                value={stopLoss}
-                                onChange={e => setStopLoss(e.target.value)}
-                                style={{
-                                  width: "100%", boxSizing: "border-box" as const, height: 44, padding: "0 12px",
-                                  background: stopLoss ? "rgba(239,68,68,0.08)" : "rgba(255,255,255,0.05)",
-                                  border: stopLoss ? "1.5px solid rgba(239,68,68,0.4)" : "1.5px solid rgba(255,255,255,0.1)",
-                                  borderRadius: 10, color: "white", fontSize: 14, fontWeight: 600,
-                                  fontFamily: "inherit", outline: "none",
-                                }}
-                              />
-                            </div>
-                            {slPct && (
-                              <div style={{ fontSize: 10, color: parseFloat(slPct) < 0 ? "#ef4444" : "#f59e0b", marginTop: 5, fontWeight: 700, display: "flex", alignItems: "center", gap: 4 }}>
-                                {parseFloat(slPct) < 0
-                                  ? <><ArrowDown size={10} /> Pérdida máx: {slPct}%</>
-                                  : <><AlertTriangle size={10} /> S/L está por encima del precio actual</>
-                                }
-                              </div>
-                            )}
-                            <div style={{ fontSize: 10, color: "rgba(255,255,255,0.3)", marginTop: 4, lineHeight: 1.4, display: "flex", alignItems: "flex-start", gap: 5 }}>
-                              <Info size={10} style={{ flexShrink: 0, marginTop: 1 }} /> Venta automática si el precio cae para limitar pérdidas
-                            </div>
-                          </div>
-                          {/* Take-Profit */}
-                          <div>
-                            <label style={{ fontSize: 10, fontWeight: 700, color: "#10b981", textTransform: "uppercase" as const, letterSpacing: "0.06em", display: "flex", alignItems: "center", gap: 5, marginBottom: 6 }}>
-                              <Target size={11} /> Take-Profit (bz)
-                            </label>
-                            <div style={{ position: "relative" }}>
-                              <input
-                                type="number"
-                                min={0}
-                                step={1}
-                                placeholder={currentPrice > 0 ? `ej. ${(currentPrice * 1.10).toFixed(0)}` : "Precio"}
-                                value={takeProfit}
-                                onChange={e => setTakeProfit(e.target.value)}
-                                style={{
-                                  width: "100%", boxSizing: "border-box" as const, height: 44, padding: "0 12px",
-                                  background: takeProfit ? "rgba(16,185,129,0.08)" : "rgba(255,255,255,0.05)",
-                                  border: takeProfit ? "1.5px solid rgba(16,185,129,0.4)" : "1.5px solid rgba(255,255,255,0.1)",
-                                  borderRadius: 10, color: "white", fontSize: 14, fontWeight: 600,
-                                  fontFamily: "inherit", outline: "none",
-                                }}
-                              />
-                            </div>
-                            {tpPct && (
-                              <div style={{ fontSize: 10, color: parseFloat(tpPct) > 0 ? "#10b981" : "#f59e0b", marginTop: 5, fontWeight: 700, display: "flex", alignItems: "center", gap: 4 }}>
-                                {parseFloat(tpPct) > 0
-                                  ? <><ArrowUp size={10} /> Ganancia objetivo: +{tpPct}%</>
-                                  : <><AlertTriangle size={10} /> T/P está por debajo del precio actual</>
-                                }
-                              </div>
-                            )}
-                            <div style={{ fontSize: 10, color: "rgba(255,255,255,0.3)", marginTop: 4, lineHeight: 1.4, display: "flex", alignItems: "flex-start", gap: 5 }}>
-                              <Info size={10} style={{ flexShrink: 0, marginTop: 1 }} /> Venta automática al alcanzar tu objetivo de ganancia
-                            </div>
-                          </div>
-                        </div>
-                        {/* Risk/Reward Ratio */}
-                        {slVal > 0 && tpVal > 0 && currentPrice > 0 && (
-                          <div style={{ marginTop: 12, padding: "10px 14px", background: "rgba(59,130,246,0.08)", border: "1px solid rgba(59,130,246,0.2)", borderRadius: 10 }}>
-                            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                              <span style={{ fontSize: 11, color: "rgba(255,255,255,0.5)" }}>Ratio Riesgo/Beneficio</span>
-                              <span style={{ fontSize: 13, fontWeight: 800, color: (() => {
-                                const risk = Math.abs(currentPrice - slVal);
-                                const reward = Math.abs(tpVal - currentPrice);
-                                const ratio = risk > 0 ? reward / risk : 0;
-                                return ratio >= 2 ? "#10b981" : ratio >= 1 ? "#f59e0b" : "#ef4444";
-                              })() }}>
-                                1 : {(() => {
-                                  const risk = Math.abs(currentPrice - slVal);
-                                  const reward = Math.abs(tpVal - currentPrice);
-                                  return risk > 0 ? (reward / risk).toFixed(2) : "—";
-                                })()}
-                              </span>
-                            </div>
-                            <div style={{ fontSize: 10, color: "rgba(255,255,255,0.3)", marginTop: 4 }}>
-                              Los profesionales buscan un ratio mínimo de 1:2 (ganar el doble de lo que arrriesgan)
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })()}
-                  {/* ====== END SL/TP PANEL ====== */}
-
-                  <div
-                    style={{
-                      marginTop: 12,
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: 14,
-                    }}
-                  >
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 6,
-                        fontSize: 11,
-                        fontWeight: 700,
-                        color: "rgba(255,255,255,0.4)",
-                        textTransform: "uppercase",
-                        letterSpacing: "0.08em",
-                      }}
-                    >
-                      <div
-                        style={{
-                          width: 16,
-                          height: 1.5,
-                          background: "currentColor",
-                        }}
-                      />
-                      Paso Final: Confirma tu operación
-                    </div>
-                    {/* Journal Note */}
-                    <div style={{ marginBottom: 20 }}>
-                      <label style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase" as const, letterSpacing: "0.08em", display: "flex", alignItems: "center", gap: 6, marginBottom: 8 }}>
-                        <Info size={11} /> Bitácora — ¿Por qué haces esta operación? (opcional)
-                      </label>
-                      <textarea
-                        value={journalNote}
-                        onChange={e => setJournalNote(e.target.value)}
-                        placeholder="Ej: NVDA tiene catalizadores de IA, el P/E bajó a 54x y el soporte técnico aguantó…"
-                        rows={2}
-                        style={{
-                          width: "100%", boxSizing: "border-box" as const,
-                          background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)",
-                          borderRadius: 10, color: "rgba(255,255,255,0.8)", fontSize: 12,
-                          padding: "10px 14px", fontFamily: "inherit", outline: "none",
-                          resize: "vertical" as const, lineHeight: 1.5,
-                        }}
-                      />
-                    </div>
-
-                    <button
-                      onClick={placeOrder}
-
-                      disabled={placing}
-                      className={
-                        !placing && orderForm.qty > 0 ? "pulsing-order-btn" : ""
-                      }
-                      style={{
-                        width: "100%",
-                        padding: "18px 32px",
-                        background: placing
-                          ? "#334155"
-                          : orderForm.side === "buy"
-                            ? "linear-gradient(135deg,#10b981,#059669)"
-                            : "linear-gradient(135deg,#ef4444,#dc2626)",
-                        color: "white",
-                        border: "none",
-                        borderRadius: 16,
-                        fontWeight: 800,
-                        cursor: placing ? "not-allowed" : "pointer",
-                        fontSize: 16,
-                        fontFamily: "inherit",
-                        display: "inline-flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        gap: 12,
-                        boxShadow: placing
-                          ? "none"
-                          : orderForm.side === "buy"
-                            ? "0 10px 25px rgba(16,185,129,0.35)"
-                            : "0 10px 25px rgba(239,68,68,0.35)",
-                        transition: "all 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
-                      }}
-                      onMouseEnter={(e) => {
-                        if (!placing) {
-                          (e.currentTarget as HTMLElement).style.transform =
-                            "translateY(-2px)";
-                          (e.currentTarget as HTMLElement).style.filter =
-                            "brightness(1.1)";
-                        }
-                      }}
-                      onMouseLeave={(e) => {
-                        (e.currentTarget as HTMLElement).style.transform =
-                          "translateY(0)";
-                        (e.currentTarget as HTMLElement).style.filter = "none";
-                      }}
-                    >
-                      {placing ? (
-                        <>
-                          <RefreshCw
-                            size={20}
-                            style={{ animation: "spin 1s linear infinite" }}
-                          />{" "}
-                          Enviando orden...
-                        </>
-                      ) : (
-                        <>
-                          <Zap size={20} />
-                          {orderForm.side === "buy"
-                            ? `Confirmar Compra de ${orderForm.symbol} ahora`
-                            : `Confirmar Venta de ${orderForm.symbol} ahora`}
-                        </>
-                      )}
-                    </button>
-                  </div>
-
-                  {orderMsg && (
-                    <div
-                      style={{
-                        marginTop: 16,
-                        padding: "14px 18px",
-                        borderRadius: 12,
-                        background:
-                          orderMsg.type === "ok"
-                            ? "rgba(16,185,129,0.12)"
-                            : "rgba(239,68,68,0.12)",
-                        border: `1.5px solid ${orderMsg.type === "ok" ? "rgba(16,185,129,0.3)" : "rgba(239,68,68,0.3)"}`,
-                        display: "flex",
-                        gap: 10,
-                        alignItems: "flex-start",
-                      }}
-                    >
-                      {orderMsg.type === "ok" ? (
-                        <CheckCircle2
-                          size={16}
-                          color="#10b981"
-                          style={{ flexShrink: 0, marginTop: 1 }}
-                        />
-                      ) : (
-                        <AlertTriangle
-                          size={16}
-                          color="#ef4444"
-                          style={{ flexShrink: 0, marginTop: 1 }}
-                        />
-                      )}
-                      <p
-                        style={{
-                          margin: 0,
-                          fontSize: 13,
-                          color: orderMsg.type === "ok" ? "#6ee7b7" : "#fca5a5",
-                          lineHeight: 1.6,
-                        }}
-                      >
-                        {orderMsg.text}
-                      </p>
-                    </div>
-                  )}
-                        </div>
-                      </motion.div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+                {renderBizenTerminal()}
               </div>
             )}
 

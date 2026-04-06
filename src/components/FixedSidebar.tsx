@@ -678,7 +678,7 @@ export default function FixedSidebar() {
                 )}
 
                 {/* ── BIZEN LIVE ── */}
-                {user && (
+                {user && (dbProfile?.role === 'student' || dbProfile?.role === 'teacher' || dbProfile?.role === 'school_admin' || dbProfile?.role === 'admin') && (
                     <button
                         onClick={() => navigateTo("/live/join")}
                         style={{

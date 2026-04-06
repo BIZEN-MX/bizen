@@ -34,6 +34,7 @@ export default function MobileFooterNav() {
   const isAdminOrTeacher = dbProfile?.role === "school_admin" || dbProfile?.role === "teacher"
   const canHostLive = isAdminOrTeacher || dbProfile?.role === "institutional" || dbProfile?.role === "student"
   const isStudentOrGuest = !isAdminOrTeacher
+  const isInstitutional = dbProfile?.role === 'student' || dbProfile?.role === 'teacher' || dbProfile?.role === 'school_admin' || dbProfile?.role === 'admin'
 
   const isOnLessonPage = pathname?.includes('/learn/')
   const protectedRoutes = ['/forum', '/profile', '/cuenta', '/configuracion', '/tienda', '/impacto-social', '/teacher/dashboard', '/teacher/courses']
@@ -356,33 +357,35 @@ export default function MobileFooterNav() {
 
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
               {/* BIZEN Live */}
-              <button
-                onClick={() => {
-                  setShowProfilePanel(false)
-                  navigateTo(canHostLive ? "/live/host" : "/live/join")
-                }}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "14px",
-                  padding: "14px 18px",
-                  background: pathname?.includes("/live") ? "rgba(15, 98, 254, 0.08)" : "transparent",
-                  border: "none",
-                  borderRadius: "16px",
-                  cursor: "pointer",
-                  fontSize: 16,
-                  fontWeight: 600,
-                  color: pathname?.includes("/live") ? "#0F62FE" : "#1e293b",
-                  width: "100%",
-                  textAlign: "left",
-                  transition: "all 0.2s ease"
-                }}
-              >
-                <div style={{ width: 36, height: 36, borderRadius: "10px", background: "rgba(15, 98, 254, 0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  <Zap size={20} color="#0F62FE" strokeWidth={2.5} />
-                </div>
-                <span>BIZEN Live</span>
-              </button>
+              {isInstitutional && (
+                <button
+                  onClick={() => {
+                    setShowProfilePanel(false)
+                    navigateTo(canHostLive ? "/live/host" : "/live/join")
+                  }}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "14px",
+                    padding: "14px 18px",
+                    background: pathname?.includes("/live") ? "rgba(15, 98, 254, 0.08)" : "transparent",
+                    border: "none",
+                    borderRadius: "16px",
+                    cursor: "pointer",
+                    fontSize: 16,
+                    fontWeight: 600,
+                    color: pathname?.includes("/live") ? "#0F62FE" : "#1e293b",
+                    width: "100%",
+                    textAlign: "left",
+                    transition: "all 0.2s ease"
+                  }}
+                >
+                  <div style={{ width: 36, height: 36, borderRadius: "10px", background: "rgba(15, 98, 254, 0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <Zap size={20} color="#0F62FE" strokeWidth={2.5} />
+                  </div>
+                  <span>BIZEN Live</span>
+                </button>
+              )}
               
               {/* Noticias BIZEN */}
               <button

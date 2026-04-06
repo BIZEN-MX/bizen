@@ -91,7 +91,6 @@ export default function Header({
           <a href={navPreciosUrl}>{navPreciosLabel}</a>
           <a href={navFaqUrl}>{navFaqLabel}</a>
           <a href={navContactoUrl}>{navContactoLabel}</a>
-          <a href="/live/join" style={{ color: "#fbbf24", fontWeight: 700 }}>Live Quiz ⚡️</a>
         </nav>
 
         <div className="header-ctas">
@@ -152,7 +151,6 @@ export default function Header({
           <a href={navPreciosUrl} onClick={() => setOpen(false)}>{navPreciosLabel}</a>
           <a href={navFaqUrl} onClick={() => setOpen(false)}>{navFaqLabel}</a>
           <a href={navContactoUrl} onClick={() => setOpen(false)}>{navContactoLabel}</a>
-          <a href="/live/join" onClick={() => setOpen(false)} style={{ color: "#fbbf24", fontWeight: 700 }}>Live Quiz ⚡️</a>
           <div className="mobile-nav__ctas">
             {user ? (
               // Authenticated user - show logout only

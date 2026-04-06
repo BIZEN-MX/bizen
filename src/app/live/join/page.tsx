@@ -406,6 +406,10 @@ export default function JoinPage() {
                   ))}
                 </div>
 
+                <p style={{ textAlign: "center", marginTop: 0, marginBottom: 24, color: "rgba(255,255,255,0.5)", fontSize: 13, padding: "0 10px" }}>
+                  El PIN lo da el anfitrión antes de iniciar
+                </p>
+
                 <AnimatePresence>
                   {error && (
                     <motion.p
@@ -438,11 +442,6 @@ export default function JoinPage() {
                 >
                   Continuar →
                 </motion.button>
-
-                <p style={{ textAlign: "center", marginTop: 20, color: "rgba(255,255,255,0.25)", fontSize: 13 }}>
-                  El PIN lo da el anfitrión antes de iniciar
-                </p>
-
 
               </motion.div>
             )}

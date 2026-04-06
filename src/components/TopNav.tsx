@@ -135,8 +135,11 @@ export default function TopNav() {
     { label: 'Simuladores', path: '/cash-flow', icon: <BarChart2 size={16} /> },
     { label: 'Comunidad', path: '/comunidad', icon: <MessageSquare size={16} /> },
     { label: 'Tienda', path: '/tienda', icon: <ShoppingBag size={16} /> },
-    { label: 'Live', path: '/live/join', icon: <Zap size={16} /> },
   ]
+  const isInstitutional = role === 'student' || role === 'teacher' || role === 'school_admin' || role === 'admin';
+  if (isInstitutional) {
+    studentNavItems.push({ label: 'Live', path: '/live/join', icon: <Zap size={16} /> });
+  }
 
   const teacherNavItems = [
     { label: 'Panel Escolar', path: '/teacher/dashboard', icon: <IcoGrid size={16} color="currentColor" /> },

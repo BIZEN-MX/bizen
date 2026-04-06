@@ -128,15 +128,19 @@ export default function MobileBottomNav() {
   } : null
 
   // More menu items (for authenticated users)
+  const isInstitutional = dbProfile?.role === 'student' || dbProfile?.role === 'teacher' || dbProfile?.role === 'school_admin' || dbProfile?.role === 'admin';
+
   const moreMenuItems = user ? [
     ...(isStudentOrGuest ? [
-      {
-        id: 'live',
-        label: 'Bizen Live',
-        icon: Zap,
-        path: '/live/join',
-        protected: false
-      },
+      ...(isInstitutional ? [
+        {
+          id: 'live',
+          label: 'Bizen Live',
+          icon: Zap,
+          path: '/live/join',
+          protected: false
+        }
+      ] : []),
       {
         id: 'news',
         label: 'Noticias BIZEN',
