@@ -21,6 +21,6 @@ export async function GET() {
   } catch (error: any) {
     console.warn("⚠️ Error fetching tags (returning empty list):", error.message || String(error))
     // Return empty array instead of error - tags will be created when threads are created
-    return NextResponse.json([])  }
+    return NextResponse.json([])
+  }
 }
-

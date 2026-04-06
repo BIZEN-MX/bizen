@@ -58,7 +58,9 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(threads)
   } catch (error) {
     console.error("Error fetching bookmarks:", error)
-    return NextResponse.json({ error: "Failed to fetch bookmarks" }, { status: 500 })  }
+    return NextResponse.json({ error: "Failed to fetch bookmarks" }, { status: 500 })
+  }
+}
 }
 
 export async function POST(request: NextRequest) {
@@ -110,7 +112,9 @@ export async function POST(request: NextRequest) {
     if (errorMessage.includes('Unique constraint') || errorMessage.includes('P2002')) {
       return NextResponse.json({ bookmarked: true })
     }
-    return NextResponse.json({ error: "Failed to bookmark", details: errorMessage }, { status: 500 })  }
+    return NextResponse.json({ error: "Failed to bookmark", details: errorMessage }, { status: 500 })
+  }
+}
 }
 
 export async function DELETE(request: NextRequest) {
@@ -145,6 +149,4 @@ export async function DELETE(request: NextRequest) {
     return NextResponse.json({ bookmarked: false })
   } catch (error) {
     console.error("Error removing bookmark:", error)
-    return NextResponse.json({ error: "Failed to remove bookmark" }, { status: 500 })  }
-}
-
+    return NextResponse.json({ error: "Failed to remove bookmark" }, { status: 500 })

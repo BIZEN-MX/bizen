@@ -39,5 +39,7 @@ export async function POST() {
     })
   } catch (error) {
     console.error("Error seeding topics:", error)
-    return NextResponse.json({ error: "Failed to seed topics" }, { status: 500 })  }
+    return NextResponse.json({ error: "Failed to seed topics" }, { status: 500 })
+  }
+}
 
