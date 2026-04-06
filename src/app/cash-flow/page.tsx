@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
 import { createClientMicrocred } from '@/lib/supabase/client-microcred'
 import { BarChart2, Briefcase, PiggyBank, CreditCard, TrendingUp, Percent, ChevronRight, Trash2, Play, Plus, MonitorSmartphone, Laptop, Sparkles, Brain, Rocket, Target } from "lucide-react"
-import StreakWidget from "@/components/StreakWidget"
 import PageLoader from "@/components/PageLoader"
 
 interface Simulator {
@@ -329,15 +328,7 @@ export default function CombinedSimulatorsPage() {
           boxSizing: "border-box"
         }}>
 
-          {/* Header */}
-            <div style={{
-              display: "flex",
-              justifyContent: "flex-end",
-              alignItems: "flex-start",
-              marginBottom: 0,
-            }}>
-              <StreakWidget streak={streak} showCalendar activeDays={weeklyActiveDays} />
-            </div>
+          {/* Header removed */}
 
           <div style={{
             display: "flex",
