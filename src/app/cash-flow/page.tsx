@@ -330,39 +330,14 @@ export default function CombinedSimulatorsPage() {
         }}>
 
           {/* Header */}
-          <div style={{ marginBottom: "40px" }}>
             <div style={{
               display: "flex",
-              justifyContent: "space-between",
+              justifyContent: "flex-end",
               alignItems: "flex-start",
-              flexWrap: "wrap",
-              gap: 16,
               marginBottom: 0,
             }}>
-              <div>
-                <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(11,113,254,0.1)", border: "1px solid rgba(11,113,254,0.2)", borderRadius: 999, padding: "6px 16px", marginBottom: 20, fontSize: 12, fontWeight: 500, color: "#0B71FE", letterSpacing: "0.05em", textTransform: "uppercase" }}>
-                  <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#0B71FE", display: "inline-block" }} />
-                  Centro Financiero Interactivo
-                </div>
-                <h1 style={{
-                  fontSize: "clamp(28px, 5.5vw, 60px)",
-                  fontWeight: 600,
-                  margin: "0 0 18px",
-                  background: "linear-gradient(135deg, #0f172a 0%, #0F62FE 100%)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  letterSpacing: "-0.04em",
-                  lineHeight: 1.15
-                }}>
-                  Simulador Financiero
-                </h1>
-                <p style={{ fontSize: "clamp(16px, 2vw, 20px)", color: "#64748B", margin: 0, lineHeight: 1.6, maxWidth: "700px" }}>
-                  Explora el impacto de tus decisiones y domina las finanzas con nuestras herramientas avanzadas.
-                </p>
-              </div>
               <StreakWidget streak={streak} showCalendar activeDays={weeklyActiveDays} />
             </div>
-          </div>
 
           <div style={{
             display: "flex",
