@@ -327,7 +327,7 @@ export default function CoursePageTemplate({
                 className="courses-main-content"
                 style={{
                     flex: 1,
-                    paddingTop: 0,
+                    paddingTop: "84px", // Compensates for the extracted frame
                     paddingBottom: "clamp(40px, 8vw, 80px)",
                     paddingLeft: "0",
                     paddingRight: "0",
@@ -342,7 +342,7 @@ export default function CoursePageTemplate({
                     zIndex: 1,
                 }}
             >
-                <div style={{ width: "100%", maxWidth: "none", margin: "0", position: "relative", zIndex: 1, padding: 0, boxSizing: "border-box", display: "flex", flexDirection: "column", alignItems: "center", gap: 0 }}>
+                <div style={{ width: "100%", maxWidth: "none", margin: "0", position: "relative", zIndex: 1, padding: 0, boxSizing: "border-box", display: "flex", flexDirection: "column", alignItems: "stretch", gap: 0 }}>
 
                     {/* ── HERO BANNER (mirrors /courses hero) ───────────────────────── */}
                     <div
@@ -529,7 +529,7 @@ export default function CoursePageTemplate({
                     )}
 
                     {/* ── SUBTEMAS ──────────────────────────────────────────────────── */}
-                    <div style={{ width: "calc(100% - 64px)", maxWidth: "none", margin: "0 auto", display: "flex", flexDirection: "column", gap: "clamp(24px, 4vw, 36px)", padding: "0", paddingBottom: 40, boxSizing: "border-box" }}>
+                    <div style={{ width: "100%", maxWidth: "none", margin: "0", display: "flex", flexDirection: "column", gap: "clamp(24px, 4vw, 36px)", padding: "0", paddingBottom: 40, boxSizing: "border-box" }}>
                         {subtemas.length === 0 ? (
                             <div style={{ 
                                 textAlign: "center", 
@@ -555,7 +555,7 @@ export default function CoursePageTemplate({
                                     {(() => {
                                         const v = SUBTEMA_VARIANTS[subIdx % SUBTEMA_VARIANTS.length]
                                         return (
-                                            <div style={{ display: "flex", flexDirection: "column", padding: "14px 20px", paddingBottom: 14, background: v.background, borderRadius: 18, boxShadow: v.boxShadow, border: v.border, marginBottom: 16 }}>
+                                            <div style={{ display: "flex", flexDirection: "column", padding: "14px 20px", paddingBottom: 14, background: v.background, borderRadius: 18, boxShadow: v.boxShadow, border: v.border, margin: "0 32px 16px 32px" }}>
                                                 <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 14 }}>
                                                     <div style={{ flex: 1, minWidth: 0 }}>
                                                         <div style={{ fontSize: 11, fontWeight: 500, color: "rgba(255,255,255,0.8)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 4 }}>CURSO {(subIdx + 1).toString().padStart(2, "0")}</div>
@@ -589,8 +589,8 @@ export default function CoursePageTemplate({
                                             overflowY: "visible", // Enforced for the aura/glow shadows
                                             paddingBottom: "60px",
                                             paddingTop: "48px",
-                                            paddingLeft: "0",
-                                            paddingRight: "0",
+                                            paddingLeft: "32px", // Start at same offset as hero card
+                                            paddingRight: "32px", // Same on the right
                                             marginTop: "-32px", // Compensate the extra top padding
                                             scrollSnapType: "x mandatory",
                                             WebkitOverflowScrolling: "touch",

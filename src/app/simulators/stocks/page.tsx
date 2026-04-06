@@ -2550,69 +2550,90 @@ function StockSimulatorContent() {
                       <motion.div
                         ref={orderFormRef}
                         className="order-panel"
-                        initial={{ opacity: 0, scale: 0.95, y: 20 }}
-                        animate={{ opacity: 1, scale: 1, y: 0 }}
-                        exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                        initial={{ opacity: 0, x: 40 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: 40 }}
+                        transition={{ type: "spring", stiffness: 280, damping: 30 }}
                         style={{
-                          width: "100%",
-                          maxWidth: 800,
-                          maxHeight: "95vh",
-                          overflowY: "auto",
-                          background: "linear-gradient(155deg,#060d1f 0%,#0f172a 50%,#0d1a2e 100%)",
-                          borderRadius: 24,
-                          padding: "clamp(20px, 4vw, 32px)",
-                          color: "white",
-                          border: "2px solid rgba(16,185,129,0.2)",
-                          boxShadow: "0 24px 50px rgba(0,0,0,0.5)",
+                          width: "100vw",
+                          height: "100vh",
+                          background: "#060d1f",
+                          display: "flex",
+                          overflow: "hidden",
+                          position: "relative",
                         }}
                         onClick={(e) => e.stopPropagation()}
                       >
+                        {/* ── CLOSE BUTTON ─────────────────────────── */}
+                        <button
+                          onClick={() => setOrderForm((f) => ({ ...f, symbol: "" }))}
+                          style={{
+                            position: "absolute",
+                            top: 18,
+                            right: 22,
+                            zIndex: 100,
+                            width: 36,
+                            height: 36,
+                            borderRadius: 10,
+                            border: "1.5px solid rgba(255,255,255,0.12)",
+                            background: "rgba(255,255,255,0.06)",
+                            color: "rgba(255,255,255,0.7)",
+                            cursor: "pointer",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            transition: "all 0.15s ease",
+                          }}
+                          onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = "rgba(239,68,68,0.2)"; (e.currentTarget as HTMLElement).style.color = "#ef4444"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(239,68,68,0.4)"; }}
+                          onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.06)"; (e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.7)"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.12)"; }}
+                        >
+                          <X size={16} />
+                        </button>
+
+                        {/* ── LEFT COLUMN: Market Data ─────────────── */}
+                        <div
+                          style={{
+                            flex: "1 1 60%",
+                            overflowY: "auto",
+                            padding: "28px 32px",
+                            borderRight: "1px solid rgba(255,255,255,0.07)",
+                          }}
+                        >
+
                         <div
                           style={{
                             display: "flex",
                             alignItems: "center",
-                            gap: 10,
-                            marginBottom: 26,
+                            gap: 12,
+                            marginBottom: 28,
                           }}
                         >
-                          <div
-                            style={{
-                              width: 36,
-                              height: 36,
-                              borderRadius: 10,
-                              background: "rgba(16,185,129,0.2)",
-                              border: "1px solid rgba(16,185,129,0.3)",
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                            }}
-                          >
-                            <Zap size={18} color="#10b981" />
+                          {/* BIZEN Terminal branding */}
+                          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                            <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#10b981", boxShadow: "0 0 8px #10b981" }} />
+                            <span style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.35)", textTransform: "uppercase" as const, letterSpacing: "0.12em" }}>BIZEN Terminal</span>
                           </div>
-                          <h3
-                            style={{
-                              fontWeight: 500,
-                              fontSize: 18,
-                              margin: 0,
-                              color: "white",
-                            }}
-                          >
-                            Colocar Orden
-                          </h3>
-                          <button
-                            onClick={() => setOrderForm((f) => ({ ...f, symbol: "" }))}
-                            style={{
-                              marginLeft: "auto",
-                              background: "none",
-                              border: "none",
-                              color: "rgba(255,255,255,0.5)",
-                              cursor: "pointer",
-                              padding: 4,
-                            }}
-                          >
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                          </button>
+                          <div style={{ flex: 1 }} />
+                          {/* Stock badge */}
+                          {orderForm.symbol && (() => {
+                            const s = processedMarketData.find((st: any) => st.symbol === orderForm.symbol);
+                            if (!s) return null;
+                            const chg = s.changePercent ?? 0;
+                            return (
+                              <div style={{ display: "flex", alignItems: "center", gap: 10, background: "rgba(255,255,255,0.05)", padding: "8px 14px", borderRadius: 12, border: "1px solid rgba(255,255,255,0.1)" }}>
+                                <StockLogo symbol={s.symbol} size={22} />
+                                <span style={{ fontSize: 14, fontWeight: 800, color: "white" }}>{s.symbol}</span>
+                                <span style={{ fontSize: 20, fontWeight: 900, color: "white", fontFamily: "'JetBrains Mono',monospace", letterSpacing: "-0.03em" }}>
+                                  ${(s.price / 10).toFixed(2)}
+                                </span>
+                                <span style={{ fontSize: 12, fontWeight: 700, color: chg >= 0 ? "#10b981" : "#ef4444", padding: "3px 8px", background: chg >= 0 ? "rgba(16,185,129,0.15)" : "rgba(239,68,68,0.15)", borderRadius: 6 }}>
+                                  {chg >= 0 ? "+" : ""}{chg.toFixed(2)}%
+                                </span>
+                              </div>
+                            );
+                          })()}
                         </div>
+
 
                         {orderForm.symbol && (
                           <div
@@ -3181,17 +3202,53 @@ function StockSimulatorContent() {
                         </div>
                     )}
                   </div>
+                        </div>
 
-                  <div
-                    style={{
-                      display: "grid",
-                      gridTemplateColumns:
-                        "repeat(auto-fit, minmax(min(100%, 180px), 1fr))",
-                      gap: 20,
-                      marginBottom: 28,
-                    }}
-                  >
+                        {/* ── RIGHT COLUMN: Order Form ─────────────── */}
+                        <div
+                          style={{
+                            flex: "0 0 420px",
+                            overflowY: "auto",
+                            padding: "28px 28px",
+                            background: "linear-gradient(180deg,#0a1628 0%,#0d1b2e 100%)",
+                            display: "flex",
+                            flexDirection: "column" as const,
+                            gap: 0,
+                          }}
+                        >
+                          {/* Right column header */}
+                          <div style={{ marginBottom: 24, paddingRight: 44 }}>
+                            <div style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.35)", textTransform: "uppercase" as const, letterSpacing: "0.12em", marginBottom: 6 }}>Nueva Orden</div>
+                            <div style={{ fontSize: 22, fontWeight: 900, color: "white", letterSpacing: "-0.03em" }}>
+                              {orderForm.symbol || "—"}
+                              {(() => {
+                                const d = processedMarketData.find((s: any) => s.symbol === orderForm.symbol);
+                                if (!d) return null;
+                                const chg = d.changePercent ?? 0;
+                                return (
+                                  <span style={{ fontSize: 13, fontWeight: 600, color: chg >= 0 ? "#10b981" : "#ef4444", marginLeft: 10 }}>
+                                    {chg >= 0 ? "+" : ""}{chg.toFixed(2)}%
+                                  </span>
+                                );
+                              })()}
+                            </div>
+                            {(() => {
+                              const d = processedMarketData.find((s: any) => s.symbol === orderForm.symbol);
+                              if (!d) return null;
+                              return <div style={{ fontSize: 13, color: "rgba(255,255,255,0.45)", marginTop: 2 }}>{d.name}</div>;
+                            })()}
+                          </div>
+
+                          <div
+                            style={{
+                              display: "grid",
+                              gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 160px), 1fr))",
+                              gap: 16,
+                              marginBottom: 20,
+                            }}
+                          >
                     {/* Symbol */}
+
                     <div>
                       <label
                         style={{
@@ -3681,7 +3738,8 @@ function StockSimulatorContent() {
                       </p>
                     </div>
                   )}
-                </motion.div>
+                        </div>
+                      </motion.div>
               </motion.div>
             )}
           </AnimatePresence>
@@ -3691,9 +3749,9 @@ function StockSimulatorContent() {
             {activeTab === "analytics" && (() => {
               const holdings = portfolio?.holdings ?? [];
               const totalVal = holdings.reduce((s: number, h: any) => {
-                const price = processedMarketData.find((m: any) => m.symbol === h.symbol)?.price ?? h.avg_price;
-                return s + price * h.quantity;
-              }, 0) + (portfolio?.cash_balance ?? 0);
+                const price = processedMarketData.find((m: any) => m.symbol === h.symbol)?.price ?? Number(h.avg_price);
+                return s + price * Number(h.quantity);
+              }, 0) + Number(portfolio?.cash_balance ?? 0);
 
               // Sector allocation
               const sectorMap: Record<string, number> = {};

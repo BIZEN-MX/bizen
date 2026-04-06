@@ -259,10 +259,12 @@ export default function CoursesPage() {
       background: "#FBFAF5",
       overflow: "visible",
       boxSizing: "border-box",
-      paddingBottom: 0,
       marginBottom: 0,
       margin: 0,
-      padding: 0
+      paddingTop: "84px", // Replaces AppLayout top padding
+      paddingBottom: 0,
+      paddingLeft: 0,
+      paddingRight: 0,
     }}>
       {/* Decorative Orbs for Glassmorphism */}
       <div style={{ position: "fixed", top: "5%", right: "-5%", width: 500, height: 500, background: "radial-gradient(circle, rgba(59,130,246,0.15) 0%, transparent 70%)", borderRadius: "50%", filter: "blur(80px)", pointerEvents: "none", zIndex: 0 }} />
