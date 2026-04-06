@@ -7,6 +7,8 @@ import { AppLayout } from "@/components/AppLayout"
 import { AchievementToastProvider } from "@/components/AchievementToast"
 import StructuredData from "@/components/SEO/StructuredData"
 import { SpeedInsights } from "@vercel/speed-insights/next"
+import PageLoader from "@/components/PageLoader"
+import React from "react"
 import "./globals.css"
 
 const geist = Geist({
@@ -103,15 +105,21 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <StructuredData />
       </head>
       <body>
-        <Providers>
-          <ClientLayoutWrapper>
-            <AppLayout>
-              {children}
-            </AppLayout>
-          </ClientLayoutWrapper>
-          <AchievementToastProvider />
-          <SpeedInsights />
-        </Providers>
+        <React.Suspense fallback={
+          <div className="flex h-screen w-screen items-center justify-center bg-[#FBFAF5]">
+             <PageLoader />
+          </div>
+        }>
+          <Providers>
+            <ClientLayoutWrapper>
+              <AppLayout>
+                {children}
+              </AppLayout>
+            </ClientLayoutWrapper>
+            <AchievementToastProvider />
+            <SpeedInsights />
+          </Providers>
+        </React.Suspense>
       </body>
     </html>
   )

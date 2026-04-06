@@ -89,7 +89,9 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
           <main className="app-main flex-1 flex flex-col items-center">
             {/* Inner wrapper to ensure content is centered in the usable space */}
             <div className="w-full flex-1 flex flex-col">
-              {children}
+              <React.Suspense fallback={<PageLoader />}>
+                {children}
+              </React.Suspense>
             </div>
           </main>
         </div>
