@@ -238,24 +238,27 @@ function InnerClientWrapper({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <HydrationGuard>
-      {/* Show TopNav on desktop (>767px), hidden during interactive lesson, hidden when unauth */}
-      {!hideAppNavigation && !isMobile && !isLessonInteractivePage && !isUnauthProtected && <TopNav />}
+    <>
+      <HydrationGuard>
+        {/* Show TopNav on desktop (>767px), hidden during interactive lesson, hidden when unauth */}
+        {!hideAppNavigation && !isMobile && !isLessonInteractivePage && !isUnauthProtected && <TopNav />}
 
-      {/* Show MobileFooterNav only on mobile (≤767px), hidden on lesson interactive page, hidden when unauth */}
-      {!hideAppNavigation && isMobile && !isLessonInteractivePage && !isUnauthProtected && <MobileFooterNav />}
+        {/* Show MobileFooterNav only on mobile (≤767px), hidden on lesson interactive page, hidden when unauth */}
+        {!hideAppNavigation && isMobile && !isLessonInteractivePage && !isUnauthProtected && <MobileFooterNav />}
 
-      {!hideAppNavigation && !isUnauthProtected && <GlobalLogo />}
-      
-      {isNavigating && <NavigationLoading isLoading={true} />}
+        {!hideAppNavigation && !isUnauthProtected && <GlobalLogo />}
+        
+        {isNavigating && <NavigationLoading isLoading={true} />}
+        
+        {!hideChat && <BillyChatbot />}
+        
+        {showTour && (
+          <AppTourOverlay onEnd={() => setShowTour(false)} />
+        )}
+      </HydrationGuard>
       
       {children}
-      {!hideChat && <BillyChatbot />}
-      
-      {showTour && (
-        <AppTourOverlay onEnd={() => setShowTour(false)} />
-      )}
-    </HydrationGuard>
+    </>
   );
 }
 

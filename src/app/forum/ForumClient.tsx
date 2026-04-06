@@ -16,7 +16,6 @@ import {
 import { RocketIcon, LeafIcon, NoteIcon, ThumbsUpIcon, IdeaIcon, WarningIcon, ZapIcon } from "@/components/CustomIcons"
 import PageLoader from "@/components/PageLoader"
 
-export const dynamic = 'force-dynamic'
 
 // ── Types ──────────────────────────────────────────────────────────────────────
 interface ForumThread {
