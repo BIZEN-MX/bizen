@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, Suspense, useMemo } from "react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import ReturnButton from "@/components/ReturnButton";
 import {
@@ -282,7 +282,8 @@ const CandlestickBar = (props: any) => {
   );
 };
 
-function StockSimulatorContent() {
+export function StockSimulatorContent({ tradeSymbol }: { tradeSymbol?: string }) {
+  const router = useRouter();
   const { user, loading, dbProfile, refreshUser } = useAuth();
   const [isMobile, setIsMobile] = useState(false);
   const [sectorFilter, setSectorFilter] = useState("Todos");
@@ -326,12 +327,18 @@ function StockSimulatorContent() {
   const [alertDirection, setAlertDirection] = useState<'above'|'below'>('above');
   const [triggeredAlerts, setTriggeredAlerts] = useState<string[]>([]);
   const [orderForm, setOrderForm] = useState({
-    symbol: "",
+    symbol: tradeSymbol || "",
     side: "buy",
     amount: 1000,
     qty: 0,
     type: "market",
   });
+
+  useEffect(() => {
+    if (tradeSymbol) {
+      setOrderForm((f) => ({ ...f, symbol: tradeSymbol }));
+    }
+  }, [tradeSymbol]);
   // --- Professional Trading Features ---
   const [chartType, setChartType] = useState<"area" | "candle">("area");
   const [showSMA, setShowSMA] = useState(false);
@@ -477,10 +484,9 @@ function StockSimulatorContent() {
     if (typeof window !== 'undefined') localStorage.setItem('bizen_journal', JSON.stringify(tradeJournal));
   }, [tradeJournal]);
 
-  // --- Centralized stock selector: sets symbol + scrolls to top so modal is visible ---
+  // --- Centralized stock selector: routes to standalone trade page ---
   const selectStock = (symbol: string) => {
-    setOrderForm((f) => ({ ...f, symbol }));
-    setOrderMsg(null);
+    router.push(`/simulators/stocks/trade/${symbol}`);
   };
 
   const fetchRankings = async () => {
@@ -725,6 +731,10 @@ function StockSimulatorContent() {
         });
         setShowCardAnim(true);
         await Promise.all([fetchPortfolio(), refreshUser?.()]);
+
+        if (tradeSymbol) {
+          setTimeout(() => router.push("/simulators/stocks"), 1500);
+        }
       } else {
         setOrderMsg({
           type: "err",
@@ -2442,7 +2452,7 @@ function StockSimulatorContent() {
                       Cargando datos del mercado...
                     </p>
                   )}
-                  {processedMarketData.filter(s => sectorFilter === "Todos" || (s.sector || SYMBOL_SECTORS[s.symbol]) === sectorFilter).map((s) => {
+                  {processedMarketData.filter(s => sectorFilter === "Todos" || (SYMBOL_SECTORS[s.symbol] || s.sector) === sectorFilter).map((s) => {
                     const isSelected = orderForm.symbol === s.symbol;
                     return (
                       <motion.div
@@ -2620,7 +2630,10 @@ function StockSimulatorContent() {
                         margin: 0,
                         overflow: "hidden",
                       }}
-                      onClick={() => setOrderForm((f) => ({ ...f, symbol: "" }))}
+                      onClick={() => {
+                        if (tradeSymbol) { router.push("/simulators/stocks"); }
+                        else { setOrderForm((f) => ({ ...f, symbol: "" })); }
+                      }}
                     >
                       <motion.div
                         ref={orderFormRef}
@@ -2643,7 +2656,10 @@ function StockSimulatorContent() {
                       >
                         {/* ── CLOSE BUTTON ─────────────────────────── */}
                         <button
-                          onClick={() => setOrderForm((f) => ({ ...f, symbol: "" }))}
+                          onClick={() => {
+                            if (tradeSymbol) { router.push("/simulators/stocks"); }
+                            else { setOrderForm((f) => ({ ...f, symbol: "" })); }
+                          }}
                           style={{
                             position: "absolute",
                             top: 18,
