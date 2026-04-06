@@ -23,6 +23,19 @@ function isPublicPath(p: string | null) {
 import BillyChatbot from './BillyChatbot';
 import AppTourOverlay from './AppTourOverlay';
 import { useOnboarding } from '@/contexts/OnboardingContext';
+import React from 'react';
+
+/**
+ * HydrationGuard ensures client-only components that depend on 
+ * browser-specific state (like authenticated profile data or viewport width)
+ * do not cause hydration mismatches by delaying rendering until mount.
+ */
+function HydrationGuard({ children }: { children: React.ReactNode }) {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => { setMounted(true); }, []);
+  if (!mounted) return null;
+  return <>{children}</>;
+}
 
 export default function ClientLayoutWrapper({ children }: { children: React.ReactNode }) {
   return (
@@ -225,7 +238,7 @@ function InnerClientWrapper({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <>
+    <HydrationGuard>
       {/* Show TopNav on desktop (>767px), hidden during interactive lesson, hidden when unauth */}
       {!hideAppNavigation && !isMobile && !isLessonInteractivePage && !isUnauthProtected && <TopNav />}
 
@@ -242,7 +255,7 @@ function InnerClientWrapper({ children }: { children: React.ReactNode }) {
       {showTour && (
         <AppTourOverlay onEnd={() => setShowTour(false)} />
       )}
-    </>
+    </HydrationGuard>
   );
 }
 
