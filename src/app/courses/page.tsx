@@ -237,7 +237,7 @@ export default function CoursesPage() {
 
   // Show loading placeholder if data is missing OR if we are about to redirect
   // This prevents the "Overview" page from blinking for one frame before jumping to the topic.
-  if (loading || loadingData || loadingInsight || !user || (willRedirect && nextTopicId)) {
+  if (loading || loadingData || !user || (willRedirect && nextTopicId)) {
     return <PageLoader />
   }
 
@@ -278,7 +278,7 @@ export default function CoursesPage() {
       <div
         className="courses-main-content"
         style={{
-          paddingTop: "clamp(72px, 9vw, 88px)",
+          paddingTop: "clamp(24px, 4vw, 40px)",
           paddingBottom: "clamp(40px, 8vw, 80px)",
           paddingLeft: "clamp(16px, 3vw, 56px)",
           paddingRight: "clamp(16px, 3vw, 56px)",
@@ -310,8 +310,8 @@ export default function CoursesPage() {
             className="courses-hero"
             style={{
               background: "linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #1d4ed8 100%)",
-              borderRadius: 0,
-              padding: "clamp(24px, 4vw, 40px) clamp(22px, 5vw, 64px)",
+              borderRadius: 28,
+              padding: "clamp(24px, 4vw, 40px) 32px",
               width: "100%",
               maxWidth: "100%",
               margin: "0 0 clamp(20px, 4vw, 32px)",
@@ -401,7 +401,7 @@ export default function CoursesPage() {
           </div>
 
           {/* ── BILLY INSIGHT SECTION ────────────────────────────────────────── */}
-          {insight && (
+          {(insight || loadingInsight) && (
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -440,19 +440,34 @@ export default function CoursesPage() {
                     height={52} 
                     style={{ 
                       objectFit: "contain",
-                      filter: "drop-shadow(0 4px 8px rgba(0,0,0,0.08))"
+                      filter: "drop-shadow(0 4px 8px rgba(0,0,0,0.08))",
+                      opacity: loadingInsight ? 0.6 : 1
                     }} 
                   />
+                  {loadingInsight && (
+                    <motion.div 
+                      animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.6, 0.3] }}
+                      transition={{ duration: 1.5, repeat: Infinity }}
+                      style={{ position: "absolute", inset: 0, borderRadius: "50%", background: "rgba(59,130,246,0.2)" }}
+                    />
+                  )}
                 </div>
                 <div style={{ flex: 1 }}>
-                  <div style={{ 
-                    fontSize: "clamp(13px, 1.6vw, 15px)", 
-                    color: "#1e293b", 
-                    lineHeight: 1.5,
-                    fontWeight: 500
-                  }}>
-                    &quot;{insight.replace(/\*/g, '')}&quot;
-                  </div>
+                  {loadingInsight && !insight ? (
+                    <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                      <div className="skeleton-pulse" style={{ height: 14, width: "80%", background: "rgba(0,0,0,0.05)", borderRadius: 4 }} />
+                      <div className="skeleton-pulse" style={{ height: 14, width: "60%", background: "rgba(0,0,0,0.05)", borderRadius: 4 }} />
+                    </div>
+                  ) : (
+                    <div style={{ 
+                      fontSize: "clamp(13px, 1.6vw, 15px)", 
+                      color: "#1e293b", 
+                      lineHeight: 1.5,
+                      fontWeight: 500
+                    }}>
+                      &quot;{insight?.replace(/\*/g, '')}&quot;
+                    </div>
+                  )}
                 </div>
               </div>
             </motion.div>
@@ -715,16 +730,47 @@ export default function CoursesPage() {
                 )
               }
 
+              if (dbTopics.length === 0 && !loadingData) {
+                return (
+                  <div style={{ 
+                    textAlign: "center", 
+                    padding: "60px 20px", 
+                    background: "rgba(255,255,255,0.5)", 
+                    borderRadius: 24, 
+                    border: "1px dashed rgba(0,0,0,0.1)",
+                    margin: "0 20px"
+                  }}>
+                    <div style={{ marginBottom: 16 }}>
+                      <Skull size={40} color="#cbd5e1" strokeWidth={1.5} />
+                    </div>
+                    <h3 style={{ fontSize: 18, fontWeight: 600, color: "#1e293b", margin: "0 0 8px" }}>Sin temas disponibles</h3>
+                    <p style={{ fontSize: 14, color: "#64748b", maxWidth: 300, margin: "0 auto" }}>
+                      No hemos podido cargar los cursos en este momento. Por favor, intenta recargar la página.
+                    </p>
+                    <button 
+                      onClick={() => setRefreshKey(k => k + 1)}
+                      style={{ marginTop: 20, padding: "10px 20px", background: "#0B71FE", color: "white", border: "none", borderRadius: 10, cursor: "pointer", fontWeight: 500 }}
+                    >
+                      Reintentar
+                    </button>
+                  </div>
+                )
+              }
+
               return [
-                renderSection(coreTopics, "Fase 1: Cimientos (Tronco Común)", "Los 5 pilares fundamentales para dominar el dinero.", 0),
-                <div key="separator" style={{ width: "100%", display: "flex", justifyContent: "center", marginBottom: 60, marginTop: -40 }}>
-                   <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12 }}>
-                      <div style={{ width: 2, height: 40, background: "linear-gradient(to bottom, #3b82f6, transparent)" }} />
-                      <Sparkles size={24} color="#3b82f6" opacity={0.5} />
-                      <div style={{ width: 2, height: 40, background: "linear-gradient(to top, #6366f1, transparent)" }} />
-                   </div>
-                </div>,
-                renderSection(advancedTopics, "Fase 2: Especialización DNA", "Rutas personalizadas basadas en tu perfil analítico y metas personales.", 5)
+                coreTopics.length > 0 && renderSection(coreTopics, "Fase 1: Cimientos (Tronco Común)", "Los 5 pilares fundamentales para dominar el dinero.", 0),
+                advancedTopics.length > 0 && (
+                  <React.Fragment key="advanced-phase">
+                    <div key="separator" style={{ width: "100%", display: "flex", justifyContent: "center", marginBottom: 60, marginTop: -40 }}>
+                       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12 }}>
+                          <div style={{ width: 2, height: 40, background: "linear-gradient(to bottom, #3b82f6, transparent)" }} />
+                          <Sparkles size={24} color="#3b82f6" opacity={0.5} />
+                          <div style={{ width: 2, height: 40, background: "linear-gradient(to top, #6366f1, transparent)" }} />
+                       </div>
+                    </div>
+                    {renderSection(advancedTopics, "Fase 2: Especialización DNA", "Rutas personalizadas basadas en tu perfil analítico y metas personales.", 5)}
+                  </React.Fragment>
+                )
               ]
             })()}
           </section>
@@ -784,6 +830,14 @@ export default function CoursesPage() {
           }
         }
         /* RESTORED ANIMATIONS & HOVER EFFECTS */
+        .skeleton-pulse {
+          animation: skeleton-pulse-fade 1.5s ease-in-out infinite;
+        }
+        @keyframes skeleton-pulse-fade {
+          0%, 100% { opacity: 0.5; }
+          50% { opacity: 1; }
+        }
+
         @keyframes shimmer {
           0% { background-position: -200% center; }
           100% { background-position: 200% center; }

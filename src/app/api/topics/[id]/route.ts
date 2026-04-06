@@ -9,6 +9,7 @@ export async function GET(
   try {
     const { id } = await params
     let topic: any = null
+
     try {
       // 1. Try finding by the provided ID
       topic = await prisma.topic.findUnique({
@@ -17,68 +18,53 @@ export async function GET(
           courses: {
             include: {
               lessons: {
-                include: {
-                  quizzes: true
-                },
-                orderBy: {
-                  order: 'asc'
-                }
+                orderBy: { order: 'asc' }
               }
             },
-            orderBy: {
-              order: 'asc'
-            }
+            orderBy: { order: 'asc' }
           },
           _count: {
-            select: {
-              enrollments: true
-            }
+            select: { enrollments: true }
           }
         }
-      })
+      });
 
       // 2. Fallback for numeric IDs (Legacy support: '1' -> 'tema-01')
       if (!topic && !id.includes('tema-') && !isNaN(parseInt(id))) {
-        const legacyId = `tema-${id.padStart(2, '0')}`
+        const legacyId = `tema-${id.padStart(2, '0')}`;
         topic = await prisma.topic.findUnique({
           where: { id: legacyId },
           include: {
             courses: {
               include: {
                 lessons: {
-                  include: {
-                    quizzes: true
-                  },
-                  orderBy: {
-                    order: 'asc'
-                  }
+                  orderBy: { order: 'asc' }
                 }
               },
-              orderBy: {
-                order: 'asc'
-              }
+              orderBy: { order: 'asc' }
             },
             _count: {
-              select: {
-                enrollments: true
-              }
+              select: { enrollments: true }
             }
           }
-        })
+        });
       }
     } catch (dbErr: any) {
-      console.warn("Soft error fetching topic relations:", dbErr.message)
-      topic = await prisma.topic.findUnique({ where: { id } }).catch(() => null)
+      console.error("Critical error fetching topic with relations:", dbErr.message);
+      return NextResponse.json(
+        { error: 'Error de base de datos al obtener el tema y sus lecciones.' },
+        { status: 500 }
+      );
     }
 
     if (!topic) {
       return NextResponse.json(
         { error: `Topic with ID '${id}' not found in database.` },
         { status: 404 }
-      )
+      );
     }
 
-    return NextResponse.json(topic)
+    return NextResponse.json(topic);
   } catch (error) {
     console.error('Error fetching topic:', error)
     return NextResponse.json(

@@ -282,7 +282,7 @@ export default function CoursePageTemplate({
     const totalInTopic = allLessonsInTopic.length
     const topicPct = totalInTopic > 0 ? Math.round((completedInTopic / totalInTopic) * 100) : 0
 
-    if (loading || !user || loadingInsight) {
+    if (loading || !user) {
         return <div style={{ minHeight: "50vh", display: "flex", alignItems: "center", justifyContent: "center", }} />
     }
 
@@ -320,7 +320,7 @@ export default function CoursePageTemplate({
                 className="courses-main-content"
                 style={{
                     flex: 1,
-                    paddingTop: "clamp(8px, 1.5vw, 16px)",
+                    paddingTop: 0,
                     paddingBottom: "clamp(40px, 8vw, 80px)",
                     paddingLeft: "0",
                     paddingRight: "0",
@@ -341,8 +341,8 @@ export default function CoursePageTemplate({
                         className="cpt-hero"
                         style={{
                             background: "linear-gradient(135deg, #0f2a6e 0%, #1e3a8a 45%, #2563eb 100%)",
-                            borderRadius: 0,
-                            padding: "clamp(28px, 4vw, 48px) clamp(24px, 5vw, 64px)",
+                            borderRadius: 28,
+                            padding: "clamp(24px, 4vw, 40px) 32px",
                             width: "100%",
                             maxWidth: "100%",
                             margin: "0 0 clamp(20px, 4vw, 32px)",
@@ -447,7 +447,7 @@ export default function CoursePageTemplate({
 
 
                     {/* ── BILLY INSIGHT SECTION ────────────────────────────────────────── */}
-                    {insight && (
+                    {(insight || loadingInsight) && (
                         <motion.div 
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
@@ -457,7 +457,7 @@ export default function CoursePageTemplate({
                                 maxWidth: "100%", 
                                 margin: "0 auto 32px", 
                                 boxSizing: "border-box",
-                                padding: "0 clamp(16px, 5vw, 48px)",
+                                padding: "0 16px",
                             }}
                         >
                             <div style={{ 
@@ -487,27 +487,54 @@ export default function CoursePageTemplate({
                                         height={52} 
                                         style={{ 
                                             objectFit: "contain",
-                                            filter: "drop-shadow(0 4px 8px rgba(0,0,0,0.08))"
+                                            filter: "drop-shadow(0 4px 8px rgba(0,0,0,0.08))",
+                                            opacity: loadingInsight ? 0.6 : 1
                                         }} 
                                     />
+                                    {loadingInsight && (
+                                        <motion.div 
+                                            animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.6, 0.3] }}
+                                            transition={{ duration: 1.5, repeat: Infinity }}
+                                            style={{ position: "absolute", inset: 0, borderRadius: "50%", background: "rgba(59,130,246,0.2)" }}
+                                        />
+                                    )}
                                 </div>
                                 <div style={{ flex: 1 }}>
-                                    <div style={{ 
-                                        fontSize: "clamp(13px, 1.6vw, 15px)", 
-                                        color: "#1e293b", 
-                                        lineHeight: 1.5,
-                                        fontWeight: 500
-                                    }}>
-                                        &quot;{insight.replace(/\*/g, '')}&quot;
-                                    </div>
+                                    {loadingInsight && !insight ? (
+                                        <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                                            <div className="skeleton-pulse" style={{ height: 14, width: "80%", background: "rgba(0,0,0,0.05)", borderRadius: 4 }} />
+                                            <div className="skeleton-pulse" style={{ height: 14, width: "60%", background: "rgba(0,0,0,0.05)", borderRadius: 4 }} />
+                                        </div>
+                                    ) : (
+                                        <div style={{ 
+                                            fontSize: "clamp(13px, 1.6vw, 15px)", 
+                                            color: "#1e293b", 
+                                            lineHeight: 1.5,
+                                            fontWeight: 500
+                                        }}>
+                                            &quot;{insight?.replace(/\*/g, '')}&quot;
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </motion.div>
                     )}
 
                     {/* ── SUBTEMAS ──────────────────────────────────────────────────── */}
-                    <div style={{ width: "100%", maxWidth: "100%", margin: "0 auto", display: "flex", flexDirection: "column", gap: "clamp(28px, 5vw, 44px)", padding: "0 clamp(16px, 5vw, 48px)", paddingBottom: 40, boxSizing: "border-box" }}>
-                        {subtemas.map((sub, subIdx) => {
+                    <div style={{ width: "100%", maxWidth: "100%", margin: "0 auto", display: "flex", flexDirection: "column", gap: "clamp(24px, 4vw, 36px)", padding: "0 16px", paddingBottom: 40, boxSizing: "border-box" }}>
+                        {subtemas.length === 0 ? (
+                            <div style={{ 
+                                textAlign: "center", 
+                                padding: "48px 24px", 
+                                background: "rgba(255,255,255,0.4)", 
+                                borderRadius: 24, 
+                                border: "1px dashed rgba(0,0,0,0.1)" 
+                            }}>
+                                <p style={{ color: "#64748b", margin: 0, fontSize: 16 }}>
+                                    Aún no hay lecciones disponibles para este tema o hubo un error al cargarlas.
+                                </p>
+                            </div>
+                        ) : subtemas.map((sub, subIdx) => {
                             const subCompleted = sub.lessons.filter((l) => completedLessons.includes(l.slug)).length
                             const subTotal = sub.lessons.length
                             const subPct = subTotal > 0 ? Math.round((subCompleted / subTotal) * 100) : 0
@@ -1187,6 +1214,19 @@ export default function CoursePageTemplate({
                   }
                 }
                 
+                .skeleton-pulse {
+                  animation: skeleton-pulse-fade 1.5s ease-in-out infinite;
+                }
+                @keyframes skeleton-pulse-fade {
+                  0%, 100% { opacity: 0.5; }
+                  50% { opacity: 1; }
+                }
+
+                @keyframes flagPulse {
+                  0%, 100% { transform: scale(1); box-shadow: 0 6px 20px rgba(37,99,235,0.35), 0 0 0 6px rgba(37,99,235,0.12); }
+                  50% { transform: scale(1.05); box-shadow: 0 8px 30px rgba(37,99,235,0.45), 0 0 0 12px rgba(37,99,235,0.08); }
+                }
+
                 @keyframes cpt-shimmer {
                   0%   { background-position: -200% center; }
                   100% { background-position: 200% center; }

@@ -22,100 +22,71 @@ export default function PageLoader() {
             }}
         >
             <style>{`
-                @keyframes text-shimmer {
-                    0% { background-position: -200% center; }
-                    100% { background-position: 200% center; }
+                .universal-loader-container {
+                    position: relative;
+                    width: 100px;
+                    height: 100px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
                 }
-                .bizen-shimmer {
-                    font-size: 36px;
-                    font-weight: 800;
-                    background: linear-gradient(
-                        90deg, 
-                        #1e293b 0%, 
-                        #1e293b 42%, 
-                        #0F62FE 50%, 
-                        #1e293b 58%, 
-                        #1e293b 100%
-                    );
-                    background-size: 200% auto;
-                    -webkit-background-clip: text;
-                    -webkit-text-fill-color: transparent;
-                    animation: text-shimmer 2s cubic-bezier(0.16, 1, 0.3, 1) infinite;
-                    letter-spacing: -0.06em;
+
+                .loader-ring {
+                    width: 64px;
+                    height: 64px;
+                    border-radius: 50%;
+                    border: 3px solid rgba(15, 98, 254, 0.1);
+                    border-top: 3px solid #0F62FE;
+                    animation: spin 1s cubic-bezier(0.5, 0, 0.5, 1) infinite;
                     position: relative;
                 }
-                .dot-orbit {
+
+                .loader-ring-outer {
                     position: absolute;
-                    top: 50%;
-                    right: -14px;
-                    width: 6px;
-                    height: 6px;
+                    width: 84px;
+                    height: 84px;
+                    border-radius: 50%;
+                    border: 1px solid rgba(15, 98, 254, 0.05);
+                    border-bottom: 2px solid rgba(15, 98, 254, 0.3);
+                    animation: spin-reverse 2s linear infinite;
+                }
+
+                .loader-glow {
+                    position: absolute;
+                    width: 40px;
+                    height: 40px;
                     background: #0F62FE;
+                    filter: blur(40px);
+                    opacity: 0.3;
                     border-radius: 50%;
-                    transform: translateY(-50%);
-                    box-shadow: 0 0 10px rgba(15, 98, 254, 0.4);
                 }
-                .dot-ghost {
-                    position: absolute;
-                    top: 0; left: 0;
-                    width: 100%; height: 100%;
-                    border-radius: 50%;
-                    background: inherit;
-                    animation: dot-pulse 1.8s ease-out infinite;
+
+                @keyframes spin {
+                    0% { transform: rotate(0deg); }
+                    100% { transform: rotate(360deg); }
                 }
-                @keyframes dot-pulse {
-                    0% { transform: scale(1); opacity: 0.6; }
-                    100% { transform: scale(3.5); opacity: 0; }
+
+                @keyframes spin-reverse {
+                    0% { transform: rotate(360deg); }
+                    100% { transform: rotate(0deg); }
                 }
-                .liquid-track {
-                    width: 140px;
-                    height: 4px;
-                    background: rgba(15, 98, 254, 0.08);
-                    border-radius: 99px;
-                    overflow: hidden;
-                    position: relative;
-                }
-                .liquid-fill {
-                    position: absolute;
-                    height: 100%;
-                    width: 35%;
-                    background: linear-gradient(90deg, #0F62FE, #4A9EFF);
-                    border-radius: 99px;
-                    animation: liquid-flow 1.5s cubic-bezier(0.65, 0, 0.35, 1) infinite;
-                }
-                @keyframes liquid-flow {
-                    0% { left: -40%; width: 30%; }
-                    50% { left: 30%; width: 50%; }
-                    100% { left: 110%; width: 30%; }
-                }
-                .loading-caption {
-                    font-size: 11px;
-                    font-weight: 600;
-                    color: #94a3b8;
-                    text-transform: uppercase;
-                    letter-spacing: 0.12em;
-                    margin-top: -8px;
+
+                @keyframes pulse-soft {
+                    0%, 100% { opacity: 0.4; transform: scale(1); }
+                    50% { opacity: 0.7; transform: scale(1.1); }
                 }
             `}</style>
 
             <motion.div
-                initial={{ scale: 0.95, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ duration: 0.4 }}
-                style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 20 }}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5, ease: "easeOut" }}
+                style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 32 }}
             >
-                <div style={{ position: "relative" }}>
-                    <h1 className="bizen-shimmer">BIZEN</h1>
-                    <div className="dot-orbit">
-                        <div className="dot-ghost" />
-                    </div>
-                </div>
-
-                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12 }}>
-                    <div className="liquid-track">
-                        <div className="liquid-fill" />
-                    </div>
-                    <span className="loading-caption">Inspirando tu futuro</span>
+                <div className="universal-loader-container">
+                    <div className="loader-glow" />
+                    <div className="loader-ring-outer" />
+                    <div className="loader-ring" />
                 </div>
             </motion.div>
         </motion.div>

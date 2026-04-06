@@ -213,7 +213,7 @@ a {
 /* 2. Top Offset: Compensate for the 60px floating top nav on desktop */
 @media (min-width: 768px) {
     [data-topnav-active="true"] .app-main {
-        padding-top: 60px !important;
+        padding-top: 80px !important;
     }
 }
 
@@ -541,6 +541,7 @@ body.hide-sidebar .app-main {
     background: linear-gradient(90deg, currentColor 0%, rgba(255,255,255,0.8) 50%, currentColor 100%);
     background-size: 200% auto;
     -webkit-background-clip: text;
+  background-clip: text;
     -webkit-text-fill-color: transparent;
     animation: shimmer 3s linear infinite;
 }

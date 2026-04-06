@@ -224,7 +224,7 @@ export default function TopNav() {
       setNotifications(prev => prev.map(n => ({ ...n, readAt: new Date() })))
     } catch (e) {}
   }
-  if (!mounted || loading || isHiddenByGlobalClass) return null
+  if (!mounted) return null
 
   return (
     <>
