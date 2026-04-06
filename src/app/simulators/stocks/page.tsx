@@ -337,6 +337,7 @@ export function StockSimulatorContent({ tradeSymbol }: { tradeSymbol?: string })
   useEffect(() => {
     if (tradeSymbol) {
       setOrderForm((f) => ({ ...f, symbol: tradeSymbol }));
+      setActiveTab("market");
     }
   }, [tradeSymbol]);
   // --- Professional Trading Features ---
@@ -1233,6 +1234,8 @@ export function StockSimulatorContent({ tradeSymbol }: { tradeSymbol?: string })
         className="bizen-market-outer dot-grid-bg"
         style={{
           minHeight: "100vh",
+          height: tradeSymbol ? "100vh" : "auto",
+          overflow: tradeSymbol ? "hidden" : "visible",
           background: "#ffffff",
           fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, sans-serif",
           letterSpacing: "-0.01em",
