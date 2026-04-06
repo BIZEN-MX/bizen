@@ -20,7 +20,10 @@ import {
   ChevronDown,
   Flame,
   Search,
-  Bell
+  Bell,
+  Star,
+  ArrowUpRight,
+  Crown
 } from "lucide-react"
 import BizcoinIcon from "@/components/BizcoinIcon"
 import { ShieldIcon } from "@/components/CustomIcons"
@@ -413,46 +416,122 @@ export default function TopNav() {
                 </button>
 
                 {profileOpen && (
-                  <div className="topnav-dropdown">
-                    {/* Header */}
-                    <div className="topnav-dropdown-header">
-                      <div style={{ fontSize: 13, fontWeight: 700, color: '#1e293b', marginBottom: 2 }}>
-                        {dbProfile?.fullName || user.user_metadata?.full_name || user.email?.split('@')[0]}
+                  <div className="profile-dropdown-panel">
+
+                    {/* ── GRADIENT HEADER ── */}
+                    <div className="profile-dropdown-hero">
+                      {/* Decorative orbs */}
+                      <div className="profile-dropdown-orb1" />
+                      <div className="profile-dropdown-orb2" />
+
+                      <div style={{ position: 'relative', zIndex: 1 }}>
+                        {/* Avatar + name row */}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 14 }}>
+                          <div style={{ width: 48, height: 48, borderRadius: 16, background: 'rgba(255,255,255,0.15)', border: '2px solid rgba(255,255,255,0.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, backdropFilter: 'blur(4px)' }}>
+                            <AvatarDisplay
+                              avatar={dbProfile?.avatar || user.user_metadata?.avatar || { type: 'emoji', value: (dbProfile?.fullName || user.email || 'U')[0].toUpperCase() }}
+                              size={36}
+                              frame={dbProfile?.inventory?.includes('2') ? 'vip' : dbProfile?.inventory?.includes('1') ? 'ambassador' : null}
+                            />
+                          </div>
+                          <div style={{ flex: 1, minWidth: 0 }}>
+                            <div style={{ fontSize: 14, fontWeight: 700, color: '#fff', lineHeight: 1.2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                              {dbProfile?.fullName || user.user_metadata?.full_name || user.email?.split('@')[0]}
+                            </div>
+                            <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.6)', marginTop: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                              {user.email}
+                            </div>
+                          </div>
+                          {/* Plan badge */}
+                          <div style={{
+                            padding: '3px 10px',
+                            borderRadius: 999,
+                            fontSize: 10,
+                            fontWeight: 700,
+                            letterSpacing: '0.06em',
+                            textTransform: 'uppercase',
+                            flexShrink: 0,
+                            background: isBasicPlan ? 'rgba(255,255,255,0.15)' : 'linear-gradient(135deg, #fbbf24, #f59e0b)',
+                            color: '#fff',
+                            border: isBasicPlan ? '1px solid rgba(255,255,255,0.25)' : 'none',
+                            boxShadow: !isBasicPlan ? '0 2px 8px rgba(251,191,36,0.4)' : 'none',
+                          }}>
+                            {isBasicPlan ? planLabel : <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}><Crown size={9} />{planLabel}</span>}
+                          </div>
+                        </div>
+
+                        {/* Stats row */}
+                        {!isAdminOrTeacher && (
+                          <div style={{ display: 'flex', gap: 8 }}>
+                            {[
+                              { icon: <Flame size={13} color="#fbbf24" />, value: streak || 0, label: 'Racha', bg: 'rgba(251,191,36,0.15)', border: 'rgba(251,191,36,0.25)', color: '#fef3c7' },
+                              { icon: <Zap size={13} color="#a78bfa" />, value: (dbProfile as any)?.xp || 0, label: 'XP', bg: 'rgba(167,139,250,0.15)', border: 'rgba(167,139,250,0.25)', color: '#ede9fe' },
+                              { icon: <span style={{ display: 'flex' }}><BizcoinIcon size={13} /></span>, value: bizcoins, label: 'BZ', bg: 'rgba(52,211,153,0.15)', border: 'rgba(52,211,153,0.25)', color: '#d1fae5' },
+                            ].map(s => (
+                              <div key={s.label} style={{ flex: 1, background: s.bg, border: `1px solid ${s.border}`, borderRadius: 10, padding: '7px 8px', textAlign: 'center' as const }}>
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4, marginBottom: 2 }}>{s.icon}</div>
+                                <div style={{ fontSize: 13, fontWeight: 800, color: s.color, lineHeight: 1 }}>{s.value.toLocaleString()}</div>
+                                <div style={{ fontSize: 9, fontWeight: 600, color: 'rgba(255,255,255,0.45)', textTransform: 'uppercase', letterSpacing: '0.08em', marginTop: 2 }}>{s.label}</div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
                       </div>
-                      <div style={{ fontSize: 11, color: '#94a3b8' }}>{user.email}</div>
                     </div>
 
-                    <button className="topnav-dropdown-item" onClick={() => navigateTo('/profile')}>
-                      <div className="topnav-dropdown-icon"><User size={15} color="#0F62FE" /></div>
-                      Mi Perfil
-                    </button>
-                    <button className="topnav-dropdown-item" onClick={() => navigateTo('/configuracion')}>
-                      <div className="topnav-dropdown-icon"><Settings size={15} color="#0F62FE" /></div>
-                      Configuración
-                    </button>
-                    <button className="topnav-dropdown-item" onClick={() => navigateTo('/rankings')}>
-                      <div className="topnav-dropdown-icon"><Trophy size={15} color="#0F62FE" /></div>
-                      Rankings
-                    </button>
-                    <button className="topnav-dropdown-item" onClick={() => navigateTo('/news')}>
-                      <div className="topnav-dropdown-icon"><Newspaper size={15} color="#0F62FE" /></div>
-                      Noticias BIZEN
-                    </button>
-                    <button className="topnav-dropdown-item" onClick={() => navigateTo('/impacto-social')}>
-                      <div className="topnav-dropdown-icon"><Heart size={15} color="#0F62FE" /></div>
-                      Impacto Social
-                    </button>
+                    {/* ── NAVIGATION ITEMS ── */}
+                    <div style={{ padding: '6px 6px 4px' }}>
+                      {[
+                        { icon: <User size={15} />, label: 'Mi Perfil', path: '/profile', color: '#0F62FE', bg: '#E0EFFE' },
+                        { icon: <Trophy size={15} />, label: 'Rankings', path: '/rankings', color: '#d97706', bg: '#fef3c7' },
+                        { icon: <Newspaper size={15} />, label: 'Noticias BIZEN', path: '/news', color: '#0891b2', bg: '#cffafe' },
+                        { icon: <Heart size={15} />, label: 'Impacto Social', path: '/impacto-social', color: '#db2777', bg: '#fce7f3' },
+                        { icon: <Settings size={15} />, label: 'Configuración', path: '/configuracion', color: '#7c3aed', bg: '#ede9fe' },
+                      ].map(item => (
+                        <button
+                          key={item.path}
+                          className="profile-dropdown-nav-item"
+                          onClick={() => navigateTo(item.path)}
+                        >
+                          <div style={{ width: 32, height: 32, borderRadius: 10, background: item.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', color: item.color, flexShrink: 0, transition: 'transform 0.15s ease' }}>
+                            {item.icon}
+                          </div>
+                          <span style={{ flex: 1, fontSize: 13, fontWeight: 500, color: '#1e293b' }}>{item.label}</span>
+                          <ArrowUpRight size={13} color="#cbd5e1" className="profile-dropdown-arrow" />
+                        </button>
+                      ))}
+                    </div>
 
-                    <div className="topnav-dropdown-divider" />
+                    {/* ── UPGRADE BANNER (basic plan only) ── */}
+                    {isBasicPlan && !isAdminOrTeacher && (
+                      <div style={{ margin: '4px 6px 4px', borderRadius: 12, overflow: 'hidden' }}>
+                        <button
+                          className="profile-dropdown-upgrade-btn"
+                          onClick={() => navigateTo('/payment')}
+                        >
+                          <div style={{ position: 'absolute', top: '-40%', right: '-10%', width: 80, height: 80, background: 'rgba(255,255,255,0.1)', borderRadius: '50%', filter: 'blur(20px)' }} />
+                          <Crown size={14} style={{ position: 'relative', zIndex: 1 }} />
+                          <span style={{ position: 'relative', zIndex: 1, flex: 1, textAlign: 'left' as const }}>Ir Premium</span>
+                          <ArrowUpRight size={14} style={{ position: 'relative', zIndex: 1, opacity: 0.8 }} />
+                        </button>
+                      </div>
+                    )}
 
-                    <button className="topnav-dropdown-item danger" onClick={async () => {
-                      setProfileOpen(false)
-                      await signOut()
-                      router.push('/')
-                    }}>
-                      <div className="topnav-dropdown-icon danger"><LogOut size={15} color="#DC2626" /></div>
-                      Cerrar sesión
-                    </button>
+                    {/* ── SIGN OUT ── */}
+                    <div style={{ padding: '4px 6px 6px', borderTop: '1px solid #f1f5f9', marginTop: 4 }}>
+                      <button
+                        className="profile-dropdown-signout-btn"
+                        onClick={async () => {
+                          setProfileOpen(false)
+                          await signOut()
+                          router.push('/')
+                        }}
+                      >
+                        <LogOut size={14} />
+                        Cerrar sesión
+                      </button>
+                    </div>
+
                   </div>
                 )}
               </div>

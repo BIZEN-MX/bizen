@@ -901,6 +901,129 @@ body.hide-sidebar .app-main {
   to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
+/* ─── Premium Profile Dropdown Panel ────────────────────────── */
+.profile-dropdown-panel {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  width: 300px;
+  background: #ffffff;
+  border-radius: 20px;
+  border: 1px solid rgba(0,0,0,0.07);
+  box-shadow: 0 24px 60px rgba(0,0,0,0.14), 0 4px 16px rgba(0,0,0,0.06);
+  overflow: hidden;
+  z-index: 1001;
+  animation: topnav-dropdown-in 0.22s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.profile-dropdown-hero {
+  position: relative;
+  padding: 18px 16px 16px;
+  background: linear-gradient(135deg, #0a1628 0%, #0d2a6b 50%, #1a56db 100%);
+  overflow: hidden;
+}
+
+.profile-dropdown-orb1 {
+  position: absolute;
+  top: -30%;
+  right: -10%;
+  width: 130px;
+  height: 130px;
+  background: radial-gradient(circle, rgba(96,165,250,0.25) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.profile-dropdown-orb2 {
+  position: absolute;
+  bottom: -40%;
+  left: -5%;
+  width: 100px;
+  height: 100px;
+  background: radial-gradient(circle, rgba(167,139,250,0.2) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.profile-dropdown-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 8px;
+  border: none;
+  background: transparent;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s ease;
+  text-align: left;
+  margin-bottom: 2px;
+  font-family: inherit;
+}
+
+.profile-dropdown-nav-item:hover {
+  background: #f8fafc;
+  transform: translateX(2px);
+}
+
+.profile-dropdown-nav-item:hover .profile-dropdown-arrow {
+  color: #0F62FE !important;
+  transform: translateX(2px) translateY(-2px);
+  transition: all 0.15s ease;
+}
+
+.profile-dropdown-upgrade-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 14px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #0F62FE 0%, #3b82f6 100%);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  box-shadow: 0 4px 14px rgba(15,98,254,0.35);
+}
+
+.profile-dropdown-upgrade-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(15,98,254,0.45);
+}
+
+.profile-dropdown-signout-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 9px 10px;
+  border: none;
+  background: transparent;
+  border-radius: 10px;
+  color: #ef4444;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+  font-family: inherit;
+}
+
+.profile-dropdown-signout-btn:hover {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+.profile-dropdown-arrow {
+  transition: all 0.15s ease;
+}
+
+
 /* Plan Badges for Sidebar */
 .plan-badge-premium {
   display: inline-flex;
