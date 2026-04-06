@@ -481,7 +481,6 @@ function StockSimulatorContent() {
   const selectStock = (symbol: string) => {
     setOrderForm((f) => ({ ...f, symbol }));
     setOrderMsg(null);
-    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const fetchRankings = async () => {
@@ -608,6 +607,16 @@ function StockSimulatorContent() {
       setFetchingStockNews(false);
     }
   };
+
+  useEffect(() => {
+    if (typeof document !== "undefined") {
+      if (orderForm.symbol) {
+        document.body.style.overflow = "hidden";
+      } else {
+        document.body.style.overflow = "";
+      }
+    }
+  }, [orderForm.symbol]);
 
   useEffect(() => {
     if (orderForm.symbol) {
@@ -2539,11 +2548,11 @@ function StockSimulatorContent() {
                         bottom: 0,
                         backgroundColor: "rgba(11, 30, 94, 0.4)",
                         backdropFilter: "blur(8px)",
-                        zIndex: 9999,
+                        zIndex: 99999,
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
-                        padding: "24px",
+                        padding: 0,
                       }}
                       onClick={() => setOrderForm((f) => ({ ...f, symbol: "" }))}
                     >
@@ -2555,8 +2564,8 @@ function StockSimulatorContent() {
                         exit={{ opacity: 0, x: 40 }}
                         transition={{ type: "spring", stiffness: 280, damping: 30 }}
                         style={{
-                          width: "100vw",
-                          height: "100vh",
+                          width: "100%",
+                          height: "100%",
                           background: "#060d1f",
                           display: "flex",
                           overflow: "hidden",
