@@ -22,11 +22,12 @@ export async function PATCH(
       return NextResponse.json({ error: "Forbidden" }, { status: 403 })
     }
 
+    const { id } = await params
     const body = await request.json()
     const { action } = body
 
     const report = await prisma.forumReport.findUnique({
-      where: { id: params.id }
+      where: { id }
     })
 
     if (!report) {
@@ -81,7 +82,7 @@ export async function PATCH(
 
     // Update report
     await prisma.forumReport.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         status: 'closed',
         reviewedBy: user.id,
@@ -93,5 +94,7 @@ export async function PATCH(
     return NextResponse.json({ success: true, action: actionTaken })
   } catch (error) {
     console.error("Error taking moderation action:", error)
-    return NextResponse.json({ error: "Failed to take action" }, { status: 500 })  }
+    return NextResponse.json({ error: "Failed to take action" }, { status: 500 })
+  }
+}
 

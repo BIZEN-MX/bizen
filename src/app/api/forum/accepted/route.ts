@@ -98,5 +98,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ success: true })
   } catch (error) {
     console.error("Error accepting answer:", error)
-    return NextResponse.json({ error: "Failed to accept answer" }, { status: 500 })  }
+    return NextResponse.json({ error: "Failed to accept answer" }, { status: 500 })
+  }
+}
 

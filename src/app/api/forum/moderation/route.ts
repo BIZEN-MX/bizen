@@ -32,16 +32,6 @@ export async function GET() {
             nickname: true,
             fullName: true
           }
-        },
-        thread: {
-          select: {
-            title: true
-          }
-        },
-        comment: {
-          select: {
-            body: true
-          }
         }
       },
       take: 100
@@ -57,5 +47,7 @@ export async function GET() {
     return NextResponse.json({ reports: formatted })
   } catch (error) {
     console.error("Error fetching moderation queue:", error)
-    return NextResponse.json({ error: "Failed to fetch moderation queue" }, { status: 500 })  }
+    return NextResponse.json({ error: "Failed to fetch moderation queue" }, { status: 500 })
+  }
+}
 
