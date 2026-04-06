@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef, Suspense } from 'react';
-import { usePathname, useSearchParams } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import NavigationLoading from './NavigationLoading';
 import TopNav from './TopNav';
 import MobileFooterNav from './MobileFooterNav';
@@ -26,17 +26,14 @@ import { useOnboarding } from '@/contexts/OnboardingContext';
 
 export default function ClientLayoutWrapper({ children }: { children: React.ReactNode }) {
   return (
-    <Suspense fallback={<>{children}</>}>
-      <InnerClientWrapper>{children}</InnerClientWrapper>
-    </Suspense>
+    <InnerClientWrapper>{children}</InnerClientWrapper>
   );
 }
 
 function InnerClientWrapper({ children }: { children: React.ReactNode }) {
   const [isNavigating, setIsNavigating] = useState(false);
   const pathname = usePathname();
-  // useSearchParams is now handled by the SearchParamsProvider component below
-  const [searchParams, setSearchParamsState] = useState<URLSearchParams | null>(null);
+  const [isTransfer, setIsTransfer] = useState(false);
   const previousPathname = useRef(pathname);
   const [isMobile, setIsMobile] = useState(false);
   const { user, dbProfile, loading } = useAuth();
@@ -116,7 +113,7 @@ function InnerClientWrapper({ children }: { children: React.ReactNode }) {
   const isDiagnosticPage = pathname?.startsWith('/diagnostic')
   const isLessonInteractivePage = pathname?.startsWith('/learn/')
   const isCourseTopicPage = pathname?.startsWith('/courses/tema-')
-  const isTransferPage = pathname === '/transfer' || searchParams?.get('action') === 'transfer'
+  const isTransferPage = pathname === '/transfer' || isTransfer
   const isNewsPage = pathname?.startsWith('/news')
   const isLivePage = pathname?.startsWith('/live')
   const isSimulatorPage = pathname?.startsWith('/simulators') || (pathname?.startsWith('/cash-flow/') && pathname !== '/cash-flow');
@@ -134,10 +131,15 @@ function InnerClientWrapper({ children }: { children: React.ReactNode }) {
     const checkMobile = () => {
       setIsMobile(window.innerWidth <= 767)
     }
+    const checkTransfer = () => {
+      const params = new URLSearchParams(window.location.search)
+      setIsTransfer(params.get('action') === 'transfer')
+    }
     checkMobile()
+    checkTransfer()
     window.addEventListener('resize', checkMobile)
     return () => window.removeEventListener('resize', checkMobile)
-  }, [])
+  }, [pathname])
 
   // Flag body when the fixed mobile footer is visible so pages can add safe padding
   useEffect(() => {
@@ -240,23 +242,7 @@ function InnerClientWrapper({ children }: { children: React.ReactNode }) {
       {showTour && (
         <AppTourOverlay onEnd={() => setShowTour(false)} />
       )}
-
-      {/* Helper component to inject searchParams state without suspending the whole wrapper */}
-      <Suspense fallback={null}>
-        <SearchParamsHandler onParams={setSearchParamsState} />
-      </Suspense>
     </>
   );
-}
-
-/**
- * Lightweight component that only handles search parameters to satisfy Next.js Suspense requirements
- */
-function SearchParamsHandler({ onParams }: { onParams: (params: URLSearchParams) => void }) {
-  const params = useSearchParams();
-  useEffect(() => {
-    if (params) onParams(params);
-  }, [params, onParams]);
-  return null;
 }
 
