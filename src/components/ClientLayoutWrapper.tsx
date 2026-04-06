@@ -35,7 +35,8 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
 function InnerClientWrapper({ children }: { children: React.ReactNode }) {
   const [isNavigating, setIsNavigating] = useState(false);
   const pathname = usePathname();
-  const searchParams = useSearchParams();
+  // useSearchParams is now handled by the SearchParamsProvider component below
+  const [searchParams, setSearchParamsState] = useState<URLSearchParams | null>(null);
   const previousPathname = useRef(pathname);
   const [isMobile, setIsMobile] = useState(false);
   const { user, dbProfile, loading } = useAuth();
@@ -239,7 +240,23 @@ function InnerClientWrapper({ children }: { children: React.ReactNode }) {
       {showTour && (
         <AppTourOverlay onEnd={() => setShowTour(false)} />
       )}
+
+      {/* Helper component to inject searchParams state without suspending the whole wrapper */}
+      <Suspense fallback={null}>
+        <SearchParamsHandler onParams={setSearchParamsState} />
+      </Suspense>
     </>
   );
+}
+
+/**
+ * Lightweight component that only handles search parameters to satisfy Next.js Suspense requirements
+ */
+function SearchParamsHandler({ onParams }: { onParams: (params: URLSearchParams) => void }) {
+  const params = useSearchParams();
+  useEffect(() => {
+    if (params) onParams(params);
+  }, [params, onParams]);
+  return null;
 }
 
