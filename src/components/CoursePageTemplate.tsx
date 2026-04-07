@@ -901,7 +901,7 @@ export default function CoursePageTemplate({
                                     </div>
                                 </div>
                             )
-                        }}
+                        })}
                     </div>
                 </div>
             </div>

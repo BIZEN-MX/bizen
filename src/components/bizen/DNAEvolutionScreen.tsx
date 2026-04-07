@@ -17,7 +17,7 @@ import {
 import { useRouter } from "next/navigation"
 import { createPortal } from "react-dom"
 
-interface ADNEvolutionScreenProps {
+interface DNAEvolutionScreenProps {
   currentProfile: string
   newProfile: string
   stats: {
@@ -32,14 +32,14 @@ interface ADNEvolutionScreenProps {
   onClose?: () => void
 }
 
-export default function ADNEvolutionScreen({
+export default function DNAEvolutionScreen({
   currentProfile = "Iniciado por Billy",
   newProfile = "Billy Constructor",
   stats = { mentalidad: 85, bases: 90, optimizacion: 75, ahorro: 95, riesgos: 60 },
   nextTopicId = "tema-09",
   nextTopicTitle = "Estrategias de Inversión",
   onClose
-}: ADNEvolutionScreenProps) {
+}: DNAEvolutionScreenProps) {
   const [phase, setPhase] = useState<"scanning" | "revealing" | "ready">("scanning")
   const [mounted, setMounted] = useState(false)
   const router = useRouter()

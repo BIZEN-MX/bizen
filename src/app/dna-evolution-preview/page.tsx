@@ -1,12 +1,12 @@
 "use client"
 
 import React from "react"
-import ADNEvolutionScreen from "@/components/bizen/ADNEvolutionScreen"
+import DNAEvolutionScreen from "@/components/bizen/DNAEvolutionScreen"
 
 export default function ADNPreviewPage() {
     // Mock data for the visual test
     return (
-        <ADNEvolutionScreen
+        <DNAEvolutionScreen
             currentProfile="Iniciado por Billy"
             newProfile="Billy Estratega"
             stats={{

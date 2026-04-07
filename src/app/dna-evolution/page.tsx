@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useEffect, useState } from "react"
-import ADNEvolutionScreen from "@/components/bizen/ADNEvolutionScreen"
+import DNAEvolutionScreen from "@/components/bizen/DNAEvolutionScreen"
 import PageLoader from "@/components/PageLoader"
 import { useAuth } from "@/contexts/AuthContext"
 
@@ -42,7 +42,7 @@ export default function ADNEvolutionPage() {
     }
 
     return (
-        <ADNEvolutionScreen
+        <DNAEvolutionScreen
             currentProfile={dbProfile?.adnProfile || "Iniciado"}
             newProfile={evolutionData.newProfile}
             stats={{
