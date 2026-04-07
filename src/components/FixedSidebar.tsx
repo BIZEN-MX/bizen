@@ -338,14 +338,6 @@ export default function FixedSidebar() {
             }}>
               <span style={{ display: "flex", alignItems: "baseline", gap: "2px" }}>
                 BIZEN
-                <span style={{
-                  width: 6,
-                  height: 6,
-                  borderRadius: "50%",
-                  background: "#0F62FE",
-                  display: "inline-block",
-                  marginBottom: 3
-                }} />
               </span>
 
               {mounted && !loading && (() => {

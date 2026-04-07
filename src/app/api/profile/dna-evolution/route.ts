@@ -88,8 +88,8 @@ export async function GET(request: NextRequest) {
         await prisma.profile.update({
             where: { userId: user.id },
             data: {
-                dnaProfile: newProfile,
-                dnaScore: averageScore
+                adnProfile: newProfile,
+                adnScore: averageScore
             }
         });
 
@@ -102,7 +102,7 @@ export async function GET(request: NextRequest) {
         });
 
     } catch (error) {
-        console.error("Error calculating DNA evolution:", error);
+        console.error("Error calculating ADN evolution:", error);
         return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
     }
 }

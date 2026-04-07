@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import { UnauthScreen } from "@/components/UnauthScreen";
 import PageLoader from "@/components/PageLoader";
+import { PageAppearance } from "@/components/PageAppearance";
 
 // Pages that are publicly accessible (no auth required)
 const PUBLIC_PATHS = [
@@ -57,7 +58,11 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
 
   // Render raw without frame for Landing and full-width Courses pages
   if (isLanding || isCoursesPage) {
-    return <>{children}</>;
+    return (
+      <PageAppearance>
+        {children}
+      </PageAppearance>
+    );
   }
 
   // On protected routes, don't render children while auth is loading.
@@ -116,7 +121,9 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
             {/* Inner wrapper to ensure content is full width in the usable space */}
             <div className="w-full flex-1 flex flex-col" style={{ maxWidth: "none" }}>
               <React.Suspense fallback={<PageLoader />}>
-                {children}
+                <PageAppearance>
+                  {children}
+                </PageAppearance>
               </React.Suspense>
             </div>
           </main>

@@ -13,6 +13,7 @@ export default function TradingViewChart({ data, chartType, showSMA, showEMA }: 
   const chartRef = useRef<any>(null);
   const seriesRef = useRef<any>(null);
   const [lastLivePrice, setLastLivePrice] = useState<number | null>(null);
+  const liveHighLowRef = useRef<{ high: number, low: number } | null>(null);
 
   // Process data for TV
   const { mainSeriesData, smaData, emaData } = useMemo(() => {
@@ -91,6 +92,17 @@ export default function TradingViewChart({ data, chartType, showSMA, showEMA }: 
     mainSeries.setData(mainSeriesData);
     seriesRef.current = mainSeries;
 
+    // Reset live session tracking
+    if (mainSeriesData.length > 0) {
+        const last = mainSeriesData[mainSeriesData.length - 1];
+        if (chartType === "candle") {
+            liveHighLowRef.current = { high: last.high, low: last.low };
+            setLastLivePrice(last.close);
+        } else {
+            setLastLivePrice(last.value);
+        }
+    }
+
     // Indicators
     if (showSMA) {
       const smaSeries = chart.addSeries(LineSeries, { color: '#fbbf24', lineWidth: 1.5, lineStyle: 1, crosshairMarkerVisible: false });
@@ -110,7 +122,7 @@ export default function TradingViewChart({ data, chartType, showSMA, showEMA }: 
     };
   }, [mainSeriesData, smaData, emaData, chartType, showSMA, showEMA]);
 
-  // LIVE JITTER SIMULATION: Makes the chart feel alive
+  // LIVE PRICE SIMULATION: Updated more frequently (800ms) with slightly more volatility
   useEffect(() => {
     if (!seriesRef.current || mainSeriesData.length === 0) return;
 
@@ -118,26 +130,30 @@ export default function TradingViewChart({ data, chartType, showSMA, showEMA }: 
       const lastPoint = mainSeriesData[mainSeriesData.length - 1];
       const currentPrice = lastLivePrice || (chartType === "candle" ? lastPoint.close : lastPoint.value);
       
-      // Simulado: peque\u00f1o jitter de +/- 0.05%
-      const jitter = 1 + (Math.random() * 0.001 - 0.0005);
+      // Simulado: jitter de +/- 0.08% cada 800ms
+      const jitter = 1 + (Math.random() * 0.0016 - 0.0008);
       const newPrice = currentPrice * jitter;
       setLastLivePrice(newPrice);
 
       if (chartType === "candle") {
-        const updatedCandle = {
+        if (!liveHighLowRef.current) liveHighLowRef.current = { high: lastPoint.high, low: lastPoint.low };
+        
+        liveHighLowRef.current.high = Math.max(liveHighLowRef.current.high, newPrice);
+        liveHighLowRef.current.low = Math.min(liveHighLowRef.current.low, newPrice);
+
+        seriesRef.current.update({
           ...lastPoint,
           close: newPrice,
-          high: Math.max(lastPoint.high, newPrice),
-          low: Math.min(lastPoint.low, newPrice),
-        };
-        seriesRef.current.update(updatedCandle);
+          high: liveHighLowRef.current.high,
+          low: liveHighLowRef.current.low,
+        });
       } else {
         seriesRef.current.update({
           ...lastPoint,
           value: newPrice,
         });
       }
-    }, 2000);
+    }, 800);
 
     return () => clearInterval(interval);
   }, [mainSeriesData, chartType, lastLivePrice]);

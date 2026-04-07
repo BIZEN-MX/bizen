@@ -14,6 +14,7 @@ import BizenVirtualCard from "@/components/BizenVirtualCard"
 import DNAEvolutionScreen from "@/components/bizen/DNAEvolutionScreen"
 import BillyLabWidget from "@/components/bizen/BillyLabWidget"
 import TransactionHistoryModal from "@/components/bizen/TransactionHistoryModal"
+import InvestmentsWidget from "@/components/InvestmentsWidget"
 
 // ─────────────────────────────────────────────────────────────────
 // CUSTOM SVG ICON COMPONENTS
@@ -259,7 +260,7 @@ export default function DashboardContent() {
   const [stats,            setStats]            = useState<Stats | null>(null)
   const [topics,           setTopics]           = useState<Topic[]>([])
   const [completedLessons, setCompletedLessons] = useState<string[]>([])
-  const [dnaResult,        setDnaResult]        = useState<any>(null)
+  const [adnResult,        setDnaResult]        = useState<any>(null)
   const [liveProfile,      setLiveProfile]      = useState<any>(null)
   const [loadingData,      setLoadingData]      = useState(true)
   const [isSyncing,        setIsSyncing]        = useState(false)
@@ -281,8 +282,8 @@ export default function DashboardContent() {
     }
   }, [news]);
 
-  const activeDnaProfile = liveProfile?.dnaProfile || dnaResult?.dnaProfile
-  const hasCompletedDiagnostic = !!activeDnaProfile || !!liveProfile?.diagnosticCompleted || !!dnaResult
+  const activeDnaProfile = liveProfile?.adnProfile || adnResult?.adnProfile
+  const hasCompletedDiagnostic = !!activeDnaProfile || !!liveProfile?.diagnosticCompleted || !!adnResult
 
   const searchParams = useSearchParams()
   const [showEvolution, setShowEvolution] = useState(false)
@@ -450,7 +451,7 @@ export default function DashboardContent() {
     "Maestro BIZEN": { bg: "#f0fdf4", text: "#166534", icon: "#22c55e", border: "#bbf7d0", path: "Estrategias Avanzadas", topicId: "tema-11" },
   }
 
-  const dnaInfo = activeDnaProfile ? profileColors[activeDnaProfile as string] : null
+  const adnInfo = activeDnaProfile ? profileColors[activeDnaProfile as string] : null
 
   return (
     <div style={{ minHeight: "100vh", background: "#FBFAF5", width: "100%", boxSizing: "border-box", fontFamily: '"SF Pro Display","SF Pro Text",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif' }}>
@@ -660,7 +661,7 @@ export default function DashboardContent() {
           </AnimatePresence>
 
 
-          {/* DNA PROFILE SECTION */}
+          {/* ADN PROFILE SECTION */}
           <motion.div 
             variants={{
               hidden: { opacity: 0, scale: 0.95 },
@@ -670,117 +671,116 @@ export default function DashboardContent() {
           >
             {activeDnaProfile && activeDnaProfile.includes("Billy") ? (
               <BillyLabWidget 
-                dnaProfile={activeDnaProfile}
-                dnaScore={liveProfile?.dnaScore || dnaResult?.dnaScore || 0}
+                adnProfile={activeDnaProfile}
+                adnScore={liveProfile?.adnScore || adnResult?.adnScore || 0}
                 nextTopicId={activeDnaProfile === "Billy Inversionista" ? "tema-09" : (activeDnaProfile === "Billy Estratega" ? "tema-07" : "tema-06")}
                 nextTopicTitle={activeDnaProfile === "Billy Inversionista" ? "Estrategias de Inversión" : (activeDnaProfile === "Billy Estratega" ? "Sistema de Crédito" : "Presupuesto Real")}
               />
-            ) : hasCompletedDiagnostic && dnaInfo ? (
+            ) : hasCompletedDiagnostic && adnInfo ? (
               <motion.div 
                 style={{
-                  background: dnaInfo?.bg || "white",
-                  border: `1.5px solid ${dnaInfo?.border || "#e2e8f0"}`,
+                  background: adnInfo?.bg || "white",
+                  border: `1.5px solid ${adnInfo?.border || "#e2e8f0"}`,
                   borderRadius: 24, padding: "16px 20px",
                   display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 16,
                   boxShadow: "0 4px 12px rgba(0,0,0,0.03)", transition: "all 0.3s"
                 }}
               >
                 <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-                  <div style={{ width: 56, height: 56, borderRadius: 16, background: "white", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: `0 4px 12px ${dnaInfo?.icon}20` }}>
-                    <Shield size={28} color={dnaInfo?.icon} strokeWidth={2.2} />
+                  <div style={{ width: 56, height: 56, borderRadius: 16, background: "white", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: `0 4px 12px ${adnInfo?.icon}20` }}>
+                    <Shield size={28} color={adnInfo?.icon} strokeWidth={2.2} />
                   </div>
                   <div>
-                    <div style={{ fontSize: 11, fontWeight: 800, color: dnaInfo?.text, textTransform: "uppercase", letterSpacing: ".1em", marginBottom: 4 }}>Tu Perfil Financiero</div>
-                    <div style={{ fontSize: 24, fontWeight: 800, color: dnaInfo?.text }}>{activeDnaProfile}</div>
+                    <div style={{ fontSize: 11, fontWeight: 800, color: adnInfo?.text, textTransform: "uppercase", letterSpacing: ".1em", marginBottom: 4 }}>Tu Perfil Financiero</div>
+                    <div style={{ fontSize: 24, fontWeight: 800, color: adnInfo?.text }}>{activeDnaProfile}</div>
                   </div>
                 </div>
-                <div style={{ flex: 1, height: 1.5, background: `${dnaInfo?.border}40`, margin: "0 10px", minWidth: 20 }} className="hidden sm:block" />
+                <div style={{ flex: 1, height: 1.5, background: `${adnInfo?.border}40`, margin: "0 10px", minWidth: 20 }} className="hidden sm:block" />
                 <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
                   <div style={{ textAlign: "right" as const }}>
-                    <div style={{ fontSize: 10, fontWeight: 700, color: dnaInfo?.text, textTransform: "uppercase", opacity: 0.6 }}>Ruta Recomendada</div>
-                    <div style={{ fontSize: 14, fontWeight: 700, color: dnaInfo?.text }}>{dnaInfo?.path}</div>
+                    <div style={{ fontSize: 10, fontWeight: 700, color: adnInfo?.text, textTransform: "uppercase", opacity: 0.6 }}>Ruta Recomendada</div>
+                    <div style={{ fontSize: 14, fontWeight: 700, color: adnInfo?.text }}>{adnInfo?.path}</div>
                   </div>
                   <motion.div 
-                    style={{ width: 44, height: 44, borderRadius: 12, background: "white", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", border: `1px solid ${dnaInfo?.border}` }} 
+                    style={{ width: 44, height: 44, borderRadius: 12, background: "white", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", border: `1px solid ${adnInfo?.border}` }} 
                     onClick={() => {
-                      if (dnaInfo?.topicId) {
-                        router.push(`/courses/${dnaInfo.topicId}?noredirect=true`)
+                      if (adnInfo?.topicId) {
+                        router.push(`/courses/${adnInfo.topicId}?noredirect=true`)
                       } else {
                         router.push("/courses")
                       }
                     }}
                   >
-                    <IcoArrowRight size={18} color={dnaInfo?.text} />
+                    <IcoArrowRight size={18} color={adnInfo?.text} />
                   </motion.div>
                 </div>
               </motion.div>
             ) : null}
           </motion.div>
-          {/* DNA PROMO SECTION — NOW ALWAYS VISIBLE FOR STUDENTS */}
-          {!isInstitutional && !isAdminOrTeacher && (
-            <motion.div
-               initial={{ opacity: 0, y: 20 }}
-               animate={{ opacity: 1, y: 0 }}
-               style={{
-                 background: "linear-gradient(135deg, #0a0f2e 0%, #0d2a6b 45%, #1a56db 100%)",
-                 borderRadius: 28,
-                 padding: "24px 32px",
-                 marginBottom: 24,
-                 display: "flex",
-                 alignItems: "center",
-                 justifyContent: "space-between",
-                 gap: 24,
-                 boxShadow: "0 12px 40px rgba(13, 42, 107, 0.3)",
-                 border: "1.5px solid rgba(255,255,255,0.18)",
-                 position: "relative",
-                 overflow: "hidden"
-               }}
-            >
-              <div style={{ position: "absolute", top: "-50%", right: "-10%", width: 250, height: 250, background: "rgba(255,255,255,0.12)", borderRadius: "50%", filter: "blur(60px)" }} />
-              
-              <div style={{ display: "flex", alignItems: "center", gap: 20, position: "relative", zIndex: 1 }}>
-                <div style={{ width: 64, height: 64, borderRadius: 20, background: "rgba(255,255,255,0.22)", display: "flex", alignItems: "center", justifyContent: "center", backdropFilter: "blur(12px)", border: "1px solid rgba(255,255,255,0.25)" }}>
-                  <BrainCircuit size={36} color="#fff" />
-                </div>
-                <div>
-                  <h3 style={{ margin: 0, fontSize: 22, fontWeight: 900, color: "#fff", letterSpacing: "-0.015em" }}>Descubre tu DNA Financiero</h3>
-                  <p style={{ margin: "4px 0 0", fontSize: 15, color: "rgba(255,255,255,0.9)", fontWeight: 600 }}>Toma un test rápido para recibir tu ruta de aprendizaje.</p>
-                </div>
-              </div>
-              
-              <button
-                onClick={() => router.push("/diagnostic/1")}
-                style={{
-                  background: "#fff",
-                  color: "#0F62FE",
-                  border: "none",
-                  borderRadius: 16,
-                  padding: "14px 28px",
-                  fontWeight: 900,
-                  fontSize: 16,
-                  cursor: "pointer",
-                  whiteSpace: "nowrap",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 10,
-                  boxShadow: "0 6px 20px rgba(0,0,0,0.15)",
-                  position: "relative",
-                  zIndex: 1,
-                  transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
-                }}
-                onMouseOver={(e) => {
-                  e.currentTarget.style.transform = "scale(1.05) translateY(-2px)";
-                  e.currentTarget.style.boxShadow = "0 8px 25px rgba(0,0,0,0.2)";
-                }}
-                onMouseOut={(e) => {
-                  e.currentTarget.style.transform = "scale(1) translateY(0)";
-                  e.currentTarget.style.boxShadow = "0 6px 20px rgba(0,0,0,0.15)";
-                }}
-              >
-                Empezar
-                <ChevronRight size={20} />
-              </button>
-            </motion.div>
+          {/* ADN PROMO SECTION — NOW ALWAYS VISIBLE FOR STUDENTS */}
+          {!isAdminOrTeacher && (
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24, marginBottom: 24 }}>
+                <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    style={{
+                        background: "linear-gradient(135deg, #0a0f2e 0%, #0d2a6b 45%, #1a56db 100%)",
+                        borderRadius: 28,
+                        padding: "24px 32px",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        gap: 24,
+                        boxShadow: "0 12px 40px rgba(13, 42, 107, 0.3)",
+                        border: "1.5px solid rgba(255,255,255,0.18)",
+                        position: "relative",
+                        overflow: "hidden"
+                    }}
+                >
+                    <div style={{ position: "absolute", top: "-50%", right: "-10%", width: 250, height: 250, background: "rgba(255,255,255,0.12)", borderRadius: "50%", filter: "blur(60px)" }} />
+                    
+                    <div style={{ display: "flex", alignItems: "center", gap: 20, position: "relative", zIndex: 1 }}>
+                        <div style={{ width: 64, height: 64, borderRadius: 20, background: "rgba(255,255,255,0.22)", display: "flex", alignItems: "center", justifyContent: "center", backdropFilter: "blur(12px)", border: "1px solid rgba(255,255,255,0.25)" }}>
+                            <BrainCircuit size={36} color="#fff" />
+                        </div>
+                        <div>
+                            <h3 style={{ margin: 0, fontSize: 22, fontWeight: 900, color: "#fff", letterSpacing: "-0.015em" }}>ADN Financiero</h3>
+                            <p style={{ margin: "4px 0 0", fontSize: 13, color: "rgba(255,255,255,0.8)", fontWeight: 600 }}>Descubre tu ruta de aprendizaje.</p>
+                        </div>
+                    </div>
+                    
+                    <button
+                        onClick={() => router.push("/diagnostic/1")}
+                        style={{
+                            background: "#fff",
+                            color: "#0F62FE",
+                            border: "none",
+                            borderRadius: 16,
+                            padding: "12px 20px",
+                            fontWeight: 900,
+                            fontSize: 14,
+                            cursor: "pointer",
+                            whiteSpace: "nowrap",
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 8,
+                            position: "relative",
+                            zIndex: 1,
+                            transition: "all 0.3s"
+                        }}
+                    >
+                        Empezar
+                        <ChevronRight size={18} />
+                    </button>
+                </motion.div>
+
+                <motion.div
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                >
+                    <InvestmentsWidget />
+                </motion.div>
+            </div>
           )}
 
           {!isAdminOrTeacher && (
@@ -977,7 +977,7 @@ export default function DashboardContent() {
             </div>
           </div>
 
-          <div style={{ position: "relative", minHeight: 320, background: "white", borderRadius: 32, border: "1.5px solid #e9eef8", overflow: "hidden", boxShadow: "0 14px 40px rgba(13,42,107,0.06)" }}>
+          <div style={{ position: "relative", height: 380, background: "white", borderRadius: 32, border: "1.5px solid #e9eef8", overflow: "hidden", boxShadow: "0 14px 40px rgba(13,42,107,0.06)" }}>
             {loadingNews ? (
               <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
                 <div className="animate-spin" style={{ width: 32, height: 32, border: "3px solid #f1f5f9", borderTopColor: "#0F62FE", borderRadius: "50%" }} />
@@ -1022,7 +1022,7 @@ export default function DashboardContent() {
                         <span style={{ fontSize: 12, fontWeight: 900, color: "#0F62FE", textTransform: "uppercase", letterSpacing: "0.1em", background: "rgba(15,98,254,0.06)", padding: "4px 14px", borderRadius: 99 }}>{news[activeNewsIndex].category}</span>
                         <span style={{ fontSize: 13, color: "#94a3b8", fontWeight: 600 }}>{news[activeNewsIndex].time} • {news[activeNewsIndex].source}</span>
                       </div>
-                      <h4 style={{ margin: 0, fontSize: "clamp(22px, 3vw, 32px)", fontWeight: 900, color: "#0B1E5E", lineHeight: 1.15, letterSpacing: "-0.03em" }}>{news[activeNewsIndex].title}</h4>
+                      <h4 style={{ margin: 0, fontSize: "clamp(22px, 3vw, 32px)", fontWeight: 900, color: "#0B1E5E", lineHeight: 1.15, letterSpacing: "-0.03em", display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical", overflow: "hidden" }}>{news[activeNewsIndex].title}</h4>
                       <p style={{ marginTop: 20, fontSize: 16, color: "#475569", lineHeight: 1.6, fontWeight: 500, display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
                         {news[activeNewsIndex].desc}
                       </p>
@@ -1461,17 +1461,17 @@ export default function DashboardContent() {
       </motion.div>
     </div>
 
-    {/* DNA Evolution Modal overlay */}
-    {showEvolution && dnaResult && (
+    {/* ADN Evolution Modal overlay */}
+    {showEvolution && adnResult && (
       <DNAEvolutionScreen 
         currentProfile="Aspirante BIZEN"
-        newProfile={dnaResult.dnaProfile}
+        newProfile={adnResult.adnProfile}
         stats={{
-          mentalidad: dnaResult.categoryScores?.Presupuesto?.percentage ?? 80,
-          bases: dnaResult.categoryScores?.Crédito?.percentage ?? 80,
-          optimizacion: dnaResult.categoryScores?.Inversión?.percentage ?? 80,
-          ahorro: dnaResult.categoryScores?.Ahorro?.percentage ?? 80,
-          riesgos: dnaResult.categoryScores?.Seguridad?.percentage ?? 80,
+          mentalidad: adnResult.categoryScores?.Presupuesto?.percentage ?? 80,
+          bases: adnResult.categoryScores?.Crédito?.percentage ?? 80,
+          optimizacion: adnResult.categoryScores?.Inversión?.percentage ?? 80,
+          ahorro: adnResult.categoryScores?.Ahorro?.percentage ?? 80,
+          riesgos: adnResult.categoryScores?.Seguridad?.percentage ?? 80,
         }}
         nextTopicId={nextLessonInfo?.lessonSlug || "intro"}
         nextTopicTitle={nextLessonInfo?.lessonSlug ? "Tu Plan Personalizado" : "Explorar Cursos"}

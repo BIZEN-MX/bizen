@@ -234,9 +234,16 @@ export default function CoursePageTemplate({
         const body = document.body
         html.style.background = "#FBFAF5"
         body.style.background = "#FBFAF5"
+        
+        // Ensure scroll is enabled
+        html.style.overflow = "auto"
+        body.style.overflow = "auto"
+        
         return () => {
             html.style.background = ""
             body.style.background = ""
+            html.style.overflow = ""
+            body.style.overflow = ""
         }
     }, [])
 
@@ -364,14 +371,14 @@ export default function CoursePageTemplate({
                         className="cpt-hero"
                         style={{
                             background: "linear-gradient(135deg, #0f2a6e 0%, #1e3a8a 45%, #2563eb 100%)",
-                            borderRadius: "40px",
-                            padding: "clamp(24px, 4vw, 36px) clamp(32px, 5vw, 64px)", // drastically reduced height
-                            width: "calc(100% - 64px)",
-                            maxWidth: "none", // FULL WIDTH
-                            margin: "24px auto 40px",
+                            borderRadius: "44px", 
+                            padding: "clamp(32px, 6vw, 64px) clamp(40px, 10vw, 120px)", 
+                            width: "calc(100% - clamp(48px, 10vw, 160px))",
+                            maxWidth: "none", 
+                            margin: "24px auto 54px",
                             position: "relative",
                             overflow: "hidden",
-                            boxShadow: "0 24px 70px rgba(15,98,254,0.35)",
+                            boxShadow: "0 28px 80px rgba(15,98,254,0.22)",
                             boxSizing: "border-box",
                         }}
                     >
@@ -460,7 +467,7 @@ export default function CoursePageTemplate({
                                                 <StatIcon size={18} color={stat.color} />
                                                 <div style={{ fontSize: 11, fontWeight: 500, color: "#93c5fd", textTransform: "uppercase", letterSpacing: "0.1em" }}>{stat.label}</div>
                                             </div>
-                                            <div style={{ fontSize: 28, fontWeight: 500, color: "#fff", lineHeight: 1.1 }}>{stat.value}</div>
+                                            <div style={{ fontSize: 32, fontWeight: 500, color: "#fff", lineHeight: 1.1 }}>{stat.value}</div>
                                         </div>
                                     )
                                 })}
@@ -476,11 +483,11 @@ export default function CoursePageTemplate({
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.3 }}
                             style={{ 
-                                width: "calc(100% - 64px)", 
+                                width: "100%", 
                                 maxWidth: "none", 
                                 margin: "0 auto 32px", 
                                 boxSizing: "border-box",
-                                padding: "0",
+                                padding: "0 clamp(24px, 5vw, 80px)", 
                             }}
                         >
                             <div style={{ 
@@ -570,9 +577,9 @@ export default function CoursePageTemplate({
                                     {(() => {
                                         const v = SUBTEMA_VARIANTS[subIdx % SUBTEMA_VARIANTS.length]
                                         return (
-                                            <div style={{ display: "flex", flexDirection: "column", padding: "14px 20px", paddingBottom: 14, background: v.background, borderRadius: 18, boxShadow: v.boxShadow, border: v.border, margin: "0 32px 16px 32px" }}>
+                                            <div style={{ display: "flex", flexDirection: "column", padding: "20px 28px", paddingBottom: 20, background: v.background, borderRadius: 28, boxShadow: v.boxShadow, border: v.border, margin: "0 clamp(24px, 5vw, 80px) 18px clamp(24px, 5vw, 80px)" }}>
                                                 <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 14 }}>
-                                                    <div style={{ flex: 1, minWidth: 0 }}>
+                                                    <div style={{ flex: 1, minWidth: 0, padding: "0 8px" }}>
                                                         <div style={{ fontSize: 11, fontWeight: 500, color: "rgba(255,255,255,0.8)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 4 }}>CURSO {(subIdx + 1).toString().padStart(2, "0")}</div>
                                                         <div style={{ fontSize: "clamp(15px, 3vw, 19px)", fontWeight: 500, color: "#fff", lineHeight: 1.2, marginBottom: 4 }}>{sub.title}</div>
                                                         <div style={{ fontSize: 12, fontWeight: 500, color: "rgba(255,255,255,0.7)" }}>{subTotal} lecciones · {subCompleted} completadas</div>
@@ -593,20 +600,17 @@ export default function CoursePageTemplate({
                                     {/* Lessons horizontal scroll */}
                                     <div
                                         className="lessons-scroll-container"
-                                        onScroll={(e) => {
-                                            // Auto-scroll to next subtema removed as requested
-                                        }}
                                         style={{
                                             display: "flex",
                                             flexDirection: "row",
                                             gap: 16,
                                             overflowX: "auto",
-                                            overflowY: "visible", // Enforced for the aura/glow shadows
+                                            overflowY: "visible", 
                                             paddingBottom: "60px",
                                             paddingTop: "48px",
-                                            paddingLeft: "32px", // Start at same offset as hero card
-                                            paddingRight: "32px", // Same on the right
-                                            marginTop: "-32px", // Compensate the extra top padding
+                                            paddingLeft: "clamp(24px, 5vw, 80px)", 
+                                            paddingRight: "clamp(24px, 5vw, 80px)", 
+                                            marginTop: "-32px", 
                                             scrollSnapType: "x mandatory",
                                             WebkitOverflowScrolling: "touch",
                                             scrollbarWidth: "none"
@@ -897,7 +901,7 @@ export default function CoursePageTemplate({
                                     </div>
                                 </div>
                             )
-                        })}
+                        }}
                     </div>
                 </div>
             </div>
@@ -1160,14 +1164,10 @@ export default function CoursePageTemplate({
                     animation: panel-shimmer 1.5s ease-out forwards;
                 }
 
-                /* Sidebar compensation */
-                @media (min-width: 768px) and (max-width: 1160px) {
-                  .courses-main-content { padding-left: 252px !important; padding-right: 16px !important; display: flex !important; justify-content: center !important; }
-                  .courses-main-content > div { max-width: calc(100vw - 252px - 32px) !important; width: 100% !important; margin: 0 auto !important; }
-                }
-                @media (min-width: 1161px) {
-                  .courses-main-content { padding-left: 312px !important; padding-right: 16px !important; display: flex !important; justify-content: center !important; }
-                  .courses-main-content > div { max-width: calc(100vw - 312px - 48px) !important; width: 100% !important; margin: 0 auto !important; }
+                /* Sidebar compensation removed to allow for full width topic page */
+                @media (min-width: 768px) {
+                  .courses-main-content { padding-left: 0 !important; padding-right: 0 !important; }
+                  .courses-main-content > div { max-width: none !important; width: 100% !important; margin: 0 !important; }
                 }
 
                 /* Flashcard Overrides - Hide Sidebar & Reset Padding */

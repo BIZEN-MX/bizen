@@ -143,7 +143,7 @@ export async function POST(req: NextRequest) {
                     data: responseEntries
                 })
 
-                // 🔥 Trigger DNA Profile Refinement (Placeholder for logic)
+                // 🔥 Trigger ADN Profile Refinement (Placeholder for logic)
                 // if (lessonId.includes('behavioral') || lessonId.includes('sesgo')) {
                 //    await refineDnaProfile(userId, answers)
                 // }

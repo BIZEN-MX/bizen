@@ -105,7 +105,7 @@ export function OnboardingProvider({ children }: { children: React.ReactNode }) 
         if (SKIP_PATHS.some(p => pathname === p || pathname.startsWith(p + "/"))) return
         if (pathname.startsWith("/diagnostic")) return
         
-        // Don't show setup if we are currently in the middle of a DNA evolution reveal
+        // Don't show setup if we are currently in the middle of a ADN evolution reveal
         if (typeof window !== 'undefined' && window.location.search.includes('showEvolution=true')) return
 
         const isComplete = user.user_metadata?.onboarding_complete === true

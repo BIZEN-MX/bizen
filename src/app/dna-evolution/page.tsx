@@ -1,11 +1,11 @@
 "use client"
 
 import React, { useEffect, useState } from "react"
-import DNAEvolutionScreen from "@/components/bizen/DNAEvolutionScreen"
+import ADNEvolutionScreen from "@/components/bizen/ADNEvolutionScreen"
 import PageLoader from "@/components/PageLoader"
 import { useAuth } from "@/contexts/AuthContext"
 
-export default function DNAEvolutionPage() {
+export default function ADNEvolutionPage() {
     const { user, dbProfile, loading: authLoading } = useAuth()
     const [evolutionData, setEvolutionData] = useState<any>(null)
     const [loading, setLoading] = useState(true)
@@ -16,11 +16,11 @@ export default function DNAEvolutionPage() {
 
         const fetchEvolution = async () => {
             try {
-                const res = await fetch("/api/profile/dna-evolution")
+                const res = await fetch("/api/profile/adn-evolution")
                 const data = await res.json()
                 setEvolutionData(data)
             } catch (error) {
-                console.error("Failed to fetch DNA evolution:", error)
+                console.error("Failed to fetch ADN evolution:", error)
             } finally {
                 setLoading(false)
             }
@@ -42,8 +42,8 @@ export default function DNAEvolutionPage() {
     }
 
     return (
-        <DNAEvolutionScreen
-            currentProfile={dbProfile?.dnaProfile || "Iniciado"}
+        <ADNEvolutionScreen
+            currentProfile={dbProfile?.adnProfile || "Iniciado"}
             newProfile={evolutionData.newProfile}
             stats={{
                 mentalidad: evolutionData.scores.mentalidad,

@@ -37,7 +37,7 @@ export async function GET(request: NextRequest) {
             xp: profile.xp,
             level: profile.level,
             completedLessons: profile.progress.map(p => p.lessonId),
-            dnaProfile: (profile as any).dnaProfile || "Sin Diagnosticar",
+            adnProfile: (profile as any).adnProfile || "Sin Diagnosticar",
             currentTopic: topic || undefined,
             gameStats: lastGame.data ? {
                 totalCash: lastGame.data.cash_on_hand,

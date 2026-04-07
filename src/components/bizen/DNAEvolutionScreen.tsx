@@ -17,7 +17,7 @@ import {
 import { useRouter } from "next/navigation"
 import { createPortal } from "react-dom"
 
-interface DNAEvolutionScreenProps {
+interface ADNEvolutionScreenProps {
   currentProfile: string
   newProfile: string
   stats: {
@@ -32,14 +32,14 @@ interface DNAEvolutionScreenProps {
   onClose?: () => void
 }
 
-export default function DNAEvolutionScreen({
+export default function ADNEvolutionScreen({
   currentProfile = "Iniciado por Billy",
   newProfile = "Billy Constructor",
   stats = { mentalidad: 85, bases: 90, optimizacion: 75, ahorro: 95, riesgos: 60 },
   nextTopicId = "tema-09",
   nextTopicTitle = "Estrategias de Inversión",
   onClose
-}: DNAEvolutionScreenProps) {
+}: ADNEvolutionScreenProps) {
   const [phase, setPhase] = useState<"scanning" | "revealing" | "ready">("scanning")
   const [mounted, setMounted] = useState(false)
   const router = useRouter()
@@ -173,7 +173,7 @@ export default function DNAEvolutionScreen({
                />
                <div style={{ position: "relative", zIndex: 1, background: "rgba(59,130,246,0.15)", border: "1px solid rgba(59,130,246,0.4)", padding: "12px 24px", borderRadius: "999px", display: "flex", alignItems: "center", gap: 8 }}>
                   <Sparkles size={18} color="#60a5fa" />
-                  <span style={{ fontSize: 13, fontWeight: 500, color: "#93c5fd", textTransform: "uppercase", letterSpacing: 1 }}>DNA Detectado</span>
+                  <span style={{ fontSize: 13, fontWeight: 500, color: "#93c5fd", textTransform: "uppercase", letterSpacing: 1 }}>ADN Detectado</span>
                </div>
             </div>
 

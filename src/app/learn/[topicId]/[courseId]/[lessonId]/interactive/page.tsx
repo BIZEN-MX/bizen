@@ -252,7 +252,7 @@ function InteractiveLessonContent() {
 
     // Normal Exit Logic
     if (topicIdStr === "tema-05") {
-      router.push("/dna-evolution")
+      router.push("/adn-evolution")
     } else {
       router.push(`/courses/${topicIdStr || 'tema-01'}`)
     }
@@ -294,7 +294,7 @@ function InteractiveLessonContent() {
             onClose={() => {
               setShowTopicSplash(false)
               if (topicIdStr === "tema-05") {
-                router.push("/dna-evolution")
+                router.push("/adn-evolution")
               } else {
                 router.push(`/courses/${topicIdStr || 'tema-01'}`)
               }

@@ -354,8 +354,6 @@ export function StockSimulatorContent({ tradeSymbol }: { tradeSymbol?: string })
     text: string;
   } | null>(null);
   const [marketData, setMarketData] = useState<any[]>([]);
-  const [isCrisis, setIsCrisis] = useState(false);
-  const [crisisImpact, setCrisisImpact] = useState(0);
   const [dataFetched, setDataFetched] = useState(false);
   const [showBonusAnim, setShowBonusAnim] = useState(false);
   const [history, setHistory] = useState<any[]>([]);
@@ -625,6 +623,12 @@ export function StockSimulatorContent({ tradeSymbol }: { tradeSymbol?: string })
         document.documentElement.style.overflow = "";
       }
     }
+    return () => {
+      if (typeof document !== "undefined") {
+        document.body.style.overflow = "";
+        document.documentElement.style.overflow = "";
+      }
+    };
   }, [orderForm.symbol]);
 
   useEffect(() => {
@@ -749,24 +753,7 @@ export function StockSimulatorContent({ tradeSymbol }: { tradeSymbol?: string })
     }
   };
 
-  const triggerCrisis = () => {
-    if (isCrisis) {
-      setIsCrisis(false);
-      setCrisisImpact(0);
-    } else {
-      setIsCrisis(true);
-      setCrisisImpact(Math.floor(Math.random() * 20) + 15); // 15-35% drop
-    }
-  };
-
-  const processedMarketData = useMemo(() => {
-    if (!isCrisis) return marketData;
-    return marketData.map((s) => ({
-      ...s,
-      price: s.price * (1 - crisisImpact / 100),
-      change: s.change - crisisImpact,
-    }));
-  }, [marketData, isCrisis, crisisImpact]);
+  const processedMarketData = useMemo(() => marketData, [marketData]);
 
   // Calculate quantity from amount (Bizcoins)
   useEffect(() => {
@@ -923,7 +910,6 @@ export function StockSimulatorContent({ tradeSymbol }: { tradeSymbol?: string })
               { icon: "📈", title: "Datos Reales", desc: "Precios EOD del mercado" },
               { icon: "🎯", title: "Sin Riesgo", desc: "Todo con Bizcoins simulados" },
               { icon: "🏆", title: "Rankings", desc: "Compite con otros estudiantes" },
-              { icon: "🚨", title: "Cisne Negro", desc: "Simula crisis de mercado" },
             ].map((f, i) => (
               <div key={i} style={{ textAlign: "center" }}>
                 <div style={{ fontSize: 28, marginBottom: 8 }}>{f.icon}</div>
@@ -1092,7 +1078,7 @@ export function StockSimulatorContent({ tradeSymbol }: { tradeSymbol?: string })
                                 style={{
                                   fontSize: 18,
                                   fontWeight: 700,
-                                  color: isCrisis ? "#ef4444" : "#10b981",
+                                  color: "#10b981",
                                 }}
                               >
                                     bz {(s.price * 1).toFixed(0)} <BizcoinIcon size={18} style={{ marginLeft: 4 }} />
@@ -2534,148 +2520,8 @@ export function StockSimulatorContent({ tradeSymbol }: { tradeSymbol?: string })
                 </p>
             </div>
 
-            {/* Black Swan Button — Educational Feature */}
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 6 }}>
-              <motion.button
-                onClick={triggerCrisis}
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.97 }}
-                className={!isCrisis ? "crisis-btn" : ""}
-                style={{
-                  padding: "12px 20px",
-                  borderRadius: 16,
-                  border: isCrisis ? "2px solid rgba(16,185,129,0.4)" : "2px solid rgba(239,68,68,0.3)",
-                  background: isCrisis
-                    ? "linear-gradient(135deg, #064e3b, #065f46)"
-                    : "linear-gradient(135deg, #450a0a, #7f1d1d)",
-                  color: "white",
-                  fontWeight: 700,
-                  fontSize: 14,
-                  cursor: "pointer",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 10,
-                  fontFamily: "inherit",
-                  boxShadow: isCrisis
-                    ? "0 4px 20px rgba(16,185,129,0.3)"
-                    : "0 4px 20px rgba(239,68,68,0.35)",
-                  transition: "all 0.3s",
-                }}
-              >
-                {isCrisis ? (
-                  <><RefreshCw size={16} /> Restaurar Mercado</>
-                ) : (
-                  <><Skull size={16} /> 🦢 Simular Cisne Negro</>
-                )}
-              </motion.button>
-              {!isCrisis && (
-                <span style={{ fontSize: 11, color: "#94a3b8", maxWidth: 200, textAlign: "right", lineHeight: 1.4 }}>
-                  Simula una crisis financiera global y aprende a reaccionar
-                </span>
-              )}
-              {isCrisis && (
-                <span style={{ fontSize: 11, color: "#ef4444", fontWeight: 700, display: "flex", alignItems: "center", gap: 4 }}>
-                  🚨 Crisis activa: -{crisisImpact}% en todos los activos
-                </span>
-              )}
-            </div>
           </div>
 
-          {/* Crisis Overlay / Alert */}
-          {isCrisis && (
-            <div
-              style={{
-                background: "linear-gradient(135deg,#7f1d1d,#991b1b)",
-                borderRadius: 24,
-                padding: "24px 32px",
-                marginBottom: 32,
-                border: "2px solid #ef4444",
-                position: "relative",
-                overflow: "hidden",
-                animation: "fadeUp 0.4s ease",
-              }}
-            >
-              <div
-                style={{
-                  position: "absolute",
-                  top: -20,
-                  right: -20,
-                  opacity: 0.1,
-                  transform: "rotate(15deg)",
-                }}
-              >
-                <Skull size={180} color="white" />
-              </div>
-              <div style={{ position: "relative", zIndex: 1 }}>
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 12,
-                    marginBottom: 12,
-                  }}
-                >
-                  <div
-                    style={{
-                      background: "white",
-                      color: "#991b1b",
-                      padding: "6px 12px",
-                      borderRadius: 8,
-                      fontSize: 12,
-                      fontWeight: 800,
-                      textTransform: "uppercase",
-                    }}
-                  >
-                    Evento de Mercado
-                  </div>
-                  <h2
-                    style={{
-                      color: "white",
-                      margin: 0,
-                      fontSize: 24,
-                      fontWeight: 800,
-                    }}
-                  >
-                    🚨 ¡Pánico en Wall Street!
-                  </h2>
-                </div>
-                <p
-                  style={{
-                    color: "rgba(255,255,255,0.85)",
-                    fontSize: 15,
-                    lineHeight: 1.6,
-                    maxWidth: 700,
-                    margin: "0 0 20px",
-                  }}
-                >
-                  Un evento inesperado ha causado un desplome del{" "}
-                  <strong>{crisisImpact}%</strong> en el mercado global. Los
-                  inversores están vendiendo por miedo. ¿Qué harás con tu
-                  portafolio?
-                </p>
-                <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
-                  <div
-                    style={{
-                      background: "rgba(255,255,255,0.1)",
-                      border: "1px solid rgba(255,255,255,0.2)",
-                      borderRadius: 12,
-                      padding: "12px 18px",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 10,
-                    }}
-                  >
-                    <Info size={18} color="#fca5a5" />
-                    <span
-                      style={{ fontSize: 13, color: "white", fontWeight: 500 }}
-                    >
-                      Tip: Mantén la calma y revisa tu diversificación.
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
 
           {/* Disclaimer */}
           <div
@@ -3216,7 +3062,7 @@ export function StockSimulatorContent({ tradeSymbol }: { tradeSymbol?: string })
                               style={{
                                 fontSize: 16,
                                 fontWeight: 800,
-                                color: isCrisis ? "#ef4444" : "#0B1E5E",
+                                color: "#0B1E5E",
                                 margin: 0,
                               }}
                             >
@@ -3407,7 +3253,7 @@ export function StockSimulatorContent({ tradeSymbol }: { tradeSymbol?: string })
                                   </td>
                                   <td style={{ padding: "16px", textAlign: "right", fontWeight: 600, color: "#1e293b" }}>{Number(h.quantity).toFixed(4)}</td>
                                   <td style={{ padding: "16px", textAlign: "right", color: "#64748b" }}>bz {Math.round(Number(h.avg_cost)).toLocaleString()}</td>
-                                  <td style={{ padding: "16px", textAlign: "right", fontWeight: 600, color: isCrisis ? "#ef4444" : "#0B1E5E" }}>bz {Math.round(marketPriceBizcoins).toLocaleString()}</td>
+                                  <td style={{ padding: "16px", textAlign: "right", fontWeight: 600, color: "#0B1E5E" }}>bz {Math.round(marketPriceBizcoins).toLocaleString()}</td>
                                   <td style={{ padding: "16px", textAlign: "right" }}>
                                     <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: 4, fontWeight: 700, color: ret >= 0 ? "#10b981" : "#ef4444" }}>
                                       {ret >= 0 ? <ArrowUpRight size={14} /> : <ArrowDownRight size={14} />}

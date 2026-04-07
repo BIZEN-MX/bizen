@@ -22,7 +22,7 @@ export interface GeneratedLesson {
 }
 
 export async function generatePersonalizedLab(
-  dnaProfile: string,
+  adnProfile: string,
   lastMistakes: string[],
   currentTopic: string,
   savingsGoals: string[] = [] // Accept real life goals
@@ -32,7 +32,7 @@ export async function generatePersonalizedLab(
     Tu misión es generar una MICRO-LECCIÓN INTERACTIVA personalizada de 5 pasos para un alumno.
 
     CONTEXTO DEL ALUMNO:
-    - ADN Billy (Especialización): ${dnaProfile}
+    - ADN Billy (Especialización): ${adnProfile}
     - Metas de Ahorro Reales (SUEÑOS): ${savingsGoals.join(", ") || "No ha definido metas aún"}
     - Errores Recientes (Debilidades): ${lastMistakes.join(", ")}
     - Tema Actual: ${currentTopic}

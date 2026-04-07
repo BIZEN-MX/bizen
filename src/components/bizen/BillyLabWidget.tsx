@@ -6,15 +6,15 @@ import { Dna, Zap, ChevronRight, Activity, Cpu } from "lucide-react"
 import { useRouter } from "next/navigation"
 
 interface BillyLabWidgetProps {
-  dnaProfile: string
-  dnaScore: number
+  adnProfile: string
+  adnScore: number
   nextTopicId?: string
   nextTopicTitle?: string
 }
 
 export default function BillyLabWidget({
-  dnaProfile = "Billy Constructor",
-  dnaScore = 75,
+  adnProfile = "Billy Constructor",
+  adnScore = 75,
   nextTopicId = "tema-09",
   nextTopicTitle = "Estrategias de Inversión"
 }: BillyLabWidgetProps) {
@@ -42,7 +42,7 @@ export default function BillyLabWidget({
       
       <div style={{ display: "flex", gap: 18, alignItems: "center", position: "relative", zIndex: 1, flexWrap: "wrap" }}>
         
-        {/* DNA Indicator */}
+        {/* ADN Indicator */}
         <div style={{ 
           width: 80, 
           height: 80, 
@@ -66,21 +66,21 @@ export default function BillyLabWidget({
         <div style={{ flex: 1, minWidth: 200 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
             <span style={{ fontSize: 10, fontWeight: 500, color: "#93c5fd", textTransform: "uppercase", letterSpacing: 1, background: "rgba(59,130,246,0.15)", padding: "2px 8px", borderRadius: 4 }}>
-              BILLY LAB DNA Active
+              BILLY LAB ADN Active
             </span>
             <Activity size={12} color="#60a5fa" />
           </div>
-          <h2 style={{ fontSize: 24, fontWeight: 500, color: "#fff", margin: 0 }}>{dnaProfile}</h2>
+          <h2 style={{ fontSize: 24, fontWeight: 500, color: "#fff", margin: 0 }}>{adnProfile}</h2>
           <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 8 }}>
             <div style={{ fontSize: 13, color: "rgba(255,255,255,0.6)" }}>Eficiencia Táctica:</div>
             <div style={{ width: 120, height: 4, background: "rgba(255,255,255,0.1)", borderRadius: 2, overflow: "hidden" }}>
               <motion.div 
                 initial={{ width: 0 }}
-                animate={{ width: `${dnaScore}%` }}
+                animate={{ width: `${adnScore}%` }}
                 style={{ height: "100%", background: "linear-gradient(90deg, #3b82f6, #60a5fa)", boxShadow: "0 0 10px #3b82f6" }}
               />
             </div>
-            <div style={{ fontSize: 13, fontWeight: 500, color: "#60a5fa" }}>{dnaScore}%</div>
+            <div style={{ fontSize: 13, fontWeight: 500, color: "#60a5fa" }}>{adnScore}%</div>
           </div>
         </div>
 

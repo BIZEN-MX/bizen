@@ -780,7 +780,7 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
 
                 <div className="space-y-3">
                   <h2 className="text-3xl font-black tracking-tight leading-tight">
-                    ¡Perfil Listo! Solo falta tu <span className="text-blue-400">DNA Financiero</span>
+                    ¡Perfil Listo! Solo falta tu <span className="text-blue-400">ADN Financiero</span>
                   </h2>
                   <p className="text-slate-400 text-lg max-w-sm mx-auto">
                     Realiza un test rápido de 2 minutos para desbloquear tu ruta de aprendizaje personalizada y ver tu nivel inicial.
@@ -870,7 +870,7 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
                   {[
                     { icon: MessageCircle, label: "Responde preguntas", desc: "Sobre presupuesto, deudas, inversión y más", color: "#3b82f6" },
                     { icon: BookMarked, label: "Explica lecciones", desc: "Resume y aclara cualquier tema del curso", color: "#8b5cf6" },
-                    { icon: FlaskConical, label: "Analiza tu perfil", desc: "Genera insights basados en tu DNA financiero", color: "#10b981" },
+                    { icon: FlaskConical, label: "Analiza tu perfil", desc: "Genera insights basados en tu ADN financiero", color: "#10b981" },
                     { icon: Zap, label: "Siempre disponible", desc: "Las 24 hrs en cada página de la app", color: "#f59e0b" },
                   ].map((item, i) => (
                     <motion.div

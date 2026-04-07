@@ -175,6 +175,14 @@ function InnerClientWrapper({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (pathname !== previousPathname.current) {
       setIsNavigating(true);
+      
+      // Global fix: ensure overflow is reset on each navigation
+      if (typeof document !== 'undefined') {
+        document.body.style.overflow = "";
+        document.documentElement.style.overflow = "";
+        window.scrollTo(0, 0);
+      }
+
       const timer = setTimeout(() => {
         setIsNavigating(false);
         previousPathname.current = pathname;

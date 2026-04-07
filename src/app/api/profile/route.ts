@@ -14,8 +14,8 @@ export async function GET(request: NextRequest) {
         const profile = await prisma.profile.findUnique({
             where: { userId: user.id },
             select: { 
-                dnaProfile: true, 
-                dnaScore: true,
+                adnProfile: true, 
+                adnScore: true,
                 cardTheme: true,
                 level: true,
                 xp: true

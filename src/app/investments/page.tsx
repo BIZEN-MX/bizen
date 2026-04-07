@@ -214,7 +214,7 @@ export default function InvestmentsPage() {
       <div style={{ position: "fixed", top: "-10%", right: "-5%", width: "40%", height: "40%", background: `radial-gradient(circle, ${selectedPlan.glow} 0%, transparent 70%)`, pointerEvents: "none", filter: "blur(100px)", opacity: 0.3, transition: "background 0.8s ease" }} />
       <div style={{ position: "fixed", bottom: "-5%", left: "-5%", width: "30%", height: "30%", background: "radial-gradient(circle, rgba(139,92,246,0.15) 0%, transparent 70%)", pointerEvents: "none", filter: "blur(80px)", opacity: 0.2 }} />
 
-      <main style={{ maxWidth: 1100, margin: "0 auto", padding: "40px 20px", position: "relative", zIndex: 1 }}>
+      <main style={{ maxWidth: "none", margin: "0 auto", padding: "40px 20px", position: "relative", zIndex: 1 }}>
         
         {/* ── TOP HEADER ── */}
         <header style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 50 }}>

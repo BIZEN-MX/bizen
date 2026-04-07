@@ -44,7 +44,7 @@ export async function GET(
             xp: profile.xp,
             level: profile.level,
             completedLessons,
-            dnaProfile: profile.dnaProfile || "Sin Diagnosticar",
+            adnProfile: profile.adnProfile || "Sin Diagnosticar",
             // Game stats can be fetched from a separate query if needed, 
             // but for now we skip or find last game session
             gameStats: undefined, 

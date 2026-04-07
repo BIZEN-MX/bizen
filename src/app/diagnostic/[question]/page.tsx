@@ -370,7 +370,7 @@ export default function DiagnosticQuestionPage() {
                   {analysisPhase === 0 && (
                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4 }}>
                       <div style={{ marginBottom: 36 }}>
-                        {/* DNA helix icon environment */}
+                        {/* ADN helix icon environment */}
                         <div style={{ position:"relative", width:120, height:120, margin:"0 auto" }}>
                           <div style={{ position:"absolute",inset:0,borderRadius:"50%",border:"2px solid rgba(59,130,246,0.3)",animation:"pulse-ring 1.8s ease-out infinite" }} />
                           <div style={{ position:"absolute",inset:12,borderRadius:"50%",border:"2px solid rgba(59,130,246,0.5)",animation:"pulse-ring 1.8s ease-out 0.6s infinite" }} />

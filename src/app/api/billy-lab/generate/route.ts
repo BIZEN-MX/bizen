@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
         // Fetch user context for the prompt
         const profile = await prisma.profile.findUnique({
             where: { userId: user.id },
-            select: { dnaProfile: true, dnaScore: true }
+            select: { adnProfile: true, adnScore: true }
         });
 
         // FETCH REAL SAVINGS GOALS
@@ -32,7 +32,7 @@ export async function GET(request: NextRequest) {
 
         // Generate the lab using Gemini 2.0 Flash
         const lab = await generatePersonalizedLab(
-            profile?.dnaProfile || "Iniciado BIZEN",
+            profile?.adnProfile || "Iniciado BIZEN",
             mistakes,
             currentTopic,
             goalList // Pass goals to engine

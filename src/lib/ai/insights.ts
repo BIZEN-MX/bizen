@@ -8,7 +8,7 @@ export async function generateFinancialInsights(userData: {
     xp: number;
     level: number;
     completedLessons: string[];
-    dnaProfile?: string;
+    adnProfile?: string;
     gameStats?: {
         totalCash?: number;
         passiveIncome?: number;
@@ -20,7 +20,7 @@ export async function generateFinancialInsights(userData: {
     const prompt = `Actúa como Billy, el mentor experto en finanzas de BIZEN.
   USUARIO: ${userData.name}
   XP: ${userData.xp}, Nivel: ${userData.level}
-  DNA FINANCIERO: ${userData.dnaProfile || "Sin Diagnosticar"}
+  ADN FINANCIERO: ${userData.adnProfile || "Sin Diagnosticar"}
   LECCIONES COMPLETADAS: ${userData.completedLessons.length}
   DATOS DE JUEGO (CASH-FLOW):
   - Profesión: ${userData.gameStats?.mainProfession || "N/A"}

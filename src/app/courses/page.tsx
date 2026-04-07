@@ -554,8 +554,8 @@ export default function CoursesPage() {
                         const isLastTopic = idx === topics.length - 1;
                         const isOrphan = isLastTopic && idx % 2 === 0;
 
-                        // SPECIALIZATION LOGIC: DNA Bypass
-                        const isDnaSpecialist = dbProfile?.dnaProfile === "Billy Inversionista";
+                        // SPECIALIZATION LOGIC: ADN Bypass
+                        const isDnaSpecialist = dbProfile?.adnProfile === "Billy Inversionista";
                         const isDnaRecommended = isDnaSpecialist && (topic.id === "tema-09" || topic.id === "tema-10");
                         const isDnaSkipped = isDnaSpecialist && (topic.id === "tema-06" || topic.id === "tema-07" || topic.id === "tema-08");
 
@@ -572,7 +572,7 @@ export default function CoursesPage() {
                         const isPaywalled = isPremiumTopic && !hasPremiumAccess;
                         const isSequenceLocked = false; // Bloqueo de secuencia desactivado para pruebas
                         
-                        // LOCKED if (paywalled OR out of order) AND NOT (unlocked by DNA)
+                        // LOCKED if (paywalled OR out of order) AND NOT (unlocked by ADN)
                         const isLocked = (isPaywalled || isSequenceLocked) && !isDnaRecommended;
 
                         return (
@@ -630,7 +630,7 @@ export default function CoursesPage() {
                                 pointerEvents: "auto",
                                 zIndex: 2
                               }}
-                              className={topic.id === nextTopicId && !isDnaRecommended ? "next-topic-glow" : (isDnaRecommended ? "dna-glow-pulse" : "")}
+                              className={topic.id === nextTopicId && !isDnaRecommended ? "next-topic-glow" : (isDnaRecommended ? "adn-glow-pulse" : "")}
                             >
                               <div style={{ padding: "24px", height: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", gap: 8 }}>
                                 <div style={{ fontSize: 10, fontWeight: 400, color: isDnaRecommended ? "#93c5fd" : "#94a3b8", letterSpacing: "0.08em", textTransform: "uppercase" }}>
@@ -641,7 +641,7 @@ export default function CoursesPage() {
                                 
                                 {isDnaSkipped && (
                                   <div style={{ fontSize: 10, fontWeight: 400, color: "#64748b", marginTop: 4, display: "flex", alignItems: "center", gap: 4 }}>
-                                    <Sparkles size={11} color={topic.catColor} /> BILLY DNA
+                                    <Sparkles size={11} color={topic.catColor} /> BILLY ADN
                                   </div>
                                 )}
                                 
@@ -775,7 +775,7 @@ export default function CoursesPage() {
                           <div style={{ width: 2, height: 40, background: "linear-gradient(to top, #6366f1, transparent)" }} />
                        </div>
                     </div>
-                    {renderSection(advancedTopics, "Fase 2: Especialización DNA", "Rutas personalizadas basadas en tu perfil analítico y metas personales.", 5)}
+                    {renderSection(advancedTopics, "Fase 2: Especialización ADN", "Rutas personalizadas basadas en tu perfil analítico y metas personales.", 5)}
                   </React.Fragment>
                 )
               ]
@@ -874,7 +874,7 @@ export default function CoursesPage() {
           animation: topic-glow-pulse 4s ease-in-out infinite !important;
         }
 
-        @keyframes dna-glow-pulse {
+        @keyframes adn-glow-pulse {
           0%, 100% { 
             box-shadow: 0 10px 30px rgba(37, 99, 235, 0.2), 0 0 0 0px rgba(96, 165, 250, 0); 
             border-color: #60a5fa;
@@ -886,8 +886,8 @@ export default function CoursesPage() {
             transform: translateY(-8px) scale(1.02);
           }
         }
-        .dna-glow-pulse {
-          animation: dna-glow-pulse 3s ease-in-out infinite !important;
+        .adn-glow-pulse {
+          animation: adn-glow-pulse 3s ease-in-out infinite !important;
         }
 
         .phase-title-shimmer {

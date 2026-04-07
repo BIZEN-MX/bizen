@@ -14,7 +14,7 @@ export async function POST(request: Request) {
             )
         }
 
-        // Calculate detailed DNA Profile
+        // Calculate detailed ADN Profile
         const categoryScores: Record<string, { correct: number; total: number; percentage: number }> = {}
         let totalCorrect = 0
 
@@ -37,7 +37,7 @@ export async function POST(request: Request) {
         const scorePercentage = Math.round((totalCorrect / diagnosticQuiz.length) * 100)
 
         // Logic for the 3 Profiles
-        let dnaProfile = "Ahorrador Estancado" // Default
+        let adnProfile = "Ahorrador Estancado" // Default
         const creditScore = categoryScores["Crédito"]?.percentage || 0
         const budgetScore = categoryScores["Presupuesto"]?.percentage || 0
         const savingScore = categoryScores["Ahorro"]?.percentage || 0
@@ -45,13 +45,13 @@ export async function POST(request: Request) {
         const securityScore = categoryScores["Seguridad"]?.percentage || 0
 
         if (scorePercentage >= 85) {
-            dnaProfile = "Maestro BIZEN"
+            adnProfile = "Maestro BIZEN"
         } else if (creditScore < 50 || budgetScore < 50) {
-            dnaProfile = "Gastador Digital"
+            adnProfile = "Gastador Digital"
         } else if (savingScore > 50 && investmentScore < 40) {
-            dnaProfile = "Ahorrador Estancado"
+            adnProfile = "Ahorrador Estancado"
         } else if (securityScore < 50 || investmentScore < 50) {
-            dnaProfile = "Explorador Arriesgado"
+            adnProfile = "Explorador Arriesgado"
         }
 
         const result = await prisma.diagnosticResult.create({
@@ -61,12 +61,12 @@ export async function POST(request: Request) {
                 institution,
                 answers: userAnswers,
                 score: scorePercentage,
-                dnaProfile: dnaProfile,
+                adnProfile: adnProfile,
                 categoryScores: categoryScores as any,
             },
         })
 
-        return NextResponse.json({ success: true, id: result.id, profile: dnaProfile })
+        return NextResponse.json({ success: true, id: result.id, profile: adnProfile })
     } catch (error) {
         console.error("Error saving diagnostic quiz:", error)
         return NextResponse.json(
