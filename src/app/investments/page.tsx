@@ -146,8 +146,11 @@ export default function InvestmentsPage() {
     }
     // Hide sidebar on mount
     document.body.classList.add('hide-sidebar')
+    document.body.style.overflow = 'hidden'
+    
     return () => {
       document.body.classList.remove('hide-sidebar')
+      document.body.style.overflow = 'unset'
     }
   }, [user, loading, router])
 
@@ -176,12 +179,13 @@ export default function InvestmentsPage() {
 
   return (
     <div style={{
-      minHeight: "100vh",
+      height: "100vh",
       background: "radial-gradient(circle at top right, #0a0f2e 0%, #05081a 100%)",
       color: "#fff",
       fontFamily: '"SF Pro Display", system-ui, sans-serif',
       width: "100%",
       position: "relative",
+      overflowY: "auto",
       overflowX: "hidden"
     }}>
       <style>{`
@@ -197,6 +201,64 @@ export default function InvestmentsPage() {
         .card-glass:hover {
            background: rgba(255, 255, 255, 0.05);
            border-color: rgba(15, 98, 254, 0.3);
+        }
+
+        /* Responsive Layout Utilities */
+        .main-grid {
+          display: grid;
+          grid-template-columns: 1.2fr 0.8fr;
+          gap: 32px;
+        }
+
+        .header-row {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 32px;
+        }
+
+        .summary-aside {
+          position: sticky;
+          top: 40px;
+        }
+
+        @media (max-width: 1024px) {
+          .main-grid {
+            grid-template-columns: 1fr;
+          }
+          .summary-aside {
+            position: relative;
+            top: 0;
+          }
+        }
+
+        @media (max-width: 768px) {
+          .header-row {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 20px;
+          }
+          .header-balance {
+            width: 100%;
+            text-align: left !important;
+            justify-content: flex-start !important;
+          }
+          .amount-input {
+            font-size: 42px !important;
+          }
+          .plan-card {
+            padding: 20px !important;
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            gap: 16px !important;
+          }
+          .plan-yield {
+            text-align: left !important;
+          }
+          .header-title-container {
+            width: 100%;
+            gap: 12px !important;
+          }
         }
 
         /* Hide number arrows */
@@ -217,11 +279,11 @@ export default function InvestmentsPage() {
       <main style={{ maxWidth: "none", margin: "0 auto", padding: "16px 20px", position: "relative", zIndex: 1 }}>
         
         {/* ── TOP HEADER ── */}
-        <header style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 32 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
+        <header className="header-row">
+          <div className="header-title-container" style={{ display: "flex", alignItems: "center", gap: 20 }}>
             <button 
               onClick={() => router.back()}
-              style={{ width: 48, height: 48, borderRadius: 16, background: "rgba(255,255,255,0.05)", border: "1.5px solid rgba(255,255,255,0.1)", color: "white", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", transition: "all 0.2s" }}
+              style={{ width: 48, height: 48, borderRadius: 16, background: "rgba(255,255,255,0.05)", border: "1.5px solid rgba(255,255,255,0.1)", color: "white", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", transition: "all 0.2s", flexShrink: 0 }}
               onMouseEnter={e => e.currentTarget.style.background = "rgba(15, 98, 254, 0.2)"}
               onMouseLeave={e => e.currentTarget.style.background = "rgba(255,255,255,0.05)"}
             >
@@ -229,18 +291,18 @@ export default function InvestmentsPage() {
             </button>
             <div>
               <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 4 }}>
-                <h1 style={{ fontSize: 32, fontWeight: 900, margin: 0, letterSpacing: "-0.03em" }}>Inversión BIZEN</h1>
+                <h1 style={{ fontSize: "clamp(24px, 5vw, 32px)", fontWeight: 900, margin: 0, letterSpacing: "-0.03em" }}>Inversión BIZEN</h1>
               </div>
-              <p style={{ fontSize: 15, color: "rgba(255,255,255,0.45)", margin: 0, fontWeight: 500 }}>
+              <p style={{ fontSize: 14, color: "rgba(255,255,255,0.45)", margin: 0, fontWeight: 500 }}>
                 Pon tus Bizcoins a trabajar para ti.
               </p>
             </div>
           </div>
 
-          <div style={{ background: "linear-gradient(135deg, rgba(15, 98, 254, 0.15), rgba(15, 98, 254, 0.05))", border: "1.5px solid rgba(15, 98, 254, 0.2)", borderRadius: 20, padding: "12px 24px", textAlign: "right" }}>
+          <div className="header-balance" style={{ background: "linear-gradient(135deg, rgba(15, 98, 254, 0.15), rgba(15, 98, 254, 0.05))", border: "1.5px solid rgba(15, 98, 254, 0.2)", borderRadius: 20, padding: "12px 24px", textAlign: "right", display: "flex", flexDirection: "column" }}>
             <div style={{ fontSize: 11, fontWeight: 800, color: "rgba(15, 98, 254, 0.8)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 4 }}>Disponible</div>
-            <div style={{ fontSize: 26, fontWeight: 950, color: "white", display: "flex", alignItems: "center", gap: 8, justifyContent: "flex-end" }}>
-              <BizcoinIcon size={24} />
+            <div style={{ fontSize: 24, fontWeight: 950, color: "white", display: "flex", alignItems: "center", gap: 8, justifyContent: "flex-end" }}>
+              <BizcoinIcon size={20} />
               {bizcoins.toLocaleString()} <span style={{ fontSize: 14, color: "rgba(255,255,255,0.4)" }}>bz</span>
             </div>
           </div>
@@ -289,13 +351,13 @@ export default function InvestmentsPage() {
               </div>
             </motion.div>
           ) : (
-            <div style={{ display: "grid", gridTemplateColumns: "1.2fr 0.8fr", gap: 32 }}>
+            <div className="main-grid">
               
               {/* ── LEFT COLUMN: PLAN & INPUT ── */}
               <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
                 
                 {/* Amount Selection */}
-                <section className="card-glass" style={{ padding: 40 }}>
+                <section className="card-glass" style={{ padding: "clamp(20px, 5vw, 40px)" }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
                     <div style={{ fontSize: 12, fontWeight: 800, color: "rgba(255,255,255,0.3)", textTransform: "uppercase", letterSpacing: "0.1em" }}>Cantidad a Invertir</div>
                     <div style={{ fontSize: 12, fontWeight: 700, color: "rgba(255,255,255,0.4)" }}>Mín: 1 bz · Máx: {bizcoins.toLocaleString()}</div>
@@ -306,11 +368,12 @@ export default function InvestmentsPage() {
                       <input 
                         type="number" 
                         placeholder="0"
+                        className="amount-input"
                         value={amount || ""}
                         onChange={e => setAmount(Number(e.target.value))}
                         onFocus={() => setInputFocused(true)}
                         onBlur={() => setInputFocused(false)}
-                        style={{ flex: 1, background: "transparent", border: "none", outline: "none", fontSize: 56, fontWeight: 950, color: "white", letterSpacing: "-0.04em" }}
+                        style={{ flex: 1, background: "transparent", border: "none", outline: "none", fontSize: "clamp(32px, 8vw, 56px)", fontWeight: 950, color: "white", letterSpacing: "-0.04em", width: "100%" }}
                       />
                       <span style={{ fontSize: 24, fontWeight: 900, color: "rgba(255,255,255,0.2)" }}>bz</span>
                     </div>
@@ -341,7 +404,7 @@ export default function InvestmentsPage() {
                         key={plan.id}
                         onClick={() => setSelectedPlan(plan)}
                         whileHover={{ x: 8 }}
-                        className="card-glass"
+                        className="card-glass plan-card"
                         style={{ 
                           padding: "24px 32px", 
                           display: "flex", 
@@ -350,24 +413,26 @@ export default function InvestmentsPage() {
                           cursor: "pointer", 
                           border: `1.5px solid ${active ? plan.border : "rgba(255,255,255,0.08)"}`,
                           background: active ? plan.bgGlow : "rgba(255,255,255,0.03)",
-                          boxShadow: active ? `0 0 40px ${plan.glow}` : "none"
+                          boxShadow: active ? `0 0 40px ${plan.glow}` : "none",
+                          width: "100%",
+                          boxSizing: "border-box"
                         }}
                       >
                         <div style={{ width: 64, height: 64, borderRadius: 20, background: plan.gradient, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, boxShadow: active ? `0 10px 25px ${plan.glow}` : "none" }}>
                           <plan.icon size={32} color="white" />
                         </div>
                         <div style={{ flex: 1 }}>
-                          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 4 }}>
+                          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 4, flexWrap: "wrap" }}>
                             <h3 style={{ fontSize: 20, fontWeight: 900, margin: 0 }}>{plan.label}</h3>
                             <span style={{ fontSize: 10, fontWeight: 900, padding: "3px 10px", borderRadius: 99, background: plan.gradient, color: "white" }}>{plan.badge}</span>
                           </div>
                           <p style={{ fontSize: 13, color: "rgba(255,255,255,0.45)", margin: 0, fontWeight: 500 }}>{plan.desc}</p>
-                          <div style={{ marginTop: 8, display: "flex", alignItems: "center", gap: 12 }}>
+                          <div style={{ marginTop: 8, display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
                             <span style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.3)", display: "flex", alignItems: "center", gap: 4 }}><Calendar size={12} /> {plan.days} días</span>
                             <span style={{ fontSize: 11, fontWeight: 700, color: plan.riskColor, display: "flex", alignItems: "center", gap: 4 }}><AlertCircle size={12} /> Riesgo {plan.risk}</span>
                           </div>
                         </div>
-                        <div style={{ textAlign: "right" }}>
+                        <div className="plan-yield" style={{ textAlign: "right", flexShrink: 0 }}>
                           <div style={{ fontSize: 32, fontWeight: 950, color: active ? plan.accent : "rgba(255,255,255,0.3)", transition: "color 0.3s" }}>+{(plan.yieldRate * 100).toFixed(0)}%</div>
                           <div style={{ fontSize: 10, fontWeight: 800, color: "rgba(255,255,255,0.25)", textTransform: "uppercase", letterSpacing: "0.1em" }}>Retorno Estimado</div>
                         </div>
@@ -378,10 +443,10 @@ export default function InvestmentsPage() {
               </div>
 
               {/* ── RIGHT COLUMN: SUMMARY & ACTIONS ── */}
-              <aside style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+              <aside className="summary-aside" style={{ display: "flex", flexDirection: "column", gap: 24, zIndex: 10 }}>
                 
                 {/* Summary Card */}
-                <div className="card-glass" style={{ padding: "40px 32px", position: "sticky", top: 40, background: "rgba(255,255,255,0.02)" }}>
+                <div className="card-glass" style={{ padding: "clamp(24px, 5vw, 40px) clamp(20px, 4vw, 32px)", background: "rgba(255,255,255,0.02)" }}>
                   <h3 style={{ fontSize: 24, fontWeight: 900, marginBottom: 32, display: "flex", alignItems: "center", gap: 12 }}>
                     Resumen del Contrato <ShieldCheck size={24} color="#10B981" />
                   </h3>

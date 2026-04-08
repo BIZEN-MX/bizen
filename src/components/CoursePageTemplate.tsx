@@ -495,12 +495,12 @@ export default function CoursePageTemplate({
                             }}
                         >
                             <div style={{ 
-                                background: "rgba(255, 255, 255, 0.7)", 
-                                backdropFilter: "blur(20px)", 
-                                borderRadius: 24, 
-                                padding: "16px 22px", 
-                                border: "1px solid rgba(255, 255, 255, 0.8)",
-                                boxShadow: "0 10px 30px rgba(0,0,0,0.03)",
+                                background: "rgba(255, 255, 255, 0.75)", 
+                                backdropFilter: "blur(24px)", 
+                                borderRadius: 28, 
+                                padding: "18px 26px", 
+                                border: "1px solid rgba(255, 255, 255, 0.9)",
+                                boxShadow: "0 12px 34px rgba(15, 98, 254, 0.08), inset 0 0 0 1px rgba(255,255,255,0.4)",
                                 display: "flex",
                                 alignItems: "center",
                                 gap: 16
@@ -634,7 +634,7 @@ export default function CoursePageTemplate({
                                             // 3. Lessons are also locked if they are paywalled (premium lesson + no subscription).
                                             const isFirstLessonOfWholeTopic = absoluteLessonNumber === 1;
                                             const previousLesson = absoluteLessonNumber > 1 ? allLessonsInTopic[absoluteLessonNumber - 2] : null;
-                                            const isSequenceLocked = false; // Bloqueo desactivado para pruebas
+                                            const isSequenceLocked = !isFirstLessonOfWholeTopic && previousLesson && !completedLessons.includes(previousLesson.slug);
 
                                             const isExam = lesson.slug.startsWith('eval-') || lesson.slug.includes('examen') || lesson.slug.includes('evaluacion') || lesson.title.toLowerCase().includes('examen') || lesson.title.toLowerCase().includes('evaluación');
                                             const isLocked = isPaywalled || isSequenceLocked;
@@ -698,8 +698,8 @@ export default function CoursePageTemplate({
                                                             scrollSnapAlign: "start",
                                                             cursor: "pointer",
                                                             boxShadow: isExam 
-                                                                ? "0 15px 40px rgba(15,98,254,0.15), inset 0 0 0 1px rgba(255,255,255,0.05)"
-                                                                : (isLocked ? "none" : "0 8px 20px rgba(0,0,0,0.04), inset 0 0 0 1px rgba(255,255,255,0.8)"),
+                                                                ? "0 20px 50px rgba(15,98,254,0.22), inset 0 0 0 1px rgba(255,255,255,0.1)"
+                                                                : (isLocked ? "none" : (isDone ? "0 10px 25px rgba(37,99,235,0.12), inset 0 0 0 1px rgba(255,255,255,0.8)" : "0 8px 20px rgba(0,0,0,0.04), inset 0 0 0 1px rgba(255,255,255,1)")),
                                                             gap: "8px",
                                                             transition: "all 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
                                                             position: "relative",
@@ -743,12 +743,13 @@ export default function CoursePageTemplate({
                                                                 <div style={{ 
                                                                     fontSize: 10, 
                                                                     fontWeight: 900, 
-                                                                    color: "#60a5fa", 
-                                                                    background: "rgba(59,130,246,0.1)", 
-                                                                    padding: "3px 8px", 
-                                                                    borderRadius: 6, 
-                                                                    letterSpacing: "0.1em",
-                                                                    textTransform: "uppercase"
+                                                                    color: "#fff", 
+                                                                    background: "linear-gradient(90deg, #3b82f6, #2563eb)", 
+                                                                    padding: "4px 10px", 
+                                                                    borderRadius: 8, 
+                                                                    letterSpacing: "0.12em",
+                                                                    textTransform: "uppercase",
+                                                                    boxShadow: "0 4px 10px rgba(37,99,235,0.2)"
                                                                 }}>
                                                                     Certificación
                                                                 </div>

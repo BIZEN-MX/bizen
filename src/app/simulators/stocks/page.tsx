@@ -489,16 +489,29 @@ export function StockSimulatorContent({ tradeSymbol }: { tradeSymbol?: string })
   };
 
   useEffect(() => {
-    if (orderForm.symbol || tradeSymbol) {
+    const isTerminal = !!(orderForm.symbol || tradeSymbol);
+    if (isTerminal) {
       document.body.style.overflow = "hidden";
+      document.body.style.height = "100vh";
+      document.body.style.position = "fixed";
+      document.body.style.width = "100%";
       document.documentElement.style.overflow = "hidden";
+      document.documentElement.style.height = "100vh";
     } else {
-      document.body.style.overflow = "unset";
-      document.documentElement.style.overflow = "unset";
+      document.body.style.overflow = "";
+      document.body.style.height = "";
+      document.body.style.position = "";
+      document.body.style.width = "";
+      document.documentElement.style.overflow = "";
+      document.documentElement.style.height = "";
     }
     return () => {
-      document.body.style.overflow = "unset";
-      document.documentElement.style.overflow = "unset";
+      document.body.style.overflow = "";
+      document.body.style.height = "";
+      document.body.style.position = "";
+      document.body.style.width = "";
+      document.documentElement.style.overflow = "";
+      document.documentElement.style.height = "";
     };
   }, [orderForm.symbol, tradeSymbol]);
 
@@ -936,8 +949,14 @@ export function StockSimulatorContent({ tradeSymbol }: { tradeSymbol?: string })
       </div>
     );
 
-  const renderBizenTerminal = () => (
-    <>
+  const renderBizenTerminal = () => {
+    return (
+      <>
+        <style>{`
+          .no-scrollbar::-webkit-scrollbar { display: none; }
+          .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+          @keyframes spin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+        `}</style>
                 
                 <AnimatePresence>
                   {orderForm.symbol && (
@@ -947,12 +966,12 @@ export function StockSimulatorContent({ tradeSymbol }: { tradeSymbol?: string })
                       exit={{ opacity: 0 }}
                       style={{
                         position: "fixed",
-                        top: tradeSymbol ? 60 : 0,
+                        top: 0,
                         left: 0,
                         width: "100vw",
-                        height: tradeSymbol ? "calc(100dvh - 60px)" : "100dvh",
-                        backgroundColor: tradeSymbol ? "#060d1f" : "rgba(11, 30, 94, 0.4)",
-                        backdropFilter: tradeSymbol ? "none" : "blur(8px)",
+                        height: "100dvh",
+                        backgroundColor: "#060d1f",
+                        backdropFilter: "none",
                         zIndex: 99999,
                         display: "flex",
                         alignItems: "center",
@@ -1022,6 +1041,7 @@ export function StockSimulatorContent({ tradeSymbol }: { tradeSymbol?: string })
                             padding: "28px 32px",
                             borderRight: "1px solid rgba(255,255,255,0.07)",
                           }}
+                          className="no-scrollbar"
                         >
 
                         <div
@@ -1532,13 +1552,14 @@ export function StockSimulatorContent({ tradeSymbol }: { tradeSymbol?: string })
                         <div
                           style={{
                             flex: "0 0 420px",
-                            overflowY: "hidden",
+                            overflowY: "auto",
                             padding: "28px 28px",
                             background: "linear-gradient(180deg,#0a1628 0%,#0d1b2e 100%)",
                             display: "flex",
                             flexDirection: "column" as const,
                             gap: 0,
                           }}
+                          className="no-scrollbar"
                         >
                           {/* Right column header */}
                           <div style={{ marginBottom: 24, paddingRight: 44 }}>
@@ -2229,8 +2250,9 @@ export function StockSimulatorContent({ tradeSymbol }: { tradeSymbol?: string })
               </motion.div>
             )}
           </AnimatePresence>
-    </>
-  );
+        </>
+      );
+    };
 
   if (tradeSymbol) return renderBizenTerminal();
 
@@ -2346,6 +2368,10 @@ export function StockSimulatorContent({ tradeSymbol }: { tradeSymbol?: string })
         /* Table rows */
         .sim-row-table { transition: background 0.15s ease; }
         .sim-row-table:hover { background: #f8fafc !important; }
+
+        /* ── Scrolling ─────────────────────────────── */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
         /* Pulsing order button */
         .pulsing-order-btn {

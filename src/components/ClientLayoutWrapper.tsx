@@ -137,9 +137,13 @@ function InnerClientWrapper({ children }: { children: React.ReactNode }) {
   const isBudgetTool = pathname?.startsWith('/tools/budget')
   const isVisionTool = pathname?.startsWith('/tools/vision')
   const isToolsPageExclude = isBudgetTool || isVisionTool
+  const isDashboard = pathname === '/dashboard' || pathname === '/teacher/dashboard'
+  const isCommunityPage = pathname?.startsWith('/comunidad') || pathname?.startsWith('/forum') || pathname?.startsWith('/rankings')
+  const isStore = pathname?.startsWith('/tienda')
+  const isSettings = pathname?.startsWith('/configuracion') || pathname?.startsWith('/cuenta') || pathname?.startsWith('/profile')
   const hideAppNavigation = isAuthPage || isNewsPage || isDiagnosticPage || onboardingActive || isLessonInteractivePage || isTransferPage || isHistoryPage || isInvestmentsPage || isToolsPageExclude || isLivePage;
 
-  const hideChat = isAuthPage || isDiagnosticPage || onboardingActive || isLessonInteractivePage || isCourseTopicPage || isLivePage || isSimulatorPage;
+  const hideChat = isAuthPage || isDiagnosticPage || onboardingActive || isLessonInteractivePage || isCourseTopicPage || isLivePage || isSimulatorPage || isDashboard || isCommunityPage || isStore || isSettings;
 
   // Detect mobile screen size (≤767px)
   useEffect(() => {

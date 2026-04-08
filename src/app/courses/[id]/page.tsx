@@ -34,6 +34,13 @@ export default function DynamicTopicPage() {
                     throw new Error("Error al cargar el tema")
                 }
                 const data = await res.json()
+                
+                // Normalize URL if fallback was used (e.g. lesson slug matched to parent topic)
+                if (data.id && data.id !== id) {
+                    router.replace(`/courses/${data.id}`)
+                    return
+                }
+
                 setTopicData(data)
             } catch (err: any) {
                 setError(err.message)

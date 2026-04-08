@@ -93,15 +93,18 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
     !pathname?.startsWith('/diagnostic') &&
     !pathname?.startsWith('/login') &&
     !pathname?.startsWith('/signup') &&
-    !pathname?.startsWith('/onboarding') &&
-    !pathname?.startsWith('/live') &&
-    !pathname?.includes('/auth/') &&
-    !pathname?.startsWith('/impacto-social') &&
+    !pathname?.startsWith('/onboarding') && 
+    !pathname?.startsWith('/live') && 
+    !pathname?.startsWith('/investments') &&
+    !pathname?.startsWith('/transfer') &&
+    !pathname?.startsWith('/history') &&
+    !pathname?.includes('/auth/') && 
+    !pathname?.startsWith('/impacto-social') && 
     pathname !== '/payment';
 
   return (
     <div className="app-shell" data-topnav-active={isTopNavActive} data-is-live={pathname?.startsWith('/live')}>
-      {pathname?.startsWith('/live') && (
+      {(pathname?.startsWith('/live') || pathname?.startsWith('/investments')) && (
         <style>{`
           body { background: #060c1d !important; }
           .app-shell { background: #060c1d !important; }

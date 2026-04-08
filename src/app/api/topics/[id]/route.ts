@@ -49,6 +49,33 @@ export async function GET(
           }
         });
       }
+
+      // 3. Fallback for lesson slugs appearing in /courses/[id] URLs
+      if (!topic) {
+        const lesson = await prisma.lesson.findUnique({
+          where: { id },
+          include: { course: true }
+        });
+
+        if (lesson?.course?.topicId) {
+          topic = await prisma.topic.findUnique({
+            where: { id: lesson.course.topicId },
+            include: {
+              courses: {
+                include: {
+                  lessons: {
+                    orderBy: { order: 'asc' }
+                  }
+                },
+                orderBy: { order: 'asc' }
+              },
+              _count: {
+                select: { enrollments: true }
+              }
+            }
+          });
+        }
+      }
     } catch (dbErr: any) {
       console.error("Critical error fetching topic with relations:", dbErr.message);
       return NextResponse.json(

@@ -624,16 +624,24 @@ export default function DashboardContent() {
                 )}
               </div>
 
-              {/* right: Virtual Card (Student ONLY) */}
+              {/* right: Virtual Card + Mascot (Student ONLY) */}
               {!isAdminOrTeacher && (
                 <motion.div 
                   variants={{
                     hidden: { opacity: 0, x: 50 },
                     visible: { opacity: 1, x: 0 }
                   }}
-                  className="hero-virtual-card" style={{ flex: "1 1 300px", display: "flex", justifyContent: "flex-end", alignItems: "center" }}
+                  className="hero-virtual-card" 
+                  style={{ 
+                    flex: "1 1 400px", 
+                    display: "flex", 
+                    justifyContent: "center", 
+                    alignItems: "center",
+                    gap: 0,
+                    position: "relative"
+                  }}
                 >
-                  <div style={{ width: "100%", maxWidth: 400 }}>
+                  <div style={{ position: "relative", zIndex: 1, width: "100%", maxWidth: 380 }}>
                     <BizenVirtualCard
                       bizcoins={bizcoins}
                       holderName={dbProfile?.fullName || user?.email?.split("@")[0] || ""}
@@ -641,6 +649,7 @@ export default function DashboardContent() {
                       colorTheme={dbProfile?.cardTheme || "blue"}
                       level={dbProfile?.level || 1}
                       onTransferClick={() => router.push("/transfer")}
+                      onRedeemClick={() => router.push("/tienda")}
                       pattern={(dbProfile?.settings as any)?.cardCustomizations?.pattern || "none"}
                       showBillySticker={(dbProfile?.settings as any)?.cardCustomizations?.showBillySticker || false}
                     />
@@ -1473,8 +1482,8 @@ export default function DashboardContent() {
           ahorro: adnResult.categoryScores?.Ahorro?.percentage ?? 80,
           riesgos: adnResult.categoryScores?.Seguridad?.percentage ?? 80,
         }}
-        nextTopicId={nextLessonInfo?.lessonSlug || "intro"}
-        nextTopicTitle={nextLessonInfo?.lessonSlug ? "Tu Plan Personalizado" : "Explorar Cursos"}
+        nextTopicId={nextLessonInfo?.topic.id || "intro"}
+        nextTopicTitle={nextLessonInfo?.topic.id ? "Tu Plan Personalizado" : "Explorar Cursos"}
         onClose={() => {
           setShowEvolution(false)
           router.replace("/dashboard", { scroll: false })

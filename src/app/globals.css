@@ -1369,34 +1369,24 @@ body.hide-sidebar .app-main {
   0%, 100% { transform: translateY(0px) rotate(0deg); }
   50% { transform: translateY(-10px) rotate(2deg); }
 }
-@keyframes launchPulse {
-  0% { box-shadow: 0 0 0 0 rgba(15, 98, 254, 0.4); }
-  70% { box-shadow: 0 0 0 20px rgba(15, 98, 254, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(15, 98, 254, 0); }
-}
+
 .billy-chat-launcher {
   position: fixed;
   bottom: 32px;
   right: 32px;
-  width: 76px;
-  height: 76px;
-  border-radius: 28px;
   z-index: 10001;
   cursor: pointer;
   border: none;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #0b1e5e 0%, #0F62FE 100%);
-  box-shadow: 0 16px 36px rgba(15, 98, 254, 0.35);
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 .billy-chat-launcher:hover {
   transform: translateY(-8px) scale(1.05);
-  box-shadow: 0 24px 48px rgba(15, 98, 254, 0.45);
 }
 @media (max-width: 767px) {
-  .billy-chat-launcher { width: 64px; height: 64px; bottom: 100px; right: 20px; border-radius: 20px; }
+  .billy-chat-launcher { bottom: 100px; right: 20px; }
 }
 
 /* ─── AppTourOverlay Component ──────────────────────────────────

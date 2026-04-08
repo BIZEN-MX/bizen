@@ -198,11 +198,21 @@ export default function BillyChatbot() {
         onClick={() => setIsOpen(!isOpen)}
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}
-        style={{ animation: isMobile ? 'none' : 'launchPulse 3s infinite' }}
+        style={{ 
+          animation: 'none',
+          background: 'rgba(255, 255, 255, 0.9)',
+          backdropFilter: 'blur(10px)',
+          border: '1px solid rgba(15, 98, 254, 0.15)',
+          width: isMobile ? 54 : 64,
+          height: isMobile ? 54 : 64,
+          boxShadow: '0 12px 24px rgba(15, 98, 254, 0.12)'
+        }}
       >
-        <Billy mood={hasUnread ? "thinking" : "mascot"} size={68} />
+        <div style={{ transform: 'scale(1)', transition: '0.3s' }}>
+          <Billy mood={hasUnread ? "thinking" : "mascot"} size={isMobile ? 42 : 52} />
+        </div>
         {hasUnread && (
-          <div style={{ position: "absolute", top: -4, right: -4, width: 22, height: 22, borderRadius: "50%", background: "#ef4444", border: "4px solid #fff", boxShadow: "0 4px 8px rgba(239, 68, 68, 0.4)" }} />
+          <div style={{ position: "absolute", top: 2, right: 2, width: 14, height: 14, borderRadius: "50%", background: "#ef4444", border: "2px solid #fff", boxShadow: "0 2px 4px rgba(239, 68, 68, 0.4)" }} />
         )}
       </motion.button>
 

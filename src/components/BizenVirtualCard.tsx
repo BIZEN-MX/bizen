@@ -2,7 +2,8 @@
 
 import React, { useRef, useState, useCallback, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { ShoppingBag, Send } from "lucide-react"
+import { motion } from "framer-motion"
+import { Wifi, Send, Gift, CreditCard } from "lucide-react"
 
 // Types & Themes
 export type CardTheme = "blue" | "emerald" | "violet" | "rose" | "amber" | "slate" | "obsidian"
@@ -23,92 +24,126 @@ interface BizenVirtualCardProps {
   level?: number
   showTierBadge?: boolean
   onTransferClick?: () => void
+  onRedeemClick?: () => void
   hideButtons?: boolean
   pattern?: "none" | "geometric" | "circuit" | "dots"
   showBillySticker?: boolean
 }
 
-const THEMES: Record<CardTheme, any> = {
+const THEMES: Record<CardTheme, {
+  bg: string
+  highlight: string
+  orb1: string
+  orb2: string
+  orb3: string
+  textGlow: string
+  shadowHover: string
+  shadowIdle: string
+  borderGlow: string
+  accentColor: string
+}> = {
   blue: {
-    bg: "linear-gradient(135deg, #070d22 0%, #0d2056 42%, #1649b8 75%, #1a56db 100%)",
-    orb1: "rgba(96,165,250,0.28)", orb2: "rgba(167,139,250,0.2)",
-    textGlow: "rgba(96,165,250,0.45)", shadowHover: "rgba(13,42,107,.7)",
-    shadowIdle: "rgba(13,42,107,.55)", glowAnimHover: "rgba(26,86,219,.65)", glowAnimIdle: "rgba(13,42,107,.6)",
+    bg: "linear-gradient(135deg, #060d23 0%, #0d1f5c 25%, #1a3fa8 55%, #2563eb 80%, #60a5fa 100%)",
+    highlight: "linear-gradient(135deg, rgba(96,165,250,0.3) 0%, transparent 60%)",
+    orb1: "rgba(59,130,246,0.55)", orb2: "rgba(147,197,253,0.35)", orb3: "rgba(30,58,138,0.6)",
+    textGlow: "rgba(147,197,253,0.8)", shadowHover: "0 35px 80px rgba(37,99,235,0.6), 0 0 120px rgba(59,130,246,0.2)",
+    shadowIdle: "0 20px 50px rgba(37,99,235,0.35)", borderGlow: "rgba(96,165,250,0.5)",
+    accentColor: "#93c5fd",
   },
   emerald: {
-    bg: "linear-gradient(135deg, #022c22 0%, #064e3b 42%, #059669 75%, #10b981 100%)",
-    orb1: "rgba(52,211,153,0.35)", orb2: "rgba(16,185,129,0.25)",
-    textGlow: "rgba(52,211,153,0.5)", shadowHover: "rgba(2,44,34,.7)",
-    shadowIdle: "rgba(2,44,34,.55)", glowAnimHover: "rgba(5,150,105,.65)", glowAnimIdle: "rgba(2,44,34,.6)",
+    bg: "linear-gradient(135deg, #011a11 0%, #044d2c 25%, #06773e 55%, #059669 80%, #34d399 100%)",
+    highlight: "linear-gradient(135deg, rgba(52,211,153,0.3) 0%, transparent 60%)",
+    orb1: "rgba(5,150,105,0.55)", orb2: "rgba(52,211,153,0.35)", orb3: "rgba(4,77,44,0.6)",
+    textGlow: "rgba(110,231,183,0.8)", shadowHover: "0 35px 80px rgba(5,150,105,0.6), 0 0 120px rgba(16,185,129,0.2)",
+    shadowIdle: "0 20px 50px rgba(5,150,105,0.35)", borderGlow: "rgba(52,211,153,0.5)",
+    accentColor: "#6ee7b7",
   },
   violet: {
-    bg: "linear-gradient(135deg, #2e1065 0%, #4c1d95 42%, #7c3aed 75%, #8b5cf6 100%)",
-    orb1: "rgba(167,139,250,0.35)", orb2: "rgba(196,181,253,0.25)",
-    textGlow: "rgba(167,139,250,0.5)", shadowHover: "rgba(46,16,101,.7)",
-    shadowIdle: "rgba(46,16,101,.55)", glowAnimHover: "rgba(124,58,237,.65)", glowAnimIdle: "rgba(46,16,101,.6)",
+    bg: "linear-gradient(135deg, #1a0b3c 0%, #4c1d95 25%, #6d28d9 55%, #8b5cf6 80%, #c4b5fd 100%)",
+    highlight: "linear-gradient(135deg, rgba(167,139,250,0.3) 0%, transparent 60%)",
+    orb1: "rgba(139,92,246,0.6)", orb2: "rgba(196,181,253,0.4)", orb3: "rgba(76,29,149,0.7)",
+    textGlow: "rgba(196,181,253,0.85)", shadowHover: "0 35px 80px rgba(139,92,246,0.65), 0 0 120px rgba(167,139,250,0.25)",
+    shadowIdle: "0 20px 50px rgba(139,92,246,0.4)", borderGlow: "rgba(196,181,253,0.5)",
+    accentColor: "#ddd6fe",
   },
   rose: {
-    bg: "linear-gradient(135deg, #4c0519 0%, #881337 42%, #e11d48 75%, #f43f5e 100%)",
-    orb1: "rgba(251,113,133,0.35)", orb2: "rgba(244,63,94,0.25)",
-    textGlow: "rgba(251,113,133,0.5)", shadowHover: "rgba(76,5,25,.7)",
-    shadowIdle: "rgba(76,5,25,.55)", glowAnimHover: "rgba(225,29,72,.65)", glowAnimIdle: "rgba(76,5,25,.6)",
+    bg: "linear-gradient(135deg, #200010 0%, #66061d 25%, #b90e32 55%, #e11d48 80%, #fb7185 100%)",
+    highlight: "linear-gradient(135deg, rgba(251,113,133,0.3) 0%, transparent 60%)",
+    orb1: "rgba(225,29,72,0.55)", orb2: "rgba(251,113,133,0.35)", orb3: "rgba(102,6,29,0.6)",
+    textGlow: "rgba(253,164,175,0.8)", shadowHover: "0 35px 80px rgba(225,29,72,0.6), 0 0 120px rgba(244,63,94,0.2)",
+    shadowIdle: "0 20px 50px rgba(225,29,72,0.35)", borderGlow: "rgba(251,113,133,0.5)",
+    accentColor: "#fda4af",
   },
   amber: {
-    bg: "linear-gradient(135deg, #451a03 0%, #78350f 42%, #d97706 75%, #f59e0b 100%)",
-    orb1: "rgba(251,191,36,0.3)", orb2: "rgba(245,158,11,0.2)",
-    textGlow: "rgba(251,191,36,0.5)", shadowHover: "rgba(69,26,3,.7)",
-    shadowIdle: "rgba(69,26,3,.55)", glowAnimHover: "rgba(217,119,6,.65)", glowAnimIdle: "rgba(69,26,3,.6)",
+    bg: "linear-gradient(135deg, #1c0a00 0%, #6b2700 25%, #c45a00 55%, #d97706 80%, #fbbf24 100%)",
+    highlight: "linear-gradient(135deg, rgba(251,191,36,0.3) 0%, transparent 60%)",
+    orb1: "rgba(217,119,6,0.55)", orb2: "rgba(251,191,36,0.35)", orb3: "rgba(107,39,0,0.6)",
+    textGlow: "rgba(252,211,77,0.8)", shadowHover: "0 35px 80px rgba(217,119,6,0.6), 0 0 120px rgba(245,158,11,0.2)",
+    shadowIdle: "0 20px 50px rgba(217,119,6,0.35)", borderGlow: "rgba(251,191,36,0.5)",
+    accentColor: "#fcd34d",
   },
   slate: {
-    bg: "linear-gradient(135deg, #0f172a 0%, #1e293b 42%, #475569 75%, #64748b 100%)",
-    orb1: "rgba(148,163,184,0.3)", orb2: "rgba(100,116,139,0.2)",
-    textGlow: "rgba(148,163,184,0.5)", shadowHover: "rgba(15,23,42,.7)",
-    shadowIdle: "rgba(15,23,42,.55)", glowAnimHover: "rgba(71,85,105,.65)", glowAnimIdle: "rgba(15,23,42,.6)",
+    bg: "linear-gradient(135deg, #060810 0%, #0f172a 25%, #1e2e4a 55%, #2d4165 80%, #64748b 100%)",
+    highlight: "linear-gradient(135deg, rgba(148,163,184,0.25) 0%, transparent 60%)",
+    orb1: "rgba(71,85,105,0.55)", orb2: "rgba(148,163,184,0.3)", orb3: "rgba(15,23,42,0.7)",
+    textGlow: "rgba(203,213,225,0.7)", shadowHover: "0 35px 80px rgba(30,41,59,0.8), 0 0 120px rgba(71,85,105,0.2)",
+    shadowIdle: "0 20px 50px rgba(30,41,59,0.5)", borderGlow: "rgba(148,163,184,0.4)",
+    accentColor: "#cbd5e1",
   },
   obsidian: {
-    bg: "linear-gradient(135deg, #000000 0%, #0a0a0a 42%, #171717 75%, #262626 100%)",
-    orb1: "rgba(82,82,91,0.3)", orb2: "rgba(63,63,70,0.2)",
-    textGlow: "rgba(113,113,122,0.5)", shadowHover: "rgba(0,0,0,.9)",
-    shadowIdle: "rgba(0,0,0,.7)", glowAnimHover: "rgba(38,38,38,.65)", glowAnimIdle: "rgba(0,0,0,.8)",
+    bg: "linear-gradient(135deg, #000000 0%, #0a0a0a 30%, #141414 60%, #1c1c1c 80%, #2a2a2a 100%)",
+    highlight: "linear-gradient(135deg, rgba(255,255,255,0.08) 0%, transparent 60%)",
+    orb1: "rgba(63,63,70,0.4)", orb2: "rgba(113,113,122,0.25)", orb3: "rgba(9,9,11,0.8)",
+    textGlow: "rgba(212,212,216,0.6)", shadowHover: "0 35px 80px rgba(0,0,0,0.9), 0 0 120px rgba(50,50,50,0.15)",
+    shadowIdle: "0 20px 50px rgba(0,0,0,0.7)", borderGlow: "rgba(113,113,122,0.3)",
+    accentColor: "#a1a1aa",
   },
 }
 
-const TIER_CONFIG: Record<CardTier, any> = {
+const TIER_CONFIG: Record<CardTier, {
+  label: string
+  badgeBg: string
+  badgeText: string
+  badgeBorder: string
+  extraShadow?: string
+}> = {
   plastic: { label: "STANDARD", badgeBg: "rgba(255,255,255,0.08)", badgeBorder: "rgba(255,255,255,0.15)", badgeText: "rgba(255,255,255,0.5)" },
-  metal: { label: "METAL", badgeBg: "rgba(209,213,219,0.18)", badgeBorder: "rgba(209,213,219,0.35)", badgeText: "rgba(229,231,235,0.9)", extraShadow: "0 0 30px rgba(209,213,219,0.12)" },
-  carbon: { label: "CARBON", badgeBg: "rgba(15,15,15,0.6)", badgeBorder: "rgba(100,116,139,0.5)", badgeText: "rgba(148,163,184,1)", extraShadow: "0 0 40px rgba(15,98,254,0.18)" },
-  legendary: { label: "✦ LEGENDARY", badgeBg: "linear-gradient(90deg, rgba(217,119,6,0.4), rgba(251,191,36,0.3))", badgeBorder: "rgba(251,191,36,0.6)", badgeText: "#fbbf24", extraShadow: "0 0 60px rgba(251,191,36,0.25)" },
+  metal: { label: "METAL", badgeBg: "rgba(209,213,219,0.15)", badgeBorder: "rgba(209,213,219,0.4)", badgeText: "rgba(229,231,235,0.95)", extraShadow: "0 0 40px rgba(209,213,219,0.12)" },
+  carbon: { label: "CARBON", badgeBg: "rgba(10,10,10,0.7)", badgeBorder: "rgba(100,116,139,0.6)", badgeText: "rgba(148,163,184,1)", extraShadow: "0 0 50px rgba(15,98,254,0.2)" },
+  legendary: { label: "✦ LEGENDARY", badgeBg: "linear-gradient(90deg, rgba(217,119,6,0.5), rgba(251,191,36,0.35))", badgeBorder: "rgba(251,191,36,0.7)", badgeText: "#fbbf24", extraShadow: "0 0 80px rgba(251,191,36,0.3)" },
 }
 
-// Overlays...
-const MetalOverlay = () => <div style={{ position: "absolute", inset: 0, zIndex: 3, backgroundImage: `repeating-linear-gradient(180deg, transparent 0px, transparent 3px, rgba(255,255,255,0.025) 3px, rgba(255,255,255,0.025) 4px)`, mixBlendMode: "overlay" }} />
-const CarbonOverlay = () => <div style={{ position: "absolute", inset: 0, zIndex: 3, backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12'%3E%3Crect width='6' height='6' fill='rgba(255,255,255,0.05)'/%3E%3Crect x='6' y='6' width='6' height='6' fill='rgba(255,255,255,0.05)'/%3E%3C/svg%3E")`, backgroundRepeat: "repeat", mixBlendMode: "overlay", opacity: 0.8 }} />
-const LegendaryOverlay = ({ isHovered }: { isHovered: boolean }) => (
-  <>
-    <div style={{ position: "absolute", inset: 0, zIndex: 4, background: "linear-gradient(105deg, transparent 30%, rgba(255,215,0,0.08) 50%, rgba(255,100,200,0.07) 60%, rgba(100,180,255,0.07) 70%, transparent 80%)", animation: "bzHoloSweep 3s ease-in-out infinite", mixBlendMode: "screen" }} />
-    <div style={{ position: "absolute", inset: 0, zIndex: 5, borderRadius: 20, boxShadow: "inset 0 0 0 1.5px rgba(251,191,36,0.45), inset 0 0 25px rgba(251,191,36,0.08)" }} />
-  </>
-)
-const GeometricOverlay = () => <div style={{ position: "absolute", inset: 0, zIndex: 2, backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 0l20 20-20 20L0 20z' fill='none' stroke='white' stroke-width='1' opacity='0.03'/%3E%3C/svg%3E")`, backgroundRepeat: "repeat", opacity: 0.8 }} />
-const CircuitOverlay = () => <div style={{ position: "absolute", inset: 0, zIndex: 2, backgroundImage: `url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10 10h20v20M50 10v40h30' fill='none' stroke='white' stroke-width='1' opacity='0.04'/%3E%3C/svg%3E")`, backgroundRepeat: "repeat", opacity: 0.9 }} />
-
+// --- Card Chip (EMV) ---
 const ChipSVG = () => (
-  <svg width="46" height="36" viewBox="0 0 46 36">
-    <rect width="46" height="36" rx="6" fill="url(#chipGrad)"/>
-    <defs><linearGradient id="chipGrad" x1="0" y1="0" x2="46" y2="36"><stop offset="0%" stopColor="#c8973a"/><stop offset="100%" stopColor="#b8801a"/></linearGradient></defs>
+  <svg width="42" height="32" viewBox="0 0 48 38">
+    <defs>
+      <linearGradient id="chipG" x1="0" y1="0" x2="48" y2="38">
+        <stop offset="0%" stopColor="#efc14b"/>
+        <stop offset="50%" stopColor="#d4a843"/>
+        <stop offset="100%" stopColor="#a37c2a"/>
+      </linearGradient>
+    </defs>
+    <rect width="48" height="38" rx="5" fill="url(#chipG)"/>
+    <rect x="3" y="3" width="42" height="32" rx="4" fill="none" stroke="rgba(0,0,0,0.2)" strokeWidth="0.5"/>
+    <line x1="0" y1="12" x2="48" y2="12" stroke="rgba(0,0,0,0.15)" strokeWidth="0.5"/>
+    <line x1="0" y1="26" x2="48" y2="26" stroke="rgba(0,0,0,0.15)" strokeWidth="0.5"/>
+    <line x1="16" y1="0" x2="16" y2="38" stroke="rgba(0,0,0,0.15)" strokeWidth="0.5"/>
+    <line x1="32" y1="0" x2="32" y2="38" stroke="rgba(0,0,0,0.15)" strokeWidth="0.5"/>
+    <rect x="16" y="12" width="16" height="14" rx="1.5" fill="rgba(0,0,0,0.08)"/>
   </svg>
 )
 
-const HoloBizenLogo = ({ tier }: { tier: CardTier }) => (
-  <svg width="70" height="26" viewBox="0 0 70 26">
-    <text x="0" y="20" fontSize="22" fontWeight="900" fill="rgba(255,255,255,0.9)">BIZEN</text>
-  </svg>
+const BizenWordmark = ({ accentColor }: { accentColor: string }) => (
+  <div style={{ display: "flex", alignItems: "baseline", gap: 3 }}>
+    <span style={{ fontSize: 22, fontWeight: 900, color: "white", letterSpacing: "-1px" }}>BIZEN</span>
+    <div style={{ width: 5, height: 5, borderRadius: "50%", background: accentColor, boxShadow: `0 0 8px ${accentColor}` }} />
+  </div>
 )
 
 export default function BizenVirtualCard({
   bizcoins, holderName, animationDelay = "0s",
   colorTheme = "blue", level = 1, showTierBadge = true,
-  onTransferClick, hideButtons = false, pattern = "none", showBillySticker = false
+  onTransferClick, onRedeemClick, hideButtons = false, pattern = "none", showBillySticker = false
 }: BizenVirtualCardProps) {
   const router = useRouter()
   const cardRef = useRef<HTMLDivElement>(null)
@@ -126,15 +161,24 @@ export default function BizenVirtualCard({
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
     if (!cardRef.current) return
     const rect = cardRef.current.getBoundingClientRect()
-    const x = e.clientX - rect.left; const y = e.clientY - rect.top
-    const rotX = ((y / rect.height) - 0.5) * -18; const rotY = ((x / rect.width) - 0.5) * 22
+    const x = e.clientX - rect.left
+    const y = e.clientY - rect.top
+    const rotX = ((y / rect.height) - 0.5) * -22
+    const rotY = ((x / rect.width) - 0.5) * 26
+    const gx = (x / rect.width) * 100
+    const gy = (y / rect.height) * 100
     if (rafRef.current) cancelAnimationFrame(rafRef.current)
-    rafRef.current = requestAnimationFrame(() => { setTilt({ x: rotX, y: rotY }); setGlowPos({ x: (x/rect.width)*100, y: (y/rect.height)*100 }) })
+    rafRef.current = requestAnimationFrame(() => {
+      setTilt({ x: rotX, y: rotY })
+      setGlowPos({ x: gx, y: gy })
+    })
   }, [])
 
   const handleMouseLeave = useCallback(() => {
     if (rafRef.current) cancelAnimationFrame(rafRef.current)
-    setTilt({ x: 0, y: 0 }); setGlowPos({ x: 50, y: 50 }); setIsHovered(false)
+    setTilt({ x: 0, y: 0 })
+    setGlowPos({ x: 50, y: 50 })
+    setIsHovered(false)
   }, [])
 
   useEffect(() => {
@@ -142,7 +186,7 @@ export default function BizenVirtualCard({
     const start = displayBizcoins; const end = bizcoins; const duration = 800; const startTime = performance.now()
     const animate = (now: number) => {
       const elapsed = now - startTime; const progress = Math.min(elapsed / duration, 1)
-      const ease = 1 - Math.pow(1 - progress, 3)
+      const ease = 1 - Math.pow(1 - progress, 4)
       setDisplayBizcoins(Math.floor(start + (end - start) * ease))
       if (progress < 1) countRafRef.current = requestAnimationFrame(animate)
     }
@@ -151,52 +195,123 @@ export default function BizenVirtualCard({
   }, [bizcoins])
 
   const lastFour = String(bizcoins).padStart(4, "0").slice(-4)
-  const displayName = (holderName || "USUARIO BIZEN").toUpperCase()
+  const nameParts = (holderName || "USUARIO BIZEN").trim().split(/\s+/)
+  const displayName = (nameParts.length > 2 ? `${nameParts[0]} ${nameParts[1]}` : nameParts.join(" ")).toUpperCase()
 
   return (
-    <>
-      <style>{`
-        @keyframes bzHoloSweep { 0% { transform: translateX(-100%); opacity: 0; } 50% { opacity: 1; } 100% { transform: translateX(200%); opacity: 0; } }
-      `}</style>
-      <div 
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: parseFloat(animationDelay) }}
+      style={{ width: "100%", maxWidth: 440, perspective: "1200px" }}
+    >
+      <div
         ref={cardRef}
         onMouseMove={handleMouseMove}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={handleMouseLeave}
-        onClick={() => router.push("/tienda")}
         style={{
-          perspective: "1200px", width: "100%", maxWidth: 460, aspectRatio: "1.586/1",
-          borderRadius: 20, overflow: "hidden", position: "relative", cursor: "pointer",
+          width: "100%",
+          aspectRatio: "1.586/1",
+          borderRadius: 24,
+          overflow: "hidden",
+          position: "relative",
           transform: `rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) scale(${isHovered ? 1.02 : 1})`,
-          transition: isHovered ? "none" : "transform 0.5s ease",
-          boxShadow: isHovered ? "0 40px 100px rgba(0,0,0,0.3)" : "0 20px 50px rgba(0,0,0,0.1)",
+          transition: isHovered ? "transform 0.05s linear" : "transform 0.5s ease",
+          boxShadow: isHovered ? theme.shadowHover : theme.shadowIdle,
+          background: theme.bg,
+          transformStyle: "preserve-3d",
         }}
       >
-        <div style={{ position: "absolute", inset: 0, background: theme.bg, zIndex: 0 }} />
-        {tier === "metal" && <MetalOverlay />}
-        {tier === "carbon" && <CarbonOverlay />}
-        {tier === "legendary" && <LegendaryOverlay isHovered={isHovered} />}
-        
-        <div style={{ position: "relative", zIndex: 10, height: "100%", padding: 24, display: "flex", flexDirection: "column", justifyContent: "space-between", color: "white" }}>
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <HoloBizenLogo tier={tier} />
-            {showTierBadge && tier !== "plastic" && <div style={{ fontSize: 10, fontWeight: 800, background: "rgba(255,255,255,0.1)", padding: "4px 10px", borderRadius: 99 }}>{tierCfg.label}</div>}
-          </div>
+        {/* Glow Effects */}
+        <div style={{ position: "absolute", top: "-20%", right: "-10%", width: "70%", height: "70%", background: `radial-gradient(circle, ${theme.orb1} 0%, transparent 70%)`, filter: "blur(40px)", opacity: 0.6 }} />
+        <div style={{ position: "absolute", bottom: "-20%", left: "-10%", width: "60%", height: "60%", background: `radial-gradient(circle, ${theme.orb2} 0%, transparent 70%)`, filter: "blur(40px)", opacity: 0.4 }} />
+        <div style={{ position: "absolute", inset: 0, background: `radial-gradient(circle at ${glowPos.x}% ${glowPos.y}%, rgba(255,255,255,0.15) 0%, transparent 50%)`, pointerEvents: "none", opacity: isHovered ? 1 : 0, transition: "opacity 0.3s" }} />
 
-          <div>
-            <div style={{ fontSize: 10, opacity: 0.5, textTransform: "uppercase" }}>Saldo Disponible</div>
-            <div style={{ fontSize: 40, fontWeight: 900 }}>{displayBizcoins.toLocaleString("es-MX")} <span style={{ fontSize: 16 }}>bz</span></div>
-          </div>
+        {/* Shine Sweep */}
+        <motion.div
+          animate={isHovered ? { x: ["-100%", "200%"] } : { x: "-100%" }}
+          transition={{ duration: 1.6, repeat: Infinity, repeatDelay: 1 }}
+          style={{ position: "absolute", inset: 0, background: "linear-gradient(105deg, transparent 35%, rgba(255,255,255,0.05) 45%, rgba(255,255,255,0.15) 50%, rgba(255,255,255,0.05) 55%, transparent 65%)", zIndex: 5, pointerEvents: "none" }}
+        />
 
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
-            <div>
-              <ChipSVG />
-              <div style={{ marginTop: 10, fontSize: 12, fontWeight: 700 }}>{displayName}</div>
+        {/* Card Border Light */}
+        <div style={{ position: "absolute", inset: 0, borderRadius: 24, border: "1.5px solid rgba(255,255,255,0.1)", zIndex: 10, pointerEvents: "none" }} />
+
+        {/* Content Container */}
+        <div style={{ position: "relative", zIndex: 11, height: "100%", padding: "24px 28px", display: "flex", flexDirection: "column", justifyContent: "space-between", color: "white" }}>
+          
+          {/* Top Header */}
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+            <BizenWordmark accentColor={theme.accentColor} />
+            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+              <Wifi size={18} style={{ opacity: 0.4, transform: "rotate(90deg)" }} />
+              <CreditCard size={18} style={{ opacity: 0.4 }} />
             </div>
-            <div style={{ fontSize: 12, opacity: 0.5 }}>•••• •••• •••• {lastFour}</div>
           </div>
+
+          {/* Balance Area */}
+          <div style={{ marginTop: 10 }}>
+            <div style={{ fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 4 }}>Saldo Disponible</div>
+            <div style={{ display: "flex", alignItems: "baseline", gap: 6 }}>
+              <span style={{ fontSize: 44, fontWeight: 900, lineHeight: 1 }}>{displayBizcoins.toLocaleString()}</span>
+              <span style={{ fontSize: 18, fontWeight: 700, opacity: 0.8 }}>BC</span>
+            </div>
+          </div>
+
+          {/* Bottom Row */}
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginTop: "auto" }}>
+            {/* Left: Chip + Name */}
+            <div>
+              <div style={{ marginBottom: 16 }}>
+                <ChipSVG />
+              </div>
+              <div>
+                <div style={{ fontSize: 8, fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.15em", marginBottom: 2 }}>Titular</div>
+                <div style={{ fontSize: 14, fontWeight: 800, letterSpacing: "0.02em" }}>{displayName}</div>
+              </div>
+            </div>
+
+            {/* Right: Number + Buttons */}
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 16 }}>
+              <div style={{ fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,0.5)", letterSpacing: "2.5px", fontFamily: "monospace" }}>
+                •••• •••• •••• {lastFour}
+              </div>
+
+              {!hideButtons && (
+                <div style={{ display: "flex", gap: 8 }}>
+                  <button 
+                    onClick={(e) => { 
+                      e.preventDefault();
+                      e.stopPropagation(); 
+                      if (onTransferClick) onTransferClick();
+                    }}
+                    style={{ 
+                      padding: "8px 16px", borderRadius: 12, 
+                      background: "rgba(255,255,255,0.08)", backdropFilter: "blur(12px)",
+                      border: "1px solid rgba(255,255,255,0.1)",
+                      display: "flex", alignItems: "center", gap: 6,
+                      fontSize: 10, fontWeight: 800, color: "white",
+                      cursor: "pointer", transition: "all 0.2s"
+                    }}
+                    onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.15)"}
+                    onMouseLeave={e => e.currentTarget.style.background = "rgba(255,255,255,0.08)"}
+                  >
+                    <Send size={12} /> TRANSFERIR
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Billy Sticker */}
+          {showBillySticker && (
+            <div style={{ position: "absolute", top: 80, left: 180, width: 44, height: 44, transform: "rotate(-12deg)", opacity: 0.8, filter: "drop-shadow(0 4px 10px rgba(0,0,0,0.3))" }}>
+              <img src="/billy_chatbot.png" alt="Billy" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
+            </div>
+          )}
         </div>
       </div>
-    </>
+    </motion.div>
   )
 }
