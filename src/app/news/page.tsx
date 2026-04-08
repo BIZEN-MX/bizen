@@ -84,7 +84,7 @@ export default function NewsPage() {
           .news-page-container { padding: 20px 16px !important; }
         }
       `}</style>
-      <div style={{ maxWidth: 1200, margin: "0 auto" }}>
+      <div style={{ maxWidth: 1700, margin: "0 auto" }}>
         {/* Header Section */}
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 40, flexWrap: "wrap", gap: 20 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 16 }}>

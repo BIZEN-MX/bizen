@@ -143,7 +143,7 @@ function InnerClientWrapper({ children }: { children: React.ReactNode }) {
   const isSettings = pathname?.startsWith('/configuracion') || pathname?.startsWith('/cuenta') || pathname?.startsWith('/profile')
   const hideAppNavigation = isAuthPage || isNewsPage || isDiagnosticPage || onboardingActive || isLessonInteractivePage || isTransferPage || isHistoryPage || isInvestmentsPage || isToolsPageExclude || isLivePage;
 
-  const hideChat = isAuthPage || isDiagnosticPage || onboardingActive || isLessonInteractivePage || isCourseTopicPage || isLivePage || isSimulatorPage || isDashboard || isCommunityPage || isStore || isSettings;
+  const hideChat = isAuthPage || isDiagnosticPage || onboardingActive || isLessonInteractivePage || isCourseTopicPage || isLivePage || isSimulatorPage;
 
   // Detect mobile screen size (≤767px)
   useEffect(() => {

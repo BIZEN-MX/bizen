@@ -22,6 +22,8 @@ import {
   Newspaper
 } from "lucide-react"
 
+import { Billy } from "./Billy"
+
 export default function MobileFooterNav() {
   const router = useRouter()
   const pathname = usePathname()
@@ -356,6 +358,35 @@ export default function MobileFooterNav() {
             }} />
 
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+              {/* HABLAR CON BILLY AI */}
+              <button
+                onClick={() => {
+                  setShowProfilePanel(false)
+                  window.dispatchEvent(new CustomEvent('open-billy-chat'))
+                }}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "14px",
+                  padding: "14px 18px",
+                  background: "rgba(15, 98, 254, 0.08)",
+                  border: "none",
+                  borderRadius: "16px",
+                  cursor: "pointer",
+                  fontSize: 16,
+                  fontWeight: 700,
+                  color: "#0F62FE",
+                  width: "100%",
+                  textAlign: "left",
+                  transition: "all 0.2s ease"
+                }}
+              >
+                <div style={{ padding: "4px", background: "white", borderRadius: "10px", boxShadow: "0 4px 10px rgba(15, 98, 254, 0.1)" }}>
+                   <Billy mood="mascot" size={28} />
+                </div>
+                <span>Hablar con Billy AI</span>
+              </button>
+
               {/* BIZEN Live */}
               {isInstitutional && (
                 <button

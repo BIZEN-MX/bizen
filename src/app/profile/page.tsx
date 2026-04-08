@@ -673,7 +673,7 @@ export default function ProfilePage() {
         {/* RIGHT COLUMN: BIZEN CARD & SOCIAL */}
         <div className="prof-side fade-up" style={{ width: screenSize < 1200 ? "100%" : 380, display: "flex", flexDirection: "column", gap: 24, animationDelay: "0.15s" }}>
           {/* BIZEN VIRTUAL CARD */}
-          <div className="prof-card fade-up" style={{ padding: "20px", background: "white", animationDelay: "0.15s", borderRadius: 24, overflow: "visible" }}>
+          <div className="prof-card fade-up" style={{ padding: screenSize < 768 ? "12px" : "24px", background: "white", animationDelay: "0.15s", borderRadius: 24, overflow: "visible" }}>
             <div style={{ marginBottom: 16 }}>
               <BizenVirtualCard 
                 holderName={displayName} 

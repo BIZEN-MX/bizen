@@ -38,6 +38,8 @@ const IcoGrid = ({ size = 18, color = "currentColor" }) => (
   </svg>
 )
 
+import { Billy } from "./Billy"
+
 export default function TopNav() {
   const router = useRouter()
   const pathname = usePathname()
@@ -237,6 +239,15 @@ export default function TopNav() {
                   {bizcoins.toLocaleString()}
                 </div>
               )}
+
+              <button 
+                className="topnav-icon-btn" 
+                aria-label="Billy Assistant"
+                onClick={() => window.dispatchEvent(new CustomEvent('open-billy-chat'))}
+                style={{ background: 'rgba(15, 98, 254, 0.06)', borderRadius: '12px', padding: '4px', marginRight: '4px' }}
+              >
+                <Billy mood="mascot" size={28} />
+              </button>
 
               <div style={{ position: 'relative' }} ref={notifRef}>
                 <button 

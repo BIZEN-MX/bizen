@@ -134,9 +134,9 @@ const ChipSVG = () => (
 )
 
 const BizenWordmark = ({ accentColor }: { accentColor: string }) => (
-  <div style={{ display: "flex", alignItems: "baseline", gap: 3 }}>
-    <span style={{ fontSize: 22, fontWeight: 900, color: "white", letterSpacing: "-1px" }}>BIZEN</span>
-    <div style={{ width: 5, height: 5, borderRadius: "50%", background: accentColor, boxShadow: `0 0 8px ${accentColor}` }} />
+  <div style={{ display: "flex", alignItems: "baseline", gap: "0.8cqw" }}>
+    <span style={{ fontSize: "clamp(12px, 5cqw, 22px)", fontWeight: 900, color: "white", letterSpacing: "-0.05cqw" }}>BIZEN</span>
+    <div style={{ width: "1cqw", height: "1cqw", minWidth: 2, minHeight: 2, borderRadius: "50%", background: accentColor, boxShadow: `0 0 0.5cqw ${accentColor}` }} />
   </div>
 )
 
@@ -221,6 +221,7 @@ export default function BizenVirtualCard({
           boxShadow: isHovered ? theme.shadowHover : theme.shadowIdle,
           background: theme.bg,
           transformStyle: "preserve-3d",
+          containerType: "inline-size"
         }}
       >
         {/* Glow Effects */}
@@ -239,7 +240,7 @@ export default function BizenVirtualCard({
         <div style={{ position: "absolute", inset: 0, borderRadius: 24, border: "1.5px solid rgba(255,255,255,0.1)", zIndex: 10, pointerEvents: "none" }} />
 
         {/* Content Container */}
-        <div style={{ position: "relative", zIndex: 11, height: "100%", padding: "24px 28px", display: "flex", flexDirection: "column", justifyContent: "space-between", color: "white" }}>
+        <div style={{ position: "relative", zIndex: 11, height: "100%", padding: "5cqw 6cqw", display: "flex", flexDirection: "column", justifyContent: "space-between", color: "white" }}>
           
           {/* Top Header */}
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
@@ -252,10 +253,10 @@ export default function BizenVirtualCard({
 
           {/* Balance Area */}
           <div style={{ marginTop: 10 }}>
-            <div style={{ fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 4 }}>Saldo Disponible</div>
+            <div style={{ fontSize: "clamp(8px, 2.5cqw, 10px)", fontWeight: 700, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 2 }}>Saldo Disponible</div>
             <div style={{ display: "flex", alignItems: "baseline", gap: 6 }}>
-              <span style={{ fontSize: 44, fontWeight: 900, lineHeight: 1 }}>{displayBizcoins.toLocaleString()}</span>
-              <span style={{ fontSize: 18, fontWeight: 700, opacity: 0.8 }}>BC</span>
+              <span style={{ fontSize: "clamp(24px, 10cqw, 44px)", fontWeight: 900, lineHeight: 1 }}>{displayBizcoins.toLocaleString()}</span>
+              <span style={{ fontSize: "clamp(12px, 4cqw, 18px)", fontWeight: 700, opacity: 0.8 }}>BC</span>
             </div>
           </div>
 
@@ -267,14 +268,14 @@ export default function BizenVirtualCard({
                 <ChipSVG />
               </div>
               <div>
-                <div style={{ fontSize: 8, fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.15em", marginBottom: 2 }}>Titular</div>
-                <div style={{ fontSize: 14, fontWeight: 800, letterSpacing: "0.02em" }}>{displayName}</div>
+                <div style={{ fontSize: "clamp(6px, 1.8cqw, 8px)", fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.15em", marginBottom: 2 }}>Titular</div>
+                <div style={{ fontSize: "clamp(10px, 3.2cqw, 14px)", fontWeight: 800, letterSpacing: "0.02em" }}>{displayName}</div>
               </div>
             </div>
 
             {/* Right: Number + Buttons */}
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 16 }}>
-              <div style={{ fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,0.5)", letterSpacing: "2.5px", fontFamily: "monospace" }}>
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "2cqw" }}>
+              <div style={{ fontSize: "clamp(8px, 2.8cqw, 12px)", fontWeight: 600, color: "rgba(255,255,255,0.5)", letterSpacing: "0.2cqw", fontFamily: "monospace" }}>
                 •••• •••• •••• {lastFour}
               </div>
 

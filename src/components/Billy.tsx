@@ -126,13 +126,13 @@ export function Billy({
         <motion.div
            key={mood + (isTalking ? "-talking" : "-idle")}
            style={{ 
-             rotateX: isStatic ? 0 : rotateX, 
-             rotateY: isStatic ? 0 : rotateY, 
+             rotateX: 0, 
+             rotateY: 0, 
              y: springFloatY,
              transformStyle: "preserve-3d" 
            }}
-           whileHover={isStatic ? {} : { scale: 1.08 }}
-           whileTap={isStatic ? {} : { scale: 0.92 }}
+           whileHover={isStatic ? {} : { scale: 1 }}
+           whileTap={isStatic ? {} : { scale: 0.96 }}
            onClick={onClick}
            className={`relative z-10 w-full h-full flex items-center justify-center ${isStatic ? '' : 'cursor-pointer'}`}
         >

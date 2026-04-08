@@ -33,6 +33,9 @@ import {
   AlertCircle,
   ArrowDown,
   ArrowUp,
+  BookOpen,
+  Download,
+  FileText,
 } from "lucide-react";
 import {
   ResponsiveContainer,
@@ -841,6 +844,7 @@ export function StockSimulatorContent({ tradeSymbol }: { tradeSymbol?: string })
     { id: "orders", label: "Historial", icon: Clock },
     { id: "watchlist", label: "Watchlist", icon: Target },
     { id: "rankings", label: "Rankings", icon: Flame },
+    { id: "resources", label: "Recursos", icon: BookOpen },
   ];
 
   if (loading || (user && !dataFetched)) return <PageLoader />;

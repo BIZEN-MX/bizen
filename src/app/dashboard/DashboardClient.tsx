@@ -350,50 +350,36 @@ export default function DashboardContent() {
     else setIsSyncing(true)
     
     try {
-      const [sR, tR, pR, dR, profR, transR] = await Promise.all([
-        fetch("/api/user/stats"),
-        fetch("/api/topics"),
-        fetch("/api/progress"),
-        fetch(`/api/diagnostic-quiz?email=${encodeURIComponent(user.email)}`),
-        fetch("/api/profile"),
-        fetch("/api/wallet/transactions?limit=10")
-      ])
+      const res = await fetch("/api/dashboard-init")
+      
+      if (!res.ok) {
+         if (res.status === 401) { router.replace("/login"); return }
+         throw new Error(`Failed to load dashboard: ${res.status}`)
+      }
 
-      // Only update stats IF we got a valid response (avoid flashing 0s)
-      if (sR.ok) {
-        const newStats = await sR.json()
-        if (newStats && typeof newStats.bizcoins === 'number') {
-          // Detect changes for pulse effects
-          if (stats) {
-            if (newStats.xp !== stats.xp) {
-              setShowPulseXp(true)
-              setTimeout(() => setShowPulseXp(false), 2000)
-            }
-            if (newStats.bizcoins !== stats.bizcoins) {
-              setShowPulseBc(true)
-              setTimeout(() => setShowPulseBc(false), 2000)
-            }
+      const data = await res.json()
+      
+      // Update stats and handle pulses
+      if (data.stats) {
+        if (stats) {
+          if (data.stats.xp !== stats.xp) {
+            setShowPulseXp(true)
+            setTimeout(() => setShowPulseXp(false), 2000)
           }
-          setStats(newStats)
+          if (data.stats.bizcoins !== stats.bizcoins) {
+            setShowPulseBc(true)
+            setTimeout(() => setShowPulseBc(false), 2000)
+          }
         }
+        setStats(data.stats)
       }
 
-      if (tR.ok) setTopics(await tR.json())
-      if (pR.ok) {
-        const pd = await pR.json()
-        setCompletedLessons(
-          (pd.progress ?? pd ?? []).map((p: any) => p.lessonId || p.slug || "").filter(Boolean)
-        )
-      }
-      if (dR.ok) {
-        const dd = await dR.json()
-        if (dd.exists) setDnaResult(dd.result)
-      }
-      if (profR.ok) setLiveProfile(await profR.json())
-      if (transR.ok) {
-        const td = await transR.json()
-        setTransactions(td.transactions || [])
-      }
+      if (data.topics) setTopics(data.topics)
+      if (data.progress) setCompletedLessons(data.progress)
+      if (data.diagnostic?.exists) setDnaResult(data.diagnostic)
+      if (data.profile) setLiveProfile(data.profile)
+      if (data.transactions) setTransactions(data.transactions)
+
     } catch (err) {
       console.error("Dashboard Sync Error:", err)
     } finally {
@@ -732,6 +718,11 @@ export default function DashboardContent() {
                 <motion.div
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
+                    whileHover={{ 
+                        y: -2,
+                        borderColor: "rgba(255,255,255,0.35)",
+                        boxShadow: "0 20px 50px rgba(15, 23, 42, 0.35)"
+                    }}
                     style={{
                         background: "linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%)",
                         borderRadius: 28,
@@ -743,7 +734,8 @@ export default function DashboardContent() {
                         boxShadow: "0 12px 40px rgba(15, 23, 42, 0.25)",
                         border: "1.5px solid rgba(255,255,255,0.18)",
                         position: "relative",
-                        overflow: "hidden"
+                        overflow: "hidden",
+                        transition: "border-color 0.3s ease"
                     }}
                 >
                     <div style={{ position: "absolute", top: "-50%", right: "-10%", width: 250, height: 250, background: "rgba(255,255,255,0.12)", borderRadius: "50%", filter: "blur(60px)" }} />
@@ -758,8 +750,14 @@ export default function DashboardContent() {
                         </div>
                     </div>
                     
-                    <button
+                    <motion.button
                         onClick={() => router.push("/diagnostic/1")}
+                        whileHover={{ 
+                          scale: 1.02, 
+                          y: -2,
+                          boxShadow: "0 10px 25px rgba(0,0,0,0.15)"
+                        }}
+                        whileTap={{ scale: 0.98 }}
                         style={{
                             background: "#fff",
                             color: "#0F62FE",
@@ -775,12 +773,12 @@ export default function DashboardContent() {
                             gap: 8,
                             position: "relative",
                             zIndex: 1,
-                            transition: "all 0.3s"
+                            transition: "all 0.2s"
                         }}
                     >
                         Empezar
                         <ChevronRight size={18} />
-                    </button>
+                    </motion.button>
                 </motion.div>
 
                 <motion.div
