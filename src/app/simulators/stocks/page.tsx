@@ -488,6 +488,20 @@ export function StockSimulatorContent({ tradeSymbol }: { tradeSymbol?: string })
     window.location.href = `/simulators/stocks/trade?symbol=${symbol}`;
   };
 
+  useEffect(() => {
+    if (orderForm.symbol || tradeSymbol) {
+      document.body.style.overflow = "hidden";
+      document.documentElement.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+      document.documentElement.style.overflow = "unset";
+    }
+    return () => {
+      document.body.style.overflow = "unset";
+      document.documentElement.style.overflow = "unset";
+    };
+  }, [orderForm.symbol, tradeSymbol]);
+
   const fetchRankings = async () => {
     if (leaderboard.length > 0) return;
     setFetchingRankings(true);
@@ -2518,7 +2532,7 @@ export function StockSimulatorContent({ tradeSymbol }: { tradeSymbol?: string })
             maxWidth: "100%",
             margin: "0",
             padding: "clamp(12px, 2.5vw, 24px) clamp(16px, 2.5vw, 32px)",
-            paddingBottom: 64,
+            paddingBottom: 24,
           }}
         >
           {/* Bonus Claim Banner */}
@@ -3164,6 +3178,7 @@ export function StockSimulatorContent({ tradeSymbol }: { tradeSymbol?: string })
                             height: 220,
                             width: "100%",
                             position: "relative",
+                            padding: "0 20px 40px"
                           }}
                         >
                           <ResponsiveContainer width="100%" height="100%">

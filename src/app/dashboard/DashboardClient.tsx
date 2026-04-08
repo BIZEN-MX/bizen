@@ -474,7 +474,7 @@ export default function DashboardContent() {
             alignItems: "center", 
             justifyContent: "flex-end", 
             gap: 8, 
-            marginBottom: 16,
+            marginBottom: 4,
             paddingRight: 8
           }}
         >
@@ -511,8 +511,8 @@ export default function DashboardContent() {
             }}
             style={{
               background: isAdminOrTeacher ? "linear-gradient(135deg, #0f172a 0%, #1e3a8a 55%, #0F62FE 100%)" : "linear-gradient(135deg,#0a0f2e 0%,#0d2a6b 45%,#1a56db 100%)",
-              borderRadius: 32, padding: "clamp(24px,4vw,40px) clamp(22px,4vw,36px)",
-              marginBottom: 16, position: "relative", overflow: "hidden",
+              borderRadius: 32, padding: "clamp(20px,3vw,32px) clamp(22px,4vw,36px)",
+              marginBottom: 12, position: "relative", overflow: "hidden",
               boxShadow: "0 24px 64px rgba(13,42,107,.35), inset 0 1px 0 rgba(255,255,255,.08)",
             }}
           >
@@ -724,14 +724,14 @@ export default function DashboardContent() {
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     style={{
-                        background: "linear-gradient(135deg, #083344 0%, #164e63 45%, #0891b2 100%)",
+                        background: "linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%)",
                         borderRadius: 28,
                         padding: "24px 32px",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "space-between",
                         gap: 24,
-                        boxShadow: "0 12px 40px rgba(8, 145, 178, 0.25)",
+                        boxShadow: "0 12px 40px rgba(15, 23, 42, 0.25)",
                         border: "1.5px solid rgba(255,255,255,0.18)",
                         position: "relative",
                         overflow: "hidden"

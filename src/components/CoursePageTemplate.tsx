@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation"
 import Image from "next/image"
 import { motion, AnimatePresence } from "framer-motion"
 import { useAuth } from "@/contexts/AuthContext"
+import PageLoader from "@/components/PageLoader"
 import { useLessonProgress } from "@/hooks/useLessonProgress"
 import { StarIcon } from "@/components/icons/StarIcon"
 import { SUBTEMAS_BY_COURSE } from "@/data/lessons/courseLessonsOrder"
@@ -206,9 +207,9 @@ export default function CoursePageTemplate({
 
     React.useEffect(() => {
         if (!loading && !user) {
-            window.open("/login", "_blank")
+            router.push("/login?redirect=" + encodeURIComponent(window.location.pathname))
         }
-    }, [loading, user])
+    }, [loading, user, router])
 
     // Billy Insights
     useEffect(() => {
@@ -288,6 +289,10 @@ export default function CoursePageTemplate({
         return 1;
     }, [completedLessons]);
 
+    if (loading || !user) {
+        return <PageLoader />;
+    }
+
     const currentTopicNumStr = topicId.toString().replace('tema-', '').replace(/^0+/, '')
     const currentTopicNum = parseInt(currentTopicNumStr)
     const isTopicLockedBySequence = false; // Bloqueo desactivado para pruebas
@@ -296,9 +301,8 @@ export default function CoursePageTemplate({
     const totalInTopic = allLessonsInTopic.length
     const topicPct = totalInTopic > 0 ? Math.round((completedInTopic / totalInTopic) * 100) : 0
 
-    if (loading || !user) {
-        return <div style={{ minHeight: "50vh", display: "flex", alignItems: "center", justifyContent: "center", }} />
-    }
+    // AppLayout handles loading/unauth states for protected routes.
+    // We only need to handle the case where we can't determine the topic yet.
 
     if (isTopicLockedBySequence) {
         return (
@@ -337,7 +341,7 @@ export default function CoursePageTemplate({
             boxSizing: "border-box",
             marginBottom: 0,
             margin: 0,
-            paddingTop: "84px", // Replaces AppLayout top padding
+            paddingTop: 0,
             paddingBottom: 0,
             paddingLeft: 0,
             paddingRight: 0,

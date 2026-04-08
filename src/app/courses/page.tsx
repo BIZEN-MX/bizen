@@ -261,7 +261,7 @@ export default function CoursesPage() {
       boxSizing: "border-box",
       marginBottom: 0,
       margin: 0,
-      paddingTop: "84px", // Replaces AppLayout top padding
+      paddingTop: 0,
       paddingBottom: 0,
       paddingLeft: 0,
       paddingRight: 0,
@@ -512,9 +512,7 @@ export default function CoursesPage() {
               const coreTopics = allTopics.slice(0, 5);
               const advancedTopics = allTopics.slice(5);
 
-              const renderSection = (topics: typeof allTopics, title: string, subtitle: string, startIndex: number) => {
-                const totalTopics = topics.length;
-
+              const renderSection = (topics: typeof allTopics, title: string, subtitle: string) => {
                 return (
                   <div key={title} style={{ width: "100%", display: "flex", flexDirection: "column", alignItems: "stretch", marginBottom: 60 }}>
                     <div style={{ textAlign: "center" as const, marginBottom: 40, padding: "0 20px" }}>
@@ -537,199 +535,125 @@ export default function CoursesPage() {
 
                     <div style={{
                       display: "grid",
-                      gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-                      justifyItems: "center",
-                      gap: "60px 40px",
+                      gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))",
+                      gap: "24px",
                       width: "100%",
                       maxWidth: "none",
-                      margin: "0 auto",
-                      position: "relative",
                       padding: "0 24px"
                     }}>
-                      {topics.map((topic, idx) => {
-                        const globalIdx = startIndex + idx;
-                        const rowIdx = Math.floor(idx / 2);
-                        const isEvenRow = rowIdx % 2 === 0;
-                        const isLastInRow = idx % 2 === 1;
-                        const isLastTopic = idx === topics.length - 1;
-                        const isOrphan = isLastTopic && idx % 2 === 0;
-
-                        // SPECIALIZATION LOGIC: ADN Bypass
+                      {topics.map((topic) => {
                         const isDnaSpecialist = dbProfile?.adnProfile === "Billy Inversionista";
                         const isDnaRecommended = isDnaSpecialist && (topic.id === "tema-09" || topic.id === "tema-10");
                         const isDnaSkipped = isDnaSpecialist && (topic.id === "tema-06" || topic.id === "tema-07" || topic.id === "tema-08");
 
-                        // Determine visual position in grid
-                        let gridColumn = (idx % 2) + 1;
-                        if (!isEvenRow) {
-                          gridColumn = idx % 2 === 0 ? 2 : 1; 
-                        }
-
-                        // If it's an orphan, center it across both columns
-                        const gridColValue = isOrphan ? "1 / span 2" : gridColumn.toString();
-
                         const isPremiumTopic = topic.displayOrder > 1;
                         const isPaywalled = isPremiumTopic && !hasPremiumAccess;
-                        const isSequenceLocked = false; // Bloqueo de secuencia desactivado para pruebas
-                        
-                        // LOCKED if (paywalled OR out of order) AND NOT (unlocked by ADN)
+                        const isSequenceLocked = false; 
                         const isLocked = (isPaywalled || isSequenceLocked) && !isDnaRecommended;
 
                         return (
-                          <React.Fragment key={topic.id}>
-                            <motion.div
-                              whileHover={{ y: -5, scale: 1.01 }}
-                              transition={{ type: "spring", stiffness: 400, damping: 17 }}
-                              onClick={() => {
-                                if (!dbProfile && user) return;
-                                if (isLocked) {
-                                  if (isSequenceLocked) {
-                                    setTopicWarning(true);
-                                    return;
-                                  }
-                                  if (isPaywalled) {
-                                    router.push('/payment');
-                                    return;
-                                  }
-                                } else {
-                                  router.push(`/courses/${topic.id}`);
+                          <motion.div
+                            key={topic.id}
+                            whileHover={{ y: -5, scale: 1.02 }}
+                            transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                            onClick={() => {
+                              if (!dbProfile && user) return;
+                              if (isLocked) {
+                                if (isSequenceLocked) {
+                                  setTopicWarning(true);
+                                  return;
                                 }
-                              }}
-                              style={{
-                                justifySelf: "center",
-                                width: "260px",
-                                height: "260px",
-                                aspectRatio: "1 / 1",
-                                cursor: "pointer",
-                                borderRadius: "50%",
-                                background: isLocked 
-                                  ? `linear-gradient(135deg, rgba(241, 245, 249, 0.8), rgba(241, 245, 249, 0.4))`
-                                  : (isDnaRecommended 
-                                      ? "linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 100%)" 
-                                      : `linear-gradient(135deg, rgba(255, 255, 255, 0.8), ${topic.catColor}15)`),
-                                backgroundColor: isLocked ? "rgba(241, 245, 249, 0.6)" : "rgba(255, 255, 255, 0.3)",
-                                backdropFilter: "blur(20px)",
-                                WebkitBackdropFilter: "blur(20px)",
-                                border: isLocked 
-                                  ? "1.5px solid rgba(255, 255, 255, 0.6)" 
-                                  : (isDnaRecommended 
-                                      ? "2px solid #60a5fa" 
-                                      : `1.5px solid ${topic.catColor}30`),
-                                boxShadow: isDnaRecommended 
-                                  ? "0 20px 40px rgba(37, 99, 235, 0.3)" 
-                                  : (isLocked ? "none" : "0 10px 30px rgba(0, 0, 0, 0.03)"),
-                                transition: "all 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
-                                overflow: "hidden",
-                                display: "flex",
-                                flexDirection: "column",
-                                justifyContent: "center",
-                                alignItems: "center",
-                                textAlign: "center",
-                                position: "relative",
-                                opacity: isDnaSkipped ? 0.6 : (isLocked ? 0.8 : 1),
-                                pointerEvents: "auto",
-                                zIndex: 2
-                              }}
-                              className={topic.id === nextTopicId && !isDnaRecommended ? "next-topic-glow" : (isDnaRecommended ? "adn-glow-pulse" : "")}
-                            >
-                              <div style={{ padding: "24px", height: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", gap: 8 }}>
-                                <div style={{ fontSize: 10, fontWeight: 400, color: isDnaRecommended ? "#93c5fd" : "#94a3b8", letterSpacing: "0.08em", textTransform: "uppercase" }}>
-                                  TEMA {topic.displayOrder.toString().padStart(2, "0")}
-                                </div>
-                                
-                                <h3 style={{ fontSize: 18, fontWeight: 600, color: isDnaRecommended ? "#fff" : "#1e293b", margin: 0, lineHeight: 1.2, maxWidth: "180px" }}>{topic.title}</h3>
-                                
-                                {isDnaSkipped && (
-                                  <div style={{ fontSize: 10, fontWeight: 400, color: "#64748b", marginTop: 4, display: "flex", alignItems: "center", gap: 4 }}>
-                                    <Sparkles size={11} color={topic.catColor} /> BILLY ADN
-                                  </div>
-                                )}
-                                
-                                <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 8, fontSize: 11, color: isDnaRecommended ? "rgba(255,255,255,0.8)" : "#64748b" }}>
-                                  <BookOpen size={14} color={isDnaRecommended ? "#fff" : (isLocked ? "#94a3b8" : topic.catColor)} />
-                                  <span style={{ fontWeight: 400 }}>{topic.lessons} cursos</span>
-                                </div>
+                                if (isPaywalled) {
+                                  router.push('/payment');
+                                  return;
+                                }
+                              } else {
+                                router.push(`/courses/${topic.id}`);
+                              }
+                            }}
+                            style={{
+                              cursor: "pointer",
+                              borderRadius: "24px",
+                              background: isLocked 
+                                ? `linear-gradient(135deg, rgba(241, 245, 249, 0.8), rgba(241, 245, 249, 0.4))`
+                                : (isDnaRecommended 
+                                    ? "linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 100%)" 
+                                    : `rgba(255, 255, 255, 0.8)`),
+                              border: isLocked 
+                                ? "1.5px solid rgba(255, 255, 255, 0.6)" 
+                                : (isDnaRecommended 
+                                    ? "2px solid #60a5fa" 
+                                    : `1.5px solid rgba(255, 255, 255, 0.8)`),
+                              boxShadow: isDnaRecommended 
+                                ? "0 20px 40px rgba(37, 99, 235, 0.2)" 
+                                : "0 10px 30px rgba(0, 0, 0, 0.03)",
+                              transition: "all 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
+                              overflow: "hidden",
+                              padding: "24px",
+                              display: "flex",
+                              flexDirection: "column",
+                              justifyContent: "space-between",
+                              minHeight: "220px",
+                              opacity: isDnaSkipped ? 0.6 : (isLocked ? 0.8 : 1),
+                              position: "relative",
+                            }}
+                            className={topic.id === nextTopicId && !isDnaRecommended ? "next-topic-glow" : (isDnaRecommended ? "adn-glow-pulse" : "")}
+                          >
+                            <div>
+                               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 12 }}>
+                                 <div style={{ 
+                                   width: 48, 
+                                   height: 48, 
+                                   borderRadius: 14, 
+                                   background: isDnaRecommended ? "rgba(255,255,255,0.15)" : `${topic.catColor}15`,
+                                   display: "flex",
+                                   alignItems: "center",
+                                   justifyContent: "center"
+                                 }}>
+                                   <topic.icon size={24} color={isDnaRecommended ? "#fff" : topic.catColor} />
+                                 </div>
+                                 <div style={{ fontSize: 11, fontWeight: 700, color: isDnaRecommended ? "#93c5fd" : "#94a3b8", letterSpacing: "0.05em" }}>
+                                    #{topic.displayOrder.toString().padStart(2, "0")}
+                                 </div>
+                               </div>
 
-                                <div style={{ 
-                                  marginTop: 10,
-                                  fontSize: 9, 
-                                  fontWeight: 600, 
-                                  color: isDnaRecommended ? "#fff" : (isLocked ? '#64748b' : topic.catColor), 
-                                  background: isDnaRecommended ? "rgba(255,255,255,0.2)" : (isLocked ? 'rgba(255,255,255,0.4)' : `${topic.catColor}15`), 
-                                  padding: "3px 8px", 
-                                  borderRadius: 999, 
-                                  textTransform: "uppercase",
-                                  border: `1px solid ${isDnaRecommended ? "rgba(255,255,255,0.3)" : (isLocked ? 'rgba(0,0,0,0.05)' : `${topic.catColor}30`)}`,
-                                }}>
-                                  {isDnaRecommended ? "Recomendado" : (isPaywalled ? 'Premium' : topic.category)}
+                               <h3 style={{ fontSize: 20, fontWeight: 700, color: isDnaRecommended ? "#fff" : "#1e293b", margin: "0 0 8px", lineHeight: 1.3 }}>
+                                 {topic.title}
+                               </h3>
+                               
+                               {isDnaRecommended && (
+                                 <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11, color: "#93c5fd", fontWeight: 600, marginBottom: 12 }}>
+                                   <Sparkles size={14} /> RECOMENDADO BILLY ADN
+                                 </div>
+                               )}
+                            </div>
+
+                            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: "auto" }}>
+                              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                                <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, color: isDnaRecommended ? "rgba(255,255,255,0.8)" : "#64748b" }}>
+                                  <BookOpen size={16} color={isDnaRecommended ? "#fff" : topic.catColor} />
+                                  <span>{topic.lessons} cursos</span>
                                 </div>
                               </div>
-                              {isLocked && (
-                                <div style={{ position: "absolute", bottom: 12, right: 12 }}>
-                                  {isPaywalled ? <Sparkles size={16} color="#f59e0b" /> : <Zap size={16} color="#94a3b8" opacity={0.5} />}
-                                </div>
-                              )}
-                            </motion.div>
+                              <div style={{ 
+                                fontSize: 10, 
+                                fontWeight: 700, 
+                                color: isDnaRecommended ? "#fff" : topic.catColor, 
+                                background: isDnaRecommended ? "rgba(255,255,255,0.2)" : `${topic.catColor}15`, 
+                                padding: "4px 10px", 
+                                borderRadius: 10,
+                                textTransform: "uppercase"
+                              }}>
+                                {isPaywalled ? "Premium" : topic.category}
+                              </div>
+                            </div>
 
-                            {/* Connection Arrow Logic */}
-                            {!isLastTopic && (() => {
-                              const nextTopic = topics[idx + 1];
-                              const isTurnRow = (idx + 1) % 2 === 0; // Turn row every 2 topics
-                              const isDestLocked = (nextTopic.displayOrder > 1 && !hasPremiumAccess); // Solo bloqueado si es premium y no tiene acceso, no por secuencia
-                              const arrowColor = isDestLocked ? "#cbd5e1" : "#3b82f6";
-                              const isRightToLeft = !isEvenRow;
-
-                              if ((idx + 1) % 2 !== 0) {
-                                // Horizontal arrow between columns
-                                return (
-                                  <div style={{
-                                    position: "absolute",
-                                    top: `calc(${rowIdx * 280}px + 120px)`, // Perfect center of 240px circle
-                                    left: "50%",
-                                    transform: "translateX(-50%)",
-                                    width: 60,
-                                    height: 20,
-                                    zIndex: 1,
-                                    display: "flex",
-                                    justifyContent: "center",
-                                    alignItems: "center"
-                                  }}>
-                                    <svg width="40" height="20" viewBox="0 0 40 20" fill="none">
-                                      {isRightToLeft ? (
-                                        <path d="M15 5L5 10L15 15M35 10H7" stroke={arrowColor} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                                      ) : (
-                                        <path d="M25 5L35 10L25 15M5 10H33" stroke={arrowColor} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                                      )}
-                                    </svg>
-                                  </div>
-                                );
-                              } else {
-                                // Vertical arrow between rows
-                                // If row 0, arrow is on Right (idx 1 down to 2)
-                                // If row 1, arrow is on Left (idx 3 down to 4)
-                                const isArrowOnRight = isEvenRow; 
-                                
-                                // Special case: if next topic is an orphan, center the arrow
-                                const isNextOrphan = (idx + 1) === topics.length - 1 && (idx + 1) % 2 === 0;
-
-                                return (
-                                  <div style={{
-                                    position: "absolute",
-                                    top: `calc(${rowIdx * 280}px + 240px)`, // Bottom of 240px circle
-                                    left: isNextOrphan ? "50%" : (isArrowOnRight ? "calc(75% + 10px)" : "calc(25% - 10px)"),
-                                    transform: "translateX(-50%)",
-                                    height: 40,
-                                    width: 20,
-                                    zIndex: 1
-                                  }}>
-                                    <svg width="20" height="40" viewBox="0 0 20 40" fill="none">
-                                      <path d="M5 25L10 35L15 25M10 5V33" stroke={arrowColor} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                                    </svg>
-                                  </div>
-                                );
-                              }
-                            })()}
-                          </React.Fragment>
+                            {isLocked && (
+                              <div style={{ position: "absolute", top: 12, right: 12 }}>
+                                {isPaywalled ? <Sparkles size={16} color="#f59e0b" /> : <Zap size={16} color="#94a3b8" opacity={0.5} />}
+                              </div>
+                            )}
+                          </motion.div>
                         )
                       })}
                     </div>
@@ -765,7 +689,7 @@ export default function CoursesPage() {
               }
 
               return [
-                coreTopics.length > 0 && renderSection(coreTopics, "Fase 1: Cimientos (Tronco Común)", "Los 5 pilares fundamentales para dominar el dinero.", 0),
+                coreTopics.length > 0 && renderSection(coreTopics, "Fase 1: Cimientos (Tronco Común)", "Los 5 pilares fundamentales para dominar el dinero."),
                 advancedTopics.length > 0 && (
                   <React.Fragment key="advanced-phase">
                     <div key="separator" style={{ width: "100%", display: "flex", justifyContent: "center", marginBottom: 60, marginTop: -40 }}>
@@ -775,7 +699,7 @@ export default function CoursesPage() {
                           <div style={{ width: 2, height: 40, background: "linear-gradient(to top, #6366f1, transparent)" }} />
                        </div>
                     </div>
-                    {renderSection(advancedTopics, "Fase 2: Especialización ADN", "Rutas personalizadas basadas en tu perfil analítico y metas personales.", 5)}
+                    {renderSection(advancedTopics, "Fase 2: Especialización ADN", "Rutas personalizadas basadas en tu perfil analítico y metas personales.")}
                   </React.Fragment>
                 )
               ]
@@ -790,12 +714,6 @@ export default function CoursesPage() {
           .courses-page-active div[style*="gridTemplateColumns"] {
             grid-template-columns: 1fr !important;
             gap: 24px !important;
-          }
-          
-          /* Hide connection arrows on mobile stack */
-          .courses-page-active svg[width="40"],
-          .courses-page-active svg[width="20"] {
-            display: none !important;
           }
         }
 

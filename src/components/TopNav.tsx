@@ -197,7 +197,6 @@ export default function TopNav() {
               className={`topnav-plan-badge ${isBasicPlan ? 'basic' : 'premium'}`}
               onClick={isBasicPlan ? (e) => { e.stopPropagation(); router.push('/payment') } : undefined}
             >
-              <span className="topnav-plan-dot" style={{ background: isBasicPlan ? '#94a3b8' : '#0F62FE' }} />
               {planLabel}
             </span>
           )}

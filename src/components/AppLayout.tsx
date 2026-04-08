@@ -54,10 +54,10 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
 
   const isLanding = pathname === "/";
   const isCoursesPage = pathname === "/courses" || pathname?.startsWith("/courses/");
-  const isProtected = !isPublicPath(pathname) && !isLanding;
+  const isProtected = (!isPublicPath(pathname) && !isLanding) || isCoursesPage;
 
-  // Render raw without frame for Landing and full-width Courses pages
-  if (isLanding || isCoursesPage) {
+  // Render raw without frame only for Landing page
+  if (isLanding) {
     return (
       <PageAppearance>
         {children}

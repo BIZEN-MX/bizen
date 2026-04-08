@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, useRef, useMemo } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Trophy, Star, Clock, Target, ArrowRight, RotateCcw, Download, CheckCircle2, Sparkles, Zap, Flame, ShieldCheck, RefreshCcw } from "lucide-react"
+import { Trophy, Star, Clock, Target, ArrowRight, RotateCcw, Download, CheckCircle2, Sparkles, Zap, Flame, ShieldCheck, RefreshCcw, Rocket } from "lucide-react"
 import { useAuth } from "@/contexts/AuthContext"
 import { generateBizenCertificate } from "@/utils/certificateGenerator"
 import { haptic } from "@/utils/hapticFeedback"
@@ -30,6 +30,12 @@ const BLUE = "#0F62FE"
 const SLATE_DARK = "#0f172a"
 const SLATE_BODY = "#475569"
 const XP_PER_STAR = 5
+const starMessages: Record<number, React.ReactNode> = {
+  0: <div style={{ display: "flex", alignItems: "center", gap: 8 }}>Sigue intentándolo <Flame size={20} color={BLUE} /></div>,
+  1: <div style={{ display: "flex", alignItems: "center", gap: 8 }}>¡Vas muy bien! <Zap size={20} color={BLUE} /></div>,
+  2: <div style={{ display: "flex", alignItems: "center", gap: 8 }}>¡Excelente progreso! <Rocket size={20} color={BLUE} /></div>,
+  3: <div style={{ display: "flex", alignItems: "center", gap: 8 }}>¡Perfección absoluta! <Sparkles size={20} color="#EAB308" /></div>,
+}
 
 // --- XP Bar Component ---
 const XPBar = ({ initialXP, xpEarned, delay }: { initialXP: number; xpEarned: number; delay: number }) => {
@@ -234,16 +240,6 @@ export const SummaryStep: React.FC<SummaryStepProps> = ({ step, onAnswered, onRe
     }
   }
 
-  const starMessages: Record<number, React.ReactNode> = {
-    0: <div style={{ display: "flex", alignItems: "center", gap: 8 }}>Sigue intentándolo <Flame size={20} color={BLUE} /></div>,
-    1: <div style={{ display: "flex", alignItems: "center", gap: 8 }}>¡Vas muy bien! <Zap size={20} color={BLUE} /></div>,
-    2: <div style={{ display: "flex", alignItems: "center", gap: 8 }}>¡Excelente progreso! <Rocket size={20} color={BLUE} /></div>,
-    3: <div style={{ display: "flex", alignItems: "center", gap: 8 }}>¡Perfección absoluta! <Sparkles size={20} color="#EAB308" /></div>,
-  }
-
-  const Rocket = ({ size, color }: { size: number; color: string }) => (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.71-2.13.71-2.13l-4.42-4.42s-1.29 0-2.13.71c1.26 1.5 2 5 2 5s3.74-.5 5-2c.71-.84.71-2.13.71-2.13l-4.42-4.42s-1.29 0-2.13.71z"/><path d="m12 8 4 4"/><path d="M16 4l4 4"/><path d="m9 15 3 3"/><path d="m19 19-3-3"/></svg>
-  )
 
   const AnimatedStarLocal = ({ filled, delay }: { filled: boolean; delay: number }) => (
     <motion.div

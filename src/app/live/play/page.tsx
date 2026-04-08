@@ -712,7 +712,7 @@ function PlayPageContent() {
         </div>
 
         {/* Leaderboard */}
-        <div style={{ padding: "0 24px 40px" }}>
+        <div style={{ padding: "0 24px 20px" }}>
           <p style={{ color: "rgba(255,255,255,0.3)", fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12 }}>Leaderboard</p>
           {leaderboard.slice(0, 8).map((entry, i) => {
             const isMe = myRank === entry.rank
@@ -746,7 +746,7 @@ function PlayPageContent() {
           })}
         </div>
 
-        <p style={{ textAlign: "center", color: "rgba(255,255,255,0.25)", fontSize: 13, padding: "0 24px 32px" }}>
+        <p style={{ textAlign: "center", color: "rgba(255,255,255,0.25)", fontSize: 13, padding: "0 24px 12px" }}>
           {isSolo ? "Cargando siguiente pregunta..." : "Esperando al host para la siguiente pregunta..."}
         </p>
       </div>
