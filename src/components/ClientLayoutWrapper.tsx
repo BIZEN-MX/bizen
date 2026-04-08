@@ -141,7 +141,7 @@ function InnerClientWrapper({ children }: { children: React.ReactNode }) {
   const isCommunityPage = pathname?.startsWith('/comunidad') || pathname?.startsWith('/forum') || pathname?.startsWith('/rankings')
   const isStore = pathname?.startsWith('/tienda')
   const isSettings = pathname?.startsWith('/configuracion') || pathname?.startsWith('/cuenta') || pathname?.startsWith('/profile')
-  const hideAppNavigation = isAuthPage || isNewsPage || isDiagnosticPage || onboardingActive || isLessonInteractivePage || isTransferPage || isHistoryPage || isInvestmentsPage || isToolsPageExclude || isLivePage;
+  const hideAppNavigation = isAuthPage || isNewsPage || isDiagnosticPage || onboardingActive || isLessonInteractivePage || isTransferPage || isHistoryPage || isInvestmentsPage || isToolsPageExclude || isLivePage || isSimulatorPage;
 
   const hideChat = isAuthPage || isDiagnosticPage || onboardingActive || isLessonInteractivePage || isCourseTopicPage || isLivePage || isSimulatorPage;
 

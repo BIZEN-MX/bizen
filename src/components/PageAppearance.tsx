@@ -15,6 +15,7 @@ interface PageAppearanceProps {
 export function PageAppearance({ children }: PageAppearanceProps) {
   const pathname = usePathname();
   const shouldReduceMotion = useReducedMotion();
+  const wrapperRef = React.useRef<HTMLDivElement>(null);
 
   const variants = {
     initial: { 
@@ -43,17 +44,24 @@ export function PageAppearance({ children }: PageAppearanceProps) {
   return (
     <AnimatePresence mode="wait">
       <motion.div
+        ref={wrapperRef}
         key={pathname}
         variants={variants}
         initial="initial"
         animate="animate"
         exit="exit"
+        onAnimationComplete={(definition) => {
+          if (definition === "animate" && wrapperRef.current) {
+            // Remove the residual transform property to prevent it from creating a 
+            // new stacking context, which breaks 'position: fixed' modals app-wide.
+            wrapperRef.current.style.transform = "";
+          }
+        }}
         style={{ 
           width: "100%", 
           flex: 1, 
           display: "flex", 
           flexDirection: "column",
-          willChange: "transform, opacity",
         }}
         className="page-appearance-wrapper"
       >

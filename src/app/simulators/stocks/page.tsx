@@ -33,9 +33,6 @@ import {
   AlertCircle,
   ArrowDown,
   ArrowUp,
-  BookOpen,
-  Download,
-  FileText,
 } from "lucide-react";
 import {
   ResponsiveContainer,
@@ -766,10 +763,6 @@ export function StockSimulatorContent({ tradeSymbol }: { tradeSymbol?: string })
         });
         setShowCardAnim(true);
         await Promise.all([fetchPortfolio(), refreshUser?.()]);
-
-        if (tradeSymbol) {
-          setTimeout(() => router.push("/simulators/stocks"), 1500);
-        }
       } else {
         setOrderMsg({
           type: "err",
@@ -844,7 +837,6 @@ export function StockSimulatorContent({ tradeSymbol }: { tradeSymbol?: string })
     { id: "orders", label: "Historial", icon: Clock },
     { id: "watchlist", label: "Watchlist", icon: Target },
     { id: "rankings", label: "Rankings", icon: Flame },
-    { id: "resources", label: "Recursos", icon: BookOpen },
   ];
 
   if (loading || (user && !dataFetched)) return <PageLoader />;
@@ -960,6 +952,14 @@ export function StockSimulatorContent({ tradeSymbol }: { tradeSymbol?: string })
           .no-scrollbar::-webkit-scrollbar { display: none; }
           .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
           @keyframes spin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+          
+          /* Bloqueo total de scroll cuando el terminal está activo */
+          html, body {
+            overflow: hidden !important;
+            height: 100% !important;
+            position: fixed !important;
+            width: 100% !important;
+          }
         `}</style>
                 
                 <AnimatePresence>
@@ -1042,6 +1042,7 @@ export function StockSimulatorContent({ tradeSymbol }: { tradeSymbol?: string })
                           style={{
                             flex: "1 1 60%",
                             overflowY: "auto",
+                            overscrollBehavior: "contain",
                             padding: "28px 32px",
                             borderRight: "1px solid rgba(255,255,255,0.07)",
                           }}
@@ -1557,6 +1558,7 @@ export function StockSimulatorContent({ tradeSymbol }: { tradeSymbol?: string })
                           style={{
                             flex: "0 0 420px",
                             overflowY: "auto",
+                            overscrollBehavior: "contain",
                             padding: "28px 28px",
                             background: "linear-gradient(180deg,#0a1628 0%,#0d1b2e 100%)",
                             display: "flex",
@@ -4446,6 +4448,7 @@ export function StockSimulatorContent({ tradeSymbol }: { tradeSymbol?: string })
                 )}
               </div>
             )}
+
           </div>
         </div>
 
@@ -4582,7 +4585,14 @@ export function StockSimulatorContent({ tradeSymbol }: { tradeSymbol?: string })
                   }}
                 >
                   <button
-                    onClick={() => setShowCardAnim(false)}
+                    onClick={() => {
+                      setShowCardAnim(false);
+                      if (tradeSymbol) {
+                        router.push("/simulators/stocks");
+                      } else {
+                        setOrderForm((f) => ({ ...f, symbol: "" }));
+                      }
+                    }}
                     style={{
                       background: "linear-gradient(135deg, #10b981, #059669)",
                       color: "white",

@@ -559,3 +559,11 @@ Please make sure your database server is running at `aws-1-us-east-2.pooler.supa
 [2026-03-03T22:20:13.931Z] STATS API CRASH: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 error=getMexicoMidnight is not defined
 [2026-03-03T22:20:39.674Z] STATS API CRASH: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 error=getMexicoMidnight is not defined
 [2026-03-03T22:20:42.616Z] STATS API CRASH: user=c6097c75-f6b1-4e92-9f8d-c0cb4f9159d8 error=getMexicoMidnight is not defined
+[2026-04-08T19:14:54.900Z] REQUEST: user=7512c199-4885-4ed4-a738-5638676ebf7f product=20 price=400
+[2026-04-08T19:14:54.902Z] START TRANSACTION: user=7512c199-4885-4ed4-a738-5638676ebf7f product=20
+[2026-04-08T19:14:55.247Z] Checking inventory for user=7512c199-4885-4ed4-a738-5638676ebf7f product=20
+[2026-04-08T19:14:55.456Z] Fetching profile for user=7512c199-4885-4ed4-a738-5638676ebf7f
+[2026-04-08T19:14:55.680Z] BALANCE CHECK: Diego Peña Sanchez has 713, need 400
+[2026-04-08T19:14:55.685Z] DEDUCTING: 400 from Diego Peña Sanchez
+[2026-04-08T19:14:55.976Z] INSERTING inventory item for user=7512c199-4885-4ed4-a738-5638676ebf7f
+[2026-04-08T19:14:56.179Z] SUCCESS: user=7512c199-4885-4ed4-a738-5638676ebf7f

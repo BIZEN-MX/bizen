@@ -26,6 +26,8 @@ import {
     QrCode,
     History,
     TrendingUp,
+    Download,
+    FileText,
 } from "lucide-react"
 import PageLoader from "@/components/PageLoader"
 import BizenVirtualCard, { CardTheme } from "@/components/BizenVirtualCard"
@@ -49,6 +51,7 @@ interface Product {
     icon: React.ReactNode
     accent: string
     bg: string
+    downloadUrl?: string
 }
 
 // ── Rarity visual system ─────────────────────────────────────────────────────
@@ -103,6 +106,13 @@ const PRODUCTS: Product[] = [
         description: "El clásico de Benjamin Graham adaptado al contexto mexicano. Análisis de empresas de la BMV incluido.",
         badge: "Épico", icon: <IcoBook4 />, accent: "#8b5cf6",
         bg: "linear-gradient(135deg, #2e1065 0%, #8b5cf6 100%)",
+    },
+    {
+        id: 20, name: "Historia del Dinero", category: "Ebooks", price: 400,
+        description: "Descubre los orígenes del sistema financiero y cómo ha evolucionado el concepto de valor hasta la era digital.",
+        badge: "Común", icon: <IcoBook2 />, accent: "#ef4444",
+        bg: "linear-gradient(135deg, #450a0a 0%, #dc2626 100%)",
+        downloadUrl: "/BIZEN_Historia_del_Dinero.pdf",
     },
     // ── HERRAMIENTAS ───────────────────────────────────────────────────────────
     {
@@ -1174,7 +1184,7 @@ export default function TiendaPage() {
                                                 className={`canjear-btn ${isOwned ? "locked" : (canAfford ? "can-afford" : "locked")}`}
                                                 disabled={isOwned}
                                                 onClick={() => !isOwned && canAfford && setSelectedProduct(product)}
-                                                style={isOwned ? { background: "#ecfdf5", color: "#10b981", cursor: "default" } : {}}
+                                                style={isOwned ? { background: "#ecfdf5", color: "#10b981", cursor: "default", marginBottom: (isOwned && product.category === "Ebooks" && product.downloadUrl) ? 10 : 0 } : {}}
                                             >
                                                 {isOwned ? (
                                                     <><CheckCircle2 size={16} /> Ya canjeado</>
@@ -1184,6 +1194,29 @@ export default function TiendaPage() {
                                                     <><Lock size={14} /> Necesitas {(product.price - bizcoins).toLocaleString()} más</>
                                                 )}
                                             </button>
+                                            
+                                            {isOwned && product.category === "Ebooks" && product.downloadUrl && (
+                                                <a 
+                                                    href={product.downloadUrl} 
+                                                    download 
+                                                    style={{ 
+                                                        display: "flex", 
+                                                        alignItems: "center", 
+                                                        justifyContent: "center", 
+                                                        gap: 8, 
+                                                        padding: "13px", 
+                                                        background: "linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%)", 
+                                                        color: "white", 
+                                                        borderRadius: 12, 
+                                                        textDecoration: "none",
+                                                        fontSize: 14,
+                                                        fontWeight: 500,
+                                                        boxShadow: "0 4px 12px rgba(15,98,254,0.2)",
+                                                    }}
+                                                >
+                                                    <Download size={16} /> Descargar PDF
+                                                </a>
+                                            )}
                                         </div>
                                     </div>
                                 )
@@ -1223,6 +1256,29 @@ export default function TiendaPage() {
                                             <CheckCircle2 size={16} />
                                             Disponible en tu perfil
                                         </div>
+                                        {product.category === "Ebooks" && product.downloadUrl && (
+                                            <a 
+                                                href={product.downloadUrl} 
+                                                download 
+                                                style={{ 
+                                                    marginTop: 14,
+                                                    display: "flex", 
+                                                    alignItems: "center", 
+                                                    justifyContent: "center", 
+                                                    gap: 8, 
+                                                    padding: "12px", 
+                                                    background: "linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%)", 
+                                                    color: "white", 
+                                                    borderRadius: 12, 
+                                                    textDecoration: "none",
+                                                    fontSize: 13,
+                                                    fontWeight: 700,
+                                                    boxShadow: "0 4px 12px rgba(15,98,254,0.2)"
+                                                }}
+                                            >
+                                                <Download size={15} /> Descargar PDF
+                                            </a>
+                                        )}
                                     </div>
                                 </div>
                             ))}
