@@ -16,16 +16,20 @@ const prismaClientSingleton = () => {
     // Set a strict connection limit to prevent "Max client connections reached"
     // 2-3 connections per lambda is usually enough and prevents crashing the pool.
     if (!finalUrl.includes('connection_limit=')) {
-      finalUrl += '&connection_limit=' + (isProd ? '3' : '10')
+      finalUrl += '&connection_limit=' + (isProd ? '3' : '5')
     }
     if (!finalUrl.includes('pool_timeout=')) {
       finalUrl += '&pool_timeout=20'
     }
   }
 
+  if (!isProd) {
+    console.log('🔌 Prisma connecting to:', finalUrl?.replace(/:([^:@/]+)@/, ':****@'))
+  }
+
   return new PrismaClient({
     datasourceUrl: finalUrl,
-    log: isProd ? ['error'] : ['query', 'error', 'warn'],
+    log: isProd ? ['error'] : ['error', 'warn'], // Remove 'query' to clean up logs
   })
 }
 

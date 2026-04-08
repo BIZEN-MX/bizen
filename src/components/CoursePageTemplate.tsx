@@ -375,7 +375,7 @@ export default function CoursePageTemplate({
                             padding: "clamp(32px, 6vw, 64px) clamp(40px, 10vw, 120px)", 
                             width: "calc(100% - clamp(48px, 10vw, 160px))",
                             maxWidth: "none", 
-                            margin: "24px auto 54px",
+                            margin: "12px auto 40px",
                             position: "relative",
                             overflow: "hidden",
                             boxShadow: "0 28px 80px rgba(15,98,254,0.22)",
@@ -603,7 +603,7 @@ export default function CoursePageTemplate({
                                         style={{
                                             display: "flex",
                                             flexDirection: "row",
-                                            gap: 16,
+                                            gap: 28,
                                             overflowX: "auto",
                                             overflowY: "visible", 
                                             paddingBottom: "60px",
@@ -682,7 +682,7 @@ export default function CoursePageTemplate({
                                                             justifyContent: "center",
                                                             alignItems: "center",
                                                             textAlign: "center",
-                                                            padding: "24px",
+                                                            padding: "clamp(20px, 4.5vw, 40px)",
                                                             background: isExam 
                                                                 ? "linear-gradient(135deg, #0f172a 0%, #1e293b 100%)" 
                                                                 : (isDone ? "#f0f7ff" : "#ffffff"),

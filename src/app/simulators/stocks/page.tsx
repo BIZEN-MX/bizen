@@ -2053,6 +2053,168 @@ export function StockSimulatorContent({ tradeSymbol }: { tradeSymbol?: string })
               </motion.div>
             )}
           </AnimatePresence>
+
+          {/* Floating Card Animation Overlay (Duplicate for Terminal) */}
+          <AnimatePresence>
+            {showCardAnim && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                style={{
+                  position: "fixed",
+                  inset: 0,
+                  background: "rgba(11, 30, 94, 0.4)",
+                  backdropFilter: "blur(10px)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  zIndex: 9999,
+                  padding: 24,
+                }}
+              >
+                <motion.div
+                  initial={{ scale: 0.8, y: 40, opacity: 0 }}
+                  animate={{ scale: 1, y: 0, opacity: 1 }}
+                  exit={{ scale: 1.1, y: -40, opacity: 0 }}
+                  transition={{ type: "spring", damping: 15 }}
+                  style={{ width: "100%", maxWidth: 460, position: "relative" }}
+                >
+                  <div
+                    style={{
+                      position: "absolute",
+                      top: -100,
+                      left: 0,
+                      right: 0,
+                      textAlign: "center",
+                    }}
+                  >
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.3 }}
+                      style={{
+                        background: "rgba(255,255,255,0.1)",
+                        border: "1px solid rgba(255,255,255,0.2)",
+                        borderRadius: 16,
+                        padding: "12px 24px",
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: 12,
+                        backdropFilter: "blur(4px)",
+                      }}
+                    >
+                      <div
+                        style={{
+                          width: 40,
+                          height: 40,
+                          borderRadius: 12,
+                          background: "rgba(16, 185, 129, 0.2)",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                      >
+                        <Zap size={22} color="#10b981" />
+                      </div>
+                      <div style={{ textAlign: "left" }}>
+                        <p
+                          style={{
+                            margin: 0,
+                            fontSize: 13,
+                            fontWeight: 800,
+                            color: "#10b981",
+                            textTransform: "uppercase",
+                          }}
+                        >
+                          Transacción en Proceso
+                        </p>
+                        <p
+                          style={{
+                            margin: 0,
+                            fontSize: 16,
+                            fontWeight: 700,
+                            color: "white",
+                          }}
+                        >
+                          {animOrder?.side === "buy" ? "Comprando" : "Vendiendo"}{" "}
+                          {animOrder?.qty} {animOrder?.symbol}
+                        </p>
+                      </div>
+                    </motion.div>
+                  </div>
+
+                  <BizenVirtualCard
+                    bizcoins={Number(dbProfile?.bizcoins || 0)}
+                    holderName={
+                      dbProfile?.fullName ||
+                      user?.user_metadata?.full_name ||
+                      "Usuario Bizen"
+                    }
+                    colorTheme={(dbProfile?.cardTheme as any) || "blue"}
+                    level={dbProfile?.level || 1}
+                    hideButtons={true}
+                  />
+
+                  {/* Deduction Value Float */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: [0, 1, 1, 0], y: [-20, -120] }}
+                    transition={{ duration: 3, times: [0, 0.2, 0.8, 1] }}
+                    style={{
+                      position: "absolute",
+                      top: "50%",
+                      left: "50%",
+                      transform: "translate(-50%, -50%)",
+                      fontSize: 48,
+                      fontWeight: 900,
+                      color: animOrder?.side === "buy" ? "#ef4444" : "#10b981",
+                      textShadow: "0 4px 20px rgba(0,0,0,0.5)",
+                      pointerEvents: "none",
+                      whiteSpace: "nowrap",
+                      zIndex: 20,
+                    }}
+                  >
+                    {animOrder?.side === "buy" ? "-" : "+"}
+                    {Math.floor(animOrder?.cost || 0).toLocaleString()} bz
+                  </motion.div>
+
+                  <div
+                    style={{
+                      marginTop: 40,
+                      display: "flex",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <button
+                      onClick={() => setShowCardAnim(false)}
+                      style={{
+                        background: "rgba(255,255,255,0.1)",
+                        color: "white",
+                        border: "1px solid rgba(255,255,255,0.2)",
+                        padding: "16px 48px",
+                        borderRadius: 20,
+                        fontSize: 16,
+                        fontWeight: 700,
+                        cursor: "pointer",
+                        backdropFilter: "blur(10px)",
+                        transition: "all 0.2s",
+                      }}
+                      onMouseEnter={(e) =>
+                        (e.currentTarget.style.background =
+                          "rgba(255,255,255,0.15)")
+                      }
+                      onMouseLeave={(e) =>
+                        (e.currentTarget.style.background = "rgba(255,255,255,0.1)")
+                      }
+                    >
+                      Entendido
+                    </button>
+                  </div>
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
     </>
   );
 

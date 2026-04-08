@@ -190,7 +190,7 @@ export default function TopNav() {
       <nav className={`topnav-bar ${scrolled ? 'scrolled' : 'not-scrolled'}`} aria-label="Navegación principal">
         <div className="topnav-brand" onClick={() => navigateTo(user ? (isAdminOrTeacher ? '/teacher/dashboard' : '/dashboard') : '/')}>
           <span className="topnav-logo">
-            BIZEN<span className="topnav-logo-dot" />
+            BIZEN
           </span>
           {mounted && !loading && dbProfile && (
             <span

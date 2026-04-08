@@ -12,14 +12,14 @@ export default function InvestmentsWidget() {
     <motion.div
       whileHover={{ y: -4 }}
       style={{
-        background: "linear-gradient(135deg, #0a0f2e 0%, #0d2a6b 45%, #1a56db 100%)",
+        background: "linear-gradient(135deg, #0c4a6e 0%, #075985 45%, #0ea5e9 100%)",
         borderRadius: 28,
         padding: "24px 32px",
         height: "100%",
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
-        boxShadow: "0 12px 40px rgba(13, 42, 107, 0.3)",
+        boxShadow: "0 12px 40px rgba(14, 165, 233, 0.25)",
         border: "1.5px solid rgba(255,255,255,0.18)",
         position: "relative",
         overflow: "hidden",
