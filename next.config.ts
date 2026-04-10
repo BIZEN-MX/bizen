@@ -41,12 +41,12 @@ const nextConfig: NextConfig = {
             key: 'Content-Security-Policy',
             value: [
               "default-src 'self';",
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://clerk.bizen.mx https://*.clerk.accounts.dev https://*.stripe.com https://*.google.com https://*.googleapis.com https://*.gstatic.com;",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://clerk.bizen.mx https://*.bizen.mx https://*.clerk.com https://clerk.com https://*.clerk.mx https://*.clerk.accounts.dev https://*.stripe.com https://*.google.com https://*.googleapis.com https://*.gstatic.com;",
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://*.clerk.accounts.dev;",
-              "img-src 'self' blob: data: https://*.clerk.com https://img.clerk.com https://*.supabase.co https://*.stripe.com https://*.google.com https://*.googleapis.com https://*.gstatic.com https://*.resend.com;",
+              "img-src 'self' blob: data: https://*.clerk.com https://img.clerk.com https://images.clerk.dev https://clerk.bizen.mx https://*.bizen.mx https://*.supabase.co https://*.stripe.com https://*.google.com https://*.googleapis.com https://*.gstatic.com https://*.resend.com;",
               "font-src 'self' data: https://fonts.gstatic.com https://*.clerk.accounts.dev;",
-              "connect-src 'self' https://clerk-telemetry.com https://*.clerk.com https://*.clerk.mx https://*.clerk.accounts.dev https://*.supabase.co https://*.stripe.com https://*.googleapis.com https://*.google-analytics.com https://*.generativelanguage.googleapis.com;",
-              "frame-src 'self' https://*.clerk.com https://*.clerk.mx https://*.stripe.com https://*.google.com;",
+              "connect-src 'self' https://clerk.bizen.mx https://*.bizen.mx https://clerk-telemetry.com https://*.clerk.com https://*.clerk.mx https://*.clerk.accounts.dev https://*.supabase.co https://*.stripe.com https://*.googleapis.com https://*.google-analytics.com https://*.generativelanguage.googleapis.com;",
+              "frame-src 'self' https://clerk.bizen.mx https://*.bizen.mx https://*.clerk.com https://*.clerk.mx https://*.stripe.com https://*.google.com;",
               "worker-src 'self' blob:;",
               "upgrade-insecure-requests;"
             ].join(' ')
