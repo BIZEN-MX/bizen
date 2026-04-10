@@ -25,6 +25,13 @@ const rateLimitStore = new Map<string, { count: number; lastReset: number }>();
 export default clerkMiddleware(async (auth, request) => {
   const { pathname } = request.nextUrl;
   
+  // 0. Force Main Domain (Clerk production keys only work on bizen.mx)
+  const host = request.headers.get("host") || "";
+  if (host.includes("a.run.app") || host.includes("www.bizen.mx")) {
+    const targetUrl = new URL(pathname + request.nextUrl.search, "https://bizen.mx");
+    return NextResponse.redirect(targetUrl, 301);
+  }
+
   // 1. Skip paths that should be ignored by Clerk (static files, _next, etc.)
   if (
     pathname.includes('.') || 
