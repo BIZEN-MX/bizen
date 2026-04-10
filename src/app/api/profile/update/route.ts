@@ -1,17 +1,15 @@
 import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
-import { createSupabaseServer } from "@/lib/supabase/server"
 import { updateProfileSchema } from "@/validators/profile"
-import { z } from "zod"
+import { requireAuth } from "@/lib/auth/api-auth"
 
 export async function POST(req: NextRequest) {
     try {
-        const supabase = await createSupabaseServer()
-        const { data: { user } } = await supabase.auth.getUser()
-
-        if (!user) {
-            return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+        const authResult = await requireAuth(req)
+        if (!authResult.success) {
+            return authResult.response
         }
+        const { user } = authResult.data
 
         const body = await req.json()
         

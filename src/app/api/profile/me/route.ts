@@ -1,17 +1,16 @@
 import { NextRequest, NextResponse } from "next/server"
-import { createSupabaseServer } from "@/lib/supabase/server"
 import { prisma } from "@/lib/prisma"
 import { calculateLevel } from "@/lib/xp"
 import { isInstitutionalEmail } from "@/lib/emailValidation"
+import { requireAuth } from "@/lib/auth/api-auth"
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    const supabase = await createSupabaseServer()
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
-
-    if (authError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    const authResult = await requireAuth(request)
+    if (!authResult.success) {
+      return authResult.response
     }
+    const { user } = authResult.data
 
     // Use try-catch for each DB query to pinpoint failures and avoid blanket 500
     let userProfileRaw: any = null;
@@ -134,12 +133,11 @@ export async function GET() {
 
 export async function PATCH(request: NextRequest) {
   try {
-    const supabase = await createSupabaseServer()
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
-
-    if (authError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    const authResult = await requireAuth(request)
+    if (!authResult.success) {
+      return authResult.response
     }
+    const { user } = authResult.data
 
     const body = await request.json()
     const { nickname } = body
@@ -174,4 +172,3 @@ export async function PATCH(request: NextRequest) {
     return NextResponse.json({ error: "Failed to update profile" }, { status: 500 })
   }
 }
-

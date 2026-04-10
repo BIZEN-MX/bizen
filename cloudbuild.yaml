@@ -11,6 +11,8 @@ steps:
       '--build-arg', 'NEXT_PUBLIC_CLERK_PROXY_URL=${_NEXT_PUBLIC_CLERK_PROXY_URL}',
       '--build-arg', 'NEXT_PUBLIC_APP_URL=${_NEXT_PUBLIC_APP_URL}',
       '--build-arg', 'NEXT_PUBLIC_SITE_URL=${_NEXT_PUBLIC_SITE_URL}',
+      '--build-arg', 'NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=${_NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL}',
+      '--build-arg', 'NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=${_NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL}',
       '--build-arg', 'NEXT_PUBLIC_CLERK_SIGN_IN_URL=/login',
       '--build-arg', 'NEXT_PUBLIC_CLERK_SIGN_UP_URL=/signup',
       '.'
