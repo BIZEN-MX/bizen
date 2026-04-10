@@ -1,25 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { createSupabaseServerMicrocred } from '@/lib/supabase/server-microcred'
-import { cookies } from 'next/headers'
 import { awardXp } from '@/lib/rewards'
-import { createSupabaseServer } from '@/lib/supabase/server'
 import { checkAndAwardAchievements } from '@/lib/achievements'
+import { requireAuth } from '@/lib/auth/api-auth'
 
 // GET /api/progress - Get user's progress (optionally by lessonId or courseId)
 export async function GET(request: NextRequest) {
   try {
-    const cookieStore = cookies()
-    const supabase = await createSupabaseServer()
-
-    const { data: { user }, error } = await supabase.auth.getUser()
-
-    if (error || !user) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      )
+    const authResult = await requireAuth(request)
+    if (!authResult.success) {
+      return authResult.response
     }
+    const { user } = authResult.data
 
     const { searchParams } = new URL(request.url)
     const lessonId = searchParams.get('lessonId')
@@ -103,17 +95,11 @@ export async function GET(request: NextRequest) {
 // POST /api/progress - Upsert lesson progress
 export async function POST(request: NextRequest) {
   try {
-    const cookieStore = cookies()
-    const supabase = await createSupabaseServer()
-
-    const { data: { user }, error } = await supabase.auth.getUser()
-
-    if (error || !user) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      )
+    const authResult = await requireAuth(request)
+    if (!authResult.success) {
+      return authResult.response
     }
+    const { user } = authResult.data
 
     const body = await request.json()
     const { lessonId, percent, completedAt } = body

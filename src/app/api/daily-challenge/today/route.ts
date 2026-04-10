@@ -1,12 +1,14 @@
-import { NextResponse } from "next/server"
+import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
-import { createSupabaseServer } from "@/lib/supabase/server"
+import { requireAuth } from "@/lib/auth/api-auth"
 
-export async function GET() {
+export async function GET(request: NextRequest) {
     try {
-        const supabase = await createSupabaseServer()
-        const { data: { user } } = await supabase.auth.getUser()
-        if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+        const authResult = await requireAuth(request)
+        if (!authResult.success) {
+            return authResult.response
+        }
+        const { user } = authResult.data
 
         // 1. Get Today's Date in Mexico City Time
         const mxFormatter = new Intl.DateTimeFormat("en-US", {

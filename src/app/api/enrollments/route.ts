@@ -1,22 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { createSupabaseServerMicrocred as createClient } from '@/lib/supabase/server-microcred'
-import { cookies } from 'next/headers'
+import { requireAuth } from '@/lib/auth/api-auth'
 
 // GET /api/enrollments - Get user's enrollments (Joined Topics)
 export async function GET(request: NextRequest) {
   try {
-    const cookieStore = cookies()
-    const supabase = createClient(cookieStore)
-
-    const { data: { user }, error } = await supabase.auth.getUser()
-
-    if (error || !user) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      )
+    const authResult = await requireAuth(request)
+    if (!authResult.success) {
+      return authResult.response
     }
+    const { user } = authResult.data
 
     const enrollments = await prisma.enrollment.findMany({
       where: { userId: user.id },
@@ -56,17 +49,11 @@ export async function GET(request: NextRequest) {
 // POST /api/enrollments - Enroll in a topic
 export async function POST(request: NextRequest) {
   try {
-    const cookieStore = cookies()
-    const supabase = createClient(cookieStore)
-
-    const { data: { user }, error } = await supabase.auth.getUser()
-
-    if (error || !user) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      )
+    const authResult = await requireAuth(request)
+    if (!authResult.success) {
+      return authResult.response
     }
+    const { user } = authResult.data
 
     const body = await request.json()
     const { topicId } = body
@@ -118,17 +105,11 @@ export async function POST(request: NextRequest) {
 // DELETE /api/enrollments - Unenroll from a topic
 export async function DELETE(request: NextRequest) {
   try {
-    const cookieStore = cookies()
-    const supabase = createClient(cookieStore)
-
-    const { data: { user }, error } = await supabase.auth.getUser()
-
-    if (error || !user) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      )
+    const authResult = await requireAuth(request)
+    if (!authResult.success) {
+      return authResult.response
     }
+    const { user } = authResult.data
 
     const { searchParams } = new URL(request.url)
     const topicId = searchParams.get('topicId')

@@ -1,17 +1,16 @@
 import { NextRequest, NextResponse } from "next/server"
 export const dynamic = 'force-dynamic'
-import { createSupabaseServer } from "@/lib/supabase/server"
 import { prisma } from "@/lib/prisma"
 import { calculateLevel, xpInCurrentLevel, totalXpForNextLevel, xpForNextLevel, calculateCurrentStreak } from "@/lib/xp"
+import { requireAuth } from "@/lib/auth/api-auth"
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    const supabase = await createSupabaseServer()
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
-
-    if (authError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    const authResult = await requireAuth(request)
+    if (!authResult.success) {
+      return authResult.response
     }
+    const { user } = authResult.data
 
     // Parallel fetch with carefully managed Prisma calls
     const [profile, topics, progress, diagnostic, transactions] = await Promise.all([
@@ -46,7 +45,36 @@ export async function GET() {
     })
 
     if (!profile) {
-      return NextResponse.json({ error: "Profile not found" }, { status: 500 })
+      console.log(`[dashboard-init] Profile missing for user ${user.id}, creating ephemeral profile...`)
+      // Return a basic state if profile is missing instead of 500
+      return NextResponse.json({
+        stats: {
+          xp: 0,
+          level: 1,
+          xpInCurrentLevel: 0,
+          xpNeeded: 100,
+          xpToNextLevel: 100,
+          lessonsCompleted: 0,
+          coursesEnrolled: 0,
+          currentStreak: 0,
+          certificatesCount: 0,
+          bizcoins: 0,
+          inventory: [],
+          weeklyActiveDays: [],
+        },
+        topics: topics || [],
+        progress: [],
+        diagnostic: { exists: false },
+        profile: {
+          userId: user.id,
+          fullName: user.user_metadata?.full_name || "Usuario",
+          role: 'particular',
+          xp: 0,
+          bizcoins: 0,
+          level: 1
+        },
+        transactions: []
+      })
     }
 
     // Calculate Stats

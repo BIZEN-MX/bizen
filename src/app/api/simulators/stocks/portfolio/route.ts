@@ -1,16 +1,15 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { createSupabaseServer } from '@/lib/supabase/server';
 import { executePendingOrders } from '@/lib/simulators/stocks';
+import { requireAuth } from '@/lib/auth/api-auth';
 
-export async function GET(req: Request) {
+export async function GET(req: NextRequest) {
   try {
-    const supabase = await createSupabaseServer();
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
-
-    if (authError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    const authResult = await requireAuth(req)
+    if (!authResult.success) {
+      return authResult.response
     }
+    const { user } = authResult.data
 
     // Trigger execution of any pending orders that meet market price
     try {
@@ -75,8 +74,8 @@ export async function GET(req: Request) {
           portfolio = await prisma.simulator_portfolios.update({
             where: { id: portfolio.id },
             data: { 
-                currency: 'BIZCOINS',
-                cash_balance: profile.bizcoins || 0
+              currency: 'BIZCOINS',
+              cash_balance: profile.bizcoins || 0
             },
             include: { holdings: true, orders: { orderBy: { placed_at: 'desc' } } }
           });
