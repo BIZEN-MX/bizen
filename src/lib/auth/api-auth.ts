@@ -26,9 +26,11 @@ export async function requireAuth(
   request: NextRequest
 ): Promise<{ success: true; data: AuthResult } | { success: false; response: NextResponse }> {
   try {
+    console.log("[API Auth] Checking Clerk session...")
     const { userId } = await auth()
     
     if (!userId) {
+      console.warn("[API Auth] No userId found in session")
       return {
         success: false,
         response: NextResponse.json(
@@ -37,8 +39,12 @@ export async function requireAuth(
         ),
       }
     }
+    console.log("[API Auth] Found userId:", userId)
 
+    console.log("[API Auth] Fetching current Clerk user...")
     const clerkUser = await currentUser()
+    
+    console.log("[API Auth] Initializing Supabase server client...")
     const supabase = await createSupabaseServer() // Keep for DB access if needed
 
     // Map Clerk user to Supabase-compatible User object
@@ -50,17 +56,18 @@ export async function requireAuth(
         avatar_url: clerkUser?.imageUrl || ''
       }
     }
+    console.log("[API Auth] Authentication successful for:", user.email)
 
     return {
       success: true,
       data: { user, supabase },
     }
-  } catch (error) {
-    console.error('[API Auth] Error during authentication:', error)
+  } catch (error: any) {
+    console.error('[API Auth] FATAL AUTH ERROR:', error.message || error)
     return {
       success: false,
       response: NextResponse.json(
-        { error: 'Internal Server Error', message: 'Authentication check failed' },
+        { error: 'Internal Server Error', message: 'Authentication check failed', details: error.message || "Unknown" },
         { status: 500 }
       ),
     }
