@@ -87,6 +87,8 @@ export default function LoginClient() {
           routing="path"
           path="/login"
           signUpUrl="/signup"
+          socialButtonsPlacement="top"
+          socialButtonsVariant="blockButton"
         />
       </div>
 

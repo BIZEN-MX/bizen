@@ -87,6 +87,8 @@ export default function BIZENSignupPage() {
           routing="path"
           path="/signup"
           signInUrl="/login"
+          socialButtonsPlacement="top"
+          socialButtonsVariant="blockButton"
         />
       </div>
 
