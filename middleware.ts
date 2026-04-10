@@ -69,15 +69,9 @@ export default clerkMiddleware(async (auth, request) => {
 
   // 2. AUTHENTICATION PROTECTION
   if (!isPublicRoute(request)) {
-    const session = await auth();
+    await auth().protect();
     
-    // Redirect unauthenticated users to login
-    if (!session.userId) {
-      const from = pathname + request.nextUrl.search;
-      const loginUrl = new URL("/login", request.url);
-      loginUrl.searchParams.set("redirect", from);
-      return NextResponse.redirect(loginUrl);
-    }
+    const session = await auth();
 
     // 3. BAN SYSTEM
     const isBanned = session.sessionClaims?.metadata?.isBanned === true;
