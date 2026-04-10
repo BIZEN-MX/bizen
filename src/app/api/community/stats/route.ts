@@ -14,7 +14,7 @@ export async function GET() {
             prisma.profile.count(),
             prisma.profile.count({ 
                 where: { 
-                    updatedAt: { gte: today } 
+                    createdAt: { gte: today } 
                 } 
             }),
             prisma.progress.count({ where: { percent: 100 } })

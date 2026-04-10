@@ -112,7 +112,7 @@ const PRODUCTS: Product[] = [
         description: "Descubre los orígenes del sistema financiero y cómo ha evolucionado el concepto de valor hasta la era digital.",
         badge: "Común", icon: <IcoBook2 />, accent: "#ef4444",
         bg: "linear-gradient(135deg, #450a0a 0%, #dc2626 100%)",
-        downloadUrl: "/BIZEN_Historia_del_Dinero.pdf",
+        downloadUrl: "/api/content/pdf/BIZEN_Historia_del_Dinero",
     },
     // ── HERRAMIENTAS ───────────────────────────────────────────────────────────
     {

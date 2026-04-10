@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma"
 import { createSupabaseServer } from "@/lib/supabase/server"
 import { logToFile } from "@/lib/debugLogger"
 import { checkAndAwardAchievements } from "@/lib/achievements"
+import { OFFICIAL_PRODUCTS } from "@/lib/constants/products"
 
 export async function POST(request: NextRequest) {
     try {
@@ -15,14 +16,25 @@ export async function POST(request: NextRequest) {
         }
 
         const body = await request.json()
-        const { productId, price, name } = body
+        const { productId } = body
 
-        logToFile(`REQUEST: user=${user.id} product=${productId} price=${price}`)
-
-        if (!productId || typeof price !== 'number') {
-            logToFile(`INVALID DATA: product=${productId} price=${price}`)
-            return NextResponse.json({ error: "Invalid product data" }, { status: 400 })
+        // --- SECURITY BRAKE: VALIDATE PRODUCT & PRICE ON SERVER ---
+        const officialProduct = OFFICIAL_PRODUCTS.find(p => p.id === Number(productId));
+        
+        if (!officialProduct) {
+            logToFile(`HACK ATTEMPT or ERROR: invalid product id=${productId}`)
+            return NextResponse.json({ error: "Producto no válido" }, { status: 400 })
         }
+
+        const price = officialProduct.price; // We use the server price, ALWAYS.
+        const name = officialProduct.name;
+        
+        if (price < 0) {
+            logToFile(`HACK ATTEMPT: Negative price for product=${productId}`)
+            return NextResponse.json({ error: "Invalid price" }, { status: 400 })
+        }
+
+        logToFile(`REQUEST VERIFIED: user=${user.id} product=${productId} server_price=${price}`)
 
         // Perform purchase in a transaction
         try {

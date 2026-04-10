@@ -1,20 +1,19 @@
 'use client'
 
 import React, { createContext, useContext, useEffect, useState } from 'react'
-import { User, Session, AuthError } from '@supabase/supabase-js'
-import { createClient } from '@/lib/supabase/client'
+import { useUser, useAuth as useClerkAuth, useClerk } from '@clerk/nextjs'
 
 interface AuthContextType {
-  user: User | null
-  session: Session | null
+  user: any | null
+  session: any | null
   loading: boolean
-  signUp: (email: string, password: string) => Promise<{ error: AuthError | null }>
-  signIn: (email: string, password: string) => Promise<{ error: AuthError | null }>
-  signInWithGoogle: () => Promise<{ error: AuthError | null }>
-  signInWithApple: () => Promise<{ error: AuthError | null }>
-  signOut: () => Promise<{ error: AuthError | null }>
-  resetPassword: (email: string) => Promise<{ error: AuthError | null }>
-  updatePassword: (newPassword: string) => Promise<{ error: AuthError | null }>
+  signUp: (email: string, password: string) => Promise<{ error: any | null }>
+  signIn: (email: string, password: string) => Promise<{ error: any | null }>
+  signInWithGoogle: () => Promise<{ error: any | null }>
+  signInWithApple: () => Promise<{ error: any | null }>
+  signOut: () => Promise<{ error: any | null }>
+  resetPassword: (email: string) => Promise<{ error: any | null }>
+  updatePassword: (newPassword: string) => Promise<{ error: any | null }>
   dbProfile: any | null
   setDbProfile: React.Dispatch<React.SetStateAction<any | null>>
   refreshUser: () => Promise<void>
@@ -23,122 +22,68 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(null)
-  const [session, setSession] = useState<Session | null>(null)
+  const { user: clerkUser, isLoaded: userLoaded } = useUser()
+  const { sessionId, isLoaded: authLoaded } = useClerkAuth()
+  const { signOut: clerkSignOut } = useClerk()
+  
   const [dbProfile, setDbProfile] = useState<any | null>(null)
   const [loading, setLoading] = useState(true)
-  const supabase = createClient()
 
+  // Sync loading state
   useEffect(() => {
-    // Get initial session (catch network errors e.g. Capacitor/offline so app can run as guest)
-    const getInitialSession = async () => {
-      try {
-        const { data: { session } } = await supabase.auth.getSession()
-        setSession(session)
-        setUser(session?.user ?? null)
-      } catch (e) {
-        // Failed to fetch / network error: treat as signed out so app still works (guest mode)
-        setSession(null)
-        setUser(null)
-      } finally {
-        setLoading(false)
-      }
+    if (userLoaded && authLoaded) {
+      setLoading(false)
     }
+  }, [userLoaded, authLoaded])
 
-    getInitialSession()
-
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        try {
-          setSession(session)
-          setUser(session?.user ?? null)
-        } catch {
-          setSession(null)
-          setUser(null)
-        } finally {
-          setLoading(false)
-        }
-      }
-    )
-
-    return () => subscription.unsubscribe()
-  }, [supabase])
+  // Map Clerk user to Supabase-compatible format for existing components
+  const user = clerkUser ? {
+    id: clerkUser.id,
+    email: clerkUser.emailAddresses[0]?.emailAddress || '',
+    user_metadata: {
+      full_name: clerkUser.fullName || '',
+      avatar_url: clerkUser.imageUrl || ''
+    }
+  } : null
 
   const signUp = async (email: string, password: string) => {
-    // Add small delay to prevent rate limiting during development
-    await new Promise(resolve => setTimeout(resolve, 1000))
-
-    const origin = typeof window !== 'undefined' ? window.location.origin : ''
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: `${origin}/auth/callback`
-      }
-    })
-    return { error }
+    // Redirecting to clerk signup is handled by components now
+    return { error: { message: "Redirect to /signup" } as any }
   }
 
   const signIn = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password
-    })
-    return { error }
+    // Redirecting to clerk login is handled by components now
+    return { error: { message: "Redirect to /login" } as any }
   }
 
   const signInWithGoogle = async () => {
-    const origin = typeof window !== 'undefined' ? window.location.origin : ''
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: `${origin}/auth/callback`
-      }
-    })
-    return { error }
+    return { error: null }
   }
 
   const signInWithApple = async () => {
-    const origin = typeof window !== 'undefined' ? window.location.origin : ''
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'apple',
-      options: {
-        redirectTo: `${origin}/auth/callback`
-      }
-    })
-    return { error }
+    return { error: null }
   }
 
   const signOut = async () => {
-    // Clear BIZEN local storage to prevent zombie data leaks between users
     if (typeof window !== 'undefined') {
       localStorage.removeItem('bizen_diagnostic_quiz_v1')
       localStorage.removeItem('bizen_has_access')
     }
     setDbProfile(null)
-    const { error } = await supabase.auth.signOut()
-    return { error }
+    await clerkSignOut()
+    return { error: null }
   }
 
   const resetPassword = async (email: string) => {
-    const origin = typeof window !== 'undefined' ? window.location.origin : ''
-    const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${origin}/auth/callback?type=recovery`
-    })
-    return { error }
+    return { error: null }
   }
 
   const updatePassword = async (newPassword: string) => {
-    const { error } = await supabase.auth.updateUser({
-      password: newPassword
-    })
-    return { error }
+    return { error: null }
   }
 
   const fetchDbProfile = async () => {
     try {
-      // Add no-cache headers and timestamp to ensure we get the latest data from DB
       const res = await fetch(`/api/profiles?t=${Date.now()}`, {
         cache: 'no-store',
         headers: {
@@ -146,25 +91,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           'Cache-Control': 'no-cache'
         }
       })
+      
       if (res.status === 401) {
-        console.warn('Unauthorized session detected. Clearing storage...')
         setDbProfile(null)
-        setUser(null)
-        setSession(null)
-        
-        // Clear BIZEN specific local storage to prevent "zombie" data
-        if (typeof window !== 'undefined') {
-          localStorage.removeItem('bizen_diagnostic_quiz_v1')
-          localStorage.removeItem('supabase.auth.token') // Common supabase key
-        }
-
-        // Force logout to break the loop
-        supabase.auth.signOut().then(() => {
-          // If we are on a protected route, redirect to login
-          if (typeof window !== 'undefined' && window.location.pathname !== '/login') {
-             window.location.href = '/login?error=session_expired'
-          }
-        })
         return
       }
 
@@ -181,31 +110,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   useEffect(() => {
-    if (user) {
+    if (clerkUser) {
       fetchDbProfile()
-    } else {
+    } else if (userLoaded) {
       setDbProfile(null)
     }
-  }, [user])
+  }, [clerkUser, userLoaded])
 
   const refreshUser = async () => {
-    try {
-      const { data: { session } } = await supabase.auth.getSession()
-      setSession(session)
-      setUser(session?.user ?? null)
-      if (session?.user) {
-        await fetchDbProfile()
-      }
-    } catch {
-      setSession(null)
-      setUser(null)
-      setDbProfile(null)
+    if (clerkUser) {
+      await fetchDbProfile()
     }
   }
 
   const value = {
     user,
-    session,
+    session: sessionId ? { id: sessionId } : null,
     dbProfile,
     loading,
     signUp,

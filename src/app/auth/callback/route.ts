@@ -9,8 +9,10 @@ export async function GET(request: Request) {
   const code = searchParams.get("code");
   const type = searchParams.get("type");
 
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || origin;
+
   if (!code) {
-    return NextResponse.redirect(`${origin}/login?error=no_code`);
+    return NextResponse.redirect(`${baseUrl}/login?error=no_code`);
   }
 
   const cookieStore = await cookies();
@@ -43,7 +45,7 @@ export async function GET(request: Request) {
 
     if (error) {
       console.error('Auth callback error:', error);
-      return NextResponse.redirect(`${origin}/login?error=auth_failed`);
+      return NextResponse.redirect(`${baseUrl}/login?error=auth_failed`);
     }
 
     console.log('✅ Email verified successfully! User:', data.user?.email);
@@ -82,7 +84,7 @@ export async function GET(request: Request) {
 
     // Handle different auth flows
     if (type === 'recovery') {
-      return NextResponse.redirect(`${origin}/reset-password?verified=true`);
+      return NextResponse.redirect(`${baseUrl}/reset-password?verified=true`);
     }
 
     // If user has school with active license, set paywall bypass cookie
@@ -91,8 +93,8 @@ export async function GET(request: Request) {
     const onboardingComplete = data.user?.user_metadata?.onboarding_complete === true;
 
     let redirectUrl = (isInstitutional && !onboardingComplete)
-      ? `${origin}/diagnostic?verified=true&t=${Date.now()}`
-      : `${origin}/dashboard?verified=true&t=${Date.now()}`;
+      ? `${baseUrl}/diagnostic?verified=true&t=${Date.now()}`
+      : `${baseUrl}/dashboard?verified=true&t=${Date.now()}`;
 
     // Handle role-based redirect
     try {
@@ -101,7 +103,7 @@ export async function GET(request: Request) {
       });
 
       if (dbProfile?.role === 'school_admin' || dbProfile?.role === 'teacher') {
-        redirectUrl = `${origin}/teacher/dashboard?verified=true&t=${Date.now()}`;
+        redirectUrl = `${baseUrl}/teacher/dashboard?verified=true&t=${Date.now()}`;
       }
 
       // Restore license bypass logic
@@ -136,6 +138,6 @@ export async function GET(request: Request) {
     return NextResponse.redirect(redirectUrl);
   } catch (error) {
     console.error('Unexpected error in auth callback:', error);
-    return NextResponse.redirect(`${origin}/login?error=unexpected_error`);
+    return NextResponse.redirect(`${baseUrl}/login?error=unexpected_error`);
   }
 }

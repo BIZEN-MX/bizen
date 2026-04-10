@@ -6,9 +6,9 @@ import ClientLayoutWrapper from "@/components/ClientLayoutWrapper"
 import { AppLayout } from "@/components/AppLayout"
 import { AchievementToastProvider } from "@/components/AchievementToast"
 import StructuredData from "@/components/SEO/StructuredData"
-import { SpeedInsights } from "@vercel/speed-insights/next"
 import PageLoader from "@/components/PageLoader"
 import React from "react"
+import { ClerkProvider } from "@clerk/nextjs"
 import "./globals.css"
 
 const geist = Geist({
@@ -110,15 +110,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
              <PageLoader />
           </div>
         }>
-          <Providers>
-            <ClientLayoutWrapper>
-              <AppLayout>
-                {children}
-              </AppLayout>
-            </ClientLayoutWrapper>
-            <AchievementToastProvider />
-            <SpeedInsights />
-          </Providers>
+          <ClerkProvider>
+            <Providers>
+              <ClientLayoutWrapper>
+                <AppLayout>
+                  {children}
+                </AppLayout>
+              </ClientLayoutWrapper>
+              <AchievementToastProvider />
+            </Providers>
+          </ClerkProvider>
         </React.Suspense>
       </body>
     </html>

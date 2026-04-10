@@ -12,7 +12,10 @@ export const updateProfileSchema = z.object({
     .max(20, 'El usuario es muy largo')
     .regex(/^[a-zA-Z0-9_]+$/, 'El usuario solo puede tener letras, números y guiones bajos')
     .optional(),
-  bio: z.string().max(200, 'La biografía no puede exceder los 200 caracteres').optional(),
+  bio: z.string()
+    .max(200, 'La biografía no puede exceder los 200 caracteres')
+    .regex(/^[^<>]*$/, 'La biografía no puede contener caracteres HTML (< o >)')
+    .optional(),
   phone: z.string()
     .max(20, 'Teléfono inválido')
     .regex(/^\+?[0-9\s-]*$/, 'El teléfono no tiene un formato válido')

@@ -7,19 +7,20 @@ const prismaClientSingleton = () => {
   
   // In serverless (Vercel), we must be very careful with connection counts.
   // Each lambda can open its own connections. We force a conservative limit.
+  // Ensure optimized connection limits and timeouts for all connections
   let finalUrl = customUrl
-  if (finalUrl && finalUrl.includes(':6543')) {
-    // Supabase Transaction Pooler needs pgbouncer=true
-    if (!finalUrl.includes('pgbouncer=')) {
-      finalUrl += (finalUrl.includes('?') ? '&' : '?') + 'pgbouncer=true'
-    }
-    // Set a strict connection limit to prevent "Max client connections reached"
-    // 2-3 connections per lambda is usually enough and prevents crashing the pool.
+  if (finalUrl) {
+    // Basic pgbouncer safety (even if not using pgbouncer, these parameters help stability)
     if (!finalUrl.includes('connection_limit=')) {
-      finalUrl += '&connection_limit=' + (isProd ? '3' : '5')
+      finalUrl += (finalUrl.includes('?') ? '&' : '?') + 'connection_limit=' + (isProd ? '10' : '5')
     }
     if (!finalUrl.includes('pool_timeout=')) {
-      finalUrl += '&pool_timeout=20'
+      finalUrl += '&pool_timeout=30'
+    }
+    
+    // If using Supabase Pooler (6543)
+    if (finalUrl.includes(':6543') && !finalUrl.includes('pgbouncer=')) {
+      finalUrl += '&pgbouncer=true'
     }
   }
 

@@ -16,24 +16,38 @@ export interface AuthResult {
  */
 export type UserRole = 'student' | 'teacher' | 'school_admin' | 'moderator'
 
+import { auth, currentUser } from '@clerk/nextjs/server'
+
 /**
- * Standardized authentication check for API routes
+ * Standardized authentication check for API routes - Clerk Edition
  * Returns user and supabase client if authenticated, otherwise returns error response
  */
 export async function requireAuth(
   request: NextRequest
 ): Promise<{ success: true; data: AuthResult } | { success: false; response: NextResponse }> {
   try {
-    const supabase = await createSupabaseServer()
-    const { data: { user }, error } = await supabase.auth.getUser()
-
-    if (error || !user) {
+    const { userId } = await auth()
+    
+    if (!userId) {
       return {
         success: false,
         response: NextResponse.json(
           { error: 'Unauthorized', message: 'Authentication required' },
           { status: 401 }
         ),
+      }
+    }
+
+    const clerkUser = await currentUser()
+    const supabase = await createSupabaseServer() // Keep for DB access if needed
+
+    // Map Clerk user to Supabase-compatible User object
+    const user: any = {
+      id: userId,
+      email: clerkUser?.emailAddresses[0]?.emailAddress || '',
+      user_metadata: {
+        full_name: clerkUser?.fullName || '',
+        avatar_url: clerkUser?.imageUrl || ''
       }
     }
 
@@ -131,12 +145,26 @@ export async function optionalAuth(
   request: NextRequest
 ): Promise<{ user: User | null; supabase: Awaited<ReturnType<typeof createSupabaseServer>> }> {
   try {
+    const { userId } = await auth()
     const supabase = await createSupabaseServer()
-    const { data: { user } } = await supabase.auth.getUser()
-    return { user: user || null, supabase }
+
+    if (!userId) {
+      return { user: null, supabase }
+    }
+
+    const clerkUser = await currentUser()
+    const user: any = {
+      id: userId,
+      email: clerkUser?.emailAddresses[0]?.emailAddress || '',
+      user_metadata: {
+        full_name: clerkUser?.fullName || '',
+        avatar_url: clerkUser?.imageUrl || ''
+      }
+    }
+
+    return { user, supabase }
   } catch (error) {
     console.error('[API Auth] Error during optional authentication:', error)
-    // Return null user on error - let the route handle it
     const supabase = await createSupabaseServer()
     return { user: null, supabase }
   }

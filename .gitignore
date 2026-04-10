@@ -45,3 +45,9 @@ next-env.d.ts
 
 
 /generated/prisma
+*.sql
+*.log
+/scripts/test-new-db.js
+allow_all.yaml
+backup_data.sql
+backup_esquema.sql

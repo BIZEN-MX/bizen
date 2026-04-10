@@ -4,44 +4,49 @@ import { prisma } from '@/lib/prisma'
 import { createSupabaseServer } from '@/lib/supabase/server'
 import { cookies } from 'next/headers'
 import { isInstitutionalEmail } from '@/lib/emailValidation'
+import { logAudit } from '@/lib/audit'
+
+import { auth, currentUser } from '@clerk/nextjs/server'
 
 // GET /api/profiles - Get current user profile
 export async function GET(request: NextRequest) {
   try {
-    const supabase = await createSupabaseServer()
-
-    const { data: { user }, error } = await supabase.auth.getUser()
-
-    if (error || !user) {
+    const { userId } = await auth()
+    
+    if (!userId) {
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401 }
       )
     }
 
+    const clerkUser = await currentUser()
+    const userEmail = clerkUser?.emailAddresses[0]?.emailAddress || ''
+    const userFullName = clerkUser?.fullName || userEmail.split('@')[0] || "Usuario"
+
     // Use try-catch for each DB query to avoid blanket 500
     let profile: any = null;
     try {
       const profileResult: any[] = await prisma.$queryRaw`
-          SELECT * FROM public.profiles WHERE user_id = ${user.id} LIMIT 1
+          SELECT * FROM public.profiles WHERE user_id = ${userId} LIMIT 1
         `
       profile = profileResult[0]
     } catch (e: any) {
       console.error('DB Error (profile raw query):', e.message)
       // Try fallback to standard prisma query if raw fails
-      profile = await prisma.profile.findUnique({ where: { userId: user.id } }).catch(() => null);
+      profile = await prisma.profile.findUnique({ where: { userId: userId } }).catch(() => null);
     }
 
-    const isEduEmail = isInstitutionalEmail(user.email || '');
-    const isSpecialAdmin = user.email?.toLowerCase() === 'diegopenita31@gmail.com';
+    const isEduEmail = isInstitutionalEmail(userEmail);
+    const isSpecialAdmin = userEmail.toLowerCase() === 'diegopenita31@gmail.com';
 
     if (!profile) {
-      console.warn(`[api/profiles] Profile missing for user ${user.id}, creating default...`)
+      console.warn(`[api/profiles] Profile missing for user ${userId}, creating default...`)
       const fallbackRole = isSpecialAdmin ? 'school_admin' : (isEduEmail ? 'institutional' : 'particular');
       
       const fallbackProfile = {
-        userId: user.id,
-        fullName: user.user_metadata?.full_name || user.email?.split('@')[0] || "Usuario",
+        userId: userId,
+        fullName: userFullName,
         role: fallbackRole,
         xp: 0,
         bizcoins: 0,
@@ -55,7 +60,7 @@ export async function GET(request: NextRequest) {
       try {
         profile = await prisma.profile.create({
           data: {
-            userId: user.id,
+            userId: userId,
             fullName: fallbackProfile.fullName,
             role: fallbackRole,
             xp: 0,
@@ -74,7 +79,7 @@ export async function GET(request: NextRequest) {
     if (!isEduEmail && !isSpecialAdmin && profile.role !== 'particular') {
       try {
         profile = await prisma.profile.update({
-          where: { userId: user.id },
+          where: { userId: userId },
           data: { role: 'particular', schoolId: null }
         });
       } catch (updateErr: any) {
@@ -92,7 +97,7 @@ export async function GET(request: NextRequest) {
     let inventoryResult: any[] = []
     try {
       inventoryResult = await prisma.$queryRaw`
-          SELECT product_id FROM public.user_inventory WHERE user_id = ${user.id}
+          SELECT product_id FROM public.user_inventory WHERE user_id = ${userId}
         `
     } catch (e: any) {
       console.warn('DB Warning (inventory fetch failed):', e.message)
@@ -140,6 +145,17 @@ export async function GET(request: NextRequest) {
       school
     };
 
+    // --- AUDIT LOG (Internal) ---
+    // Log profile access as a "detectable session load"
+    // We don't await this to keep the API snappy
+    logAudit({
+      userId: userId,
+      action: 'SESSION_LOAD',
+      entityType: 'profile',
+      entityId: userId,
+      request
+    });
+
     // If user has school with active license, or active Stripe subscription, set/renew paywall bypass cookie
     const hasActiveLicense = (profile as any)?.school?.licenses?.length && (profile as any).school.licenses.length > 0;
     const hasActiveStripe = profileData.subscriptionStatus === 'active';
@@ -181,12 +197,15 @@ import { updateProfileSchema } from '@/validators/profile'
 // PATCH /api/profiles - Update current user profile
 export async function PATCH(request: NextRequest) {
   try {
-    const supabase = await createSupabaseServer()
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
-
-    if (authError || !user) {
+    const { userId } = await auth()
+    
+    if (!userId) {
       return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
     }
+
+    const clerkUser = await currentUser()
+    const userEmail = clerkUser?.emailAddresses[0]?.emailAddress || ''
+    const userFullName = clerkUser?.fullName || userEmail.split('@')[0] || "Usuario"
 
     const body = await request.json()
     
@@ -202,14 +221,30 @@ export async function PATCH(request: NextRequest) {
 
     const data = validation.data
 
+    // 1.5 Server-side Sanitization (Extra layer against XSS)
+    const sanitize = (str: string | undefined | null) => str?.replace(/[<>]/g, '').trim();
+    
+    if (data.fullName) {
+      data.fullName = sanitize(data.fullName);
+      if (data.fullName.length > 100) return NextResponse.json({ error: "Nombre demasiado largo (máx 100)" }, { status: 400 });
+    }
+    if (data.username) {
+      data.username = sanitize(data.username);
+      if (data.username.length > 50) return NextResponse.json({ error: "Username demasiado largo (máx 50)" }, { status: 400 });
+    }
+    if (data.bio) {
+      data.bio = sanitize(data.bio);
+      if (data.bio.length > 500) return NextResponse.json({ error: "Biografía demasiado larga (máx 500)" }, { status: 400 });
+    }
+
     // Fetch current profile
-    const existingProfile = await prisma.profile.findUnique({ where: { userId: user.id } });
+    const existingProfile = await prisma.profile.findUnique({ where: { userId: userId } });
     if (!existingProfile) {
       return NextResponse.json({ error: 'Perfil no encontrado' }, { status: 404 });
     }
 
-    const isEduEmail = isInstitutionalEmail(user.email || '');
-    const isSpecialAdmin = user.email?.toLowerCase() === 'diegopenita31@gmail.com';
+    const isEduEmail = isInstitutionalEmail(userEmail);
+    const isSpecialAdmin = userEmail.toLowerCase() === 'diegopenita31@gmail.com';
 
     // 2. Logic Protection (Role Downgrading for non-institutional)
     const canUpdateRole = isEduEmail || isSpecialAdmin;
@@ -219,7 +254,7 @@ export async function PATCH(request: NextRequest) {
       const usernameExists = await prisma.profile.findFirst({
         where: { 
           username: data.username,
-          NOT: { userId: user.id }
+          NOT: { userId: userId }
         }
       });
       if (usernameExists) {
@@ -228,7 +263,7 @@ export async function PATCH(request: NextRequest) {
     }
 
     const updatedProfile = await prisma.profile.update({
-      where: { userId: user.id },
+      where: { userId: userId },
       data: {
         ...(data.fullName && { fullName: data.fullName }),
         ...(((data as any).role || data.schoolId) && {
@@ -245,21 +280,17 @@ export async function PATCH(request: NextRequest) {
       },
     })
 
-    // ── SYNC WITH SUPABASE AUTH METADATA ──
-    // This prevents "phantom profiles" where the auth session has an old name
-    if (data.fullName || data.avatar) {
-      try {
-        await supabase.auth.updateUser({
-          data: {
-            ...(data.fullName && { full_name: data.fullName }),
-            ...(data.avatar && { avatar_url: typeof data.avatar === 'string' ? data.avatar : (data.avatar as any)?.url })
-          }
-        });
-      } catch (syncErr) {
-        console.error('⚠️ [Profiles:SyncWarning]: Failed to sync auth metadata:', syncErr);
-        // We don't fail the whole request because the DB is already updated
-      }
-    }
+    // --- AUDIT LOG ---
+    // Log the successful profile update
+    logAudit({
+      userId: userId,
+      action: 'UPDATE_PROFILE',
+      entityType: 'profile',
+      entityId: userId,
+      oldData: existingProfile,
+      newData: updatedProfile,
+      request
+    });
 
     return NextResponse.json(updatedProfile)
   } catch (error) {

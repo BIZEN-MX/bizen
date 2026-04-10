@@ -4,7 +4,6 @@ import { useState, useEffect, useCallback, useRef } from "react"
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from "framer-motion"
 import { AvatarDisplay } from "@/components/AvatarDisplay"
 import { AVATAR_OPTIONS, AVATAR_CATEGORIES } from "@/lib/avatarOptions"
-import { createClient } from "@/lib/supabase/client"
 import { useAuth } from "@/contexts/AuthContext"
 import { SchoolIcon, RocketIcon } from "@/components/CustomIcons"
 import { Billy } from "@/components/Billy"
@@ -277,7 +276,6 @@ function BizenCard({
 
 export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
   const { user, refreshUser } = useAuth()
-  const supabase = createClient()
 
   const [step, setStep] = useState<Step>("welcome")
   const [selectedAvatar, setSelectedAvatar] = useState<any>(AVATAR_OPTIONS[0])
@@ -332,7 +330,6 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
         setSaving(false)
         return
       }
-      await supabase.auth.refreshSession()
       await refreshUser()
       
       const emailForRole = user?.email?.toLowerCase() || ""
@@ -903,7 +900,7 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
                   <div>
                     <p className="text-sm font-black text-white mb-0.5">¿Dónde encontrarme?</p>
                     <p className="text-xs text-slate-400 leading-relaxed">
-                      Busca el <span className="text-blue-400 font-bold">botón azul flotante</span> en la esquina inferior derecha de cualquier pantalla. ¡Siempre estoy ahí!
+                      Busca mi <span className="text-blue-400 font-bold">icono en la barra superior</span> junto a tus notificaciones. ¡Siempre estoy ahí!
                     </p>
                   </div>
                 </motion.div>

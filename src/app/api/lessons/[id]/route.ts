@@ -9,33 +9,75 @@ export async function GET(
 ) {
   try {
     const { id } = await params
+    const supabase = await createSupabaseServer()
+
+    // --- SECURITY BRAKE: AUTHENTICATION ---
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    // --- SECURITY BRAKE: PROGRESS & SEQUENCING ---
+    // Get the current lesson and its order
+    const currentLesson = await prisma.lesson.findUnique({
+      where: { id },
+      include: { course: true }
+    })
+
+    if (!currentLesson) {
+      return NextResponse.json({ error: 'Lesson not found' }, { status: 404 })
+    }
+
+    // Role bypass: Admins and Teachers can skip anything
+    const role = user.user_metadata?.role || 'student'
+    const isAdmin = ['admin', 'school_admin', 'teacher'].includes(role)
+
+    if (!isAdmin && currentLesson.order > 1) {
+      // Find the PREVIOUS lesson in the same course
+      const previousLesson = await prisma.lesson.findFirst({
+        where: {
+          courseId: currentLesson.courseId,
+          order: currentLesson.order - 1
+        }
+      })
+
+      if (previousLesson) {
+        // Check if the student has completed the previous lesson
+        const progress = await prisma.progress.findUnique({
+          where: {
+            userId_lessonId: {
+              userId: user.id,
+              lessonId: previousLesson.id
+            }
+          }
+        })
+
+        if (!progress || !progress.completedAt) {
+          return NextResponse.json({ 
+            error: 'BLOQUEO DE PROGRESO: Debes completar la lección anterior antes de ver esta.',
+            code: 'PREVIOUS_LESSON_REQUIRED'
+          }, { status: 403 })
+        }
+      }
+    }
 
     // 1. Check if we have static content first (Dev-friendly / fallback)
     const staticSteps = lessonRegistry[id]
     
-    // 2. Try fetching metadata from DB (title, description, etc.)
-    let lesson: any = null
-    try {
-      lesson = await prisma.lesson.findUnique({
-        where: { id },
-        include: { steps: true }
-      })
-    } catch (dbErr) {
-      console.warn(`[api/lessons] DB Fetch failed for ${id}, using static fallback if available.`, dbErr)
-    }
-
-    // 3. Fallback logic: Combine DB metadata with static steps if DB steps are missing
-    if (!lesson && !staticSteps) {
-      return NextResponse.json(
-        { error: 'Lesson not found' },
-        { status: 404 }
-      )
+    // 2. Fetch steps from DB if needed
+    let dbSteps = currentLesson.steps || []
+    if (dbSteps.length === 0) {
+       const lessonWithSteps = await prisma.lesson.findUnique({
+         where: { id },
+         include: { steps: true }
+       })
+       dbSteps = lessonWithSteps?.steps || []
     }
 
     // Prepare response
     const responseData = {
-      ...(lesson || { id, title: id.split('-').join(' ').toUpperCase(), description: "Lección interactive" }),
-      steps: staticSteps?.length ? staticSteps : (lesson?.steps || [])
+      ...currentLesson,
+      steps: staticSteps?.length ? staticSteps : dbSteps
     }
 
     // Final check for steps

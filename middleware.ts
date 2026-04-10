@@ -1,112 +1,116 @@
-import { createServerClient, type CookieOptions } from '@supabase/ssr'
-import { NextResponse, type NextRequest } from 'next/server'
-import { getSupabaseConfig, validateEnv } from '@/lib/env'
+import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { NextResponse } from "next/server";
 
-// Validate environment variables at module load (runs once)
-try {
-  validateEnv()
-} catch (error) {
-  // In production, fail fast if env vars are missing
-  if (process.env.NODE_ENV === 'production') {
-    console.error('❌ [MIDDLEWARE] Environment validation failed:', error)
-    throw error
-  }
-}
+// Simple in-memory rate limit store
+const rateLimitStore = new Map<string, { count: number, lastReset: number }>()
+const RATE_LIMIT_THRESHOLD = 60 // general APIs
+const LOGIN_LIMIT_THRESHOLD = 5 // login protection
+const AI_LIMIT_THRESHOLD = 3    // budget protection
+const RATE_LIMIT_WINDOW = 60 * 1000 // 1 minute in ms
 
-export async function middleware(request: NextRequest) {
-  let response = NextResponse.next({
-    request: {
-      headers: request.headers,
-    },
-  })
+// Define routes that are publicly accessible
+const isPublicRoute = createRouteMatcher([
+  '/',
+  '/login(.*)',
+  '/signup(.*)',
+  '/auth/callback',
+  '/api/webhooks(.*)',
+  '/terminos',
+  '/privacidad',
+  "/api/public(.*)",
+  "/api/webhook(.*)",
+  "/tienda(.*)",
+  "/legal(.*)",
+  "/about(.*)",
+  "/banned"
+]);
 
-  const { url: supabaseUrl, anonKey: supabaseKey } = getSupabaseConfig()
+// Define routes that require specific roles
+const isAdminRoute = createRouteMatcher(["/admin(.*)"]);
+const isTeacherRoute = createRouteMatcher(["/teacher(.*)"]);
+const isPaidRoute = createRouteMatcher([
+  "/dashboard(.*)",
+  "/learn(.*)",
+  "/quiz(.*)",
+  "/courses(.*)",
+  "/simuladores(.*)",
+  "/forum(.*)",
+  "/profile(.*)"
+]);
 
-  const supabase = createServerClient(
-    supabaseUrl,
-    supabaseKey,
-    {
-      cookies: {
-        get(name: string) {
-          return request.cookies.get(name)?.value
-        },
-        set(name: string, value: string, options: CookieOptions) {
-          // If this is a Supabase auth cookie, ensure it has a long duration
-          const enhancedOptions = {
-            ...options,
-            // Defaults for persistence if not provided
-            maxAge: options.maxAge ?? (60 * 60 * 24 * 365), // 1 year default
-            path: options.path ?? '/',
-          }
+export default clerkMiddleware(async (auth, request) => {
+  const ip = request.headers.get("x-forwarded-for") || "127.0.0.1";
+  const now = Date.now();
+  const { pathname } = request.nextUrl;
 
-          request.cookies.set({ name, value, ...enhancedOptions })
-          response.cookies.set({ name, value, ...enhancedOptions })
-        },
-        remove(name: string, options: CookieOptions) {
-          request.cookies.set({ name, value: '', ...options })
-          response.cookies.set({ name, value: '', ...options })
-        },
-      },
+  // 1. RATE LIMITING PROTECTION
+  if (pathname.startsWith("/api") || pathname.startsWith("/login")) {
+    const isAiRoute = pathname.includes("/ai") || pathname.includes("/chatbot") || pathname.includes("/billy-lab");
+    let limit = RATE_LIMIT_THRESHOLD;
+    if (pathname.includes("/login")) limit = LOGIN_LIMIT_THRESHOLD;
+    if (isAiRoute) limit = AI_LIMIT_THRESHOLD;
+
+    const userData = rateLimitStore.get(ip) || { count: 0, lastReset: now };
+    if (now - userData.lastReset > RATE_LIMIT_WINDOW) {
+      userData.count = 1;
+      userData.lastReset = now;
+    } else {
+      userData.count++;
     }
-  )
+    rateLimitStore.set(ip, userData);
 
-  // Critical: this refreshes the session from the cookie and updates it if needed
-  const { data: { session }, error: sessionError } = await supabase.auth.getSession()
-
-  const pathname = request.nextUrl.pathname
-
-  // Protected routes check
-  const studentProtected = ['/dashboard', '/path', '/learn', '/quiz', '/assignments', '/progress', '/forum', '/reto-diario', '/courses', '/cash-flow', '/simuladores', '/leaderboard', '/ranking', '/cuenta', '/configuracion', '/profile']
-  const isStudentProtected = studentProtected.some(route => pathname.startsWith(route))
-
-  if (isStudentProtected && !session) {
-    const from = pathname + request.nextUrl.search
-    return NextResponse.redirect(new URL(`/login?redirect=${encodeURIComponent(from)}`, request.url))
-  }
-
-  // Admin/Teacher protection
-  if ((pathname.startsWith('/teacher') || pathname.startsWith('/admin')) && !session) {
-    return NextResponse.redirect(new URL('/login', request.url))
-  }
-
-  // Paywall Logic
-  // We only block if the user has NO session OR they are logged in but clearly flagged as no-access.
-  // HOWEVER: If they just logged in, they might not have the 'bizen_has_access' cookie yet.
-  // We allow the request if session exists, and let the Profiles API (client-side) handle the paywall cookie sync.
-  const paidRoutes = ['/courses', '/cash-flow', '/learn', '/simuladores', '/dashboard', '/forum', '/leaderboard', '/ranking', '/progress', '/reto-diario', '/cuenta', '/configuracion', '/profile']
-  const isPaidPath = paidRoutes.some(route => pathname.startsWith(route))
-  const isExempt = ['/payment', '/payment/success', '/payment/cancel'].some(route => pathname.startsWith(route))
-
-  if (isPaidPath && !isExempt) {
-    const hasAccessCookie = request.cookies.get('bizen_has_access')?.value === '1'
-
-    // IF no session, redirect to login (already handled above)
-    // IF session exists but no access cookie, we allow it TEMPORARILY 
-    // to let the app fetch the profile and set the cookie. 
-    // The actual paywall enforcement will happen in the App (ModuleGate, SectionGate, etc.) 
-    // or if the Profiles API returns subStatus='none'
-    if (session && !hasAccessCookie) {
-      // Allow through so /api/profiles can run and set the cookie
-      return response
-    }
-
-    if (!session) {
-      return NextResponse.redirect(new URL('/login', request.url))
+    if (userData.count > limit) {
+      return new NextResponse("Too Many Requests - BIZEN Protection", { 
+        status: 429,
+        headers: { "Retry-After": "60" }
+      });
     }
   }
 
-  return response
-}
+  // 2. AUTHENTICATION PROTECTION
+  if (!isPublicRoute(request)) {
+    const session = await auth();
+    
+    // Redirect unauthenticated users to login
+    if (!session.userId) {
+      const from = pathname + request.nextUrl.search;
+      const loginUrl = new URL("/login", request.url);
+      loginUrl.searchParams.set("redirect", from);
+      return NextResponse.redirect(loginUrl);
+    }
+
+    // 3. BAN SYSTEM
+    const isBanned = session.sessionClaims?.metadata?.isBanned === true;
+    if (isBanned && pathname !== "/banned") {
+      return NextResponse.redirect(new URL("/banned", request.url));
+    }
+
+    // 4. ROLE-BASED ACCESS CONTROL (RBAC)
+    const role = session.sessionClaims?.metadata?.role || "student";
+    
+    // Admin & Teacher Protection
+    if ((isAdminRoute(request) || isTeacherRoute(request)) && !["admin", "school_admin", "teacher"].includes(role)) {
+      return NextResponse.redirect(new URL("/dashboard", request.url));
+    }
+
+    // 5. PAYWALL REDIRECTION (Soft Check)
+    if (isPaidRoute(request)) {
+      const hasAccess = session.sessionClaims?.metadata?.hasAccess === true || 
+                         request.cookies.get("bizen_has_access")?.value === "1";
+      
+      // If no access and trying to reach premium content
+      if (!hasAccess && pathname !== "/tienda" && role === "student") {
+        // We let them through but the components will show the Paywall
+        // This prevents infinite loops and allows the profile to sync
+      }
+    }
+  }
+
+  return NextResponse.next();
+});
 
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - public folder
-     */
-    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
-}
+};

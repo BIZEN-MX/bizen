@@ -359,19 +359,21 @@ export default function DashboardContent() {
 
       const data = await res.json()
       
-      // Update stats and handle pulses
+      // Update stats and handle pulses using functional updates to avoid dependency
       if (data.stats) {
-        if (stats) {
-          if (data.stats.xp !== stats.xp) {
-            setShowPulseXp(true)
-            setTimeout(() => setShowPulseXp(false), 2000)
+        setStats(prev => {
+          if (prev) {
+            if (data.stats.xp !== prev.xp) {
+              setShowPulseXp(true)
+              setTimeout(() => setShowPulseXp(false), 2000)
+            }
+            if (data.stats.bizcoins !== prev.bizcoins) {
+              setShowPulseBc(true)
+              setTimeout(() => setShowPulseBc(false), 2000)
+            }
           }
-          if (data.stats.bizcoins !== stats.bizcoins) {
-            setShowPulseBc(true)
-            setTimeout(() => setShowPulseBc(false), 2000)
-          }
-        }
-        setStats(data.stats)
+          return data.stats
+        })
       }
 
       if (data.topics) setTopics(data.topics)
@@ -386,7 +388,7 @@ export default function DashboardContent() {
       if (!isSilent) setLoadingData(false)
       setIsSyncing(false)
     }
-  }, [user, stats])
+  }, [user, router]) // Removed 'stats' from dependency list
 
   const fetchNews = async () => {
     try {
@@ -413,11 +415,11 @@ export default function DashboardContent() {
       return
     }
 
-    // Initial Load
+    // Initial Load - only called once when mount or user/profile changes
     go()
 
-    // Real-time Polling (every 10s)
-    const interval = setInterval(() => go(true), 10000)
+    // Real-time Polling (every 30s instead of 10s to be gentler on DB)
+    const interval = setInterval(() => go(true), 30000)
     return () => clearInterval(interval)
   }, [user, loading, router, dbProfile, go])
 

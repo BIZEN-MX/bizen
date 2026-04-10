@@ -35,12 +35,15 @@ export async function GET(request: NextRequest) {
                 include: { course: { include: { topic: true } } },
                 take: 5
             }),
-            prisma.$queryRawUnsafe(`
-                SELECT id, title, 'news' as type, CONCAT('/news/', id) as url 
-                FROM "public"."news" 
-                WHERE "title" ILIKE $1 OR "excerpt" ILIKE $1
-                LIMIT 5
-            `, `%${query}%`).catch(() => []),
+            prisma.newsItem.findMany({
+                where: {
+                    OR: [
+                        { title: { contains: query, mode: 'insensitive' } },
+                        { excerpt: { contains: query, mode: 'insensitive' } }
+                    ],
+                },
+                take: 5
+            }).catch(() => []),
             prisma.forumThread.findMany({
                 where: {
                     OR: [
@@ -89,7 +92,9 @@ export async function GET(request: NextRequest) {
 
         return NextResponse.json({ results })
     } catch (error) {
-        console.error("Search API Error:", error)
-        return NextResponse.json({ error: "Failed to search" }, { status: 500 })
+        console.error("❌ [Search:API_FAIL]:", error)
+        return NextResponse.json({ 
+            error: "La búsqueda ha fallado temporalmente. Intenta de nuevo." 
+        }, { status: 500 })
     }
 }
