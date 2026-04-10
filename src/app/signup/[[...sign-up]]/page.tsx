@@ -89,6 +89,8 @@ export default function BIZENSignupPage() {
           signInUrl="/login"
           socialButtonsPlacement="top"
           socialButtonsVariant="blockButton"
+          forceRedirectUrl="/dashboard"
+          fallbackRedirectUrl="/dashboard"
         />
       </div>
 

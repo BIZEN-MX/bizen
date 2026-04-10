@@ -89,6 +89,8 @@ export default function LoginClient() {
           signUpUrl="/signup"
           socialButtonsPlacement="top"
           socialButtonsVariant="blockButton"
+          forceRedirectUrl="/dashboard"
+          fallbackRedirectUrl="/dashboard"
         />
       </div>
 
