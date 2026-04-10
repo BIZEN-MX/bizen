@@ -8,6 +8,8 @@ export const metadata: Metadata = {
   description: "Tu centro de control financiero. Consulta tus estadísticas, sigue tus cursos y mide tu impacto social."
 }
 
+export const dynamic = "force-dynamic"
+
 export default function DashboardPage() {
   return (
     <Suspense fallback={<PageLoader />}>
