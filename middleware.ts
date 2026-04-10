@@ -1,62 +1,53 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
-// Simple in-memory rate limit store
-const rateLimitStore = new Map<string, { count: number, lastReset: number }>()
-const RATE_LIMIT_THRESHOLD = 60 // general APIs
-const LOGIN_LIMIT_THRESHOLD = 5 // login protection
-const AI_LIMIT_THRESHOLD = 3    // budget protection
-const RATE_LIMIT_WINDOW = 60 * 1000 // 1 minute in ms
-
 // Define routes that are publicly accessible
 const isPublicRoute = createRouteMatcher([
   '/',
   '/login(.*)',
   '/signup(.*)',
-  '/auth/callback',
-  '/api/webhooks(.*)',
+  '/about',
+  '/contacto',
   '/terminos',
   '/privacidad',
-  "/api/public(.*)",
-  "/api/webhook(.*)",
-  "/tienda(.*)",
-  "/legal(.*)",
-  "/about(.*)",
-  "/banned"
+  '/api/webhooks(.*)',
+  '/api/public(.*)',
+  '/banned'
 ]);
 
-// Define routes that require specific roles
-const isAdminRoute = createRouteMatcher(["/admin(.*)"]);
-const isTeacherRoute = createRouteMatcher(["/teacher(.*)"]);
-const isPaidRoute = createRouteMatcher([
-  "/dashboard(.*)",
-  "/learn(.*)",
-  "/quiz(.*)",
-  "/courses(.*)",
-  "/simuladores(.*)",
-  "/forum(.*)",
-  "/profile(.*)"
-]);
+const isAdminRoute = createRouteMatcher(['/admin(.*)', '/api/admin(.*)']);
+const isTeacherRoute = createRouteMatcher(['/teacher(.*)', '/api/teacher(.*)']);
+const isPaidRoute = createRouteMatcher(['/courses(.*)', '/simulators(.*)']);
+
+// Simple rate limit map
+const rateLimitStore = new Map<string, { count: number; lastReset: number }>();
 
 export default clerkMiddleware(async (auth, request) => {
-  const ip = request.headers.get("x-forwarded-for") || "127.0.0.1";
-  const now = Date.now();
   const { pathname } = request.nextUrl;
+  
+  // 1. Skip paths that should be ignored by Clerk (static files, _next, etc.)
+  if (
+    pathname.includes('.') || 
+    pathname.startsWith('/_next') || 
+    pathname.includes('favicon.ico')
+  ) {
+    return NextResponse.next();
+  }
 
-  // 1. RATE LIMITING PROTECTION
-  if (pathname.startsWith("/api") || pathname.startsWith("/login")) {
-    const isAiRoute = pathname.includes("/ai") || pathname.includes("/chatbot") || pathname.includes("/billy-lab");
-    let limit = RATE_LIMIT_THRESHOLD;
-    if (pathname.includes("/login")) limit = LOGIN_LIMIT_THRESHOLD;
-    if (isAiRoute) limit = AI_LIMIT_THRESHOLD;
+  // Basic Rate Limiting check
+  const ip = request.headers.get("x-forwarded-for") || "anonymous";
+  const limit = 100; // requests per minute
+  const window = 60 * 1000;
+  
+  const now = Date.now();
+  const userData = rateLimitStore.get(ip) || { count: 0, lastReset: now };
 
-    const userData = rateLimitStore.get(ip) || { count: 0, lastReset: now };
-    if (now - userData.lastReset > RATE_LIMIT_WINDOW) {
-      userData.count = 1;
-      userData.lastReset = now;
-    } else {
-      userData.count++;
-    }
+  if (now - userData.lastReset > window) {
+    userData.count = 1;
+    userData.lastReset = now;
+    rateLimitStore.set(ip, userData);
+  } else {
+    userData.count++;
     rateLimitStore.set(ip, userData);
 
     if (userData.count > limit) {
@@ -86,21 +77,29 @@ export default clerkMiddleware(async (auth, request) => {
     if ((isAdminRoute(request) || isTeacherRoute(request)) && !["admin", "school_admin", "teacher"].includes(role)) {
       return NextResponse.redirect(new URL("/dashboard", request.url));
     }
-
-    // 5. PAYWALL REDIRECTION (Soft Check)
-    if (isPaidRoute(request)) {
-      const hasAccess = session.sessionClaims?.metadata?.hasAccess === true || 
-                         request.cookies.get("bizen_has_access")?.value === "1";
-      
-      // If no access and trying to reach premium content
-      if (!hasAccess && pathname !== "/tienda" && role === "student") {
-        // We let them through but the components will show the Paywall
-        // This prevents infinite loops and allows the profile to sync
-      }
-    }
   }
 
-  return NextResponse.next();
+  // 5. SECURITY HEADERS (CSP)
+  const response = NextResponse.next();
+  
+  const csp = `
+    default-src 'self';
+    script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.clerk.com https://clerk.com https://clerk.bizen.mx https://*.bizen.mx https://*.clerk.mx https://*.clerk.accounts.dev https://*.stripe.com https://*.google.com https://*.googleapis.com;
+    style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://*.clerk.accounts.dev;
+    img-src 'self' blob: data: https://*.clerk.com https://img.clerk.com https://images.clerk.dev https://clerk.bizen.mx https://*.bizen.mx https://*.supabase.co https://*.stripe.com https://*.google.com https://*.resend.com;
+    font-src 'self' data: https://fonts.gstatic.com https://*.clerk.accounts.dev;
+    connect-src 'self' https://clerk.bizen.mx https://*.bizen.mx https://*.clerk.com https://*.clerk.mx https://*.clerk-telemetry.com https://*.clerk.accounts.dev https://*.supabase.co https://*.stripe.com https://*.googleapis.com;
+    frame-src 'self' https://clerk.bizen.mx https://*.bizen.mx https://*.clerk.com https://*.clerk.mx https://*.stripe.com https://*.google.com;
+    worker-src 'self' blob:;
+    upgrade-insecure-requests;
+  `.replace(/\s{2,}/g, ' ').trim();
+
+  response.headers.set('Content-Security-Policy', csp);
+  response.headers.set('X-Content-Type-Options', 'nosniff');
+  response.headers.set('X-Frame-Options', 'DENY');
+  response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
+  
+  return response;
 });
 
 export const config = {
