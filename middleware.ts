@@ -25,8 +25,13 @@ const rateLimitStore = new Map<string, { count: number; lastReset: number }>();
 export default clerkMiddleware(async (auth, request) => {
   const { pathname } = request.nextUrl;
   
-  // 0. Force Main Domain (Clerk production keys only work on bizen.mx)
+  // 0. Development Bypass: Allow all requests on localhost for instant UI feedback
   const host = request.headers.get("host") || "";
+  if (host.includes("localhost") || host.includes("127.0.0.1")) {
+    return NextResponse.next();
+  }
+  
+  // 0. Force Main Domain (Clerk production keys only work on bizen.mx)
   if (host.includes("a.run.app") || host.includes("www.bizen.mx")) {
     const targetUrl = new URL(pathname + request.nextUrl.search, "https://bizen.mx");
     return NextResponse.redirect(targetUrl, 301);
