@@ -2,15 +2,18 @@ import { NextRequest, NextResponse } from "next/server"
 import { createSupabaseServer } from "@/lib/supabase/server"
 import { prisma } from "@/lib/prisma"
 
-export async function GET() {
-  try {
-    const supabase = await createSupabaseServer()
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
+import { requireAuth } from "@/lib/auth/api-auth"
 
-    if (authError || !user) {
-      console.warn("[API Notifications] Auth failed or missing user", authError?.message)
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+export async function GET(request: NextRequest) {
+  try {
+    const authResult = await requireAuth(request)
+
+    if (!authResult.success) {
+      console.warn("[API Notifications] Auth failed:", authResult.response.status)
+      return authResult.response
     }
+
+    const { user } = authResult.data
 
     const [forumNotifs, systemNotifs, forumCount, systemCount] = await Promise.all([
       prisma.forumNotification.findMany({
@@ -51,12 +54,13 @@ export async function GET() {
 
 export async function PATCH(request: NextRequest) {
   try {
-    const supabase = await createSupabaseServer()
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    const authResult = await requireAuth(request)
     
-    if (authError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    if (!authResult.success) {
+      return authResult.response
     }
+
+    const { user } = authResult.data
 
     const body = await request.json()
     const { notificationId, markAllRead } = body

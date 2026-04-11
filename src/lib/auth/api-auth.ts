@@ -44,8 +44,13 @@ export async function requireAuth(
     console.log("[API Auth] Fetching current Clerk user...")
     const clerkUser = await currentUser()
     
-    console.log("[API Auth] Initializing Supabase server client...")
-    const supabase = await createSupabaseServer() // Keep for DB access if needed
+    console.log("[API Auth] Initializing Supabase server client (optional)...")
+    let supabase = null;
+    try {
+      supabase = await createSupabaseServer()
+    } catch (e) {
+      console.warn("[API Auth] Supabase initialization skipped:", (e as Error).message)
+    }
 
     // Map Clerk user to Supabase-compatible User object
     const user: any = {
@@ -150,10 +155,16 @@ export async function requireAuthAndRole(
  */
 export async function optionalAuth(
   request: NextRequest
-): Promise<{ user: User | null; supabase: Awaited<ReturnType<typeof createSupabaseServer>> }> {
+): Promise<{ user: User | null; supabase: any }> {
   try {
     const { userId } = await auth()
-    const supabase = await createSupabaseServer()
+    
+    let supabase = null;
+    try {
+      supabase = await createSupabaseServer()
+    } catch (e) {
+      // Ignore
+    }
 
     if (!userId) {
       return { user: null, supabase }
@@ -172,8 +183,7 @@ export async function optionalAuth(
     return { user, supabase }
   } catch (error) {
     console.error('[API Auth] Error during optional authentication:', error)
-    const supabase = await createSupabaseServer()
-    return { user: null, supabase }
+    return { user: null, supabase: null }
   }
 }
 
