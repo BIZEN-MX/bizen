@@ -44,15 +44,7 @@ export async function requireAuth(
     console.log("[API Auth] Fetching current Clerk user...")
     const clerkUser = await currentUser()
     
-    console.log("[API Auth] Initializing Supabase server client (optional)...")
-    let supabase = null;
-    try {
-      supabase = await createSupabaseServer()
-    } catch (e) {
-      console.warn("[API Auth] Supabase initialization skipped:", (e as Error).message)
-    }
-
-    // Map Clerk user to Supabase-compatible User object
+    // Map Clerk user to standardized User object
     const user: any = {
       id: userId,
       email: clerkUser?.emailAddresses[0]?.emailAddress || '',
@@ -65,7 +57,7 @@ export async function requireAuth(
 
     return {
       success: true,
-      data: { user, supabase },
+      data: { user, supabase: null as any },
     }
   } catch (error: any) {
     console.error('[API Auth] FATAL AUTH ERROR:', error.message || error)
@@ -159,15 +151,8 @@ export async function optionalAuth(
   try {
     const { userId } = await auth()
     
-    let supabase = null;
-    try {
-      supabase = await createSupabaseServer()
-    } catch (e) {
-      // Ignore
-    }
-
     if (!userId) {
-      return { user: null, supabase }
+      return { user: null, supabase: null }
     }
 
     const clerkUser = await currentUser()
@@ -180,7 +165,7 @@ export async function optionalAuth(
       }
     }
 
-    return { user, supabase }
+    return { user, supabase: null }
   } catch (error) {
     console.error('[API Auth] Error during optional authentication:', error)
     return { user: null, supabase: null }
