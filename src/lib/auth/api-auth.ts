@@ -26,6 +26,24 @@ export async function requireAuth(
   request: NextRequest
 ): Promise<{ success: true; data: AuthResult } | { success: false; response: NextResponse }> {
   try {
+    const host = request.headers.get("host") || "";
+    const isLocal = host.includes("localhost") || host.includes("127.0.0.1");
+
+    // NEW: Development Bypass for APIs
+    if (isLocal) {
+      console.log("[API Auth] Localhost detected. Bypassing Clerk check.");
+      return { 
+        success: true, 
+        data: { 
+          user: { 
+            id: 'dev_user_id', 
+            email: 'dev@bizen.mx', 
+            fullName: 'Desarrollador BIZEN' 
+          } 
+        } 
+      };
+    }
+
     console.log("[API Auth] Checking Clerk session (with timeout)...")
     
     // Add a safety timeout to auth() to prevent hanging the whole server
