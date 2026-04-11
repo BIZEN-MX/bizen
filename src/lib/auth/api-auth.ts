@@ -26,8 +26,16 @@ export async function requireAuth(
   request: NextRequest
 ): Promise<{ success: true; data: AuthResult } | { success: false; response: NextResponse }> {
   try {
-    console.log("[API Auth] Checking Clerk session...")
-    const { userId } = await auth()
+    console.log("[API Auth] Checking Clerk session (with timeout)...")
+    
+    // Add a safety timeout to auth() to prevent hanging the whole server
+    const authPromise = auth()
+    const timeoutPromise = new Promise((_, reject) => 
+      setTimeout(() => reject(new Error("Clerk Auth Timeout")), 4000)
+    )
+    
+    // @ts-ignore
+    const { userId } = await Promise.race([authPromise, timeoutPromise])
     
     if (!userId) {
       console.warn("[API Auth] No userId found in session")

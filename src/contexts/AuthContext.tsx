@@ -22,8 +22,13 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const { user: clerkUser, isLoaded: userLoaded } = useUser()
-  const { sessionId, isLoaded: authLoaded } = useClerkAuth()
+  // Check if we are on localhost to avoid Clerk production key errors in browser
+  const isLocal = typeof window !== 'undefined' && 
+                 (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+
+  // Skip Clerk hooks on local to prevent domain errors
+  const { user: clerkUser, isLoaded: userLoaded } = isLocal ? { user: null, isLoaded: true } : useUser()
+  const { sessionId, isLoaded: authLoaded } = isLocal ? { sessionId: null, isLoaded: true } : useClerkAuth()
   const { signOut: clerkSignOut } = useClerk()
   
   const [dbProfile, setDbProfile] = useState<any | null>(null)
@@ -34,17 +39,46 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (userLoaded && authLoaded) {
       setLoading(false)
     }
+
+    // Dev bypass: Don't wait forever for Clerk on localhost
+    if (typeof window !== 'undefined' && 
+       (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
+      const timer = setTimeout(() => {
+        setLoading(false)
+      }, 1500) // Give it 1.5s then force entry
+      return () => clearTimeout(timer)
+    }
   }, [userLoaded, authLoaded])
 
   // Map Clerk user to Supabase-compatible format for existing components
-  const user = clerkUser ? {
-    id: clerkUser.id,
-    email: clerkUser.emailAddresses[0]?.emailAddress || '',
-    user_metadata: {
-      full_name: clerkUser.fullName || '',
-      avatar_url: clerkUser.imageUrl || ''
+  const user = React.useMemo(() => {
+    // If we have a real clerk user, use it
+    if (clerkUser) {
+      return {
+        id: clerkUser.id,
+        email: clerkUser.emailAddresses[0]?.emailAddress || '',
+        user_metadata: {
+          full_name: clerkUser.fullName || '',
+          avatar_url: clerkUser.imageUrl || ''
+        }
+      }
     }
-  } : null
+    
+    // If we are on localhost and Clerk is not yet logged in, provide a dev user
+    if (typeof window !== 'undefined' && 
+       (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
+      return {
+        id: 'dev_user_id',
+        email: 'dev@bizen.mx',
+        user_metadata: {
+          full_name: 'Desarrollador BIZEN',
+          avatar_url: ''
+        }
+      }
+    }
+    
+    return null
+  }, [clerkUser])
 
   const signUp = async (email: string, password: string) => {
     // Redirecting to clerk signup is handled by components now
@@ -113,7 +147,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (clerkUser) {
       fetchDbProfile()
     } else if (userLoaded) {
-      setDbProfile(null)
+      // Mock profile for local development
+      if (typeof window !== 'undefined' && 
+         (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
+        setDbProfile({
+          userId: 'dev_user_id',
+          nickname: 'Diego BIZEN',
+          fullName: 'Desarrollador BIZEN',
+          role: 'particular',
+          xp: 1250,
+          level: 5,
+          bizcoins: 8500,
+          dnaProfile: 'Analista'
+        })
+      } else {
+        setDbProfile(null)
+      }
     }
   }, [clerkUser, userLoaded])
 
