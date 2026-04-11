@@ -27,33 +27,27 @@ export async function requireAuth(
 ): Promise<{ success: true; data: AuthResult } | { success: false; response: NextResponse }> {
   try {
     const host = request.headers.get("host") || "";
-    const isLocal = host.includes("localhost") || host.includes("127.0.0.1");
+    let userId: string | null = null;
+    let userEmail: string | null = "dev@bizen.mx";
+    let userFullName: string | null = "Desarrollador BIZEN";
 
     // NEW: Development Bypass for APIs
     if (isLocal) {
       console.log("[API Auth] Localhost detected. Bypassing Clerk check.");
-      return { 
-        success: true, 
-        data: { 
-          user: { 
-            id: 'dev_user_id', 
-            email: 'dev@bizen.mx', 
-            fullName: 'Desarrollador BIZEN' 
-          } 
-        } 
-      };
+      userId = 'dev_user_id';
+    } else {
+      console.log("[API Auth] Checking Clerk session (with timeout)...")
+      
+      // Add a safety timeout to auth() to prevent hanging the whole server
+      const authPromise = auth()
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error("Clerk Auth Timeout")), 4000)
+      )
+      
+      // @ts-ignore
+      const result = await Promise.race([authPromise, timeoutPromise])
+      userId = (result as any)?.userId;
     }
-
-    console.log("[API Auth] Checking Clerk session (with timeout)...")
-    
-    // Add a safety timeout to auth() to prevent hanging the whole server
-    const authPromise = auth()
-    const timeoutPromise = new Promise((_, reject) => 
-      setTimeout(() => reject(new Error("Clerk Auth Timeout")), 4000)
-    )
-    
-    // @ts-ignore
-    const { userId } = await Promise.race([authPromise, timeoutPromise])
     
     if (!userId) {
       console.warn("[API Auth] No userId found in session")
