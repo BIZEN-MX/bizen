@@ -14,6 +14,12 @@ export async function POST(request: NextRequest) {
         console.log("[onboarding] Received body:", JSON.stringify(body))
         const { username, bio, avatar, birthDate, schoolId } = body
 
+        // Validate birthDate to avoid "Invalid Date" errors in DB
+        let parsedBirthDate = null;
+        if (birthDate && !isNaN(Date.parse(birthDate))) {
+            parsedBirthDate = new Date(birthDate);
+        }
+
         // Validate username
         if (!username || username.trim().length < 3) {
             console.warn("[onboarding] Invalid username format")
@@ -43,7 +49,7 @@ export async function POST(request: NextRequest) {
                 update: {
                     nickname: trimmedUser,
                     bio: bio?.trim() || "",
-                    birthDate: birthDate ? new Date(birthDate) : null,
+                    birthDate: parsedBirthDate,
                     schoolId: schoolId || null,
                     dnaProfile: avatar 
                 },
@@ -55,7 +61,7 @@ export async function POST(request: NextRequest) {
                     bizcoins: 0,
                     role: 'particular',
                     bio: bio?.trim() || "",
-                    birthDate: birthDate ? new Date(birthDate) : null,
+                    birthDate: parsedBirthDate,
                     schoolId: schoolId || null,
                     dnaProfile: avatar
                 }
