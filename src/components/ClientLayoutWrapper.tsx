@@ -65,39 +65,8 @@ function InnerClientWrapper({ children }: { children: React.ReactNode }) {
     offset: 100
   });
 
-  // 🔴 GLOBAL FIX FOR CACHE ISSUES 🔴
-  // Next.js and browsers aggressively cache API responses.
-  // This intercepts all fetch calls globally to force fresh data without needing to rewrite the entire app to SWR.
-  useEffect(() => {
-    if (typeof window !== 'undefined' && !(window as any)._fetchPatched) {
-      const originalFetch = window.fetch;
-      window.fetch = async function (resource, config) {
-        if (typeof resource === 'string' && resource.startsWith('/api/')) {
-          config = config || {};
-          if (!config.method || config.method.toUpperCase() === 'GET') {
-            config.cache = 'no-store';
-            const t = Date.now();
-            resource += (resource.includes('?') ? '&' : '?') + `_t=${t}`;
-
-            // Safely merge headers regardless of whether input is a plain object or Headers instance
-            const headers = new Headers(config.headers || {});
-            headers.set('Pragma', 'no-cache');
-            headers.set('Cache-Control', 'no-cache, no-store, must-revalidate');
-            config.headers = headers;
-          }
-        }
-
-        try {
-          return await originalFetch.call(window, resource, config);
-        } catch (err) {
-          console.error('Fetch error caught in interceptor:', err);
-          throw err;
-        }
-      };
-      (window as any)._fetchPatched = true;
-      console.log('✅ Global Fetch interceptor activated (Cache Buster)');
-    }
-  }, []);
+  // The previous Global Fetch Interceptor (Cache Buster) has been removed 
+  // Cache control is now handled via server headers in next.config.ts for better stability.
 
   // Update body attribute when keyboard is visible
   useEffect(() => {
