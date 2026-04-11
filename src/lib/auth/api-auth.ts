@@ -27,30 +27,38 @@ export async function requireAuth(
 ): Promise<{ success: true; data: AuthResult } | { success: false; response: NextResponse }> {
   try {
     const host = request.headers.get("host") || "";
+    const isLocal = host.includes("localhost") || host.includes("127.0.0.1") || host.includes("3004");
+    
     let userId: string | null = null;
-    let userEmail: string | null = "dev@bizen.mx";
-    let userFullName: string | null = "Desarrollador BIZEN";
 
-    // NEW: Development Bypass for APIs
     if (isLocal) {
       console.log("[API Auth] Localhost detected. Bypassing Clerk check.");
       userId = 'dev_user_id';
     } else {
-      console.log("[API Auth] Checking Clerk session (with timeout)...")
-      
-      // Add a safety timeout to auth() to prevent hanging the whole server
-      const authPromise = auth()
-      const timeoutPromise = new Promise((_, reject) => 
-        setTimeout(() => reject(new Error("Clerk Auth Timeout")), 4000)
-      )
-      
-      // @ts-ignore
-      const result = await Promise.race([authPromise, timeoutPromise])
-      userId = (result as any)?.userId;
+      console.log("[API Auth] Checking Clerk session...");
+      try {
+        const authPromise = auth();
+        const timeoutPromise = new Promise((_, reject) => 
+          setTimeout(() => reject(new Error("Clerk Auth Timeout")), 5000)
+        );
+        // @ts-ignore
+        const result = await Promise.race([authPromise, timeoutPromise]);
+        userId = (result as any)?.userId;
+      } catch (e: any) {
+        console.error("[API Auth] Clerk check failed:", e.message);
+        // On production, if Clerk is unreachable, we must fail 401
+        return {
+          success: false,
+          response: NextResponse.json(
+            { error: 'Unauthorized', message: 'Auth service unreachable' },
+            { status: 401 }
+          ),
+        }
+      }
     }
     
     if (!userId) {
-      console.warn("[API Auth] No userId found in session")
+      console.warn("[API Auth] No userId found in session");
       return {
         success: false,
         response: NextResponse.json(
@@ -61,23 +69,49 @@ export async function requireAuth(
     }
     console.log("[API Auth] Found userId:", userId)
 
-    console.log("[API Auth] Fetching current Clerk user...")
-    const clerkUser = await currentUser()
+    // 2. Fetch User Profile Info
+    let user: any;
     
-    // Map Clerk user to standardized User object
-    const user: any = {
-      id: userId,
-      email: clerkUser?.emailAddresses[0]?.emailAddress || '',
-      user_metadata: {
-        full_name: clerkUser?.fullName || '',
-        avatar_url: clerkUser?.imageUrl || ''
+    if (isLocal) {
+      user = {
+        id: userId,
+        email: 'dev@bizen.mx',
+        user_metadata: {
+          full_name: 'Diego BIZEN',
+          avatar_url: ''
+        }
+      }
+    } else {
+      console.log("[API Auth] Fetching current Clerk user...")
+      try {
+        const clerkUser = await currentUser()
+        
+        // Map Clerk user to standardized User object
+        user = {
+          id: userId,
+          email: clerkUser?.emailAddresses[0]?.emailAddress || '',
+          user_metadata: {
+            full_name: clerkUser?.fullName || '',
+            avatar_url: clerkUser?.imageUrl || ''
+          }
+        }
+      } catch (e: any) {
+        console.error("[API Auth] currentUser fetch failed:", e.message);
+        user = { id: userId, email: '', user_metadata: {} };
       }
     }
-    console.log("[API Auth] Authentication successful for:", user.email)
+    
+    console.log("[API Auth] Authentication successful for:", user.email || user.id)
 
     return {
       success: true,
-      data: { user, supabase: null as any },
+      data: { 
+        user, 
+        supabase: { 
+          from: () => ({ select: () => ({ single: () => ({ data: null, error: null }) }) }),
+          auth: { getUser: async () => ({ data: { user: null }, error: null }) }
+        } as any 
+      },
     }
   } catch (error: any) {
     console.error('[API Auth] FATAL AUTH ERROR:', error.message || error)
@@ -169,6 +203,20 @@ export async function optionalAuth(
   request: NextRequest
 ): Promise<{ user: User | null; supabase: any }> {
   try {
+    const host = request.headers.get("host") || "";
+    const isLocal = host.includes("localhost") || host.includes("127.0.0.1") || host.includes("3004");
+
+    if (isLocal) {
+      return { 
+        user: { 
+          id: 'dev_user_id', 
+          email: 'dev@bizen.mx', 
+          user_metadata: { full_name: 'Diego BIZEN' } 
+        } as any, 
+        supabase: null 
+      }
+    }
+
     const { userId } = await auth()
     
     if (!userId) {
@@ -185,7 +233,13 @@ export async function optionalAuth(
       }
     }
 
-    return { user, supabase: null }
+    return { 
+      user, 
+      supabase: { 
+        from: () => ({ select: () => ({ single: () => ({ data: null, error: null }) }) }),
+        auth: { getUser: async () => ({ data: { user: null }, error: null }) }
+      } as any 
+    }
   } catch (error) {
     console.error('[API Auth] Error during optional authentication:', error)
     return { user: null, supabase: null }

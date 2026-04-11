@@ -22,13 +22,8 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  // Check if we are on localhost to avoid Clerk production key errors in browser
-  const isLocal = typeof window !== 'undefined' && 
-                 (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
-
-  // Skip Clerk hooks on local to prevent domain errors
-  const { user: clerkUser, isLoaded: userLoaded } = isLocal ? { user: null, isLoaded: true } : useUser()
-  const { sessionId, isLoaded: authLoaded } = isLocal ? { sessionId: null, isLoaded: true } : useClerkAuth()
+  const { user: clerkUser, isLoaded: userLoaded } = useUser()
+  const { sessionId, isLoaded: authLoaded } = useClerkAuth()
   const { signOut: clerkSignOut } = useClerk()
   
   const [dbProfile, setDbProfile] = useState<any | null>(null)
@@ -120,10 +115,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       const res = await fetch(`/api/profiles?t=${Date.now()}`, {
         cache: 'no-store',
-        headers: {
-          'Pragma': 'no-cache',
-          'Cache-Control': 'no-cache'
-        }
+        headers: { 'Accept': 'application/json' }
       })
       
       if (res.status === 401) {
@@ -131,10 +123,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return
       }
 
-      if (res.ok) {
+      const contentType = res.headers.get("content-type");
+      if (res.ok && contentType && contentType.includes("application/json")) {
         const data = await res.json()
         setDbProfile(data)
       } else {
+        console.warn('[AuthContext] Expected JSON but got something else or error code:', res.status)
         setDbProfile(null)
       }
     } catch (err) {

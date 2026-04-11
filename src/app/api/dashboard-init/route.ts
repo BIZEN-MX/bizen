@@ -15,38 +15,39 @@ export async function GET(request: NextRequest) {
     const { user } = authResult.data
     console.log(`[dashboard-init] User authenticated: ${user.id} (${user.email})`)
 
-    // Parallel fetch with carefully managed Prisma calls
-    console.log("[dashboard-init] Fetching base data from Prisma...")
+    // Parallel fetch with independent error handling for resilience
+    console.log("[dashboard-init] Fetching data components...")
+    
+    const fetchSafe = async (promise: Promise<any>, label: string) => {
+      try {
+        return await promise;
+      } catch (err: any) {
+        console.warn(`[dashboard-init] Soft error in ${label}:`, err.message);
+        return null;
+      }
+    };
+
     const [profile, topics, progress, diagnostic, transactions] = await Promise.all([
-      prisma.profile.findUnique({
-        where: { userId: user.id },
-      }),
-      prisma.topic.findMany({
+      fetchSafe(prisma.profile.findUnique({ where: { userId: user.id } }), "Profile"),
+      fetchSafe(prisma.topic.findMany({
         where: { isActive: true },
         include: {
-          courses: {
-            orderBy: { order: 'asc' }
-          },
+          courses: { orderBy: { order: 'asc' } },
           _count: { select: { courses: true } }
         },
         orderBy: { displayOrder: 'asc' }
-      }),
-      prisma.progress.findMany({
-        where: { userId: user.id },
-      }),
-      prisma.diagnosticResult.findFirst({
+      }), "Topics"),
+      fetchSafe(prisma.progress.findMany({ where: { userId: user.id } }), "Progress"),
+      fetchSafe(prisma.diagnosticResult.findFirst({
         where: { email: { equals: user.email || "", mode: 'insensitive' } },
         orderBy: { createdAt: 'desc' }
-      }),
-      prisma.walletTransaction.findMany({
+      }), "Diagnostic"),
+      fetchSafe(prisma.walletTransaction.findMany({
         where: { userId: user.id },
         orderBy: { createdAt: 'desc' },
         take: 10
-      })
-    ]).catch(err => {
-      console.error("[dashboard-init] DATABASE FETCH FATAL ERROR:", err.message)
-      throw err
-    })
+      }), "Transactions")
+    ]);
 
     if (!profile) {
       console.log(`[dashboard-init] Profile missing for user ${user.id}, creating ephemeral state...`)
@@ -134,6 +135,23 @@ export async function GET(request: NextRequest) {
 
   } catch (error: any) {
     console.error("[dashboard-init] FATAL CRASH:", error.message || error)
+    
+    // Safety Fallback for local development or DB outages
+    const host = request.headers.get("host") || "";
+    if (host.includes("localhost") || host.includes("127.0.0.1")) {
+      console.log("[dashboard-init] Localhost detected during crash. Serving rescue mock data.")
+      return NextResponse.json({
+        stats: {
+          xp: 1250, level: 5, xpInCurrentLevel: 250, xpNeeded: 1000, xpToNextLevel: 750,
+          lessonsCompleted: 10, coursesEnrolled: 3, currentStreak: 5,
+          certificatesCount: 2, bizcoins: 8500, inventory: [], weeklyActiveDays: ["Mon", "Tue", "Wed"]
+        },
+        topics: [], progress: [], diagnostic: { exists: false },
+        profile: { userId: "dev_user_id", nickname: "Diego BIZEN (Local)", xp: 1250, bizcoins: 8500 },
+        transactions: []
+      })
+    }
+
     return NextResponse.json({ 
       error: "Internal Server Error", 
       details: error.message || "Unknown error" 

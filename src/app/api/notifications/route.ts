@@ -44,6 +44,18 @@ export async function GET(request: NextRequest) {
     })
   } catch (error: any) {
     console.error("[CRITICAL API ERROR] Error fetching notifications:", error.message, error.stack)
+    
+    // Safety Fallback for local development
+    const host = request.headers.get("host") || "";
+    if (host.includes("localhost") || host.includes("127.0.0.1")) {
+      console.log("[notifications] Localhost detected during crash. Serving empty results to prevent UI break.")
+      return NextResponse.json({
+        notifications: [],
+        unreadCount: 0,
+        warning: "Emergency dev mode"
+      })
+    }
+
     return NextResponse.json({ 
         error: "Internal Server Error", 
         message: error.message || "Failed to fetch notifications",

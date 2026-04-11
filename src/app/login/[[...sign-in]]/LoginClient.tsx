@@ -9,7 +9,7 @@ export default function LoginClient() {
   React.useEffect(() => {
     document.documentElement.style.overflow = "auto"
     document.body.style.overflow = "auto"
-    document.body.style.background = "#020e27"
+    document.body.style.background = "#030b1a"
     return () => {
       document.documentElement.style.overflow = ""
       document.body.style.overflow = ""
@@ -24,43 +24,43 @@ export default function LoginClient() {
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
-      background: "linear-gradient(135deg, #020e27 0%, #041640 50%, #020e27 100%)",
+      background: "linear-gradient(145deg, #030b1a 0%, #060f26 40%, #030b1a 100%)",
       overflow: "hidden",
       padding: "clamp(16px, 4vw, 40px)",
       boxSizing: "border-box",
     }}>
 
-      {/* Animated mesh grid */}
+      {/* Mesh grid */}
       <div aria-hidden style={{
         position: "absolute", inset: 0, zIndex: 0,
-        backgroundImage: "linear-gradient(rgba(15,98,254,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(15,98,254,0.06) 1px, transparent 1px)",
-        backgroundSize: "60px 60px",
+        backgroundImage: "linear-gradient(rgba(37,99,235,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(37,99,235,0.05) 1px, transparent 1px)",
+        backgroundSize: "50px 50px",
       }} />
 
-      {/* Primary blue orb — top left */}
+      {/* Top-right orb */}
       <div aria-hidden style={{
-        position: "absolute", top: "-15%", left: "-10%",
-        width: "clamp(320px, 55vw, 640px)", height: "clamp(320px, 55vw, 640px)",
+        position: "absolute", top: "-20%", right: "-10%",
+        width: "clamp(300px, 50vw, 600px)", height: "clamp(300px, 50vw, 600px)",
         borderRadius: "50%",
-        background: "radial-gradient(circle, rgba(15,98,254,0.25) 0%, transparent 70%)",
-        filter: "blur(60px)", zIndex: 0,
-      }} />
-
-      {/* Accent blue orb — bottom right */}
-      <div aria-hidden style={{
-        position: "absolute", bottom: "-20%", right: "-12%",
-        width: "clamp(280px, 48vw, 560px)", height: "clamp(280px, 48vw, 560px)",
-        borderRadius: "50%",
-        background: "radial-gradient(circle, rgba(0,86,231,0.20) 0%, transparent 70%)",
+        background: "radial-gradient(circle, rgba(37,99,235,0.18) 0%, transparent 65%)",
         filter: "blur(70px)", zIndex: 0,
       }} />
 
-      {/* Subtle highlight orb — center */}
+      {/* Bottom-left orb */}
       <div aria-hidden style={{
-        position: "absolute", top: "40%", left: "50%", transform: "translate(-50%, -50%)",
-        width: "clamp(200px, 35vw, 400px)", height: "clamp(200px, 35vw, 400px)",
+        position: "absolute", bottom: "-15%", left: "-8%",
+        width: "clamp(250px, 40vw, 500px)", height: "clamp(250px, 40vw, 500px)",
         borderRadius: "50%",
-        background: "radial-gradient(circle, rgba(25,131,253,0.08) 0%, transparent 70%)",
+        background: "radial-gradient(circle, rgba(29,78,216,0.15) 0%, transparent 65%)",
+        filter: "blur(80px)", zIndex: 0,
+      }} />
+
+      {/* Center accent */}
+      <div aria-hidden style={{
+        position: "absolute", top: "30%", left: "40%",
+        width: "clamp(150px, 25vw, 300px)", height: "clamp(150px, 25vw, 300px)",
+        borderRadius: "50%",
+        background: "radial-gradient(circle, rgba(96,165,250,0.06) 0%, transparent 70%)",
         filter: "blur(40px)", zIndex: 0,
       }} />
 
@@ -70,39 +70,39 @@ export default function LoginClient() {
         textDecoration: "none", zIndex: 10, display: "flex", alignItems: "center", gap: 10,
       }}>
         <strong style={{
-          fontSize: "clamp(24px, 3vw, 30px)", color: "#fff",
+          fontSize: "clamp(22px, 2.5vw, 28px)", color: "#fff",
           letterSpacing: "-0.03em", fontWeight: 900,
         }}>
-          BIZEN<span style={{ color: "#0F62FE" }}>.</span>
+          BIZEN<span style={{ color: "#3b82f6" }}>.</span>
         </strong>
       </Link>
 
-      {/* Tagline top right */}
+      {/* Top right badge */}
       <div style={{
         position: "absolute", top: 32, right: "clamp(20px, 4vw, 40px)",
         zIndex: 10, display: "flex", alignItems: "center", gap: 8,
       }}>
+        <div style={{
+          width: 6, height: 6, borderRadius: "50%",
+          background: "#3b82f6",
+          boxShadow: "0 0 10px rgba(59,130,246,0.9)",
+        }} />
         <span style={{
-          fontSize: 12, color: "rgba(255,255,255,0.4)",
+          fontSize: 11, color: "rgba(255,255,255,0.5)",
           letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 600,
         }}>
           Educación Financiera Premium
         </span>
-        <div style={{
-          width: 6, height: 6, borderRadius: "50%",
-          background: "#0F62FE",
-          boxShadow: "0 0 8px rgba(15,98,254,0.8)",
-        }} />
       </div>
 
-      {/* Card container */}
-      <div style={{ position: "relative", zIndex: 2, width: "100%", maxWidth: 460 }}>
+      {/* Card wrapper */}
+      <div style={{ position: "relative", zIndex: 2, width: "100%", maxWidth: 440 }}>
 
-        {/* Glow ring behind card */}
+        {/* Card glow */}
         <div aria-hidden style={{
-          position: "absolute", inset: -2, borderRadius: 36,
-          background: "linear-gradient(135deg, rgba(15,98,254,0.3), rgba(0,86,231,0.15), transparent 60%)",
-          filter: "blur(20px)", zIndex: -1,
+          position: "absolute", inset: -1, borderRadius: 28,
+          background: "linear-gradient(135deg, rgba(59,130,246,0.4) 0%, rgba(29,78,216,0.2) 50%, transparent 80%)",
+          filter: "blur(16px)", zIndex: -1,
         }} />
 
         <SignIn
@@ -110,92 +110,92 @@ export default function LoginClient() {
             baseTheme: dark,
             elements: {
               rootBox: "mx-auto w-full",
+
               card: [
                 "relative w-full overflow-hidden",
-                "bg-[rgba(4,22,64,0.85)]",
-                "border border-[rgba(15,98,254,0.2)]",
-                "rounded-[32px]",
-                "shadow-[0_32px_80px_rgba(0,0,0,0.5),0_0_0_1px_rgba(15,98,254,0.1),inset_0_1px_0_rgba(255,255,255,0.05)]",
-                "backdrop-blur-[24px]",
+                "rounded-[24px]",
               ].join(" "),
 
-              headerTitle: [
-                "text-[28px] sm:text-[32px] font-black tracking-[-0.03em] text-white",
-                "pb-2",
-              ].join(" "),
-              headerSubtitle: "text-[rgba(255,255,255,0.45)] text-sm font-medium",
+              headerTitle: "text-white font-black text-[30px] tracking-tight pb-1",
+              headerSubtitle: "text-[#94a3b8] text-[14px] font-medium",
 
-              main: "gap-5 pb-2",
+              main: "gap-4",
 
-              // Google button — premium glass
+              // Google button - WHITE background, dark text = max contrast
               socialButtonsBlockButton: [
-                "group relative w-full h-[52px] rounded-2xl overflow-hidden",
-                "bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.08)]",
-                "hover:bg-[rgba(15,98,254,0.12)] hover:border-[rgba(15,98,254,0.4)]",
-                "transition-all duration-300",
+                "w-full h-[50px] rounded-2xl",
+                "bg-white hover:bg-[#f1f5f9]",
+                "border border-[#e2e8f0]",
+                "transition-all duration-200",
+                "shadow-sm hover:shadow-md",
               ].join(" "),
-              socialButtonsBlockButtonText: "text-white font-semibold text-[15px] tracking-[-0.01em]",
+              socialButtonsBlockButtonText: "text-[#0f172a] font-semibold text-[14px]",
               socialButtonsBlockButtonArrow: "hidden",
 
-              // Primary action button — BIZEN blue
+              // CTA button - solid blue, white text
               formButtonPrimary: [
-                "w-full h-[52px] rounded-2xl font-bold text-[15px] tracking-[-0.01em]",
-                "bg-[#0F62FE] hover:bg-[#0043ce]",
+                "w-full h-[50px] rounded-2xl font-bold text-[15px]",
+                "bg-[#2563eb] hover:bg-[#1d4ed8]",
                 "text-white",
-                "shadow-[0_8px_24px_rgba(15,98,254,0.45)]",
-                "hover:shadow-[0_12px_32px_rgba(15,98,254,0.55)]",
-                "transition-all duration-300 active:scale-[0.98]",
-                "border-0",
+                "shadow-[0_4px_20px_rgba(37,99,235,0.5)]",
+                "hover:shadow-[0_6px_28px_rgba(37,99,235,0.65)]",
+                "transition-all duration-200 active:scale-[0.98]",
+                "border-none",
               ].join(" "),
 
-              formFieldLabel: [
-                "text-[rgba(255,255,255,0.5)] text-[11px] uppercase tracking-[0.12em] font-semibold mb-1.5",
-              ].join(" "),
+              // Labels - high contrast slate
+              formFieldLabel: "text-[#94a3b8] text-[12px] font-semibold uppercase tracking-[0.08em] mb-1",
+
+              // Inputs - visible border, readable text
               formFieldInput: [
-                "w-full h-[50px] rounded-xl px-4",
-                "bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.08)]",
-                "text-white text-[15px] placeholder:text-[rgba(255,255,255,0.25)]",
-                "focus:border-[rgba(15,98,254,0.6)] focus:bg-[rgba(15,98,254,0.06)]",
-                "focus:ring-2 focus:ring-[rgba(15,98,254,0.25)] focus:outline-none",
+                "w-full h-[48px] rounded-xl px-4",
+                "bg-[#0d1e3d] border border-[#1e3a5f]",
+                "text-white text-[15px] placeholder:text-[#4a6280] font-medium",
+                "focus:border-[#3b82f6] focus:bg-[#0d2040]",
+                "focus:ring-2 focus:ring-[rgba(59,130,246,0.3)] focus:outline-none",
                 "transition-all duration-200",
               ].join(" "),
-              formFieldInputShowPasswordButton: "text-[rgba(255,255,255,0.3)] hover:text-[rgba(15,98,254,0.9)] transition-colors",
+              formFieldInputShowPasswordButton: "text-[#4a6280] hover:text-[#60a5fa] transition-colors",
 
-              footerActionLink: [
-                "text-[#1983FD] hover:text-[#5aabff] font-semibold",
-                "transition-colors duration-200",
-                "underline-offset-4 decoration-[rgba(25,131,253,0.4)]",
-              ].join(" "),
-              footerAction: "text-[rgba(255,255,255,0.4)] text-sm",
+              // Links - bright, readable blue
+              footerActionLink: "text-[#60a5fa] hover:text-[#93c5fd] font-semibold transition-colors underline-offset-4",
+              footerAction: "text-[#64748b] text-[13px]",
 
               identityPreviewText: "text-white font-semibold",
-              identityPreviewEditButtonIcon: "text-[#0F62FE]",
+              identityPreviewEditButtonIcon: "text-[#3b82f6]",
 
-              dividerLine: "bg-[rgba(255,255,255,0.07)]",
-              dividerText: "text-[rgba(255,255,255,0.3)] text-[11px] uppercase tracking-[0.2em] font-semibold",
+              dividerLine: "bg-[#1e3a5f]",
+              dividerText: "text-[#475569] text-[11px] uppercase tracking-[0.15em] font-semibold",
 
-              footer: [
-                "bg-[rgba(0,0,0,0.25)] border-t border-[rgba(255,255,255,0.05)]",
-                "py-5",
+              footer: "bg-[rgba(3,11,26,0.6)] border-t border-[#0f2040] py-5",
+
+              // Errors - readable
+              formFieldErrorText: "text-[#f87171] text-[13px] font-medium mt-1",
+              alertText: "text-[#fecaca] text-[13px] font-medium",
+              alert: "bg-[rgba(239,68,68,0.1)] border border-[rgba(239,68,68,0.25)] rounded-xl",
+
+              // OTP/Code inputs
+              otpCodeFieldInput: [
+                "!bg-[#0d1e3d] !border-[#1e3a5f] !text-white",
+                "focus:!border-[#3b82f6] focus:!ring-[rgba(59,130,246,0.3)]",
               ].join(" "),
 
-              // Alert / error messages
-              formFieldErrorText: "text-red-400 text-sm mt-1",
-              alertText: "text-white text-sm",
-              alert: "bg-red-500/10 border border-red-500/20 rounded-xl",
+              formResendCodeLink: "text-[#60a5fa] hover:text-[#93c5fd] font-semibold transition-colors",
             },
             variables: {
-              colorPrimary: '#0F62FE',
-              colorBackground: '#041640',
+              colorPrimary: '#2563eb',
+              colorBackground: '#060f26',
               colorText: '#ffffff',
-              colorTextSecondary: 'rgba(255,255,255,0.5)',
-              colorInputBackground: 'rgba(255,255,255,0.04)',
+              colorTextSecondary: '#94a3b8',
+              colorInputBackground: '#0d1e3d',
               colorInputText: '#ffffff',
-              colorNeutral: 'rgba(255,255,255,0.15)',
+              colorNeutral: '#1e3a5f',
               colorDanger: '#f87171',
-              borderRadius: '1rem',
+              colorSuccess: '#34d399',
+              borderRadius: '0.875rem',
               fontSize: '1rem',
-              fontFamily: '"Inter", "Geist", ui-sans-serif, system-ui, sans-serif',
+              fontFamily: '"Inter", ui-sans-serif, system-ui, sans-serif',
+              fontWeight: { normal: 400, medium: 500, bold: 700 },
               spacingUnit: '1rem',
             }
           }}
@@ -212,22 +212,14 @@ export default function LoginClient() {
       {/* Bottom badge */}
       <div style={{
         position: "absolute", bottom: 24, left: "50%", transform: "translateX(-50%)",
-        zIndex: 10, display: "flex", alignItems: "center", gap: 6,
+        zIndex: 10, display: "flex", alignItems: "center", gap: 8,
+        whiteSpace: "nowrap",
       }}>
-        <div style={{
-          width: 5, height: 5, borderRadius: "50%",
-          background: "#0F62FE", boxShadow: "0 0 6px rgba(15,98,254,0.9)",
-        }} />
-        <span style={{
-          fontSize: 11, color: "rgba(255,255,255,0.25)",
-          letterSpacing: "0.12em", textTransform: "uppercase",
-        }}>
+        <div style={{ width: 5, height: 5, borderRadius: "50%", background: "#3b82f6", boxShadow: "0 0 6px rgba(59,130,246,0.9)" }} />
+        <span style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", letterSpacing: "0.12em", textTransform: "uppercase" }}>
           Plataforma segura · TLS 1.3
         </span>
-        <div style={{
-          width: 5, height: 5, borderRadius: "50%",
-          background: "#0F62FE", boxShadow: "0 0 6px rgba(15,98,254,0.9)",
-        }} />
+        <div style={{ width: 5, height: 5, borderRadius: "50%", background: "#3b82f6", boxShadow: "0 0 6px rgba(59,130,246,0.9)" }} />
       </div>
 
     </main>

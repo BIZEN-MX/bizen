@@ -106,6 +106,21 @@ export async function GET(request: NextRequest) {
 
     } catch (err: any) {
         console.error("CRITICAL: GET /api/daily-challenge/today:", err);
+        
+        // Safety Fallback for local development
+        const host = request.headers.get("host") || "";
+        if (host.includes("localhost") || host.includes("127.0.0.1")) {
+            console.log("[daily-challenge] Localhost detected during crash. Serving rescue mock challenge.")
+            return NextResponse.json({
+                id: "mock-daily-challenge",
+                title: "Ahorro Inteligente",
+                description: "Hoy es un gran día para pensar en cómo ahorrar un 10% adicional de tus ingresos.",
+                challengeType: "reflection",
+                xpReward: 100,
+                isCompleted: false
+            })
+        }
+
         return NextResponse.json({
             error: "Error al cargar el reto",
             details: err?.message || String(err)

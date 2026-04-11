@@ -11,41 +11,38 @@ import { auth, currentUser } from '@clerk/nextjs/server'
 // GET /api/profiles - Get current user profile
 export async function GET(request: NextRequest) {
   try {
-    const { userId } = await auth()
+    const authResult = await requireAuth(request)
     
-    if (!userId) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      )
+    if (!authResult.success) {
+      return authResult.response
     }
 
-    const clerkUser = await currentUser()
-    const userEmail = clerkUser?.emailAddresses[0]?.emailAddress || ''
-    const userFullName = clerkUser?.fullName || userEmail.split('@')[0] || "Usuario"
+    const { user } = authResult.data
+    const userEmail = user.email || ''
+    const userFullName = user.user_metadata?.full_name || userEmail.split('@')[0] || "Usuario"
 
     // Use try-catch for each DB query to avoid blanket 500
     let profile: any = null;
     try {
       const profileResult: any[] = await prisma.$queryRaw`
-          SELECT * FROM public.profiles WHERE user_id = ${userId} LIMIT 1
+          SELECT * FROM public.profiles WHERE user_id = ${user.id} LIMIT 1
         `
       profile = profileResult[0]
     } catch (e: any) {
       console.error('DB Error (profile raw query):', e.message)
       // Try fallback to standard prisma query if raw fails
-      profile = await prisma.profile.findUnique({ where: { userId: userId } }).catch(() => null);
+      profile = await prisma.profile.findUnique({ where: { userId: user.id } }).catch(() => null);
     }
 
     const isEduEmail = isInstitutionalEmail(userEmail);
     const isSpecialAdmin = userEmail.toLowerCase() === 'diegopenita31@gmail.com';
 
     if (!profile) {
-      console.warn(`[api/profiles] Profile missing for user ${userId}, creating default...`)
+      console.warn(`[api/profiles] Profile missing for user ${user.id}, creating default...`)
       const fallbackRole = isSpecialAdmin ? 'school_admin' : (isEduEmail ? 'institutional' : 'particular');
       
       const fallbackProfile = {
-        userId: userId,
+        userId: user.id,
         fullName: userFullName,
         role: fallbackRole,
         xp: 0,
@@ -60,7 +57,7 @@ export async function GET(request: NextRequest) {
       try {
         profile = await prisma.profile.create({
           data: {
-            userId: userId,
+            userId: user.id,
             fullName: fallbackProfile.fullName,
             role: fallbackRole,
             xp: 0,
@@ -79,7 +76,7 @@ export async function GET(request: NextRequest) {
     if (!isEduEmail && !isSpecialAdmin && profile.role !== 'particular') {
       try {
         profile = await prisma.profile.update({
-          where: { userId: userId },
+          where: { userId: user.id },
           data: { role: 'particular', schoolId: null }
         });
       } catch (updateErr: any) {
@@ -97,7 +94,7 @@ export async function GET(request: NextRequest) {
     let inventoryResult: any[] = []
     try {
       inventoryResult = await prisma.$queryRaw`
-          SELECT product_id FROM public.user_inventory WHERE user_id = ${userId}
+          SELECT product_id FROM public.user_inventory WHERE user_id = ${user.id}
         `
     } catch (e: any) {
       console.warn('DB Warning (inventory fetch failed):', e.message)
@@ -149,10 +146,10 @@ export async function GET(request: NextRequest) {
     // Log profile access as a "detectable session load"
     // We don't await this to keep the API snappy
     logAudit({
-      userId: userId,
+      userId: user.id,
       action: 'SESSION_LOAD',
       entityType: 'profile',
-      entityId: userId,
+      entityId: user.id,
       request
     });
 
@@ -197,15 +194,15 @@ import { updateProfileSchema } from '@/validators/profile'
 // PATCH /api/profiles - Update current user profile
 export async function PATCH(request: NextRequest) {
   try {
-    const { userId } = await auth()
+    const authResult = await requireAuth(request)
     
-    if (!userId) {
-      return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
+    if (!authResult.success) {
+      return authResult.response
     }
 
-    const clerkUser = await currentUser()
-    const userEmail = clerkUser?.emailAddresses[0]?.emailAddress || ''
-    const userFullName = clerkUser?.fullName || userEmail.split('@')[0] || "Usuario"
+    const { user } = authResult.data
+    const userEmail = user.email || ''
+    const userFullName = user.user_metadata?.full_name || userEmail.split('@')[0] || "Usuario"
 
     const body = await request.json()
     
@@ -238,7 +235,7 @@ export async function PATCH(request: NextRequest) {
     }
 
     // Fetch current profile
-    const existingProfile = await prisma.profile.findUnique({ where: { userId: userId } });
+    const existingProfile = await prisma.profile.findUnique({ where: { userId: user.id } });
     if (!existingProfile) {
       return NextResponse.json({ error: 'Perfil no encontrado' }, { status: 404 });
     }
@@ -254,7 +251,7 @@ export async function PATCH(request: NextRequest) {
       const usernameExists = await prisma.profile.findFirst({
         where: { 
           username: data.username,
-          NOT: { userId: userId }
+          NOT: { userId: user.id }
         }
       });
       if (usernameExists) {
@@ -263,7 +260,7 @@ export async function PATCH(request: NextRequest) {
     }
 
     const updatedProfile = await prisma.profile.update({
-      where: { userId: userId },
+      where: { userId: user.id },
       data: {
         ...(data.fullName && { fullName: data.fullName }),
         ...(((data as any).role || data.schoolId) && {
@@ -283,10 +280,10 @@ export async function PATCH(request: NextRequest) {
     // --- AUDIT LOG ---
     // Log the successful profile update
     logAudit({
-      userId: userId,
+      userId: user.id,
       action: 'UPDATE_PROFILE',
       entityType: 'profile',
-      entityId: userId,
+      entityId: user.id,
       oldData: existingProfile,
       newData: updatedProfile,
       request

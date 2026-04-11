@@ -39,11 +39,11 @@ model License {
 }
 
 model ContactMessage {
-  id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id        String    @id @default(dbgenerated("gen_random_uuid()"))
   name      String
   email     String
   message   String
-  createdAt DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
+  createdAt DateTime? @default(now()) @map("created_at")
   read      Boolean?  @default(false)
   responded Boolean?  @default(false)
 
@@ -66,10 +66,10 @@ model Profile {
   commentsCreated      Int                 @default(0) @map("comments_created")
   acceptedAnswers      Int                 @default(0) @map("accepted_answers")
   createdAt            DateTime            @default(now()) @map("created_at")
-  birthDate            DateTime?           @map("birth_date") @db.Timestamptz(6)
+  birthDate            DateTime?           @map("birth_date")
   isMinor              Boolean             @default(false) @map("is_minor")
   parentalOverride     Boolean             @default(false) @map("parental_override")
-  ageVerifiedAt        DateTime?           @map("age_verified_at") @db.Timestamptz(6)
+  ageVerifiedAt        DateTime?           @map("age_verified_at")
   avatar               Json?
   currentStreak        Int?                @default(0) @map("current_streak")
   longestStreak        Int?                @default(0) @map("longest_streak")
@@ -85,6 +85,9 @@ model Profile {
   phone                String?             @map("phone")
   settings             Json?               @default("{}") @map("settings")
   cardTheme            String?             @default("blue") @map("card_theme")
+  dnaProfile           String?             @default("Sin Diagnosticar") @map("dna_profile")
+  dnaScore             Int?                @default(0) @map("dna_score")
+  isBanned             Boolean             @default(false) @map("is_banned")
   certificates         Certificate[]
   enrollments          Enrollment[]
   evidence_posts       EvidencePost[]
@@ -98,13 +101,10 @@ model Profile {
   forumUserBadges      ForumUserBadge[]    @relation("ForumUserBadges")
   forumVotes           ForumVote[]         @relation("ForumVotes")
   progress             Progress[]
-  inventory            UserInventoryItem[] @relation("ProfileInventory")
-  walletTransactions   WalletTransaction[]
   savingsGoals         SavingsGoal[]
   stakingPositions     StakingPosition[]
-  dnaProfile           String?             @default("Sin Diagnosticar") @map("dna_profile")
-  dnaScore             Int?                @default(0) @map("dna_score")
-  isBanned             Boolean             @default(false) @map("is_banned")
+  inventory            UserInventoryItem[] @relation("ProfileInventory")
+  walletTransactions   WalletTransaction[]
 
   @@index([schoolId], map: "idx_profiles_school")
   @@index([username], map: "idx_profiles_username")
@@ -165,7 +165,7 @@ model Section {
   courseId  String?   @map("course_id")
   title     String
   order     Int
-  createdAt DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
+  createdAt DateTime? @default(now()) @map("created_at")
   lessons   Lesson[]
   course    Course?   @relation(fields: [courseId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "sections_unit_id_fkey")
 
@@ -291,7 +291,7 @@ model Enrollment {
   id         String   @id @default(cuid())
   userId     String   @map("user_id")
   topicId    String   @map("topic_id")
-  enrolledAt DateTime @default(now()) @map("enrolled_at") @db.Timestamptz(6)
+  enrolledAt DateTime @default(now()) @map("enrolled_at")
   topic      Topic    @relation(fields: [topicId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "enrollments_course_id_fkey")
   user       Profile  @relation(fields: [userId], references: [userId], onDelete: Cascade, onUpdate: NoAction)
 
@@ -334,10 +334,10 @@ model StepResponse {
 
 model Attempt {
   id          String    @id @default(cuid())
-  userId      String?   @map("user_id") @db.Uuid
+  userId      String?   @map("user_id")
   quizId      String?   @map("quiz_id")
   score       Int
-  completedAt DateTime? @default(now()) @map("completed_at") @db.Timestamptz(6)
+  completedAt DateTime? @default(now()) @map("completed_at")
   quiz        Quiz?     @relation(fields: [quizId], references: [id], onDelete: Cascade, onUpdate: NoAction)
   user        AuthUser? @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
@@ -352,7 +352,7 @@ model Certificate {
   userId   String   @map("user_id")
   topicId  String   @map("topic_id")
   url      String?
-  issuedAt DateTime @default(now()) @map("issued_at") @db.Timestamptz(6)
+  issuedAt DateTime @default(now()) @map("issued_at")
   topic    Topic    @relation(fields: [topicId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "certificates_course_id_fkey")
   user     Profile  @relation(fields: [userId], references: [userId], onDelete: Cascade, onUpdate: NoAction)
 
@@ -589,7 +589,7 @@ model UserInventoryItem {
 model UserFollow {
   followerId  String    @map("follower_id")
   followingId String    @map("following_id")
-  createdAt   DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
+  createdAt   DateTime? @default(now()) @map("created_at")
 
   @@id([followerId, followingId])
   @@map("user_follows")
@@ -616,7 +616,7 @@ model Profession {
   retailDebt          Int       @map("retail_debt")
   startingCash        Int       @map("starting_cash")
   startingSavings     Int       @map("starting_savings")
-  createdAt           DateTime? @default(now()) @map("created_at") @db.Timestamp(6)
+  createdAt           DateTime? @default(now()) @map("created_at")
   players             Player[]
 
   @@map("professions")
@@ -625,12 +625,12 @@ model Profession {
 
 model GameSession {
   id              Int         @id @default(autoincrement())
-  userId          String      @map("user_id") @db.Uuid
+  userId          String      @map("user_id")
   status          String      @default("active") @db.VarChar(20)
   currentPhase    String?     @default("rat_race") @map("current_phase") @db.VarChar(20)
-  startedAt       DateTime?   @default(now()) @map("started_at") @db.Timestamp(6)
-  completedAt     DateTime?   @map("completed_at") @db.Timestamp(6)
-  lastActivityAt  DateTime?   @default(now()) @map("last_activity_at") @db.Timestamp(6)
+  startedAt       DateTime?   @default(now()) @map("started_at")
+  completedAt     DateTime?   @map("completed_at")
+  lastActivityAt  DateTime?   @default(now()) @map("last_activity_at")
   totalTurns      Int?        @default(0) @map("total_turns")
   durationMinutes Int?        @map("duration_minutes")
   gameEvents      GameEvent[]
@@ -646,7 +646,7 @@ model GameSession {
 model Player {
   id                Int                @id @default(autoincrement())
   gameSessionId     Int                @map("game_session_id")
-  userId            String             @map("user_id") @db.Uuid
+  userId            String             @map("user_id")
   professionId      Int                @map("profession_id")
   cashOnHand        Int                @map("cash_on_hand")
   savings           Int?               @default(0)
@@ -654,14 +654,14 @@ model Player {
   currentPosition   Int?               @default(0) @map("current_position")
   isOnFastTrack     Boolean?           @default(false) @map("is_on_fast_track")
   hasEscapedRatRace Boolean?           @default(false) @map("has_escaped_rat_race")
-  escapedAt         DateTime?          @map("escaped_at") @db.Timestamp(6)
+  escapedAt         DateTime?          @map("escaped_at")
   currentTurn       Int?               @default(1) @map("current_turn")
   totalIncome       Int?               @map("total_income")
   totalExpenses     Int?               @map("total_expenses")
   passiveIncome     Int?               @default(0) @map("passive_income")
   cashFlow          Int?               @map("cash_flow")
-  createdAt         DateTime?          @default(now()) @map("created_at") @db.Timestamp(6)
-  updatedAt         DateTime?          @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  createdAt         DateTime?          @default(now()) @map("created_at")
+  updatedAt         DateTime?          @default(now()) @updatedAt @map("updated_at")
   gameEvents        GameEvent[]
   playerDoodads     PlayerDoodad[]
   playerInvestments PlayerInvestment[]
@@ -692,7 +692,7 @@ model OpportunityCard {
   bedrooms          Int?
   rarity            String?            @default("common") @db.VarChar(20)
   isActive          Boolean?           @default(true) @map("is_active")
-  createdAt         DateTime?          @default(now()) @map("created_at") @db.Timestamp(6)
+  createdAt         DateTime?          @default(now()) @map("created_at")
   isFastTrack       Boolean?           @default(false) @map("is_fast_track")
   playerInvestments PlayerInvestment[]
 
@@ -704,17 +704,17 @@ model PlayerInvestment {
   id                Int             @id @default(autoincrement())
   playerId          Int             @map("player_id")
   opportunityCardId Int             @map("opportunity_card_id")
-  purchasedAt       DateTime?       @default(now()) @map("purchased_at") @db.Timestamp(6)
+  purchasedAt       DateTime?       @default(now()) @map("purchased_at")
   purchasePrice     Int             @map("purchase_price")
   downPaymentPaid   Int?            @map("down_payment_paid")
   mortgageAmount    Int?            @map("mortgage_amount")
   sharesOwned       Int?            @default(1) @map("shares_owned")
   isSold            Boolean?        @default(false) @map("is_sold")
-  soldAt            DateTime?       @map("sold_at") @db.Timestamp(6)
+  soldAt            DateTime?       @map("sold_at")
   salePrice         Int?            @map("sale_price")
   currentCashFlow   Int?            @map("current_cash_flow")
   totalIncomeEarned Int?            @default(0) @map("total_income_earned")
-  createdAt         DateTime?       @default(now()) @map("created_at") @db.Timestamp(6)
+  createdAt         DateTime?       @default(now()) @map("created_at")
   opportunityCard   OpportunityCard @relation(fields: [opportunityCardId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   player            Player          @relation(fields: [playerId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
@@ -733,10 +733,10 @@ model PlayerLiability {
   remainingBalance Int       @map("remaining_balance")
   interestRate     Decimal?  @map("interest_rate") @db.Decimal(5, 2)
   monthlyPayment   Int       @map("monthly_payment")
-  acquiredAt       DateTime? @default(now()) @map("acquired_at") @db.Timestamp(6)
-  paidOffAt        DateTime? @map("paid_off_at") @db.Timestamp(6)
+  acquiredAt       DateTime? @default(now()) @map("acquired_at")
+  paidOffAt        DateTime? @map("paid_off_at")
   isPaidOff        Boolean?  @default(false) @map("is_paid_off")
-  createdAt        DateTime? @default(now()) @map("created_at") @db.Timestamp(6)
+  createdAt        DateTime? @default(now()) @map("created_at")
   player           Player    @relation(fields: [playerId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@index([playerId], map: "idx_player_liabilities_player_id")
@@ -750,8 +750,8 @@ model PlayerDoodad {
   name        String    @db.VarChar(100)
   description String?
   cost        Int
-  purchasedAt DateTime? @default(now()) @map("purchased_at") @db.Timestamp(6)
-  createdAt   DateTime? @default(now()) @map("created_at") @db.Timestamp(6)
+  purchasedAt DateTime? @default(now()) @map("purchased_at")
+  createdAt   DateTime? @default(now()) @map("created_at")
   player      Player    @relation(fields: [playerId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@index([playerId], map: "idx_player_doodads_player_id")
@@ -768,7 +768,7 @@ model MarketCard {
   multiplier            Decimal?  @db.Decimal(5, 2)
   cashBonus             Int?      @map("cash_bonus")
   isActive              Boolean?  @default(true) @map("is_active")
-  createdAt             DateTime? @default(now()) @map("created_at") @db.Timestamp(6)
+  createdAt             DateTime? @default(now()) @map("created_at")
 
   @@map("market_cards")
   @@schema("public")
@@ -783,7 +783,7 @@ model GameEvent {
   cashChange     Int?        @map("cash_change")
   cashFlowChange Int?        @map("cash_flow_change")
   turnNumber     Int         @map("turn_number")
-  createdAt      DateTime?   @default(now()) @map("created_at") @db.Timestamp(6)
+  createdAt      DateTime?   @default(now()) @map("created_at")
   gameSession    GameSession @relation(fields: [gameSessionId], references: [id], onDelete: Cascade, onUpdate: NoAction)
   player         Player      @relation(fields: [playerId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
@@ -802,7 +802,7 @@ model Doodad {
   category    String?   @db.VarChar(50)
   rarity      String?   @default("common") @db.VarChar(20)
   isActive    Boolean?  @default(true) @map("is_active")
-  createdAt   DateTime? @default(now()) @map("created_at") @db.Timestamp(6)
+  createdAt   DateTime? @default(now()) @map("created_at")
 
   @@map("doodads")
   @@schema("public")
@@ -834,8 +834,8 @@ model DailyChallenge {
   benefits      Json?          @default("[]")
   payload       Json?          @default("{}")
   activeDate    DateTime       @unique @map("active_date") @db.Date
-  createdAt     DateTime?      @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt     DateTime?      @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  createdAt     DateTime?      @default(now()) @map("created_at")
+  updatedAt     DateTime?      @default(now()) @updatedAt @map("updated_at")
   evidencePosts EvidencePost[]
 
   @@index([activeDate])
@@ -856,8 +856,8 @@ model EvidencePost {
   attachments      Json?
   status           String?            @default("submitted")
   validatedBy      String?            @map("validated_by")
-  validatedAt      DateTime?          @map("validated_at") @db.Timestamptz(6)
-  createdAt        DateTime?          @default(now()) @map("created_at") @db.Timestamptz(6)
+  validatedAt      DateTime?          @map("validated_at")
+  createdAt        DateTime?          @default(now()) @map("created_at")
   comments         EvidenceComment[]
   author           Profile            @relation(fields: [authorUserId], references: [userId], onDelete: Cascade)
   dailyChallenge   DailyChallenge     @relation(fields: [dailyChallengeId], references: [id], onDelete: Cascade, onUpdate: NoAction)
@@ -872,7 +872,7 @@ model EvidenceReaction {
   evidencePostId String       @map("evidence_post_id")
   userId         String       @map("user_id")
   reactionType   String       @map("reaction_type")
-  createdAt      DateTime?    @default(now()) @map("created_at") @db.Timestamptz(6)
+  createdAt      DateTime?    @default(now()) @map("created_at")
   evidencePost   EvidencePost @relation(fields: [evidencePostId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@unique([evidencePostId, userId])
@@ -886,7 +886,7 @@ model EvidenceComment {
   userId          String            @map("user_id")
   body            String            @db.VarChar(500)
   parentCommentId String?           @map("parent_comment_id")
-  createdAt       DateTime?         @default(now()) @map("created_at") @db.Timestamptz(6)
+  createdAt       DateTime?         @default(now()) @map("created_at")
   evidencePost    EvidencePost      @relation(fields: [evidencePostId], references: [id], onDelete: Cascade, onUpdate: NoAction)
   parentComment   EvidenceComment?  @relation("EvidenceCommentReplies", fields: [parentCommentId], references: [id], onDelete: Cascade, onUpdate: NoAction)
   replies         EvidenceComment[] @relation("EvidenceCommentReplies")
@@ -907,8 +907,8 @@ model FileUpload {
   size         Int
   type         String
   path         String
-  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt    DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@map("file_uploads")
   @@schema("public")
@@ -992,40 +992,40 @@ model Reward {
 
 /// This model contains an expression index which requires additional setup for migrations. Visit https://pris.ly/d/expression-indexes for more info.
 model AuthUser {
-  instance_id                 String?                @db.Uuid
-  id                          String                 @id @db.Uuid
+  instance_id                 String?               
+  id                          String                 @id
   aud                         String?                @db.VarChar(255)
   role                        String?                @db.VarChar(255)
   email                       String?                @db.VarChar(255)
   encrypted_password          String?                @db.VarChar(255)
-  email_confirmed_at          DateTime?              @db.Timestamptz(6)
-  invited_at                  DateTime?              @db.Timestamptz(6)
+  email_confirmed_at          DateTime?             
+  invited_at                  DateTime?             
   confirmation_token          String?                @db.VarChar(255)
-  confirmation_sent_at        DateTime?              @db.Timestamptz(6)
+  confirmation_sent_at        DateTime?             
   recovery_token              String?                @db.VarChar(255)
-  recovery_sent_at            DateTime?              @db.Timestamptz(6)
+  recovery_sent_at            DateTime?             
   email_change_token_new      String?                @db.VarChar(255)
   email_change                String?                @db.VarChar(255)
-  email_change_sent_at        DateTime?              @db.Timestamptz(6)
-  last_sign_in_at             DateTime?              @db.Timestamptz(6)
+  email_change_sent_at        DateTime?             
+  last_sign_in_at             DateTime?             
   raw_app_meta_data           Json?
   raw_user_meta_data          Json?
   is_super_admin              Boolean?
-  created_at                  DateTime?              @db.Timestamptz(6)
-  updated_at                  DateTime?              @db.Timestamptz(6)
+  created_at                  DateTime?             
+  updated_at                  DateTime?             
   phone                       String?                @unique
-  phone_confirmed_at          DateTime?              @db.Timestamptz(6)
+  phone_confirmed_at          DateTime?             
   phone_change                String?                @default("")
   phone_change_token          String?                @default("") @db.VarChar(255)
-  phone_change_sent_at        DateTime?              @db.Timestamptz(6)
-  confirmed_at                DateTime?              @map("confirmed_at") @db.Timestamptz(6)
+  phone_change_sent_at        DateTime?             
+  confirmed_at                DateTime?              @map("confirmed_at")
   email_change_token_current  String?                @default("") @db.VarChar(255)
   email_change_confirm_status Int?                   @default(0) @db.SmallInt
-  banned_until                DateTime?              @db.Timestamptz(6)
+  banned_until                DateTime?             
   reauthentication_token      String?                @default("") @db.VarChar(255)
-  reauthentication_sent_at    DateTime?              @db.Timestamptz(6)
+  reauthentication_sent_at    DateTime?             
   is_sso_user                 Boolean                @default(false)
-  deleted_at                  DateTime?              @db.Timestamptz(6)
+  deleted_at                  DateTime?             
   is_anonymous                Boolean                @default(false)
   identities                  AuthIdentity[]
   mfa_factors                 AuthMfaFactor[]
@@ -1052,10 +1052,10 @@ model AuthUser {
 }
 
 model AuthAuditLog {
-  instance_id String?   @db.Uuid
-  id          String    @id @db.Uuid
+  instance_id String?  
+  id          String    @id
   payload     Json?     @db.Json
-  created_at  DateTime? @db.Timestamptz(6)
+  created_at  DateTime?
   ip_address  String    @default("") @db.VarChar(64)
 
   @@index([instance_id], map: "audit_logs_instance_id_idx")
@@ -1065,14 +1065,14 @@ model AuthAuditLog {
 
 model AuthIdentity {
   provider_id     String
-  user_id         String    @db.Uuid
+  user_id         String   
   identity_data   Json
   provider        String
-  last_sign_in_at DateTime? @db.Timestamptz(6)
-  created_at      DateTime? @db.Timestamptz(6)
-  updated_at      DateTime? @db.Timestamptz(6)
+  last_sign_in_at DateTime?
+  created_at      DateTime?
+  updated_at      DateTime?
   email           String?   @map("email")
-  id              String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id              String    @id @default(dbgenerated("gen_random_uuid()"))
   users           AuthUser  @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@unique([provider_id, provider], map: "identities_provider_id_provider_unique")
@@ -1083,18 +1083,18 @@ model AuthIdentity {
 }
 
 model AuthSession {
-  id                     String             @id @db.Uuid
-  user_id                String             @db.Uuid
-  created_at             DateTime?          @db.Timestamptz(6)
-  updated_at             DateTime?          @db.Timestamptz(6)
-  factor_id              String?            @db.Uuid
+  id                     String             @id
+  user_id                String            
+  created_at             DateTime?         
+  updated_at             DateTime?         
+  factor_id              String?           
   aal                    aal_level?
-  not_after              DateTime?          @db.Timestamptz(6)
-  refreshed_at           DateTime?          @db.Timestamp(6)
+  not_after              DateTime?         
+  refreshed_at           DateTime?         
   user_agent             String?
   ip                     String?            @db.Inet
   tag                    String?
-  oauth_client_id        String?            @db.Uuid
+  oauth_client_id        String?           
   refresh_token_hmac_key String?
   refresh_token_counter  BigInt?
   scopes                 String?
@@ -1112,15 +1112,15 @@ model AuthSession {
 }
 
 model AuthRefreshToken {
-  instance_id String?      @db.Uuid
+  instance_id String?     
   id          BigInt       @id @default(autoincrement())
   token       String?      @unique(map: "refresh_tokens_token_unique") @db.VarChar(255)
   user_id     String?      @db.VarChar(255)
   revoked     Boolean?
-  created_at  DateTime?    @db.Timestamptz(6)
-  updated_at  DateTime?    @db.Timestamptz(6)
+  created_at  DateTime?   
+  updated_at  DateTime?   
   parent      String?      @db.VarChar(255)
-  session_id  String?      @db.Uuid
+  session_id  String?     
   sessions    AuthSession? @relation(fields: [session_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@index([instance_id])
@@ -1133,22 +1133,22 @@ model AuthRefreshToken {
 }
 
 model AuthFlowState {
-  id                     String                 @id @db.Uuid
-  user_id                String?                @db.Uuid
+  id                     String                 @id
+  user_id                String?               
   auth_code              String?
   code_challenge_method  code_challenge_method?
   code_challenge         String?
   provider_type          String
   provider_access_token  String?
   provider_refresh_token String?
-  created_at             DateTime?              @db.Timestamptz(6)
-  updated_at             DateTime?              @db.Timestamptz(6)
+  created_at             DateTime?             
+  updated_at             DateTime?             
   authentication_method  String
-  auth_code_issued_at    DateTime?              @db.Timestamptz(6)
+  auth_code_issued_at    DateTime?             
   invite_token           String?
   referrer               String?
-  oauth_client_state_id  String?                @db.Uuid
-  linking_target_id      String?                @db.Uuid
+  oauth_client_state_id  String?               
+  linking_target_id      String?               
   email_optional         Boolean                @default(false)
   saml_relay_states      AuthSamlRelayState[]
 
@@ -1160,11 +1160,11 @@ model AuthFlowState {
 }
 
 model AuthMfaAmrClaim {
-  session_id            String      @db.Uuid
-  created_at            DateTime    @db.Timestamptz(6)
-  updated_at            DateTime    @db.Timestamptz(6)
+  session_id            String     
+  created_at            DateTime   
+  updated_at            DateTime   
   authentication_method String
-  id                    String      @id(map: "amr_id_pk") @db.Uuid
+  id                    String      @id(map: "amr_id_pk")
   sessions              AuthSession @relation(fields: [session_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@unique([session_id, authentication_method], map: "mfa_amr_claims_session_id_authentication_method_pkey")
@@ -1173,10 +1173,10 @@ model AuthMfaAmrClaim {
 }
 
 model AuthMfaChallenge {
-  id                     String        @id @db.Uuid
-  factor_id              String        @db.Uuid
-  created_at             DateTime      @db.Timestamptz(6)
-  verified_at            DateTime?     @db.Timestamptz(6)
+  id                     String        @id
+  factor_id              String       
+  created_at             DateTime     
+  verified_at            DateTime?    
   ip_address             String        @db.Inet
   otp_code               String?
   web_authn_session_data Json?
@@ -1188,18 +1188,18 @@ model AuthMfaChallenge {
 }
 
 model AuthMfaFactor {
-  id                           String             @id @db.Uuid
-  user_id                      String             @db.Uuid
+  id                           String             @id
+  user_id                      String            
   friendly_name                String?
   factor_type                  factor_type
   status                       factor_status
-  created_at                   DateTime           @db.Timestamptz(6)
-  updated_at                   DateTime           @db.Timestamptz(6)
+  created_at                   DateTime          
+  updated_at                   DateTime          
   secret                       String?
   phone                        String?
-  last_challenged_at           DateTime?          @unique @db.Timestamptz(6)
+  last_challenged_at           DateTime?          @unique
   web_authn_credential         Json?
-  web_authn_aaguid             String?            @db.Uuid
+  web_authn_aaguid             String?           
   last_webauthn_challenge_data Json?
   mfa_challenges               AuthMfaChallenge[]
   users                        AuthUser           @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
@@ -1212,14 +1212,14 @@ model AuthMfaFactor {
 }
 
 model AuthSamlProvider {
-  id                String          @id @db.Uuid
-  sso_provider_id   String          @db.Uuid
+  id                String          @id
+  sso_provider_id   String         
   entity_id         String          @unique
   metadata_xml      String
   metadata_url      String?
   attribute_mapping Json?
-  created_at        DateTime?       @db.Timestamptz(6)
-  updated_at        DateTime?       @db.Timestamptz(6)
+  created_at        DateTime?      
+  updated_at        DateTime?      
   name_id_format    String?
   sso_providers     AuthSsoProvider @relation(fields: [sso_provider_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
@@ -1229,14 +1229,14 @@ model AuthSamlProvider {
 }
 
 model AuthSamlRelayState {
-  id              String          @id @db.Uuid
-  sso_provider_id String          @db.Uuid
+  id              String          @id
+  sso_provider_id String         
   request_id      String
   for_email       String?
   redirect_to     String?
-  created_at      DateTime?       @db.Timestamptz(6)
-  updated_at      DateTime?       @db.Timestamptz(6)
-  flow_state_id   String?         @db.Uuid
+  created_at      DateTime?      
+  updated_at      DateTime?      
+  flow_state_id   String?        
   flow_state      AuthFlowState?  @relation(fields: [flow_state_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
   sso_providers   AuthSsoProvider @relation(fields: [sso_provider_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
@@ -1249,11 +1249,11 @@ model AuthSamlRelayState {
 
 /// This model contains an expression index which requires additional setup for migrations. Visit https://pris.ly/d/expression-indexes for more info.
 model AuthSsoDomain {
-  id              String          @id @db.Uuid
-  sso_provider_id String          @db.Uuid
+  id              String          @id
+  sso_provider_id String         
   domain          String
-  created_at      DateTime?       @db.Timestamptz(6)
-  updated_at      DateTime?       @db.Timestamptz(6)
+  created_at      DateTime?      
+  updated_at      DateTime?      
   sso_providers   AuthSsoProvider @relation(fields: [sso_provider_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@index([sso_provider_id])
@@ -1263,10 +1263,10 @@ model AuthSsoDomain {
 
 /// This model contains an expression index which requires additional setup for migrations. Visit https://pris.ly/d/expression-indexes for more info.
 model AuthSsoProvider {
-  id                String               @id @db.Uuid
+  id                String               @id
   resource_id       String?
-  created_at        DateTime?            @db.Timestamptz(6)
-  updated_at        DateTime?            @db.Timestamptz(6)
+  created_at        DateTime?           
+  updated_at        DateTime?           
   disabled          Boolean?
   saml_providers    AuthSamlProvider[]
   saml_relay_states AuthSamlRelayState[]
@@ -1285,11 +1285,11 @@ model AuthSchemaMigration {
 }
 
 model AuthInstance {
-  id              String    @id @db.Uuid
-  uuid            String?   @db.Uuid
+  id              String    @id
+  uuid            String?  
   raw_base_config String?
-  created_at      DateTime? @db.Timestamptz(6)
-  updated_at      DateTime? @db.Timestamptz(6)
+  created_at      DateTime?
+  updated_at      DateTime?
 
   @@map("instances")
   @@schema("auth")
@@ -1326,7 +1326,7 @@ model TransparencyReport {
   period    String
   reportUrl String    @map("report_url")
   badgeType String?   @map("badge_type")
-  createdAt DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
+  createdAt DateTime? @default(now()) @map("created_at")
 
   @@map("transparency_reports")
   @@schema("public")
@@ -1342,23 +1342,23 @@ model Simulator {
   buttonColor String?   @map("button_color")
   isActive    Boolean?  @default(true) @map("is_active")
   sortOrder   Int?      @default(0) @map("sort_order")
-  createdAt   DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
+  createdAt   DateTime? @default(now()) @map("created_at")
 
   @@map("simulators")
   @@schema("public")
 }
 
 model AuditLog {
-  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  userId      String   @map("user_id")
-  action      String
-  entityType  String   @map("entity_type")
-  entityId    String   @map("entity_id")
-  oldData     Json?    @map("old_data")
-  newData     Json?    @map("new_data")
-  ipAddress   String?  @map("ip_address")
-  userAgent   String?  @map("user_agent")
-  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  userId     String   @map("user_id")
+  action     String
+  entityType String   @map("entity_type")
+  entityId   String   @map("entity_id")
+  oldData    Json?    @map("old_data")
+  newData    Json?    @map("new_data")
+  ipAddress  String?  @map("ip_address")
+  userAgent  String?  @map("user_agent")
+  createdAt  DateTime @default(now()) @map("created_at")
 
   @@map("audit_logs")
   @@schema("public")
@@ -1366,14 +1366,14 @@ model AuditLog {
 
 model Notification {
   id        String    @id @default(cuid())
-  userId    String    @map("user_id") @db.Uuid
+  userId    String    @map("user_id")
   title     String
   message   String
   type      String?   @default("system")
   priority  String?   @default("normal")
   link      String?
-  readAt    DateTime? @map("read_at") @db.Timestamptz(6)
-  createdAt DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
+  readAt    DateTime? @map("read_at")
+  createdAt DateTime? @default(now()) @map("created_at")
   user      AuthUser  @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@index([createdAt], map: "idx_notifications_created_at")
@@ -1389,7 +1389,7 @@ model Achievement {
   icon             String
   category         String?           @default("general")
   xpReward         Int?              @default(100) @map("xp_reward")
-  createdAt        DateTime?         @default(now()) @map("created_at") @db.Timestamptz(6)
+  createdAt        DateTime?         @default(now()) @map("created_at")
   threshold        Int?              @default(1)
   rarity           String?           @default("common")
   userAchievements UserAchievement[]
@@ -1399,9 +1399,9 @@ model Achievement {
 }
 
 model UserAchievement {
-  userId        String      @map("user_id") @db.Uuid
+  userId        String      @map("user_id")
   achievementId String      @map("achievement_id")
-  earnedAt      DateTime?   @default(now()) @map("earned_at") @db.Timestamptz(6)
+  earnedAt      DateTime?   @default(now()) @map("earned_at")
   achievement   Achievement @relation(fields: [achievementId], references: [id], onDelete: Cascade, onUpdate: NoAction)
   user          AuthUser    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
@@ -1412,7 +1412,7 @@ model UserAchievement {
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model custom_oauth_providers {
-  id                    String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id                    String    @id @default(dbgenerated("gen_random_uuid()"))
   provider_type         String
   identifier            String    @unique
   name                  String
@@ -1429,13 +1429,13 @@ model custom_oauth_providers {
   discovery_url         String?
   skip_nonce_check      Boolean   @default(false)
   cached_discovery      Json?
-  discovery_cached_at   DateTime? @db.Timestamptz(6)
+  discovery_cached_at   DateTime?
   authorization_url     String?
   token_url             String?
   userinfo_url          String?
   jwks_uri              String?
-  created_at            DateTime  @default(now()) @db.Timestamptz(6)
-  updated_at            DateTime  @default(now()) @db.Timestamptz(6)
+  created_at            DateTime  @default(now())
+  updated_at            DateTime  @default(now())
 
   @@index([created_at])
   @@index([enabled])
@@ -1446,10 +1446,10 @@ model custom_oauth_providers {
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model oauth_authorizations {
-  id                    String                     @id @db.Uuid
+  id                    String                     @id
   authorization_id      String                     @unique
-  client_id             String                     @db.Uuid
-  user_id               String?                    @db.Uuid
+  client_id             String                    
+  user_id               String?                   
   redirect_uri          String
   scope                 String
   state                 String?
@@ -1459,9 +1459,9 @@ model oauth_authorizations {
   response_type         oauth_response_type        @default(code)
   status                oauth_authorization_status @default(pending)
   authorization_code    String?                    @unique
-  created_at            DateTime                   @default(now()) @db.Timestamptz(6)
-  expires_at            DateTime                   @default(dbgenerated("(now() + '00:03:00'::interval)")) @db.Timestamptz(6)
-  approved_at           DateTime?                  @db.Timestamptz(6)
+  created_at            DateTime                   @default(now())
+  expires_at            DateTime                   @default(dbgenerated("(now() + '00:03:00'::interval)"))
+  approved_at           DateTime?                 
   nonce                 String?
   oauth_clients         oauth_clients              @relation(fields: [client_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
   users                 AuthUser?                  @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
@@ -1471,10 +1471,10 @@ model oauth_authorizations {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model oauth_client_states {
-  id            String   @id @db.Uuid
+  id            String   @id
   provider_type String
   code_verifier String?
-  created_at    DateTime @db.Timestamptz(6)
+  created_at    DateTime
 
   @@index([created_at], map: "idx_oauth_client_states_created_at")
   @@schema("auth")
@@ -1482,7 +1482,7 @@ model oauth_client_states {
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model oauth_clients {
-  id                         String                  @id @db.Uuid
+  id                         String                  @id
   client_secret_hash         String?
   registration_type          oauth_registration_type
   redirect_uris              String
@@ -1490,9 +1490,9 @@ model oauth_clients {
   client_name                String?
   client_uri                 String?
   logo_uri                   String?
-  created_at                 DateTime                @default(now()) @db.Timestamptz(6)
-  updated_at                 DateTime                @default(now()) @db.Timestamptz(6)
-  deleted_at                 DateTime?               @db.Timestamptz(6)
+  created_at                 DateTime                @default(now())
+  updated_at                 DateTime                @default(now())
+  deleted_at                 DateTime?              
   client_type                oauth_client_type       @default(confidential)
   token_endpoint_auth_method String
   oauth_authorizations       oauth_authorizations[]
@@ -1505,12 +1505,12 @@ model oauth_clients {
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model oauth_consents {
-  id            String        @id @db.Uuid
-  user_id       String        @db.Uuid
-  client_id     String        @db.Uuid
+  id            String        @id
+  user_id       String       
+  client_id     String       
   scopes        String
-  granted_at    DateTime      @default(now()) @db.Timestamptz(6)
-  revoked_at    DateTime?     @db.Timestamptz(6)
+  granted_at    DateTime      @default(now())
+  revoked_at    DateTime?    
   oauth_clients oauth_clients @relation(fields: [client_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
   users         AuthUser      @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
@@ -1522,13 +1522,13 @@ model oauth_consents {
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model one_time_tokens {
-  id         String              @id @db.Uuid
-  user_id    String              @db.Uuid
+  id         String              @id
+  user_id    String             
   token_type one_time_token_type
   token_hash String
   relates_to String
-  created_at DateTime            @default(now()) @db.Timestamp(6)
-  updated_at DateTime            @default(now()) @db.Timestamp(6)
+  created_at DateTime            @default(now())
+  updated_at DateTime            @default(now())
   users      AuthUser            @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@unique([user_id, token_type])
@@ -1539,7 +1539,7 @@ model one_time_tokens {
 
 model forbidden_words {
   word       String    @id
-  created_at DateTime? @default(now()) @db.Timestamptz(6)
+  created_at DateTime? @default(now())
 
   @@schema("public")
 }
@@ -1570,15 +1570,15 @@ model forum_rate_limits {
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model sim_runs {
-  id             String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  user_id        String    @db.Uuid
+  id             String    @id @default(dbgenerated("gen_random_uuid()"))
+  user_id        String   
   simulator_slug String
   run_name       String?
   inputs         Json
   outputs        Json
   notes          String?
-  created_at     DateTime? @default(now()) @db.Timestamptz(6)
-  updated_at     DateTime? @default(now()) @db.Timestamptz(6)
+  created_at     DateTime? @default(now())
+  updated_at     DateTime? @default(now())
   users          AuthUser  @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@index([created_at(sort: Desc)], map: "idx_sim_runs_created_at")
@@ -1589,13 +1589,13 @@ model sim_runs {
 }
 
 model simulator_portfolios {
-  id            String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  user_id       String               @db.Uuid
-  classroom_id  String?              @db.Uuid
+  id            String               @id @default(dbgenerated("gen_random_uuid()"))
+  user_id       String              
+  classroom_id  String?             
   currency      String               @default("USD")
   starting_cash Decimal              @db.Decimal(12, 2)
   cash_balance  Decimal              @db.Decimal(12, 2)
-  created_at    DateTime?            @default(now()) @db.Timestamptz(6)
+  created_at    DateTime?            @default(now())
   holdings      simulator_holdings[]
   orders        simulator_orders[]
   users         AuthUser             @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
@@ -1604,28 +1604,28 @@ model simulator_portfolios {
 }
 
 model simulator_holdings {
-  id           String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  portfolio_id String               @db.Uuid
+  id           String               @id @default(dbgenerated("gen_random_uuid()"))
+  portfolio_id String              
   symbol       String
   quantity     Decimal              @db.Decimal(12, 4)
   avg_cost     Decimal              @db.Decimal(12, 2)
-  created_at   DateTime?            @default(now()) @db.Timestamptz(6)
+  created_at   DateTime?            @default(now())
   portfolio    simulator_portfolios @relation(fields: [portfolio_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@schema("public")
 }
 
 model simulator_orders {
-  id           String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  portfolio_id String               @db.Uuid
+  id           String               @id @default(dbgenerated("gen_random_uuid()"))
+  portfolio_id String              
   symbol       String
   side         String
   order_type   String
   limit_price  Decimal?             @db.Decimal(12, 2)
   quantity     Decimal              @db.Decimal(12, 4)
   status       String
-  placed_at    DateTime?            @default(now()) @db.Timestamptz(6)
-  filled_at    DateTime?            @db.Timestamptz(6)
+  placed_at    DateTime?            @default(now())
+  filled_at    DateTime?           
   fill_price   Decimal?             @db.Decimal(12, 2)
   fee          Decimal?             @db.Decimal(12, 2)
   portfolio    simulator_portfolios @relation(fields: [portfolio_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
@@ -1647,9 +1647,9 @@ model market_prices_eod {
 }
 
 model credit_sim_profiles {
-  id         String                 @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  user_id    String                 @db.Uuid
-  created_at DateTime?              @default(now()) @db.Timestamptz(6)
+  id         String                 @id @default(dbgenerated("gen_random_uuid()"))
+  user_id    String                
+  created_at DateTime?              @default(now())
   users      AuthUser               @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
   scenarios  credit_sim_scenarios[]
 
@@ -1657,11 +1657,11 @@ model credit_sim_profiles {
 }
 
 model credit_sim_scenarios {
-  id            String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  profile_id    String               @db.Uuid
+  id            String               @id @default(dbgenerated("gen_random_uuid()"))
+  profile_id    String              
   scenario_type String
   inputs_json   Json
-  created_at    DateTime?            @default(now()) @db.Timestamptz(6)
+  created_at    DateTime?            @default(now())
   results       credit_sim_results[]
   profile       credit_sim_profiles  @relation(fields: [profile_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
@@ -1678,23 +1678,23 @@ model market_symbols {
 }
 
 model credit_sim_results {
-  id           String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  scenario_id  String               @db.Uuid
+  id           String               @id @default(dbgenerated("gen_random_uuid()"))
+  scenario_id  String              
   results_json Json
-  created_at   DateTime?            @default(now()) @db.Timestamptz(6)
+  created_at   DateTime?            @default(now())
   scenario     credit_sim_scenarios @relation(fields: [scenario_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@schema("public")
 }
 
 model readiness_events {
-  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  user_id     String    @db.Uuid
+  id          String    @id @default(dbgenerated("gen_random_uuid()"))
+  user_id     String   
   label       String
   event_type  String
   score_delta Int
   reason      String
-  created_at  DateTime? @default(now()) @db.Timestamptz(6)
+  created_at  DateTime? @default(now())
   users       AuthUser  @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@index([user_id])
@@ -1705,12 +1705,12 @@ model readiness_events {
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model lab_mentors {
   id         String   @id @default(dbgenerated("(gen_random_uuid())::text"))
-  user_id    String   @db.Uuid
+  user_id    String  
   topics     String[] @default([])
   bio        String?
   is_active  Boolean? @default(true)
-  created_at DateTime @default(now()) @db.Timestamptz(6)
-  updated_at DateTime @default(now()) @db.Timestamptz(6)
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
 
   @@index([is_active], map: "idx_lab_mentors_active")
   @@index([topics], map: "idx_lab_mentors_topics", type: Gin)
@@ -1721,11 +1721,11 @@ model lab_mentors {
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model lab_scores {
-  user_id         String   @id @db.Uuid
+  user_id         String   @id
   readiness_score Int?     @default(0)
   notes           String?
   breakdown       Json?
-  updated_at      DateTime @default(now()) @db.Timestamptz(6)
+  updated_at      DateTime @default(now())
 
   @@schema("public")
 }
@@ -1740,7 +1740,7 @@ model lab_steps {
   order          Int
   required       Boolean? @default(true)
   goal           String?
-  created_at     DateTime @default(now()) @db.Timestamptz(6)
+  created_at     DateTime @default(now())
   estimated_time String?
 
   @@index([order], map: "idx_lab_steps_order")
@@ -1757,7 +1757,7 @@ model lab_tracks {
   title       String
   description String?
   order       Int
-  created_at  DateTime @default(now()) @db.Timestamptz(6)
+  created_at  DateTime @default(now())
   is_active   Boolean? @default(true)
   icon        String?
   color       String?
@@ -1771,12 +1771,12 @@ model lab_tracks {
 model mentor_sessions {
   id           String    @id @default(dbgenerated("(gen_random_uuid())::text"))
   mentor_id    String
-  founder_id   String    @db.Uuid
+  founder_id   String   
   notes        String?
   status       String?   @default("scheduled")
-  scheduled_at DateTime? @db.Timestamptz(6)
-  completed_at DateTime? @db.Timestamptz(6)
-  created_at   DateTime  @default(now()) @db.Timestamptz(6)
+  scheduled_at DateTime?
+  completed_at DateTime?
+  created_at   DateTime  @default(now())
 
   @@index([founder_id], map: "idx_mentor_sessions_founder")
   @@index([mentor_id], map: "idx_mentor_sessions_mentor")
@@ -1786,12 +1786,12 @@ model mentor_sessions {
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model webauthn_challenges {
-  id             String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  user_id        String?   @db.Uuid
+  id             String    @id @default(dbgenerated("gen_random_uuid()"))
+  user_id        String?  
   challenge_type String
   session_data   Json
-  created_at     DateTime  @default(now()) @db.Timestamptz(6)
-  expires_at     DateTime  @db.Timestamptz(6)
+  created_at     DateTime  @default(now())
+  expires_at     DateTime 
   users          AuthUser? @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@index([expires_at])
@@ -1800,20 +1800,20 @@ model webauthn_challenges {
 }
 
 model webauthn_credentials {
-  id               String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  user_id          String    @db.Uuid
+  id               String    @id @default(dbgenerated("gen_random_uuid()"))
+  user_id          String   
   credential_id    Bytes     @unique
   public_key       Bytes
   attestation_type String    @default("")
-  aaguid           String?   @db.Uuid
+  aaguid           String?  
   sign_count       BigInt    @default(0)
   transports       Json      @default("[]")
   backup_eligible  Boolean   @default(false)
   backed_up        Boolean   @default(false)
   friendly_name    String    @default("")
-  created_at       DateTime  @default(now()) @db.Timestamptz(6)
-  updated_at       DateTime  @default(now()) @db.Timestamptz(6)
-  last_used_at     DateTime? @db.Timestamptz(6)
+  created_at       DateTime  @default(now())
+  updated_at       DateTime  @default(now())
+  last_used_at     DateTime?
   users            AuthUser  @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@index([user_id])
@@ -1822,16 +1822,16 @@ model webauthn_credentials {
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model live_answers {
-  id                 String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  session_id         String            @db.Uuid
-  question_id        String            @db.Uuid
-  participant_id     String            @db.Uuid
+  id                 String            @id @default(dbgenerated("gen_random_uuid()"))
+  session_id         String           
+  question_id        String           
+  participant_id     String           
   selected_option_id String?
   is_correct         Boolean?
   answer_time_ms     Int?
   score_earned       Int?              @default(0)
   streak_at_answer   Int?              @default(0)
-  answered_at        DateTime?         @default(now()) @db.Timestamptz(6)
+  answered_at        DateTime?         @default(now())
   live_participants  live_participants @relation(fields: [participant_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
   live_questions     live_questions    @relation(fields: [question_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
   live_sessions      live_sessions     @relation(fields: [session_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
@@ -1845,11 +1845,11 @@ model live_answers {
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model live_leaderboard_snapshots {
-  id             String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  session_id     String        @db.Uuid
+  id             String        @id @default(dbgenerated("gen_random_uuid()"))
+  session_id     String       
   question_index Int
   snapshot       Json
-  created_at     DateTime?     @default(now()) @db.Timestamptz(6)
+  created_at     DateTime?     @default(now())
   live_sessions  live_sessions @relation(fields: [session_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@index([session_id, question_index], map: "idx_live_snapshots_session")
@@ -1858,8 +1858,8 @@ model live_leaderboard_snapshots {
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model live_participants {
-  id             String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  session_id     String         @db.Uuid
+  id             String         @id @default(dbgenerated("gen_random_uuid()"))
+  session_id     String        
   user_id        String?
   nickname       String
   avatar         Json?
@@ -1867,8 +1867,8 @@ model live_participants {
   current_streak Int?           @default(0)
   rank           Int?
   is_host        Boolean?       @default(false)
-  joined_at      DateTime?      @default(now()) @db.Timestamptz(6)
-  left_at        DateTime?      @db.Timestamptz(6)
+  joined_at      DateTime?      @default(now())
+  left_at        DateTime?     
   is_active      Boolean?       @default(true)
   live_answers   live_answers[]
   live_sessions  live_sessions  @relation(fields: [session_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
@@ -1880,8 +1880,8 @@ model live_participants {
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model live_questions {
-  id                    String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  session_id            String         @db.Uuid
+  id                    String         @id @default(dbgenerated("gen_random_uuid()"))
+  session_id            String        
   order_index           Int
   question_text         String
   question_type         String         @default("mcq") @db.VarChar(20)
@@ -1890,7 +1890,7 @@ model live_questions {
   options               Json           @default("[]")
   image_url             String?
   source_lesson_step_id String?
-  created_at            DateTime?      @default(now()) @db.Timestamptz(6)
+  created_at            DateTime?      @default(now())
   live_answers          live_answers[]
   live_sessions         live_sessions  @relation(fields: [session_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
@@ -1900,7 +1900,7 @@ model live_questions {
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model live_quiz_templates {
-  id             String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id             String    @id @default(dbgenerated("gen_random_uuid()"))
   owner_id       String
   title          String
   description    String?
@@ -1910,8 +1910,8 @@ model live_quiz_templates {
   questions      Json      @default("[]")
   times_used     Int?      @default(0)
   is_public      Boolean?  @default(false)
-  created_at     DateTime? @default(now()) @db.Timestamptz(6)
-  updated_at     DateTime? @default(now()) @db.Timestamptz(6)
+  created_at     DateTime? @default(now())
+  updated_at     DateTime? @default(now())
 
   @@index([owner_id], map: "idx_live_quiz_templates_owner")
   @@schema("public")
@@ -1919,17 +1919,17 @@ model live_quiz_templates {
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model live_sessions {
-  id                         String                       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id                         String                       @id @default(dbgenerated("gen_random_uuid()"))
   host_id                    String
   pin                        String                       @unique @db.VarChar(6)
   title                      String                       @default("Quiz en vivo")
   status                     String                       @default("lobby") @db.VarChar(20)
   current_question_index     Int?                         @default(0)
-  question_started_at        DateTime?                    @db.Timestamptz(6)
+  question_started_at        DateTime?                   
   time_limit_seconds         Int?                         @default(20)
-  created_at                 DateTime?                    @default(now()) @db.Timestamptz(6)
-  started_at                 DateTime?                    @db.Timestamptz(6)
-  finished_at                DateTime?                    @db.Timestamptz(6)
+  created_at                 DateTime?                    @default(now())
+  started_at                 DateTime?                   
+  finished_at                DateTime?                   
   settings                   Json?                        @default("{}")
   live_answers               live_answers[]
   live_leaderboard_snapshots live_leaderboard_snapshots[]
@@ -1939,6 +1939,52 @@ model live_sessions {
   @@index([host_id], map: "idx_live_sessions_host")
   @@index([pin], map: "idx_live_sessions_pin")
   @@index([status], map: "idx_live_sessions_status")
+  @@schema("public")
+}
+
+model WalletTransaction {
+  id          String   @id @default(cuid())
+  userId      String   @map("user_id")
+  amount      Int
+  type        String
+  category    String
+  description String
+  createdAt   DateTime @default(now()) @map("created_at")
+  user        Profile  @relation(fields: [userId], references: [userId], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("wallet_transactions")
+  @@schema("public")
+}
+
+model SavingsGoal {
+  id           String   @id @default(cuid())
+  userId       String   @map("user_id")
+  title        String
+  targetAmount Int      @map("target_amount")
+  category     String?
+  isCompleted  Boolean  @default(false) @map("is_completed")
+  createdAt    DateTime @default(now()) @map("created_at")
+  user         Profile  @relation(fields: [userId], references: [userId], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("savings_goals")
+  @@schema("public")
+}
+
+model StakingPosition {
+  id           String   @id @default(cuid())
+  userId       String   @map("user_id")
+  amount       Int
+  yieldRate    Float    @map("yield_rate")
+  startDate    DateTime @default(now()) @map("start_date")
+  endDate      DateTime @map("end_date")
+  status       String   @default("active")
+  earnedAmount Int?     @map("earned_amount")
+  user         Profile  @relation(fields: [userId], references: [userId], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("staking_positions")
   @@schema("public")
 }
 
@@ -2010,50 +2056,4 @@ enum one_time_token_type {
   phone_change_token
 
   @@schema("auth")
-}
-
-model WalletTransaction {
-  id          String   @id @default(cuid())
-  userId      String   @map("user_id")
-  amount      Int
-  type        String // "income" | "expense"
-  category    String // "lesson_reward", "purchase", "streak_bonus", etc.
-  description String
-  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
-  user        Profile  @relation(fields: [userId], references: [userId], onDelete: Cascade)
-
-  @@index([userId])
-  @@map("wallet_transactions")
-  @@schema("public")
-}
-
-model SavingsGoal {
-  id           String   @id @default(cuid())
-  userId       String   @map("user_id")
-  title        String
-  targetAmount Int      @map("target_amount")
-  category     String? // e.g., "avatar", "item", "gift_card"
-  isCompleted  Boolean  @default(false) @map("is_completed")
-  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
-  user         Profile  @relation(fields: [userId], references: [userId], onDelete: Cascade)
-
-  @@index([userId])
-  @@map("savings_goals")
-  @@schema("public")
-}
-
-model StakingPosition {
-  id           String   @id @default(cuid())
-  userId       String   @map("user_id")
-  amount       Int
-  yieldRate    Float    @map("yield_rate")
-  startDate    DateTime @default(now()) @map("start_date") @db.Timestamptz(6)
-  endDate      DateTime @map("end_date") @db.Timestamptz(6)
-  status       String   @default("active") // "active", "completed"
-  earnedAmount Int?     @map("earned_amount")
-  user         Profile  @relation(fields: [userId], references: [userId], onDelete: Cascade)
-
-  @@index([userId])
-  @@map("staking_positions")
-  @@schema("public")
 }

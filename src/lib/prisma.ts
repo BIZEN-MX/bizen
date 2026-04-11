@@ -3,24 +3,21 @@ import { PrismaClient } from '@prisma/client'
 const prismaClientSingleton = () => {
   const isProd = process.env.NODE_ENV === 'production'
   
-  // Try both possible env var names
   let databaseUrl = process.env.DATABASE_URL || process.env.BIZEN_DATABASE_URL
   
   if (!databaseUrl) {
-    console.error('❌ FATAL: DATABASE_URL is not defined in the environment')
+    console.warn('⚠️ WARNING: DATABASE_URL is not defined in the environment. Prisma may fail.')
   } else {
-    // Optimization: Ensure connection pooling limits
-    if (!databaseUrl.includes('connection_limit=')) {
+    // Ensure connection pooling limits
+    if (databaseUrl && !databaseUrl.includes('connection_limit=')) {
       databaseUrl += (databaseUrl.includes('?') ? '&' : '?') + 'connection_limit=' + (isProd ? '15' : '5')
     }
   }
 
-  const client = new PrismaClient({
-    datasourceUrl: databaseUrl,
-    log: isProd ? ['error'] : ['error', 'warn'],
+  return new PrismaClient({
+    datasourceUrl: databaseUrl || undefined,
+    log: ['error'], 
   })
-
-  return client
 }
 
 declare const globalThis: {
