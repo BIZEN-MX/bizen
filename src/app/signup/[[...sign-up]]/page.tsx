@@ -9,7 +9,7 @@ export default function BIZENSignupPage() {
   React.useEffect(() => {
     document.documentElement.style.overflow = "auto"
     document.body.style.overflow = "auto"
-    document.body.style.background = "linear-gradient(135deg, #020e27 0%, #041640 40%, #061a4a 70%, #020e27 100%)"
+    document.body.style.background = "#020e27"
     return () => {
       document.documentElement.style.overflow = ""
       document.body.style.overflow = ""
@@ -24,64 +24,158 @@ export default function BIZENSignupPage() {
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
-      background: "linear-gradient(135deg, #050b14 0%, #0a192f 40%, #173d7a 100%)",
+      background: "linear-gradient(135deg, #020e27 0%, #041640 50%, #020e27 100%)",
       overflow: "hidden",
       padding: "clamp(16px, 4vw, 40px)",
       boxSizing: "border-box",
     }}>
 
-      {/* Grid overlay */}
+      {/* Mesh grid */}
       <div aria-hidden style={{
         position: "absolute", inset: 0, zIndex: 0,
-        backgroundImage: "linear-gradient(rgba(0,86,231,0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(0,86,231,0.07) 1px, transparent 1px)",
-        backgroundSize: "48px 48px",
+        backgroundImage: "linear-gradient(rgba(15,98,254,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(15,98,254,0.06) 1px, transparent 1px)",
+        backgroundSize: "60px 60px",
       }} />
 
-      {/* Blobs */}
-      <div aria-hidden style={{ position: "absolute", top: "-10%", right: "-10%", width: "clamp(280px,50vw,560px)", height: "clamp(280px,50vw,560px)", borderRadius: "50%", background: "radial-gradient(circle, rgba(0,86,231,0.22) 0%, transparent 70%)", filter: "blur(40px)", zIndex: 0 }} />
-      <div aria-hidden style={{ position: "absolute", bottom: "-15%", left: "-10%", width: "clamp(240px,45vw,480px)", height: "clamp(240px,45vw,480px)", borderRadius: "50%", background: "radial-gradient(circle, rgba(25,131,253,0.18) 0%, transparent 70%)", filter: "blur(50px)", zIndex: 0 }} />
+      {/* Blue orbs */}
+      <div aria-hidden style={{
+        position: "absolute", top: "-15%", right: "-10%",
+        width: "clamp(320px, 55vw, 640px)", height: "clamp(320px, 55vw, 640px)",
+        borderRadius: "50%",
+        background: "radial-gradient(circle, rgba(15,98,254,0.25) 0%, transparent 70%)",
+        filter: "blur(60px)", zIndex: 0,
+      }} />
+      <div aria-hidden style={{
+        position: "absolute", bottom: "-20%", left: "-12%",
+        width: "clamp(280px, 48vw, 560px)", height: "clamp(280px, 48vw, 560px)",
+        borderRadius: "50%",
+        background: "radial-gradient(circle, rgba(0,86,231,0.20) 0%, transparent 70%)",
+        filter: "blur(70px)", zIndex: 0,
+      }} />
 
       {/* Logo */}
       <Link href="/" style={{
-        position: "absolute", top: 24, left: "clamp(20px, 4vw, 36px)",
-        textDecoration: "none", zIndex: 10, display: "flex", alignItems: "center", gap: 8,
+        position: "absolute", top: 28, left: "clamp(20px, 4vw, 40px)",
+        textDecoration: "none", zIndex: 10, display: "flex", alignItems: "center", gap: 10,
       }}>
-        <strong style={{ fontSize: "clamp(22px, 3vw, 28px)", color: "#fff", letterSpacing: "-0.02em" }}>
-          BIZEN<span style={{ color: "#1983FD" }}>.</span>
+        <strong style={{
+          fontSize: "clamp(24px, 3vw, 30px)", color: "#fff",
+          letterSpacing: "-0.03em", fontWeight: 900,
+        }}>
+          BIZEN<span style={{ color: "#0F62FE" }}>.</span>
         </strong>
       </Link>
 
-      <div style={{ position: "relative", zIndex: 2 }}>
+      {/* Tagline */}
+      <div style={{
+        position: "absolute", top: 32, right: "clamp(20px, 4vw, 40px)",
+        zIndex: 10, display: "flex", alignItems: "center", gap: 8,
+      }}>
+        <span style={{
+          fontSize: 12, color: "rgba(255,255,255,0.4)",
+          letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 600,
+        }}>
+          Educación Financiera Premium
+        </span>
+        <div style={{
+          width: 6, height: 6, borderRadius: "50%",
+          background: "#0F62FE",
+          boxShadow: "0 0 8px rgba(15,98,254,0.8)",
+        }} />
+      </div>
+
+      {/* Card */}
+      <div style={{ position: "relative", zIndex: 2, width: "100%", maxWidth: 460 }}>
+
+        {/* Glow ring */}
+        <div aria-hidden style={{
+          position: "absolute", inset: -2, borderRadius: 36,
+          background: "linear-gradient(135deg, rgba(15,98,254,0.3), rgba(0,86,231,0.15), transparent 60%)",
+          filter: "blur(20px)", zIndex: -1,
+        }} />
+
         <SignUp
           appearance={{
             baseTheme: dark,
             elements: {
-              rootBox: "mx-auto",
-              card: "bg-[#050b14] border border-white/10 shadow-[0_0_80px_-20px_rgba(245,158,11,0.3)] rounded-[32px] overflow-hidden",
-              headerTitle: "text-4xl sm:text-5xl font-black tracking-tighter text-white mb-2 pb-2 border-b border-white/5",
-              headerSubtitle: "text-zinc-400 font-bold text-lg",
-              main: "gap-8 pb-4",
-              socialButtonsBlockButton: "bg-white/5 border border-white/10 hover:bg-white/10 hover:border-amber-500/50 transition-all duration-500 rounded-2xl h-14",
-              socialButtonsBlockButtonText: "text-white font-black tracking-tight text-base",
-              formButtonPrimary: "bg-gradient-to-r from-amber-500 via-amber-400 to-amber-500 bg-[length:200%_auto] hover:bg-right text-black font-black uppercase tracking-[0.25em] py-5 rounded-2xl shadow-2xl shadow-amber-500/30 transition-all duration-500 active:scale-95 text-sm",
-              formFieldLabel: "text-zinc-500 uppercase tracking-widest text-[11px] font-black mb-2 flex items-center gap-2",
-              formFieldInput: "bg-white/5 border-white/10 text-white rounded-2xl h-14 text-lg focus:ring-2 focus:ring-amber-500/40 focus:border-amber-500/40 transition-all",
-              footerActionLink: "text-amber-500 hover:text-amber-400 font-black transition-all hover:scale-105 inline-block underline decoration-amber-500/50 underline-offset-8",
-              identityPreviewText: "text-white font-black text-lg",
-              identityPreviewEditButtonIcon: "text-amber-500 w-5 h-5",
-              dividerLine: "bg-white/10 h-[1px]",
-              dividerText: "text-zinc-500 text-[11px] uppercase font-black tracking-[0.3em] px-4",
-              formFieldInputShowPasswordButton: "text-zinc-500 hover:text-amber-500",
-              footer: "bg-black/40 border-t border-white/10 py-6",
+              rootBox: "mx-auto w-full",
+              card: [
+                "relative w-full overflow-hidden",
+                "bg-[rgba(4,22,64,0.85)]",
+                "border border-[rgba(15,98,254,0.2)]",
+                "rounded-[32px]",
+                "shadow-[0_32px_80px_rgba(0,0,0,0.5),0_0_0_1px_rgba(15,98,254,0.1),inset_0_1px_0_rgba(255,255,255,0.05)]",
+                "backdrop-blur-[24px]",
+              ].join(" "),
+
+              headerTitle: [
+                "text-[28px] sm:text-[32px] font-black tracking-[-0.03em] text-white",
+                "pb-2",
+              ].join(" "),
+              headerSubtitle: "text-[rgba(255,255,255,0.45)] text-sm font-medium",
+
+              main: "gap-5 pb-2",
+
+              socialButtonsBlockButton: [
+                "group relative w-full h-[52px] rounded-2xl overflow-hidden",
+                "bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.08)]",
+                "hover:bg-[rgba(15,98,254,0.12)] hover:border-[rgba(15,98,254,0.4)]",
+                "transition-all duration-300",
+              ].join(" "),
+              socialButtonsBlockButtonText: "text-white font-semibold text-[15px] tracking-[-0.01em]",
+
+              formButtonPrimary: [
+                "w-full h-[52px] rounded-2xl font-bold text-[15px] tracking-[-0.01em]",
+                "bg-[#0F62FE] hover:bg-[#0043ce]",
+                "text-white",
+                "shadow-[0_8px_24px_rgba(15,98,254,0.45)]",
+                "hover:shadow-[0_12px_32px_rgba(15,98,254,0.55)]",
+                "transition-all duration-300 active:scale-[0.98]",
+                "border-0",
+              ].join(" "),
+
+              formFieldLabel: "text-[rgba(255,255,255,0.5)] text-[11px] uppercase tracking-[0.12em] font-semibold mb-1.5",
+              formFieldInput: [
+                "w-full h-[50px] rounded-xl px-4",
+                "bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.08)]",
+                "text-white text-[15px] placeholder:text-[rgba(255,255,255,0.25)]",
+                "focus:border-[rgba(15,98,254,0.6)] focus:bg-[rgba(15,98,254,0.06)]",
+                "focus:ring-2 focus:ring-[rgba(15,98,254,0.25)] focus:outline-none",
+                "transition-all duration-200",
+              ].join(" "),
+              formFieldInputShowPasswordButton: "text-[rgba(255,255,255,0.3)] hover:text-[rgba(15,98,254,0.9)] transition-colors",
+
+              footerActionLink: [
+                "text-[#1983FD] hover:text-[#5aabff] font-semibold",
+                "transition-colors duration-200",
+              ].join(" "),
+              footerAction: "text-[rgba(255,255,255,0.4)] text-sm",
+
+              identityPreviewText: "text-white font-semibold",
+              identityPreviewEditButtonIcon: "text-[#0F62FE]",
+
+              dividerLine: "bg-[rgba(255,255,255,0.07)]",
+              dividerText: "text-[rgba(255,255,255,0.3)] text-[11px] uppercase tracking-[0.2em] font-semibold",
+
+              footer: "bg-[rgba(0,0,0,0.25)] border-t border-[rgba(255,255,255,0.05)] py-5",
+
+              formFieldErrorText: "text-red-400 text-sm mt-1",
+              alertText: "text-white text-sm",
+              alert: "bg-red-500/10 border border-red-500/20 rounded-xl",
             },
             variables: {
-              colorPrimary: '#f59e0b',
-              colorBackground: '#050b14',
+              colorPrimary: '#0F62FE',
+              colorBackground: '#041640',
               colorText: '#ffffff',
-              colorInputBackground: 'transparent',
+              colorTextSecondary: 'rgba(255,255,255,0.5)',
+              colorInputBackground: 'rgba(255,255,255,0.04)',
               colorInputText: '#ffffff',
-              borderRadius: '1.25rem',
+              colorNeutral: 'rgba(255,255,255,0.15)',
+              colorDanger: '#f87171',
+              borderRadius: '1rem',
               fontSize: '1rem',
+              fontFamily: '"Inter", "Geist", ui-sans-serif, system-ui, sans-serif',
+              spacingUnit: '1rem',
             }
           }}
           routing="path"
@@ -89,9 +183,21 @@ export default function BIZENSignupPage() {
           signInUrl="/login"
           socialButtonsPlacement="top"
           socialButtonsVariant="blockButton"
-          forceRedirectUrl="/dashboard"
-          fallbackRedirectUrl="/dashboard"
+          forceRedirectUrl="/onboarding"
+          fallbackRedirectUrl="/onboarding"
         />
+      </div>
+
+      {/* Bottom badge */}
+      <div style={{
+        position: "absolute", bottom: 24, left: "50%", transform: "translateX(-50%)",
+        zIndex: 10, display: "flex", alignItems: "center", gap: 6,
+      }}>
+        <div style={{ width: 5, height: 5, borderRadius: "50%", background: "#0F62FE", boxShadow: "0 0 6px rgba(15,98,254,0.9)" }} />
+        <span style={{ fontSize: 11, color: "rgba(255,255,255,0.25)", letterSpacing: "0.12em", textTransform: "uppercase" }}>
+          Plataforma segura · TLS 1.3
+        </span>
+        <div style={{ width: 5, height: 5, borderRadius: "50%", background: "#0F62FE", boxShadow: "0 0 6px rgba(15,98,254,0.9)" }} />
       </div>
 
     </main>
