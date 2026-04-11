@@ -1,14 +1,14 @@
 import { NextRequest, NextResponse } from "next/server"
-import { createSupabaseServer } from "@/lib/supabase/server"
+import { requireAuth } from "@/lib/auth/api-auth"
+import { prisma } from "@/lib/prisma"
 
 export async function POST(request: NextRequest) {
     try {
-        const supabase = await createSupabaseServer()
-        const { data: { user }, error: authError } = await supabase.auth.getUser()
-
-        if (authError || !user) {
-            return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+        const authResult = await requireAuth(request)
+        if (!authResult.success) {
+            return authResult.response
         }
+        const { user } = authResult.data
 
         const body = await request.json()
         const { username, bio, avatar, birthDate, schoolId } = body
@@ -17,67 +17,50 @@ export async function POST(request: NextRequest) {
         if (!username || username.trim().length < 3) {
             return NextResponse.json({ error: "El nombre de usuario debe tener al menos 3 caracteres" }, { status: 400 })
         }
-        if (username.trim().length > 30) {
-            return NextResponse.json({ error: "El nombre de usuario no puede tener más de 30 caracteres" }, { status: 400 })
-        }
-        if (!/^[a-zA-Z0-9_.-]+$/.test(username.trim())) {
-            return NextResponse.json({ error: "Solo se permiten letras, números, guiones y puntos" }, { status: 400 })
-        }
-
+        
         const trimmedUser = username.trim()
 
         // Uniqueness check
-        try {
-            const { prisma } = await import("@/lib/prisma")
-            const existing = await prisma.profile.findFirst({
-                where: { 
-                    nickname: { equals: trimmedUser, mode: 'insensitive' },
-                    NOT: { userId: user.id }
-                }
-            })
-            if (existing) {
-                return NextResponse.json({ error: "Este nombre de usuario ya está en uso. Por favor elige otro." }, { status: 400 })
+        const existing = await prisma.profile.findFirst({
+            where: { 
+                nickname: { equals: trimmedUser, mode: 'insensitive' },
+                NOT: { userId: user.id }
             }
-        } catch (dbError) {
-            console.error("Uniqueness check error:", dbError)
+        })
+        if (existing) {
+            return NextResponse.json({ error: "Este nombre de usuario ya está en uso. Por favor elige otro." }, { status: 400 })
         }
 
-        // Update user metadata to mark onboarding as complete
-        const { error: updateError } = await supabase.auth.updateUser({
-            data: {
-                username: trimmedUser,
+        // Update database profile
+        console.log(`[onboarding] Updating profile for user ${user.id}...`)
+        await prisma.profile.upsert({
+            where: { userId: user.id },
+            update: {
+                nickname: trimmedUser,
                 bio: bio?.trim() || "",
-                avatar: avatar || { type: "emoji", value: "👤" },
-                birth_date: birthDate || null,
-                school_id: schoolId || null,
-                onboarding_complete: true,
+                birthDate: birthDate ? new Date(birthDate) : null,
+                schoolId: schoolId || null,
+                dnaProfile: avatar // Store avatar choice here
+            },
+            create: {
+                userId: user.id,
+                email: user.email || "",
+                nickname: trimmedUser,
+                fullName: user.user_metadata?.full_name || trimmedUser,
+                xp: 0,
+                bizcoins: 0,
+                role: 'particular',
+                onboardingComplete: true,
+                bio: bio?.trim() || "",
+                birthDate: birthDate ? new Date(birthDate) : null,
+                schoolId: schoolId || null,
+                dnaProfile: avatar
             }
         })
 
-        if (updateError) {
-            console.error("Error updating user metadata:", updateError)
-            return NextResponse.json({ error: "Error al guardar el perfil" }, { status: 500 })
-        }
-
-        // Also update the nickname in the profiles table if it exists
-        try {
-            const { prisma } = await import("@/lib/prisma")
-            await prisma.profile.updateMany({
-                where: { userId: user.id },
-                data: {
-                    nickname: trimmedUser,
-                    ...(birthDate ? { birthDate: new Date(birthDate) } : {}),
-                    ...(schoolId ? { schoolId } : {})
-                } as any
-            })
-        } catch (prismaError) {
-            // Non-fatal — profile table update failure shouldn't block onboarding
-            console.warn("Could not update profile nickname:", prismaError)
-        }
-
         return NextResponse.json({ success: true })
-    } catch (error) {
-        console.error("Onboarding complete error:", error)
-        return NextResponse.json({ error: "Internal server error" }, { status: 500 })
+    } catch (error: any) {
+        console.error("Onboarding complete fatal error:", error.message || error)
+        return NextResponse.json({ error: "Internal server error", details: error.message }, { status: 500 })
     }
 }
