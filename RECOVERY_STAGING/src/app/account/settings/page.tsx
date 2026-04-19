@@ -1,0 +1,338 @@
+"use client"
+
+import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
+import { useAuth } from "@/contexts/AuthContext"
+import Link from "next/link"
+import { LogOut, ArrowLeft } from "lucide-react"
+import PageLoader from "@/components/PageLoader"
+
+export default function AccountSettingsPage() {
+  const { user, loading } = useAuth()
+  const router = useRouter()
+
+  const [nickname, setNickname] = useState("")
+  const [notifyEmail, setNotifyEmail] = useState(true)
+  const [notifyInApp, setNotifyInApp] = useState(true)
+  const [saving, setSaving] = useState(false)
+  const [message, setMessage] = useState("")
+  const [loadingData, setLoadingData] = useState(true)
+
+  useEffect(() => {
+    const bodyEl = document.body
+    if (bodyEl) {
+      bodyEl.style.background = "#ffffff"
+      bodyEl.style.backgroundAttachment = "fixed"
+    }
+    return () => {
+      bodyEl.style.background = "#fff"
+      bodyEl.style.backgroundAttachment = "scroll"
+    }
+  }, [])
+
+  useEffect(() => {
+    if (loading) return
+    if (!user) {
+      window.open("/login", "_blank")
+      return
+    }
+    fetchSettings()
+  }, [user, loading, router])
+
+  const fetchSettings = async () => {
+    try {
+      setLoadingData(true)
+      const response = await fetch('/api/profile/me')
+      if (response.ok) {
+        const data = await response.json()
+        setNickname(data.nickname || '')
+      }
+    } catch (error) {
+      console.error("Error fetching settings:", error)
+    } finally {
+      setLoadingData(false)
+    }
+  }
+
+  const handleSave = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (saving) return
+
+    try {
+      setSaving(true)
+      setMessage("")
+
+      const response = await fetch('/api/profile/me', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          nickname: nickname.trim(),
+          notifyEmail,
+          notifyInApp
+        })
+      })
+
+      if (response.ok) {
+        setMessage("✅ Configuración guardada")
+        setTimeout(() => setMessage(""), 3000)
+      } else {
+        const error = await response.json()
+        setMessage(`❌ ${error.error || 'Error al guardar'}`)
+      }
+    } catch (error) {
+      console.error("Error saving settings:", error)
+      setMessage("❌ Error al guardar")
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const { signOut } = useAuth()
+  const handleSwitchAccount = async () => {
+    try {
+      await signOut()
+      // Clear all local storage / cookies if needed? router.push handles it
+      router.push('/login')
+    } catch (error) {
+      console.error("Error switching account:", error)
+    }
+  }
+
+  if (loading || loadingData) {
+    return <PageLoader />
+  }
+
+  if (!user) return null
+
+  return (
+    <div className="settings-outer" style={{
+      position: "relative",
+      minHeight: "100vh",
+      paddingTop: 40,
+      paddingBottom: 80,
+      background: "#FBFAF5",
+      backgroundAttachment: "fixed"
+    }}>
+      <style>{`
+        /* Mobile - no special offset */
+        @media (max-width: 767px) {
+          .settings-main { width: 100% !important; max-width: 100% !important; padding: 20px 16px !important; }
+        }
+        
+        /* Tablet/iPad (768px-1160px): Account for left sidebar (220px) */
+        @media (min-width: 768px) and (max-width: 1160px) {
+          .settings-main {
+            width: 100% !important;
+            max-width: 100% !important;
+            margin-left: 0 !important;
+          }
+        }
+        
+        /* Desktop (≥1161px): Account for left sidebar (280px) */
+        @media (min-width: 1161px) {
+          .settings-main {
+            width: 100% !important;
+            max-width: 100% !important;
+            margin-left: 0 !important;
+          }
+        }
+      `}</style>
+      <main className="settings-main" style={{
+        position: "relative",
+        maxWidth: 800,
+        margin: "0 auto",
+        padding: "clamp(20px, 4vw, 40px)",
+        zIndex: 1
+      }}>
+        <h1 style={{ margin: "0 0 8px", fontSize: 32, fontWeight: 500, color: "#1E40AF" }}>
+          Configuración de Cuenta
+        </h1>
+        <p style={{ margin: "0 0 32px", color: "#374151", fontSize: 15, fontWeight: 500 }}>
+          Gestiona tu perfil del foro y preferencias
+        </p>
+
+        <div style={{
+          padding: 32,
+          background: "rgba(255, 255, 255, 0.4)",
+          backdropFilter: "blur(20px)",
+          borderRadius: 20,
+          border: "2px solid rgba(255, 255, 255, 0.6)",
+          boxShadow: "0 8px 32px rgba(31, 38, 135, 0.15)"
+        }}>
+          <form onSubmit={handleSave}>
+            {/* Nickname */}
+            <div style={{ marginBottom: 24 }}>
+              <label style={{
+                display: "block",
+                marginBottom: 8,
+                fontSize: 15,
+                fontWeight: 500,
+                color: "#1E40AF"
+              }}>
+                Apodo (Pseudónimo del Foro)
+              </label>
+              <input
+                type="text"
+                value={nickname}
+                onChange={(e) => setNickname(e.target.value)}
+                placeholder="¿Qué apodo quieres usar?"
+                maxLength={30}
+                style={{
+                  width: "100%",
+                  padding: "14px 16px",
+                  fontSize: 15,
+                  fontWeight: 500,
+                  border: "2px solid rgba(255, 255, 255, 0.6)",
+                  borderRadius: 12,
+                  background: "rgba(255, 255, 255, 0.6)",
+                  color: "#374151",
+                  boxSizing: "border-box"
+                }}
+              />
+              <div style={{ marginTop: 6, fontSize: 12, color: "#6B7280", fontWeight: 500 }}>
+                Tu apodo se mostrará en lugar de tu nombre real en el foro
+              </div>
+            </div>
+
+            {/* Email Notifications */}
+            <div style={{ marginBottom: 24 }}>
+              <label style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 12,
+                cursor: "pointer",
+                fontSize: 15,
+                fontWeight: 500,
+                color: "#374151"
+              }}>
+                <input
+                  type="checkbox"
+                  checked={notifyEmail}
+                  onChange={(e) => setNotifyEmail(e.target.checked)}
+                  style={{ width: 18, height: 18, cursor: "pointer" }}
+                />
+                Recibir notificaciones por correo
+              </label>
+            </div>
+
+            {/* In-App Notifications */}
+            <div style={{ marginBottom: 24 }}>
+              <label style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 12,
+                cursor: "pointer",
+                fontSize: 15,
+                fontWeight: 500,
+                color: "#374151"
+              }}>
+                <input
+                  type="checkbox"
+                  checked={notifyInApp}
+                  onChange={(e) => setNotifyInApp(e.target.checked)}
+                  style={{ width: 18, height: 18, cursor: "pointer" }}
+                />
+                Recibir notificaciones en la aplicación
+              </label>
+            </div>
+
+            {/* Message */}
+            {message && (
+              <div style={{
+                padding: 16,
+                background: message.includes('✅') ? "rgba(16, 185, 129, 0.1)" : "rgba(239, 68, 68, 0.1)",
+                borderRadius: 12,
+                marginBottom: 24,
+                fontSize: 14,
+                fontWeight: 500,
+                color: message.includes('✅') ? "#10B981" : "#EF4444"
+              }}>
+                {message}
+              </div>
+            )}
+
+            {/* Danger Zone / Account Actions */}
+            <div style={{
+              marginTop: 40,
+              paddingTop: 32,
+              borderTop: "2px dashed rgba(30, 64, 175, 0.1)"
+            }}>
+              <h3 style={{ margin: "0 0 16px", fontSize: 16, fontWeight: 500, color: "#1E40AF" }}>
+                Sesión
+              </h3>
+              <button
+                type="button"
+                onClick={handleSwitchAccount}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 10,
+                  padding: "12px 20px",
+                  background: "#FEF2F2",
+                  color: "#DC2626",
+                  border: "2px solid #FEE2E2",
+                  borderRadius: 12,
+                  fontSize: 14,
+                  fontWeight: 500,
+                  cursor: "pointer",
+                  transition: "all 0.2s ease",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = "#FEE2E2"
+                  e.currentTarget.style.transform = "translateY(-1px)"
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "#FEF2F2"
+                  e.currentTarget.style.transform = "translateY(0)"
+                }}
+              >
+                <LogOut size={18} />
+                Cambiar de Cuenta
+              </button>
+            </div>
+
+            {/* Buttons */}
+            <div style={{ display: "flex", gap: 12, marginTop: 40 }}>
+              <button
+                type="submit"
+                disabled={saving}
+                style={{
+                  padding: "14px 28px",
+                  background: saving ? "#9CA3AF" : "linear-gradient(135deg, #0B71FE 0%, #4A9EFF 100%)",
+                  color: "white",
+                  border: "none",
+                  borderRadius: 12,
+                  fontSize: 15,
+                  fontWeight: 500,
+                  cursor: saving ? "not-allowed" : "pointer",
+                  boxShadow: "0 4px 12px rgba(11, 113, 254, 0.3)",
+                }}
+              >
+                {saving ? "Guardando..." : "Guardar Cambios"}
+              </button>
+
+              <Link
+                href="/forum"
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  padding: "14px 28px",
+                  background: "rgba(255, 255, 255, 0.6)",
+                  color: "#374151",
+                  border: "none",
+                  borderRadius: 12,
+                  fontSize: 15,
+                  fontWeight: 500,
+                  textDecoration: "none",
+                }}
+              >
+                Volver al Foro
+              </Link>
+            </div>
+          </form>
+        </div>
+      </main>
+    </div>
+  )
+}
+

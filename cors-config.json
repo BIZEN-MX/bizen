@@ -1,0 +1,12 @@
+[
+  {
+    "origin": [
+      "https://www.bizen.mx",
+      "https://bizen.mx",
+      "http://localhost:3000"
+    ],
+    "method": ["GET", "HEAD", "OPTIONS"],
+    "responseHeader": ["Content-Type", "Access-Control-Allow-Origin", "Range"],
+    "maxAgeSeconds": 3600
+  }
+]

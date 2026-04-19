@@ -1,0 +1,91 @@
+{
+  "courses": [
+    {
+      "title": "Business Fundamentals",
+      "description": "Learn the essential concepts of business and entrepreneurship",
+      "level": "Beginner",
+      "isActive": true,
+      "units": [
+        {
+          "title": "Module 1: Introduction to Business",
+          "order": 1,
+          "isLocked": false,
+          "lessons": [
+            {
+              "title": "What is Business?",
+              "contentType": "video",
+              "order": 1,
+              "objectives": [
+                {
+                  "title": "Understand business basics",
+                  "description": "Learn what business is and why it matters"
+                }
+              ],
+              "quizzes": [
+                {
+                  "title": "Business Basics Quiz",
+                  "passScore": 70,
+                  "totalPoints": 100,
+                  "questions": [
+                    {
+                      "type": "mcq",
+                      "prompt": "What is the primary goal of a business?",
+                      "order": 1,
+                      "options": [
+                        { "text": "To make a profit", "isCorrect": true },
+                        { "text": "To help people", "isCorrect": false },
+                        { "text": "To create jobs", "isCorrect": false },
+                        { "text": "To pay taxes", "isCorrect": false }
+                      ]
+                    },
+                    {
+                      "type": "truefalse",
+                      "prompt": "All businesses need investors to start.",
+                      "order": 2,
+                      "options": [
+                        { "text": "True", "isCorrect": false },
+                        { "text": "False", "isCorrect": true }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "title": "Types of Businesses",
+              "contentType": "reading",
+              "order": 2,
+              "objectives": [
+                {
+                  "title": "Identify business types",
+                  "description": "Recognize different business structures"
+                }
+              ]
+            }
+          ],
+          "assignments": [
+            {
+              "title": "Business Plan Draft",
+              "type": "file",
+              "points": 100,
+              "dueAt": null
+            }
+          ]
+        },
+        {
+          "title": "Module 2: Marketing Basics",
+          "order": 2,
+          "isLocked": true,
+          "lessons": [
+            {
+              "title": "Introduction to Marketing",
+              "contentType": "video",
+              "order": 1
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+

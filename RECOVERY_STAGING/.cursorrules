@@ -1,0 +1,22 @@
+# BIZEN Implementation Rules
+
+## Billy & Insights
+- Billy's insights and all automated AI-generated splashes must last exactly **7 seconds** (7000ms).
+- Do not show Billy insights immediately before a Blitz Challenge to avoid overlay fatigue.
+
+## Lessons & Content
+- **Glossary**: Do not create separate glossary pages. The glossary must be interactive within the lessons.
+- **Auto-Highlighting**: All terms found in the lesson's glossary (extracted from metadata, info step titles, or [[term|definition]] tags) should be automatically highlighted in all lesson text.
+- **User Branding**: Content within lessons should address the user directly ("sigue implementando el usuario en las lecciones").
+
+## Roles & Dashboards
+- **Admin Dashboard**: Should NOT show student-specific gamification elements (XP, Streaks, Daily Missions).
+- **Teacher Dashboard**: Hide "Top 3 Podium" and other student-centric engagement tools that are irrelevant for teacher management.
+
+## Navigation
+- The Sidebar "Inicio" button must always lead to `/dashboard` (main entry point for students).
+- A persistent "Ir a hacer misión del día" button must be visible on all pages (except dashboard itself) if the mission is not yet completed.
+
+## Code Standards
+- Use `lucide-react` for standard icons.
+- Check `AuthContext` before redirecting based on roles.

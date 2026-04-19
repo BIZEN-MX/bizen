@@ -1,0 +1,32 @@
+# Audio files directory
+
+Place your audio files here for Billy to use.
+
+Recommended formats:
+- MP3 (best compatibility)
+- WAV (best quality)
+- OGG (good compression)
+
+Example structure:
+```
+audio/
+  welcome.mp3
+  modules/
+    m1-intro.mp3
+    m1-complete.mp3
+    m2-intro.mp3
+    m2-complete.mp3
+  quiz/
+    correct.mp3
+    incorrect.mp3
+  encouragement/
+    great-job.mp3
+    keep-going.mp3
+```
+
+Tips:
+- Keep files under 2MB each
+- Use 128-192 kbps bitrate
+- Keep messages under 15 seconds
+- Use consistent volume levels
+
