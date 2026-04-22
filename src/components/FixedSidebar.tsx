@@ -262,9 +262,10 @@ export default function FixedSidebar() {
   const rankingsActive = isActivePath("/rankings")
   const liveActive = isActivePath("/live")
 
-  const isAdminOrTeacher = dbProfile?.role === "school_admin" || dbProfile?.role === "teacher"
+  const isAdminOrTeacher = (dbProfile?.role === "school_admin" || dbProfile?.role === "teacher" || dbProfile?.role === "admin") && userEmail !== "diegopenita31@gmail.com" && userEmail !== "notifications@bizen.mx"
+  const isSuperAdmin = userEmail === "diego@bizen.mx"
   const canHostLive = !!user // All authenticated users can now create & host quizzes
-  const isStudentOrGuest = !isAdminOrTeacher
+  const isStudentOrGuest = !isAdminOrTeacher && !isSuperAdmin
   const iconSize = 24
 
   return (
@@ -344,20 +345,25 @@ export default function FixedSidebar() {
               alignItems: "flex-start",
               gap: "8px"
             }}>
-              <span style={{ display: "flex", alignItems: "baseline", gap: "2px" }}>
-                {isAnahuac && (
-                  <Image 
-                    src="/anahuac-logo.png" 
-                    alt="Anahuac" 
-                    width={28} 
-                    height={28} 
-                    style={{ objectFit: 'contain', marginRight: '6px' }}
-                  />
+              <span style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                {isAnahuac ? (
+                  <>
+                    <Image 
+                      src="/anahuac-logo.png" 
+                      alt="Anahuac" 
+                      width={38} 
+                      height={38} 
+                      style={{ objectFit: 'contain' }}
+                    />
+                    <span style={{ color: "#94a3b8", fontSize: "24px", fontWeight: 500, margin: "0 6px" }}>⨯</span>
+                    <span style={{ color: "var(--primary)", fontSize: "42px", fontWeight: 600, letterSpacing: "-2px" }}>BIZEN</span>
+                  </>
+                ) : (
+                  "BIZEN"
                 )}
-                {isAnahuac ? "LEONES" : "BIZEN"}
               </span>
 
-              {mounted && !loading && (() => {
+              {mounted && !loading && !isAnahuac && (() => {
                 const isPremium = dbProfile?.subscriptionStatus === 'active' || (dbProfile?.school?.licenses?.length > 0)
                 const isParticular = dbProfile?.role === 'particular' || !dbProfile?.role
                 return (
@@ -387,7 +393,6 @@ export default function FixedSidebar() {
                         </span>
                       );
                     })()}
-
                   </>
                 )
               })()}
@@ -515,7 +520,7 @@ export default function FixedSidebar() {
                 )}
 
                 {/* ── APRENDE FINANZAS (Cursos) ── */}
-                {user && isStudentOrGuest && (
+                {user && isStudentOrGuest && !isAdminOrTeacher && (
                     <button
                         data-tour-id="/courses"
                         onClick={() => navigateTo("/courses")}
@@ -562,7 +567,7 @@ export default function FixedSidebar() {
 
 
                 {/* ── BIZEN BITES ── */}
-                {user && isStudentOrGuest && (
+                {user && isStudentOrGuest && !isAdminOrTeacher && (
                     <button
                         data-tour-id="/bites"
                         onClick={() => navigateTo("/bites")}
@@ -618,7 +623,7 @@ export default function FixedSidebar() {
                 )}
 
                 {/* ── SIMULADORES SECTION ── */}
-                {user && isStudentOrGuest && (
+                {user && isStudentOrGuest && !isAdminOrTeacher && (
                     <button
                         data-tour-id="/simuladores"
                         onClick={() => navigateTo("/cash-flow")}
@@ -653,7 +658,7 @@ export default function FixedSidebar() {
 
 
                 {/* ── COMUNIDAD ── */}
-                {user && isStudentOrGuest && (
+                {user && isStudentOrGuest && !isAdminOrTeacher && (
                     <button
                         data-tour-id="/comunidad"
                         onClick={() => navigateTo("/comunidad")}
@@ -698,7 +703,7 @@ export default function FixedSidebar() {
                 )}
 
                 {/* ── TIENDA ── */}
-                {user && isStudentOrGuest && (
+                {user && isStudentOrGuest && !isAdminOrTeacher && (
                     <button
                         data-tour-id="/tienda"
                         onClick={() => navigateTo("/tienda")}
@@ -786,48 +791,9 @@ export default function FixedSidebar() {
                     </button>
                 )}
 
-                {/* ── FUNCIONES DE ADMINISTRADOR / MAESTRO ── */}
-                {isAdminOrTeacher && (
-                    <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-                        <button
-                            onClick={() => navigateTo("/teacher/dashboard")}
-                            style={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: 12,
-                                padding: "12px 14px",
-                                background: isCompactSidebar ? "transparent" : (pathname === "/teacher/dashboard" ? "#eff6ff" : "transparent"),
-                                border: "none",
-                                borderRadius: 10,
-                                cursor: "pointer",
-                                transition: "all 0.2s ease",
-                                fontSize: 14,
-                                fontWeight: pathname === "/teacher/dashboard" ? 500 : 400,
-                                textAlign: "left",
-                                color: pathname === "/teacher/dashboard" ? "#0B71FE" : "#64748B",
-                                ...compactButtonOverrides(pathname === "/teacher/dashboard")
-                            }}
-                            onMouseEnter={(e) => {
-                                if (!isCompactSidebar) {
-                                    e.currentTarget.style.background = "#f8fafc"
-                                    e.currentTarget.style.color = "#0B71FE"
-                                }
-                            }}
-                            onMouseLeave={(e) => {
-                                if (!isCompactSidebar) {
-                                    e.currentTarget.style.background = pathname === "/teacher/dashboard" ? "#eff6ff" : "transparent"
-                                    e.currentTarget.style.color = pathname === "/teacher/dashboard" ? "#0B71FE" : "#64748B"
-                                }
-                            }}
-                        >
-                            <BarChart2 size={iconSize} strokeWidth={pathname === "/teacher/dashboard" ? 2.5 : 2} />
-                            <span className="nav-item-label">Panel escolar</span>
-                        </button>
-                    </div>
-                )}
 
                 {/* ── CONFIGURACIÓN ── */}
-                {user && (
+                {user && !isAdminOrTeacher && (
                     <button
                         onClick={() => navigateTo("/configuracion")}
                         style={{
@@ -876,7 +842,7 @@ export default function FixedSidebar() {
 
 
           {/* User Profile Footer */}
-          {mounted && user && (
+          {mounted && user && !isAdminOrTeacher && !isSuperAdmin && (
             <div
               data-tour-id="/profile"
               onClick={() => navigateTo("/profile")}

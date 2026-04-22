@@ -37,7 +37,9 @@ export default function MobileBottomNav() {
   const t = useTranslation(settings.language)
   const [showAuthDialog, setShowAuthDialog] = useState(false)
 
-  const isAdminOrTeacher = dbProfile?.role === "school_admin" || dbProfile?.role === "teacher"
+  const userEmail = (user?.email || user?.emailAddresses?.[0]?.emailAddress || "").toLowerCase();
+  const isSuperAdmin = userEmail === "diego@bizen.mx"
+  const isAdminOrTeacher = dbProfile?.role === "school_admin" || dbProfile?.role === "teacher" || dbProfile?.role === "admin" || isSuperAdmin
   const canHostLive = isAdminOrTeacher || dbProfile?.role === "institutional" || dbProfile?.role === "student"
   const isStudentOrGuest = !isAdminOrTeacher
 
@@ -108,13 +110,6 @@ export default function MobileBottomNav() {
       protected: true
     },
     {
-      id: "teacher-courses",
-      label: "Cursos de la escuela",
-      icon: MapIcon,
-      path: "/teacher/courses",
-      protected: true
-    },
-    {
       id: "teacher-live",
       label: "Bizen Live",
       icon: Zap,
@@ -155,13 +150,15 @@ export default function MobileBottomNav() {
         protected: false
       }
     ] : []),
-    {
-      id: 'profile',
-      label: 'Perfil',
-      icon: User,
-      path: '/profile',
-      protected: true
-    },
+    ...(isAdminOrTeacher ? [] : [
+      {
+        id: 'profile',
+        label: 'Perfil',
+        icon: User,
+        path: '/profile',
+        protected: true
+      }
+    ]),
     ...(isStudentOrGuest ? [
       {
         id: 'tienda',

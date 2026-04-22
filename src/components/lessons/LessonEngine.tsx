@@ -34,6 +34,8 @@ import { SmartText } from "./SmartText"
 import { motion, AnimatePresence } from "framer-motion"
 import { GlossaryProvider } from "@/contexts/GlossaryContext"
 import { Billy } from "../Billy"
+import { useAuth } from "@/contexts/AuthContext"
+import ADNInsightPanel from "./ADNInsightPanel"
 
 interface LessonEngineProps {
   lessonSteps: LessonStep[]
@@ -54,6 +56,9 @@ interface LessonEngineProps {
  * Main lesson engine component that manages state and renders appropriate step components
  */
 export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange, isRepeat }: LessonEngineProps) {
+  const { dbProfile } = useAuth()
+  const adnProfile = dbProfile?.dnaProfile || "Sin Diagnosticar"
+
   const [state, dispatch] = useReducer(lessonReducer, {
     originalSteps: lessonSteps,
     allSteps: lessonSteps,
@@ -103,14 +108,30 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
     }
   }, [state.hasBuiltReviewSteps])
   const [lessonGlossary, setLessonGlossary] = useState<{ word: string, definition: string }[]>([])
+  const [globalGlossary, setGlobalGlossary] = useState<{ word: string, definition: string }[]>([])
   const [interactiveTermsByOrder, setInteractiveTermsByOrder] = useState<Map<number, { word: string, definition: string }[]>>(new Map())
+
+  // Fetch Global Glossary on mount
+  useEffect(() => {
+    fetch("/api/admin/glossary")
+      .then(r => r.json())
+      .then(data => {
+         if (data.terms) setGlobalGlossary(data.terms)
+      })
+      .catch(e => console.error("Failed to load global glossary", e))
+  }, [])
 
   // Collect terms and calculate FIRST OCCURRENCES per step (Feature: highlight once)
   useEffect(() => {
     if (!lessonSteps.length) return
     const allTermsMap: Record<string, string> = {}
     
-    // 1. Gather ALL available definitions first (from glossary data)
+    // 1(a). Overwrite/populate with Global Glossary FIRST (so local can override if needed, or vice-versa)
+    globalGlossary.forEach(term => {
+      if (term.word && term.definition) allTermsMap[term.word] = term.definition
+    })
+    
+    // 1(b). Gather ALL available local definitions
     lessonSteps.forEach(s => {
       const step = s as any
       if (step.data && step.data.glossary && Array.isArray(step.data.glossary)) {
@@ -139,10 +160,26 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
       const step = s as any
       const stepWords: { word: string; definition: string }[] = []
       
-      const fullText = (step.title + " " + step.body + " " + (step.aiInsight || "") + " " + (step.clue || "")).toLowerCase()
+      // Concat all possible text fields for term detection
+      const texts = [
+        step.title, 
+        step.body, 
+        step.question, 
+        step.statement, 
+        step.scenario, 
+        step.aiInsight, 
+        step.clue,
+        step.description,
+        step.billyResponse,
+        ...(step.options?.map((o: any) => o.label) || []),
+        ...(step.items?.map((i: any) => i.label) || []),
+        ...(step.beliefs?.map((b: any) => b.original) || []),
+        ...(step.beliefs?.flatMap((b: any) => b.healthyOptions?.map((ho: any) => ho.label)) || [])
+      ].filter(t => typeof t === "string" && t.length > 0);
+
+      const fullText = texts.join(" ").toLowerCase();
       
       finalGlossary.forEach(term => {
-        // Use a simple word boundary check
         const escaped = term.word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
         const re = new RegExp(`\\b${escaped}\\b`, 'i')
         
@@ -152,14 +189,13 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
         }
       })
 
-      
       if (stepWords.length > 0) {
         map.set(step.order, stepWords)
       }
     })
 
     setInteractiveTermsByOrder(map)
-  }, [lessonSteps])
+  }, [lessonSteps, globalGlossary])
 
   // ── Billy Empático (Feature 2) ───────────────────────────────────────────
   const [showBillyEmpathy, setShowBillyEmpathy] = useState(false)
@@ -437,7 +473,7 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
           dispatch({ type: "GO_TO_SUMMARY" })
         } else {
           // If already at end or no summary, exit
-          // console.log("[LessonEngine] Reached end of steps with no summary found or already at end. Calling onExit.");
+          onCompleteRef.current?.(stars, state.answersByStepId)
           onExit?.()
         }
       }
@@ -446,7 +482,7 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
       dispatch({ type: "NEXT_STEP" })
     } else {
       // Reached the absolute end of the array and no special transition occurred
-      // console.log("[LessonEngine] absolute end reached. index:", nextIndex, "allSteps:", state.allSteps.length, "Calling onExit.");
+      onCompleteRef.current?.(stars, state.answersByStepId)
       onExit?.()
     }
   }, [state.isContinueEnabled, state.currentStepIndex, state.allSteps, state.originalSteps, state.hasBuiltReviewSteps, state.incorrectSteps.length, stars, currentStep, state.isActionEnabled, isLastStep, isSummaryStep, state.answersByStepId, onExit])
@@ -474,8 +510,16 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
 
   if (!currentStep) return null
 
+  const stepType = currentStep.stepType || (currentStep as any).type;
+  const rawData = (currentStep as any).data;
+  const parsedData = typeof rawData === 'string' ? JSON.parse(rawData) : (rawData || {});
+
   const stepProps = {
-    step: currentStep as any,
+    step: { 
+      ...currentStep, 
+      ...parsedData,
+      stepType 
+    } as any,
     onAnswered: onStepAnswered,
     actionTrigger: state.actionTrigger,
     isContinueEnabled: state.isContinueEnabled,
@@ -485,8 +529,11 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
 
   const renderStep = () => {
     let content;
-    switch (currentStep.stepType) {
+    switch (stepType) {
       case "info":
+      case "story":
+      case "concept":
+      case "completion":
         content = <InfoStep {...stepProps} />
         break;
       case "mcq":
@@ -514,7 +561,7 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
         const assessmentTypes = ["mcq", "multi_select", "true_false", "order", "match", "fill_blanks", "image_choice", "blitz_challenge", "mindset_translator", "influence_detective", "swipe_sorter", "impulse_meter", "mindset_translator", "influence_detective", "swipe_sorter", "narrative_check", "swipe_sorter"]
         const assessmentSteps = state.originalSteps.filter(s => {
           const step = s as any
-          return step.isAssessment ?? assessmentTypes.includes(step.stepType)
+          return step.isAssessment ?? assessmentTypes.includes(stepType)
         })
         const accuracy = assessmentSteps.length > 0 
           ? Math.max(0, Math.round(((assessmentSteps.length - state.totalMistakes) / assessmentSteps.length) * 100))
@@ -524,6 +571,7 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
         const isExamStep = currentStep.id.startsWith("eval-") || currentStep.id.toLowerCase().includes("examen") || currentStep.id.toLowerCase().includes("evaluacion")
         content = (
           <SummaryStep 
+            key={currentStep.id}
             {...stepProps} 
             step={{ 
               ...stepProps.step, 
@@ -539,35 +587,39 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
         break;
       }
       case "mini_sim":
-        content = <MiniSimStep {...stepProps} />
+        content = <MiniSimStep key={currentStep.id} {...stepProps} />
+        break;
+      case "order_priority": // Fallback for the new curriculum naming convention
+      case "order":
+        content = <OrderStep key={currentStep.id} {...(stepProps as any)} />
         break;
       case "billy_talks":
-        content = <BillyTalksStep {...stepProps} />
+        content = <BillyTalksStep key={currentStep.id} {...stepProps} />
         break;
       case "blitz_challenge":
-        content = <BlitzChallengeStep {...stepProps} />
+        content = <BlitzChallengeStep key={currentStep.id} {...stepProps} />
         break;
       case "impulse_meter":
-        content = <ImpulseMeterStep {...stepProps} />
+        content = <ImpulseMeterStep key={currentStep.id} {...stepProps} />
         break;
       case "mindset_translator":
-        content = <MindsetTranslatorStep {...stepProps} />
+        content = <MindsetTranslatorStep key={currentStep.id} {...stepProps} />
         break;
       case "influence_detective":
-        content = <InfluenceDetectiveStep {...stepProps} />
+        content = <InfluenceDetectiveStep key={currentStep.id} {...stepProps} />
         break;
       case "swipe_sorter":
-        content = <SwipeSorterStep {...(stepProps as any)} />
+        content = <SwipeSorterStep key={currentStep.id} {...(stepProps as any)} />
         break;
       case "narrative_check":
-        content = <NarrativeCheckStep {...(stepProps as any)} />
+        content = <NarrativeCheckStep key={currentStep.id} {...(stepProps as any)} />
         break;
       default:
-        console.warn("[LessonEngine] Unknown step type:", currentStep?.stepType);
+        console.warn("[LessonEngine] Unknown step type:", stepType);
         content = (
           <div style={{ padding: 40, textAlign: "center", color: "#64748b" }}>
             <p style={{ fontSize: 18, fontWeight: 500 }}>Ups, no pudimos cargar este paso.</p>
-            <p style={{ fontSize: 14 }}>Tipo: {(currentStep as any)?.stepType || "indefinido"}</p>
+            <p style={{ fontSize: 14 }}>Tipo detectado: {String(stepType || "indefinido")}</p>
           </div>
         )
     }
@@ -582,7 +634,7 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
           transition={{ type: "spring", stiffness: 300, damping: 30 }}
           style={{ width: "100%" }}
         >
-          <GlossaryProvider terms={currentStepInteractiveTerms}>
+          <GlossaryProvider terms={lessonGlossary}>
             {content}
           </GlossaryProvider>
         </motion.div>
@@ -605,7 +657,7 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
       const assessmentTypes = ["mcq", "multi_select", "true_false", "order", "match", "fill_blanks", "image_choice", "blitz_challenge", "mindset_translator", "influence_detective", "swipe_sorter", "impulse_meter", "mindset_translator", "influence_detective", "swipe_sorter", "narrative_check", "swipe_sorter"]
       const assessmentSteps = state.originalSteps.filter(s => {
         const step = s as any
-        return step.isAssessment ?? assessmentTypes.includes(step.stepType)
+        return step.isAssessment ?? assessmentTypes.includes(stepType)
       })
       const accuracy = assessmentSteps.length > 0 
         ? Math.max(0, Math.round(((assessmentSteps.length - state.totalMistakes) / assessmentSteps.length) * 100))
@@ -620,7 +672,7 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
     }
     if (isLastStep && isCorrect) return "Finalizar"
     if (!state.isContinueEnabled) {
-      if (currentStep.stepType === "info") return "Continuar"
+      if (stepType === "info" || stepType === "story" || stepType === "concept" || stepType === "completion") return "Continuar"
       if (isAssessment) return "Comprobar"
     }
     return (currentStep as any).continueLabel || "Continuar"
@@ -629,8 +681,8 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
   const footerButtonDisabled = !state.isContinueEnabled && !state.isActionEnabled && !isSummaryStep && !isLastStep
 
   const renderFooter = (isFixed: boolean = true) => {
-    const isTrueFalse = currentStep.stepType === "true_false"
-    const isBlitz = currentStep.stepType === "blitz_challenge"
+    const isTrueFalse = stepType === "true_false"
+    const isBlitz = stepType === "blitz_challenge"
     const blitzCorrect = isBlitz && isCorrect
 
     // Specifically hide explanation (feedbackBody) for true_false per request
@@ -701,12 +753,14 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
                 stars={stars}
                 isExam={isExam}
                 onExit={handleAttemptExit}
-                hasGlossary={lessonGlossary.length > 0}
+                hasGlossary={true} // Always show glossary per user request
                 onOpenGlossary={() => {
                   haptic.light()
                   setIsGlossaryOpen(true)
                 }}
               />
+
+
             </div>
           </div>
         )}
@@ -783,7 +837,11 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
               flex: 1,
             }}
           >
-            {renderStep()}
+            {currentStep ? renderStep() : (
+               <div style={{ padding: 40, textAlign: "center", color: "#64748b" }}>
+                <p style={{ fontSize: 18, fontWeight: 500 }}>Inicializando lección...</p>
+              </div>
+            )}
           </div>
         </div>
 
@@ -814,14 +872,12 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
                 width: "calc(100% - 48px)",
               }}
             >
-              <img
-                src="/billy_chatbot.png"
-                alt="Billy"
-                style={{ width: 48, height: 48, objectFit: "contain", flexShrink: 0 }}
-              />
+              <div style={{ width: 48, height: 48, borderRadius: "50%", background: "#3b82f6", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                <Zap size={24} color="white" />
+              </div>
               <div>
                 <p style={{ margin: 0, fontSize: 13, fontWeight: 800, color: "#93c5fd", letterSpacing: "0.04em" }}>
-                  BILLY INSIGHTS
+                  BIZEN INSIGHT
                 </p>
                 <p style={{ margin: "2px 0 0", fontSize: 14, fontWeight: 600, color: "white", lineHeight: 1.4 }}>
                   {((currentStep as any)?.aiInsight && (billyInsightsCount.current < 3 || billyInsightShownFor.current === currentStep?.id)) ? (currentStep as any).aiInsight :
@@ -1044,7 +1100,7 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
           showProgressBar={!onProgressChange}
           onExit={() => setIsExitModalOpen(true)}
           onOpenGlossary={() => setIsGlossaryOpen(true)}
-          hasGlossary={lessonGlossary.length > 0}
+          hasGlossary={true}
           footerContent={renderFooter(true)}
         >
           {renderStep()}
@@ -1142,32 +1198,54 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
                 display: "flex",
                 flexDirection: "column",
                 gap: 16,
+                justifyContent: lessonGlossary.length === 0 ? "center" : "flex-start",
+                alignItems: lessonGlossary.length === 0 ? "center" : "stretch",
               }}>
-                {lessonGlossary.map((term, i) => (
-                  <motion.div
-                    key={term.word}
-                    initial={{ opacity: 0, y: 12 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: i * 0.04 }}
-                    style={{
-                      padding: "18px 20px",
-                      background: "#F8FAFC",
-                      borderRadius: 20,
-                      border: "1px solid #F1F5F9",
-                      transition: "all 0.2s ease",
-                    }}
-                  >
-                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
-                       <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#0F62FE" }} />
-                       <div style={{ fontWeight: 800, color: "#0F62FE", fontSize: 16, letterSpacing: "-0.01em" }}>
-                        {term.word}
+                {lessonGlossary.length > 0 ? (
+                  lessonGlossary.map((term, i) => (
+                    <motion.div
+                      key={`${term.word}-${i}`}
+                      initial={{ opacity: 0, y: 12 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: i * 0.04 }}
+                      style={{
+                        padding: "18px 20px",
+                        background: "#F8FAFC",
+                        borderRadius: 20,
+                        border: "1px solid #F1F5F9",
+                        transition: "all 0.2s ease",
+                      }}
+                    >
+                      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
+                         <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#0F62FE" }} />
+                         <div style={{ fontWeight: 800, color: "#0F62FE", fontSize: 16, letterSpacing: "-0.01em" }}>
+                          {term.word}
+                        </div>
                       </div>
+                      <div style={{ fontSize: 14, color: "#475569", lineHeight: 1.6, fontWeight: 500 }}>
+                        {term.definition}
+                      </div>
+                    </motion.div>
+                  ))
+                ) : (
+                  <div style={{ textAlign: "center", padding: "40px 20px" }}>
+                    <div style={{ 
+                      width: 80, 
+                      height: 80, 
+                      background: "#F1F5F9", 
+                      borderRadius: "50%", 
+                      display: "flex", 
+                      alignItems: "center", 
+                      justifyContent: "center",
+                      margin: "0 auto 20px auto",
+                      color: "#94A3B8"
+                    }}>
+                      <Book size={40} />
                     </div>
-                    <div style={{ fontSize: 14, color: "#475569", lineHeight: 1.6, fontWeight: 500 }}>
-                      {term.definition}
-                    </div>
-                  </motion.div>
-                ))}
+                    <h4 style={{ margin: "0 0 8px 0", color: "#64748B", fontSize: 18, fontWeight: 700 }}>Aún no hay términos</h4>
+                    <p style={{ margin: 0, color: "#94A3B8", fontSize: 14 }}>Esta lección no contiene términos específicos en el glosario todavía.</p>
+                  </div>
+                )}
               </div>
 
               {/* Footer */}
@@ -1309,7 +1387,7 @@ const BillyInsightSplashOverlay = ({ isOpen, text, duration, onClose }: { isOpen
         }}
       >
         <motion.div initial={{ scale: 0.6, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} style={{ width: 100, height: 100, borderRadius: "50%", background: "linear-gradient(135deg, #1e3a8a, #2563eb)", display: "flex", alignItems: "center", justifyContent: "center", border: "3px solid rgba(147,197,253,0.4)" }}>
-          <img src="/billy_chatbot.png" alt="Billy" style={{ width: 80, height: 80, objectFit: "contain" }} />
+          <Zap size={48} color="#fff" />
         </motion.div>
         <motion.div initial={{ y: 16, opacity: 0 }} animate={{ y: 0, opacity: 1 }} style={{ marginTop: 24, fontSize: "clamp(18px, 4vw, 26px)", fontWeight: 700, color: "#ffffff", textAlign: "center", maxWidth: 480 }}>{text}</motion.div>
         <motion.div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 3, background: "rgba(255,255,255,0.06)" }}>
@@ -1325,7 +1403,9 @@ const ReviewSplashOverlay = ({ isOpen, onClose }: { isOpen: boolean, onClose: ()
     {isOpen && (
       <motion.div key="review-splash" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} style={{ position: "fixed", inset: 0, zIndex: 14000, background: "rgba(10, 20, 40, 0.96)", backdropFilter: "blur(16px)", display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}>
         <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} style={{ textAlign: "center", maxWidth: 420 }}>
-          <img src="/billy_chatbot.png" alt="Billy" style={{ width: 140, height: 140, marginBottom: 32 }} />
+          <div style={{ width: 140, height: 140, borderRadius: "50%", background: "rgba(59,130,246,0.1)", display: "flex", alignItems: "center", justifyContent: "center", border: "2px solid rgba(59,130,246,0.3)", margin: "0 auto 32px auto" }}>
+            <Zap size={64} color="#3b82f6" />
+          </div>
           <h2 style={{ fontSize: 32, fontWeight: 800, color: "#fff", marginBottom: 12 }}>Zona de Repaso</h2>
           <p style={{ fontSize: 18, color: "rgba(255,255,255,0.75)", marginBottom: 40 }}>¡Momento de maestría! Vamos a perfeccionar esos conceptos antes de terminar.</p>
           <button onClick={onClose} style={{ width: "100%", padding: "20px", background: "linear-gradient(135deg, #EF4444 0%, #B91C1C 100%)", color: "white", borderRadius: 20, border: "none", fontWeight: 800, fontSize: 18, cursor: "pointer" }}>¡ESTOY LISTO!</button>

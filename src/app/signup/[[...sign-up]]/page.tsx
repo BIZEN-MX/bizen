@@ -36,6 +36,18 @@ export default function BIZENSignupPage() {
           setHolderName(full || "NUEVO MIEMBRO")
         }
       }
+
+      // Email check for theme switching
+      if (target.name === "emailAddress" || target.type === "email") {
+        const val = target.value.toLowerCase()
+        const isInstitutional = val.endsWith("@anahuac.mx") || val.includes(".anahuac.mx") || val.endsWith("@bizen.mx")
+        
+        if (isInstitutional) {
+          setSelectedTheme("anahuac")
+        } else if (selectedTheme === "anahuac" && val.length > 3) {
+          setSelectedTheme("blue") // Default back to blue
+        }
+      }
     }
 
     document.addEventListener("input", handleInput)
@@ -83,7 +95,52 @@ export default function BIZENSignupPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <SignUp appearance={{ elements: { rootBox: "w-full", card: "w-full bg-transparent shadow-none border-none" } }} forceRedirectUrl="/dashboard" />
+            <SignUp 
+              appearance={{ 
+                baseTheme: undefined, // Force light base for white card
+                elements: { 
+                  rootBox: "w-full", 
+                  card: "w-full bg-white shadow-[0_24px_80px_rgba(0,0,0,0.2)] border border-slate-200 rounded-[2.5rem] p-8 md:p-10 overflow-hidden",
+                  main: "bg-white",
+                  header: "mb-6",
+                  headerLogo: "hidden",
+                  headerTitle: "text-slate-900 text-2xl font-bold tracking-tight text-left pb-1",
+                  headerSubtitle: "text-slate-500 text-left text-sm",
+                  formFieldLabel: "text-slate-700 font-bold text-[10px] uppercase tracking-wider mb-2 block",
+                  formFieldInput: "bg-slate-50 border-slate-200 focus:border-blue-600 focus:ring-4 focus:ring-blue-600/10 rounded-xl text-slate-900 placeholder-slate-400 h-12 transition-all px-4",
+                  formButtonPrimary: "bg-blue-600 hover:bg-blue-700 text-white rounded-xl h-12 transition-all shadow-lg text-sm font-semibold border-none mt-4 active:scale-[0.98]",
+                  footer: "bg-slate-50/50 border-t border-slate-100 p-8 md:p-10 -mx-8 md:-mx-10 -mb-8 md:-mb-10 mt-6",
+                  footerActionLink: "text-blue-600 hover:text-blue-700 font-bold",
+                  socialButtonsBlockButton: "bg-white border-slate-200 hover:bg-slate-50 rounded-xl text-slate-700 h-12 transition-all shadow-sm",
+                  socialButtonsBlockButtonText: "text-slate-700 font-medium text-sm",
+                  dividerLine: "bg-slate-100",
+                  dividerText: "text-slate-400 text-[10px] uppercase tracking-widest font-bold",
+                  formFieldAction: "text-blue-600 hover:text-blue-700 text-xs font-semibold transition-colors",
+                  alert: "bg-red-50 border-red-100 text-red-600 rounded-xl px-4 py-3",
+                  identityPreviewText: "text-slate-900",
+                  identityPreviewEditButton: "text-blue-600",
+                  otpCodeFieldInput: "bg-slate-50 border-slate-200 text-slate-900 rounded-xl focus:border-blue-600 h-12",
+                  formFieldInputShowPasswordButton: "text-slate-400 hover:text-slate-600 transition-colors",
+                  branding: "hidden",
+                },
+                variables: {
+                  colorPrimary: "#2563eb",
+                  colorBackground: "#ffffff",
+                  colorText: "#0f172a",
+                  colorInputBackground: "#f8fafc",
+                  colorInputText: "#0f172a",
+                  fontFamily: "var(--font-family)",
+                  colorTextSecondary: "#64748b",
+                },
+                layout: {
+                  shimmer: true,
+                  showOptionalFields: false,
+                  socialButtonsPlacement: "bottom",
+                  socialButtonsVariant: "blockButton",
+                }
+              }} 
+              afterSignUpUrl="/onboarding" 
+            />
             
             {/* Agreement Text */}
             <p style={{ 

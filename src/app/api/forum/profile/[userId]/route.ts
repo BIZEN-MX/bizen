@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
-import { createSupabaseServer } from "@/lib/supabase/server"
 import { prisma } from "@/lib/prisma"
+import { requireAuth } from "@/lib/auth/api-auth"
 
 export async function GET(
   request: NextRequest,
@@ -8,11 +8,10 @@ export async function GET(
 ) {
   try {
     const { userId } = await params
-    const supabase = await createSupabaseServer()
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    const authResult = await requireAuth(request)
 
-    if (authError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    if (!authResult.success) {
+      return authResult.response
     }
 
     const profile = (await prisma.profile.findUnique({
@@ -45,6 +44,7 @@ export async function GET(
     })) as any
 
     if (!profile) {
+      console.warn(`[API Forum Profile] Profile not found for userId: ${userId}`);
       return NextResponse.json({ error: "Profile not found" }, { status: 404 })
     }
 

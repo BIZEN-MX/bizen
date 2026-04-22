@@ -1,21 +1,18 @@
 import { NextRequest, NextResponse } from "next/server"
-import { createSupabaseServer } from "@/lib/supabase/server"
 import { prisma } from "@/lib/prisma"
+import { requireAuth } from "@/lib/auth/api-auth"
 
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ userId: string }> }
 ) {
   try {
-    const { userId } = await params
-    const supabase = await createSupabaseServer()
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    const { userId: targetUserId } = await params
+    const authResult = await requireAuth(request)
 
-    if (authError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    if (!authResult.success) {
+      return authResult.response
     }
-
-    const targetUserId = userId
 
     // Get followers and following counts for this user
     let followersCount = 0
@@ -31,7 +28,7 @@ export async function GET(
       })
     } catch (error) {
       console.error("Error fetching follow counts:", error)
-      // Return 0 if there's an error (table might not exist yet)
+      // Return 0 if there's an error
       followersCount = 0
       followingCount = 0
     }
@@ -45,4 +42,3 @@ export async function GET(
     return NextResponse.json({ error: "Failed to fetch profile stats" }, { status: 500 })
   }
 }
-

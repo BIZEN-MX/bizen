@@ -1,6 +1,7 @@
 "use client"
 
-import React, { useEffect, useState } from "react"
+import * as React from "react"
+import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
 import { useAuth } from "@/contexts/AuthContext"
@@ -158,8 +159,10 @@ export default function ProfilePage() {
   const [loadingAchievements, setLoadingAchievements] = useState(true)
   const [screenSize, setScreenSize] = useState(typeof window !== 'undefined' ? window.innerWidth : 1200)
   const [cardTheme, setCardTheme] = useState<CardTheme>("blue")
+  const [bannerTheme, setBannerTheme] = useState<string>("blue")
   const [savingTheme, setSavingTheme] = useState(false)
   const [isThemePickerOpen, setIsThemePickerOpen] = useState(false)
+  const [isBannerPickerOpen, setIsBannerPickerOpen] = useState(false)
   const [planPopoverOpen, setPlanPopoverOpen] = useState(false)
   const [transactions, setTransactions] = useState<WalletTransaction[]>([])
   const [loadingTransactions, setLoadingTransactions] = useState(true)
@@ -242,8 +245,18 @@ export default function ProfilePage() {
     if (!user) { router.push("/login"); return }
     
     if (!hasInitializedTheme.current) {
-      const currentTheme = dbProfile?.cardTheme || dbProfile?.card_theme || user.user_metadata?.cardTheme || "blue"
+      const isAdminOrTeacher = dbProfile?.role === "school_admin" || dbProfile?.role === "teacher" || dbProfile?.role === "admin"
+      const userEmail = (user?.emailAddresses?.[0]?.emailAddress || user?.email || "").toLowerCase()
+      const isSuperAdmin = userEmail === "diego@bizen.mx"
+      const canHostLive = !!user
+      const isAnahuacUser = userEmail.endsWith('@anahuac.mx') || userEmail.endsWith('@bizen.mx')
+      const currentTheme = dbProfile?.cardTheme || dbProfile?.card_theme || user.user_metadata?.cardTheme || (isAnahuacUser ? "anahuac" : "blue")
       setCardTheme(currentTheme as CardTheme)
+      
+      const storedBanner = localStorage.getItem("bizen_bannerTheme")
+      if (storedBanner) setBannerTheme(storedBanner as CardTheme)
+      else setBannerTheme(currentTheme as CardTheme)
+
       hasInitializedTheme.current = true
     }
     
@@ -336,6 +349,12 @@ export default function ProfilePage() {
     } finally { setSavingTheme(false) }
   }
 
+  const updateBannerTheme = (theme: string) => {
+    setBannerTheme(theme)
+    localStorage.setItem("bizen_bannerTheme", theme)
+    setIsBannerPickerOpen(false)
+  }
+
   const handleSignOut = async () => {
     if (!supabase) return;
     try {
@@ -344,8 +363,18 @@ export default function ProfilePage() {
     } catch { console.error("Error signing out") }
   }
 
+  const userEmail = (user?.email || user?.emailAddresses?.[0]?.emailAddress || "").toLowerCase();
+  const isSuperAdmin = userEmail === "diego@bizen.mx";
+  const isExcludedAdmin = (dbProfile?.role === 'teacher' || dbProfile?.role === 'school_admin' || dbProfile?.role === 'admin') && !isSuperAdmin;
+
+  useEffect(() => {
+    if (mounted && isExcludedAdmin) {
+      router.push("/teacher/dashboard");
+    }
+  }, [mounted, isExcludedAdmin]);
+
   if (loading || !mounted || loadingStats) return <PageLoader />
-  if (!user) return null
+  if (!user || isExcludedAdmin) return null
 
   const isSchoolAdmin = dbProfile?.role === 'school_admin'
   const isAdminOrTeacher = isSchoolAdmin || dbProfile?.role === 'teacher'
@@ -379,61 +408,40 @@ export default function ProfilePage() {
   const getPlanInfo = () => {
     const plan = getPlanTitle()
     if (plan === "BÁSICO") return {
-      label: "Plan Básico", color: "#0F62FE", bg: "white",
+      label: "Plan Básico", color: "#0f172a", bg: "white", textSub: "#64748b", textPro: "#0F62FE",
       desc: "Accede a lecciones gratuitas y a tu tarjeta BIZEN. Mejora a Pro para desbloquear todo el contenido.",
       cta: "Mejorar a BIZEN Pro — $179/mes"
     }
     if (plan === "PREMIUM") return {
-      label: "BIZEN Pro", color: "white", bg: "rgba(16,185,129,0.9)",
+      label: "BIZEN Pro", color: "#0f172a", bg: "rgba(255,255,255,0.95)", textSub: "#64748b", textPro: "#64748b",
       desc: "Tienes acceso ilimitado a todos los cursos, simuladores y herramientas premium de la plataforma.",
       cta: null
     }
     if (plan === "INSTITUCIONAL") return {
-      label: "Plan Institucional", color: "white", bg: "rgba(99,102,241,0.85)",
+      label: "Plan Institucional", color: "#0f172a", bg: "rgba(255,255,255,0.95)", textSub: "#64748b", textPro: "#64748b",
       desc: "Tu acceso es gestionado por tu institución educativa. Disfruta de todos los beneficios del plan.",
       cta: null
     }
     return null
   }
 
-  const statCards = [
-    { icon: <Flame size={20} color="#0F62FE" />, value: userStats?.currentStreak || 0, label: "Racha" },
-    { icon: <Zap size={20} color="#0F62FE" />, value: totalXp, label: "Total XP" },
-    { icon: <Award size={20} color="#0F62FE" />, value: achievements.filter(a => a.unlocked).length, label: "Logros" },
-    { icon: <Star size={20} color="#0F62FE" />, value: getLeagueTitle(level), label: "Liga" },
-  ]
-
-  // IMPORTANT: Admins must not have a traditional profile
-  if (isSchoolAdmin) {
-    return (
-      <div className="prof-outer min-h-screen bg-[#FBFAF5] flex items-center justify-center">
-        <div className="max-w-[500px] w-full text-center p-10 bg-white rounded-[32px] border-[1.5px] border-slate-200 shadow-[0_20px_50px_rgba(0,0,0,0.05)]">
-          <div className="mx-auto mb-6 w-[120px] h-[120px] rounded-full overflow-hidden flex items-center justify-center border-4 border-slate-100">
-            <AvatarDisplay avatar={{ type: "admin" }} size={120} />
-          </div>
-          <h1 className="text-[28px] font-black text-slate-900 mb-2">Cuenta de Administración</h1>
-          <p className="text-slate-500 text-[16px] mb-8">Este es un perfil institucional de gestión técnica. Las funciones sociales y de gamificación están desactivadas.</p>
-          
-          <div className="grid gap-3">
-            <div className="py-4 px-5 bg-slate-50 rounded-2xl border border-slate-100 flex justify-between items-center">
-              <span className="text-[13px] font-semibold text-slate-400">Rol Académico</span>
-              <span className="text-[13px] font-extrabold text-blue-600">Administrador Escolar</span>
-            </div>
-            <div className="py-4 px-5 bg-slate-50 rounded-2xl border border-slate-100 flex justify-between items-center">
-              <span className="text-[13px] font-semibold text-slate-400">Institución</span>
-              <span className="text-[13px] font-extrabold text-slate-900">{dbProfile?.school?.name || "Bizen Institute"}</span>
-            </div>
-          </div>
-
-          <button 
-            onClick={handleSignOut}
-            className="mt-10 w-full p-4 bg-red-500 text-white border-none rounded-2xl font-bold cursor-pointer hover:opacity-90 transition-opacity"
-          >
-            Cerrar Sesión Institucional
-          </button>
-        </div>
-      </div>
-    )
+  const getBannerThemeClasses = (theme: string) => {
+    switch (theme) {
+      case "emerald": return "from-emerald-900 to-emerald-500 shadow-[0_20px_40px_-12px_rgba(16,185,129,0.3)]"
+      case "violet": return "from-[#4c1d95] to-[#8b5cf6] shadow-[0_20px_40px_-12px_rgba(139,92,246,0.3)]"
+      case "pink": return "from-pink-900 to-pink-500 shadow-[0_20px_40px_-12px_rgba(236,72,153,0.3)]"
+      case "rose": return "from-rose-900 to-rose-500 shadow-[0_20px_40px_-12px_rgba(244,63,94,0.3)]"
+      case "amber": return "from-[#78350f] to-[#f59e0b] shadow-[0_20px_40px_-12px_rgba(245,158,11,0.3)]"
+      case "slate": return "from-[#0f172a] to-[#64748b] shadow-[0_20px_40px_-12px_rgba(100,116,139,0.3)]"
+      case "obsidian": return "from-[#0a0a0a] to-[#262626] shadow-[0_20px_40px_-12px_rgba(0,0,0,0.5)]"
+      case "indigo": return "from-indigo-900 to-indigo-500 shadow-[0_20px_40px_-12px_rgba(99,102,241,0.3)]"
+      case "cyan": return "from-cyan-900 to-cyan-500 shadow-[0_20px_40px_-12px_rgba(6,182,212,0.3)]"
+      case "fuchsia": return "from-fuchsia-900 to-fuchsia-500 shadow-[0_20px_40px_-12px_rgba(217,70,239,0.3)]"
+      case "teal": return "from-teal-900 to-teal-500 shadow-[0_20px_40px_-12px_rgba(20,184,166,0.3)]"
+      case "anahuac": return "from-[#8a2f00] to-[#FF5900] shadow-[0_20px_40px_-12px_rgba(255,89,0,0.3)]"
+      case "blue": return "from-[#0b1e5e] to-[#0F62FE] shadow-[0_20px_40px_-12px_rgba(15,98,254,0.3)]"
+      default: return "from-[#0b1e5e] to-[#0F62FE] shadow-[0_20px_40px_-12px_rgba(15,98,254,0.3)]"
+    }
   }
 
   return (
@@ -455,7 +463,7 @@ export default function ProfilePage() {
       `}</style>
 
       {/* Hero Banner with Identity */}
-      <div className="fade-up relative w-full mb-8 flex flex-col md:flex-row items-center md:items-end p-6 md:py-10 md:px-12 text-center md:text-left h-auto min-h-[180px] md:h-[260px] rounded-[20px] md:rounded-[32px] bg-gradient-to-br from-[#0b1e5e] to-[#0F62FE] shadow-[0_20px_40px_-12px_rgba(15,98,254,0.3)]">
+      <div className={`fade-up relative w-full mb-8 flex flex-col md:flex-row items-center md:items-end p-6 md:py-10 md:px-12 text-center md:text-left h-auto min-h-[180px] md:h-[260px] rounded-[20px] md:rounded-[32px] bg-gradient-to-br transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${getBannerThemeClasses(bannerTheme)}`}>
         
         <div className="relative z-10 flex gap-4 md:gap-6 items-center w-full flex-col md:flex-row text-center md:text-left">
           {/* Avatar Box in Banner */}
@@ -487,15 +495,48 @@ export default function ProfilePage() {
             <h1 className={`font-extrabold m-0 tracking-tight leading-[1.1] drop-shadow-[0_2px_8px_rgba(0,0,0,0.2)] ${screenSize < 768 ? 'text-[22px]' : 'text-[32px]'}`}>
               {displayName}
             </h1>
-            <div className={`flex items-center gap-2.5 mt-1 opacity-90 ${screenSize < 768 ? 'justify-center' : 'justify-start'}`}>
-              <span className="text-[13px] text-white/80 font-medium">@{nickname}</span>
-              <div className="w-[3px] h-[3px] rounded-full bg-white/40" />
+            <div className={`flex items-center gap-2.5 mt-2 opacity-90 ${screenSize < 768 ? 'justify-center' : 'justify-start'} flex-wrap`}>
+              <span className="text-[13px] text-white/80 font-medium whitespace-nowrap">@{nickname}</span>
+              <div className="hidden sm:block w-[3px] h-[3px] rounded-full bg-white/40" />
               <button 
                 onClick={() => router.push("/configuracion")}
-                className="flex items-center gap-1.5 text-white bg-white/10 border border-white/20 py-0.5 px-2.5 rounded-full text-[11px] font-bold cursor-pointer transition-colors hover:bg-white/20"
+                className="flex items-center gap-1.5 text-white bg-white/10 border border-white/20 py-0.5 px-2.5 rounded-full text-[11px] font-bold cursor-pointer transition-colors hover:bg-white/20 whitespace-nowrap"
               >
                 <Settings size={12} /> Editar Perfil
               </button>
+              <div className="relative">
+                <button 
+                  onClick={() => setIsBannerPickerOpen(!isBannerPickerOpen)}
+                  className="flex items-center gap-1.5 text-white bg-white/10 border border-white/20 py-0.5 px-2.5 rounded-full text-[11px] font-bold cursor-pointer transition-colors hover:bg-white/20 whitespace-nowrap"
+                >
+                  <Palette size={12} /> Fondo
+                </button>
+                {isBannerPickerOpen && (
+                  <div className="absolute left-0 sm:left-auto sm:right-0 top-8 mt-2 p-3 bg-white rounded-2xl border border-slate-100 shadow-xl w-[220px] z-50 text-left">
+                    <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3 ml-1">Color del Cover</div>
+                    <div className="flex flex-wrap gap-2.5">
+                      {[
+                        { id: "blue", hex: "#0F62FE" }, { id: "emerald", hex: "#10B981" }, { id: "violet", hex: "#8B5CF6" },
+                        { id: "pink", hex: "#EC4899" }, { id: "rose", hex: "#F43F5E" }, { id: "amber", hex: "#F59E0B" },
+                        { id: "slate", hex: "#64748B" }, { id: "obsidian", hex: "#1a1a1a" }, { id: "indigo", hex: "#6366f1" },
+                        { id: "cyan", hex: "#06b6d4" }, { id: "fuchsia", hex: "#d946ef" }, { id: "teal", hex: "#14b8a6" },
+                        { id: "anahuac", hex: "#FF5900" },
+                      ].map(t => (
+                        <button 
+                          key={t.id} 
+                          onClick={() => updateBannerTheme(t.id)} 
+                          className="w-7 h-7 rounded-full cursor-pointer hover:scale-110 transition-transform"
+                          style={{ 
+                            border: bannerTheme === t.id ? `2px solid ${t.hex}` : "2px solid white", 
+                            boxShadow: bannerTheme === t.id ? `0 0 10px ${t.hex}60` : "0 2px 4px rgba(0,0,0,0.1)",
+                            background: t.hex,
+                          }} 
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 
@@ -534,16 +575,16 @@ export default function ProfilePage() {
               >
                 {isBasic ? (
                   <>
-                    <div style={{ fontSize: 9, fontWeight: 900, color: "#0F62FE", letterSpacing: "0.1em", textTransform: "uppercase" }}>{screenSize < 768 ? "PRO" : "Mejora a Pro"}</div>
+                    <div style={{ fontSize: 9, fontWeight: 900, color: info.textPro, letterSpacing: "0.1em", textTransform: "uppercase" }}>{screenSize < 768 ? "PRO" : "Mejora a Pro"}</div>
                     <div style={{ display: "flex", alignItems: "baseline", gap: 3 }}>
-                      <span style={{ fontSize: 20, fontWeight: 950, color: "#0f172a", letterSpacing: "-0.02em", lineHeight: 1 }}>$179</span>
-                      <span style={{ fontSize: 10, color: "#64748b", fontWeight: 500 }}>/mes</span>
+                      <span style={{ fontSize: 20, fontWeight: 950, color: info.color, letterSpacing: "-0.02em", lineHeight: 1 }}>$179</span>
+                      <span style={{ fontSize: 10, color: info.textSub, fontWeight: 500 }}>/mes</span>
                     </div>
                   </>
                 ) : (
                   <>
-                    <div style={{ fontSize: 8, fontWeight: 700, color: "rgba(255,255,255,0.7)", letterSpacing: "0.12em", textTransform: "uppercase" }}>Tu Plan</div>
-                    <div style={{ fontSize: 14, fontWeight: 900, color: "white", letterSpacing: "-0.01em" }}>{info.label}</div>
+                    <div style={{ fontSize: 8, fontWeight: 700, color: info.textSub, letterSpacing: "0.12em", textTransform: "uppercase" }}>Tu Plan</div>
+                    <div style={{ fontSize: 14, fontWeight: 900, color: info.color, letterSpacing: "-0.01em" }}>{info.label}</div>
                   </>
                 )}
               </div>
@@ -712,7 +753,7 @@ export default function ProfilePage() {
                   <div className="bg-white py-0.5 px-2 rounded-md text-[9px] font-extrabold text-blue-600 border border-slate-200">{cardTheme.toUpperCase()}</div>
                 </div>
                 <div className="w-full flex flex-wrap gap-2.5">
-                  {(["blue", "emerald", "violet", "pink", "rose", "amber", "slate", "obsidian"] as CardTheme[]).map(t => (
+                  {(["blue", "emerald", "violet", "pink", "rose", "amber", "slate", "obsidian", "anahuac"] as CardTheme[]).map(t => (
                     <button 
                       key={t} 
                       onClick={() => updateCardTheme(t)} 
@@ -721,7 +762,7 @@ export default function ProfilePage() {
                       style={{ 
                         border: cardTheme === t ? "3px solid #0F62FE" : "2.5px solid white", 
                         boxShadow: cardTheme === t ? "0 0 12px rgba(15,98,254,0.3)" : "0 2px 6px rgba(0,0,0,0.08)",
-                        background: t === "obsidian" ? "#1a1a1a" : t === "blue" ? "#0F62FE" : t === "emerald" ? "#10B981" : t === "violet" ? "#8B5CF6" : t === "pink" ? "#EC4899" : t === "rose" ? "#F43F5E" : t === "amber" ? "#F59E0B" : "#64748B",
+                        background: t === "obsidian" ? "#1a1a1a" : t === "blue" ? "#0F62FE" : t === "emerald" ? "#10B981" : t === "violet" ? "#8B5CF6" : t === "pink" ? "#EC4899" : t === "rose" ? "#F43F5E" : t === "amber" ? "#F59E0B" : t === "anahuac" ? "#FF5900" : "#64748B",
                         transform: cardTheme === t ? "scale(1.1)" : "scale(1)"
                       }} 
                     />

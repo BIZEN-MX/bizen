@@ -95,7 +95,7 @@ export function ImageChoiceStep({
               shadowClass = "shadow-none"
             }
           } else if (isSelected) {
-            containerClasses += "bg-blue-50 border-[#0F62FE] text-blue-700 "
+            containerClasses += "bg-primary/5 border-primary text-primary "
             shadowClass = "shadow-[0_3px_0_0_#93C5FD]"
           } else {
             containerClasses += "bg-white border-gray-200 text-gray-700 "
@@ -138,7 +138,7 @@ export function ImageChoiceStep({
                     width: 24,
                     height: 24,
                     borderRadius: "50%",
-                    background: isCorrect ? "#0F62FE" : "#EF4444",
+                    background: isCorrect ? "var(--primary)" : "#EF4444",
                     color: "white",
                     display: "flex",
                     alignItems: "center",

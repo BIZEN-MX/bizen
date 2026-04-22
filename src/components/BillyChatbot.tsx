@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { createPortal } from "react-dom"
 import { motion, AnimatePresence, useDragControls } from "framer-motion"
 import { useAuth } from "@/contexts/AuthContext"
@@ -13,7 +13,8 @@ import {
   Trash, 
   Send,
   MoreVertical,
-  Minus
+  Minus,
+  MessageCircle
 } from "lucide-react"
 import { Billy } from "./Billy"
 
@@ -27,6 +28,7 @@ interface Message {
 export default function BillyChatbot() {
   const pathname = usePathname()
   const [isOpen, setIsOpen] = useState(false)
+  const router = useRouter()
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState("")
   const [isLoading, setIsLoading] = useState(false)
@@ -36,11 +38,15 @@ export default function BillyChatbot() {
   const [portal, setPortal] = useState<HTMLElement | null>(null)
   const [hasUnread, setHasUnread] = useState(false)
   const [isListening, setIsListening] = useState(false)
+  const [userContext, setUserContext] = useState<any>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const dragControls = useDragControls()
-  const { dbProfile } = useAuth()
+  const { dbProfile, user } = useAuth()
+  const adnProfile = dbProfile?.dnaProfile || "Sin Diagnosticar"
   const userName = dbProfile?.firstName || dbProfile?.fullName?.split(' ')[0] || "Estudiante"
+  const userEmail = user?.email?.toLowerCase() || ""
+  const isAnahuac = userEmail.endsWith('@anahuac.mx') || userEmail.endsWith('@bizen.mx')
 
   useEffect(() => {
     setIsHydrated(true)
@@ -102,6 +108,26 @@ export default function BillyChatbot() {
       if (!isMobile) {
         setTimeout(() => inputRef.current?.focus({ preventScroll: true }), 300)
       }
+      
+      // Fetch fresh context when opening chat for "Real Analysis"
+      if (!userContext) {
+        fetch("/api/dashboard-init")
+          .then(res => res.json())
+          .then(data => {
+            if (data.success) {
+              setUserContext({
+                stats: data.stats,
+                transactions: data.transactions?.slice(0, 5),
+                diagnostic: data.diagnostic,
+                progress: data.progress?.length || 0,
+                achievements: data.achievements?.map((a:any) => a.achievement?.name),
+                investments: data.investments,
+                inventory: data.inventory
+              })
+            }
+          })
+          .catch(err => console.error("Error fetching Billy context", err))
+      }
     }
   }, [isOpen, isMobile])
 
@@ -124,6 +150,8 @@ export default function BillyChatbot() {
           xp: dbProfile?.xp || 0,
           level: dbProfile?.level || 1,
           currentPath: pathname,
+          adnProfile: dbProfile?.dnaProfile || "Sin Diagnosticar",
+          userContext: userContext, // Real financial context
           conversationHistory: messages.slice(-5).map(m => ({ role: m.role, content: m.content }))
         }),
       })
@@ -175,7 +203,7 @@ export default function BillyChatbot() {
       const renderedLine = boldParts.map((part, pIdx) => {
         if (part.startsWith('**') && part.endsWith('**')) {
           return (
-            <span key={pIdx} className={`font-extrabold ${role === 'user' ? 'text-white' : 'text-[#0F62FE]'}`}>
+            <span key={pIdx} className={`font-extrabold ${role === 'user' ? 'text-white' : 'text-primary'}`}>
               {part.slice(2, -2)}
             </span>
           )
@@ -186,7 +214,7 @@ export default function BillyChatbot() {
       if (isBullet) {
         return (
           <div key={idx} className="flex gap-2 mb-1.5 pl-1.5">
-            <span className={`font-black ${role === 'user' ? 'text-white/80' : 'text-[#0F62FE]'}`}>•</span>
+            <span className={`font-black ${role === 'user' ? 'text-white/80' : 'text-primary'}`}>•</span>
             <span className="flex-1">{renderedLine}</span>
           </div>
         )
@@ -213,19 +241,19 @@ export default function BillyChatbot() {
           <div 
             onPointerDown={(e) => !isMobile && dragControls.start(e)}
             style={{ touchAction: "none" }}
-            className="relative flex items-center gap-4 px-6 py-5 md:px-7 md:py-6 bg-gradient-to-br from-[#0b1e5e] to-[#0F62FE] cursor-grab active:cursor-grabbing"
+            className={`relative flex items-center gap-4 px-6 py-5 md:px-7 md:py-6 cursor-grab active:cursor-grabbing ${isAnahuac ? 'bg-primary' : 'bg-gradient-to-br from-[#0b1e5e] to-[#0F62FE]'}`}
           >
             <div className="flex-shrink-0 flex items-center justify-center w-[52px] h-[52px] rounded-[18px] bg-white shadow-[0_8px_20px_rgba(0,0,0,0.1)]">
-              <Billy mood={isLoading ? "thinking" : "happy"} size={48} />
+              <Billy mood="chatbot" size={48} />
             </div>
             
             <div className="flex-1 select-none">
               <div className="text-white text-[19px] font-black tracking-tight leading-tight">
-                {dbProfile?.email?.toLowerCase().endsWith('anahuac.mx') || dbProfile?.email?.toLowerCase().endsWith('bizen.mx') ? "Billy Anáhuac" : "Billy"}
+                Billy
               </div>
               <div className="flex items-center gap-1.5 mt-0.5 text-white/75 text-[11px] font-bold uppercase tracking-wider">
                 <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_10px_#10b981]" />
-                {isLoading ? "Escribiendo..." : (dbProfile?.email?.toLowerCase().endsWith('anahuac.mx') || dbProfile?.email?.toLowerCase().endsWith('bizen.mx') ? "León a tu servicio" : "Experto Activo")}
+                {isLoading ? "Escribiendo..." : (isAnahuac ? "León a tu servicio" : "Experto Activo")}
               </div>
             </div>
 
@@ -251,14 +279,25 @@ export default function BillyChatbot() {
             {messages.length === 0 && (
               <div className="text-center py-10 px-5">
                 <div className="flex justify-center animate-[floatEffect_4s_infinite_ease-in-out]">
-                  <Billy mood="happy" size={130} />
+                  <Billy mood="chatbot" size={130} />
                 </div>
                 <h3 className="text-[26px] font-black text-slate-900 mt-5 mb-2.5 tracking-tight">
                   ¡Hola, {userName}!
                 </h3>
                 <p className="text-slate-500 text-base leading-relaxed max-w-[280px] mx-auto">
-                  ¿En qué desafío financiero trabajamos hoy?
+                  {adnProfile === "Sin Diagnosticar" 
+                    ? "Antes de empezar, ¿quieres descubrir tu ADN Financiero para darte tips personalizados?"
+                    : "¿En qué desafío financiero trabajamos hoy?"}
                 </p>
+                
+                {adnProfile === "Sin Diagnosticar" && (
+                    <button 
+                        onClick={() => router.push('/dashboard?startTest=true')}
+                        className={`mt-6 px-6 py-3 rounded-2xl font-bold text-sm text-white shadow-lg transition-transform hover:scale-105 active:scale-95 cursor-pointer ${isAnahuac ? 'bg-primary' : 'bg-blue-600'}`}
+                    >
+                        Comenzar Test 🧬
+                    </button>
+                )}
               </div>
             )}
 
@@ -266,8 +305,8 @@ export default function BillyChatbot() {
               <div key={i} className={`flex flex-col ${m.role === "user" ? "items-end" : "items-start"}`}>
                 <div className={`px-5 py-4 text-[15px] md:text-[16px] font-medium max-w-[88%] leading-relaxed ${
                   m.role === 'user' 
-                    ? "rounded-[24px_24px_4px_24px] bg-gradient-to-br from-[#0b1e5e] to-[#0F62FE] text-white shadow-[0_10px_24px_rgba(15,98,254,0.25)] border-none" 
-                    : "rounded-[24px_24px_24px_4px] bg-white text-slate-800 shadow-[0_4px_16px_rgba(0,0,0,0.03)] border border-[#0F62FE]/10"
+                    ? `rounded-[24px_24px_4px_24px] text-white border-none ${isAnahuac ? 'bg-primary shadow-[0_10px_24px_rgba(255,89,0,0.25)]' : 'bg-gradient-to-br from-[#0b1e5e] to-[#0F62FE] shadow-[0_10px_24px_rgba(15,98,254,0.25)]'}`
+                    : "rounded-[24px_24px_24px_4px] bg-white text-slate-800 shadow-[0_4px_16px_rgba(0,0,0,0.03)] border border-primary/10"
                 }`}>
                   {renderMessageContent(m.content, m.role)}
                 </div>
@@ -278,7 +317,7 @@ export default function BillyChatbot() {
                       <button 
                         key={s} 
                         onClick={() => sendMessage(s)} 
-                        className="px-4 py-2 bg-white border-[1.5px] border-[#0F62FE]/10 rounded-xl text-[#0F62FE] text-[13px] font-bold cursor-pointer transition-colors hover:bg-blue-50"
+                        className="px-4 py-2 bg-white border-[1.5px] border-primary/10 rounded-xl text-primary text-[13px] font-bold cursor-pointer transition-colors hover:bg-blue-50"
                       >
                         {s}
                       </button>
@@ -290,14 +329,14 @@ export default function BillyChatbot() {
             
             {isLoading && (
               <div className="flex gap-2.5 items-center">
-                <Billy mood="loading" size={32} />
-                <div className="flex gap-1.5 p-3 rounded-full bg-white border border-[#0F62FE]/10 shadow-sm">
+                <Billy mood="chatbot" size={32} />
+                <div className="flex gap-1.5 p-3 rounded-full bg-white border border-primary/10 shadow-sm">
                   {[0, 1, 2].map(d => (
                     <motion.div 
                       key={d} 
                       animate={{ opacity: [0.3, 1, 0.3], scale: [0.8, 1, 0.8] }} 
                       transition={{ repeat: Infinity, duration: 1, delay: d * 0.2 }} 
-                      className="w-2 h-2 rounded-full bg-[#0F62FE]" 
+                      className="w-2 h-2 rounded-full bg-primary" 
                     />
                   ))}
                 </div>
@@ -318,12 +357,12 @@ export default function BillyChatbot() {
                   onChange={e => setInput(e.target.value)}
                   onKeyDown={handleKeyPress}
                   placeholder="Escribe tu duda aquí..."
-                  className="w-full py-4 pr-[50px] pl-5 rounded-2xl border-[1.5px] border-slate-100 bg-slate-50 text-[15px] font-semibold outline-none transition-all duration-300 focus:border-[#0F62FE]/30 focus:bg-white focus:shadow-[0_8px_30px_rgba(15,98,254,0.08)] disabled:opacity-50"
+                  className="w-full py-4 pr-[50px] pl-5 rounded-2xl border-[1.5px] border-slate-100 bg-slate-50 text-[15px] font-semibold outline-none transition-all duration-300 focus:border-primary/30 focus:bg-white focus:shadow-[0_8px_30px_rgba(15,98,254,0.08)] disabled:opacity-50"
                 />
                 <button 
                   onClick={toggleListening} 
                   className={`absolute right-4 top-1/2 -translate-y-1/2 p-1 bg-transparent border-none cursor-pointer transition-colors ${
-                    isListening ? 'text-red-500' : 'text-slate-400 hover:text-[#0F62FE]'
+                    isListening ? 'text-red-500' : 'text-slate-400 hover:text-primary'
                   }`}
                   title="Hablar con Billy"
                 >
@@ -336,7 +375,7 @@ export default function BillyChatbot() {
                 disabled={isLoading || !input.trim()}
                 className={`flex items-center justify-center w-[54px] h-[54px] rounded-2xl border-none transition-all duration-300 ${
                   input.trim() && !isLoading
-                    ? "bg-gradient-to-br from-[#0b1e5e] to-[#0F62FE] text-white shadow-[0_10px_20px_rgba(15,98,254,0.2)] cursor-pointer hover:scale-105 hover:-rotate-3" 
+                    ? `text-white cursor-pointer hover:scale-105 hover:-rotate-3 ${isAnahuac ? 'bg-primary shadow-[0_10px_20px_rgba(255,89,0,0.2)]' : 'bg-gradient-to-br from-[#0b1e5e] to-[#0F62FE] shadow-[0_10px_20px_rgba(15,98,254,0.2)]'}`
                     : "bg-slate-100 text-slate-300 cursor-default"
                 }`}
               >

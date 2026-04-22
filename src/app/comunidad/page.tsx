@@ -1,6 +1,7 @@
 "use client"
 
-import React, { useEffect, useState } from "react"
+import * as React from "react"
+import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
 import PageLoader from "@/components/PageLoader"
@@ -40,6 +41,8 @@ function HubCard({
 
 export default function ComunidadHubPage() {
   const { user, loading, dbProfile } = useAuth()
+  const userEmail = typeof user?.email === 'string' ? user.email.toLowerCase() : ""
+  const isAnahuac = userEmail.endsWith('@anahuac.mx') || userEmail.endsWith('@bizen.mx')
   const router = useRouter()
 
   const [topPlayers, setTopPlayers] = useState<any[]>([])
@@ -128,7 +131,11 @@ export default function ComunidadHubPage() {
               {/* Primary Action */}
               <button 
                 onClick={() => router.push("/forum")} 
-                className="group flex flex-1 xl:flex-none items-center justify-center sm:justify-start gap-4 px-8 py-4 md:py-5 rounded-[1.25rem] bg-gradient-to-b from-blue-500 to-blue-600 text-white font-black text-sm md:text-base shadow-[0_15px_30px_rgba(37,99,235,0.3)] hover:shadow-[0_20px_40px_rgba(37,99,235,0.4)] border border-blue-400 hover:-translate-y-1 transition-all duration-300"
+                className={`group flex flex-1 xl:flex-none items-center justify-center sm:justify-start gap-4 px-8 py-4 md:py-5 rounded-[1.25rem] font-black text-sm md:text-base transition-all duration-300 hover:-translate-y-1 ${
+                  isAnahuac 
+                    ? "bg-gradient-to-b from-orange-500 to-orange-600 text-white shadow-[0_15px_30px_rgba(255,89,0,0.3)] hover:shadow-[0_20px_40px_rgba(255,89,0,0.4)] border border-orange-400" 
+                    : "bg-gradient-to-b from-blue-500 to-blue-600 text-white shadow-[0_15px_30px_rgba(37,99,235,0.3)] hover:shadow-[0_20px_40px_rgba(37,99,235,0.4)] border border-blue-400"
+                }`}
               >
                 <div className="w-10 h-10 rounded-2xl bg-white/20 flex items-center justify-center border border-white/20 shadow-inner group-hover:scale-110 group-hover:bg-white/30 transition-all">
                   <MessageSquare size={20} className="text-white" />
@@ -203,7 +210,7 @@ export default function ComunidadHubPage() {
                 Haz preguntas, comparte tus logros y aprende de la experiencia colectiva de toda la comunidad BIZEN.
               </p>
               <div className="mt-auto">
-                <div className="inline-flex items-center gap-2 px-6 py-3 bg-blue-50 group-hover:bg-blue-100/80 text-blue-600 rounded-xl font-black text-xs uppercase tracking-widest border border-blue-100 transition-colors">
+                <div className={`inline-flex items-center gap-2 px-6 py-3 rounded-xl font-black text-xs uppercase tracking-widest border transition-colors ${isAnahuac ? "bg-primary/10 group-hover:bg-primary/20 text-primary border-primary/20" : "bg-blue-50 group-hover:bg-blue-100/80 text-blue-600 border-blue-100"}`}>
                   Explorar el Foro <ArrowRight size={16} />
                 </div>
               </div>
@@ -267,7 +274,7 @@ export default function ComunidadHubPage() {
                   </div>
                   <span className="font-black text-xl lg:text-2xl text-slate-900 tracking-tight">Top Estudiantes</span>
                 </div>
-                <button onClick={() => router.push("/rankings")} className="flex items-center gap-1 text-xs uppercase tracking-widest font-black text-blue-600 hover:text-blue-700 transition-colors bg-blue-50 hover:bg-blue-100 px-4 py-2 rounded-xl">
+                <button onClick={() => router.push("/rankings")} className={`flex items-center gap-1 text-xs uppercase tracking-widest font-black transition-colors px-4 py-2 rounded-xl ${isAnahuac ? "text-primary hover:text-orange-600 bg-primary/10 hover:bg-primary/20" : "text-blue-600 hover:text-blue-700 bg-blue-50 hover:bg-blue-100"}`}>
                   Ver todos <ChevronRight size={16} />
                 </button>
               </div>
@@ -299,7 +306,7 @@ export default function ComunidadHubPage() {
                     <p className="text-base font-medium text-slate-500 max-w-[280px] mx-auto mb-8 leading-relaxed">
                       El ranking global acaba de reiniciarse. ¡Gana XP ahora y sé el primero en liderar la tabla!
                     </p>
-                    <button onClick={() => router.push("/dashboard")} className="px-8 py-4 bg-blue-50 hover:bg-blue-100 text-blue-600 font-black text-xs uppercase tracking-widest rounded-2xl transition-colors border border-blue-100 shadow-sm">
+                    <button onClick={() => router.push("/dashboard")} className={`px-8 py-4 font-black text-xs uppercase tracking-widest rounded-2xl transition-colors border shadow-sm ${isAnahuac ? "bg-primary/10 hover:bg-primary/20 text-primary border-primary/20" : "bg-blue-50 hover:bg-blue-100 text-blue-600 border-blue-100"}`}>
                       Ganar Puntos
                     </button>
                   </div>
@@ -348,7 +355,7 @@ export default function ComunidadHubPage() {
                   <p className="text-lg text-white/60 font-semibold leading-relaxed mb-10 max-w-sm">
                     Cientos de estudiantes comparten dudas, logros y consejos financieros cada día.
                   </p>
-                  <button onClick={() => router.push("/forum")} className="inline-flex items-center gap-3 px-8 py-4 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl font-black text-sm uppercase tracking-widest transition-all shadow-xl shadow-blue-600/30">
+                  <button onClick={() => router.push("/forum")} className={`inline-flex items-center gap-3 px-8 py-4 text-white rounded-2xl font-black text-sm uppercase tracking-widest transition-all shadow-xl ${isAnahuac ? "bg-primary hover:bg-orange-600 shadow-primary/30" : "bg-blue-600 hover:bg-blue-500 shadow-blue-600/30"}`}>
                     Ir al Foro <ArrowRight size={20} />
                   </button>
                 </div>

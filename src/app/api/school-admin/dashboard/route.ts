@@ -36,7 +36,22 @@ export async function GET(request: NextRequest) {
                 if (anySchool) {
                     userProfile.schoolId = anySchool.id
                 } else {
-                    return NextResponse.json({ error: 'No se encontraron escuelas en la base de datos.' }, { status: 200, data: { kpis: {}, students: [] } })
+                    return NextResponse.json({ 
+                        school: "Sin Institución",
+                        kpis: {
+                            totalStudents: 0,
+                            avgModulesCompleted: 0,
+                            totalCompletedLessons: 0,
+                            avgAttemptsPerQuiz: 0,
+                            institutionalROI: 0,
+                            studentsAtRisk: 0,
+                            diagnosticStats: { avgScore: 0, participation: 0, strengths: [], weaknesses: [] },
+                            currentQuizAvg: 0,
+                            nationalAvg: 48
+                        },
+                        students: [],
+                        communityLeaders: []
+                    })
                 }
             } else {
                 return NextResponse.json({ error: 'Tu usuario no está asociado a ninguna institución.' }, { status: 400 })

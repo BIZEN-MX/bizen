@@ -98,7 +98,14 @@ export async function POST(req: NextRequest) {
          orderBy: { date: 'desc' }
       });
       if (latestPrice && Number(latestPrice.close) > 0) {
-         const feeMultiplier = order_type === 'market' ? 1.0015 : 1.001;
+         const configProfile = await prisma.profile.findUnique({ where: { userId: "GLOBAL_CONFIG_MARKET" }, select: { settings: true } });
+         const config = (configProfile?.settings as any) || { commissionMarket: 0.15, commissionLimit: 0.10 };
+         
+         const marketFeeRatio = (Number(config.commissionMarket) ?? 0.15) / 100;
+         const limitFeeRatio = (Number(config.commissionLimit) ?? 0.10) / 100;
+         const feeRatio = order_type === 'market' ? marketFeeRatio : limitFeeRatio;
+         const feeMultiplier = 1 + feeRatio;
+         
          const estimatedCost = Number(latestPrice.close) * quantity * feeMultiplier;
          if (Number(portfolio.cash_balance) < estimatedCost) {
             return NextResponse.json({ error: `Saldo insuficiente para cubrir la compra. Tienes ${portfolio.cash_balance} bz pero el costo estimado es ${Math.ceil(estimatedCost)} bz.` }, { status: 400 });

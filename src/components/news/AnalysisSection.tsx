@@ -16,6 +16,7 @@ import {
   BarChart3,
   Globe
 } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 import { Billy } from "@/components/Billy";
 
 interface AnalysisItem {
@@ -31,6 +32,9 @@ export default function AnalysisSection() {
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+  const { user } = useAuth();
+  const userEmail = (user?.email || (user as any)?.emailAddresses?.[0]?.emailAddress || "").toLowerCase();
+  const isAnahuac = userEmail.endsWith('@anahuac.mx') || userEmail.includes('.anahuac.mx') || userEmail.endsWith('@bizen.mx');
 
   useEffect(() => {
     const fetchAnalysis = async () => {
@@ -48,7 +52,7 @@ export default function AnalysisSection() {
     fetchAnalysis();
   }, []);
 
-  const topAnalyses: AnalysisItem[] = [
+  const topAnalyses: AnalysisItem[] = data?.topAnalyses || [
     {
       id: "1",
       topic: "Adopción Institucional Cripto",
@@ -64,22 +68,6 @@ export default function AnalysisSection() {
       sentiment: "Neutral",
       description: "La pausa en las tasas sugiere un aterrizaje suave, pero la inflación subyacente sigue bajo la lupa.",
       correlation: "Afecta directamente el rendimiento del Simulador de Interés Compuesto."
-    },
-    {
-      id: "3",
-      topic: "Nearshoring en México",
-      impact: "Medium",
-      sentiment: "Bullish",
-      description: "El flujo de inversión extranjera directa en manufactura fortalece el peso y las PYMES locales.",
-      correlation: "Clave para proyectos en el Simulador de Negocios y Emprendimiento."
-    },
-    {
-      id: "4",
-      topic: "Escasez de Semiconductores",
-      impact: "Medium",
-      sentiment: "Bearish",
-      description: "La alta demanda en IA está creando cuellos de botella en la producción de hardware tradicional.",
-      correlation: "Presiona a la baja los márgenes en el Simulador de Bolsa (Sector Tech)."
     }
   ];
 
@@ -89,7 +77,7 @@ export default function AnalysisSection() {
         <motion.div
           animate={{ rotate: 360 }}
           transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
-          className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full mb-6"
+          className={`w-12 h-12 border-4 ${isAnahuac ? 'border-[#FF5900]' : 'border-blue-600'} border-t-transparent rounded-full mb-6`}
         />
         <p className="text-slate-500 font-bold text-lg animate-pulse">Billy AI está analizando el pulso del mercado...</p>
       </div>
@@ -107,7 +95,7 @@ export default function AnalysisSection() {
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="relative p-10 rounded-[40px] overflow-hidden bg-gradient-to-br from-[#0B1E5E] via-[#0F62FE] to-blue-500 text-white shadow-2xl shadow-blue-500/20"
+            className={`relative p-10 rounded-[40px] overflow-hidden ${isAnahuac ? 'bg-[#FF5900] bg-gradient-to-br from-[#CC4700] via-[#FF5900] to-[#FF8533]' : 'bg-primary bg-gradient-to-br from-[#0B1E5E] via-[#0F62FE] to-blue-500'} text-white shadow-2xl ${isAnahuac ? 'shadow-orange-500/20' : 'shadow-primary/20'}`}
           >
             {/* Glossy Overlay */}
             <div className="absolute inset-0 bg-white/5 opacity-20 pointer-events-none" />
@@ -116,9 +104,9 @@ export default function AnalysisSection() {
               <div className="max-w-2xl">
                 <div className="flex items-center gap-2.5 mb-6">
                   <div className="bg-white/20 backdrop-blur-md p-2 rounded-xl">
-                    <BrainCircuit size={20} className="text-blue-100" />
+                    <BrainCircuit size={20} className={isAnahuac ? "text-orange-100" : "text-blue-100"} />
                   </div>
-                  <span className="text-xs font-black uppercase tracking-[0.2em] text-blue-100">Inteligencia Predictiva</span>
+                  <span className={`text-xs font-black uppercase tracking-[0.2em] ${isAnahuac ? 'text-orange-100' : 'text-blue-100'}`}>Inteligencia Predictiva</span>
                 </div>
                 <h2 className="text-4xl font-black mb-6 leading-tight tracking-tight">
                   {data?.label || "Análisis de Sentimiento Global"}
@@ -176,14 +164,14 @@ export default function AnalysisSection() {
                   <div className="flex gap-1.5">
                     {[...Array(3)].map((_, i) => (
                       <div key={i} className={`w-3 h-1 rounded-full transition-colors ${
-                        i < (item.impact === "High" ? 3 : item.impact === "Medium" ? 2 : 1) ? "bg-blue-600" : "bg-slate-100" 
+                        i < (item.impact === "High" ? 3 : item.impact === "Medium" ? 2 : 1) ? (isAnahuac ? "bg-[#FF5900]" : "bg-blue-600") : "bg-slate-100" 
                       }`} />
                     ))}
                   </div>
                 </div>
-                <h4 className="text-lg font-black text-slate-900 mb-2 group-hover:text-blue-600 transition-colors">{item.topic}</h4>
+                <h4 className={`text-lg font-black text-slate-900 mb-2 group-hover:${isAnahuac ? 'text-[#FF5900]' : 'text-blue-600'} transition-colors`}>{item.topic}</h4>
                 <p className="text-slate-500 text-sm font-medium leading-relaxed mb-6">{item.description}</p>
-                <div className="bg-blue-50/50 p-4 rounded-2xl border border-dashed border-blue-200 text-[11px] font-bold text-blue-600 flex items-center gap-3">
+                <div className={`${isAnahuac ? 'bg-orange-50/50 border-orange-200 text-[#FF5900]' : 'bg-blue-50/50 border-blue-200 text-blue-600'} p-4 rounded-2xl border border-dashed text-[11px] font-bold flex items-center gap-3`}>
                   <Activity size={16} /> Correlación: {item.correlation}
                 </div>
               </motion.div>
@@ -200,7 +188,7 @@ export default function AnalysisSection() {
             </div>
             <h3 className="text-xl font-black text-slate-900 mb-4">Sugerencia de Billy</h3>
             <p className="text-slate-500 font-medium text-sm leading-relaxed mb-8">
-              "Viendo que el Bitcoin ha roto máximos y que las tasas de la Fed están en pausa, te sugiero revisar tu <strong className="text-blue-600 underline">Simulador de Ahorro</strong>. Podrías estar dejando de ganar interés compuesto por no ajustar tu estrategia."
+              "Viendo que el Bitcoin ha roto máximos y que las tasas de la Fed están en pausa, te sugiero revisar tu <strong className={`font-black ${isAnahuac ? 'text-[#FF5900]' : 'text-blue-600'} underline`}>Simulador de Ahorro</strong>. Podrías estar dejando de ganar interés compuesto por no ajustar tu estrategia."
             </p>
             <button 
               onClick={() => router.push("/cash-flow?tab=simulators")}
@@ -212,11 +200,11 @@ export default function AnalysisSection() {
 
           <div className="bg-white p-8 rounded-[40px] border border-slate-200 shadow-sm">
             <h4 className="text-[13px] font-black text-slate-900 mb-6 flex items-center gap-2">
-              <Zap size={18} className="text-blue-600" /> TOP NARRATIVAS HOY
+              <Zap size={18} className={isAnahuac ? "text-[#FF5900]" : "text-blue-600"} /> TOP NARRATIVAS HOY
             </h4>
             <div className="flex flex-wrap gap-2">
               {(data?.topNarrativas || ["Nearshoring", "IA Crypto", "Inflación", "EEMM", "S&P 500"]).map((tag: any) => (
-                <span key={tag} className="px-4 py-2 bg-slate-50 hover:bg-blue-50 border border-slate-100 hover:border-blue-100 rounded-xl text-[11px] font-bold text-slate-600 hover:text-blue-600 transition-colors cursor-default">
+                <span key={tag} className={`px-4 py-2 bg-slate-50 hover:${isAnahuac ? 'bg-orange-50 border-orange-100 text-[#FF5900]' : 'bg-blue-50 border-blue-100 text-blue-600'} border rounded-xl text-[11px] font-bold text-slate-600 transition-colors cursor-default`}>
                   #{tag}
                 </span>
               ))}
@@ -225,7 +213,7 @@ export default function AnalysisSection() {
 
           {/* Quick Metrics */}
           <div className="bg-slate-900 p-8 rounded-[40px] text-white overflow-hidden relative group">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-blue-600/20 blur-3xl rounded-full" />
+            <div className={`absolute top-0 right-0 w-32 h-32 ${isAnahuac ? 'bg-orange-600/20' : 'bg-blue-600/20'} blur-3xl rounded-full`} />
              <div className="relative z-10">
                 <h4 className="text-[11px] font-black text-white/50 uppercase tracking-[0.2em] mb-6">Métricas Globales</h4>
                 <div className="flex flex-col gap-4">

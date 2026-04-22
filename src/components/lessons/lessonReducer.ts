@@ -38,13 +38,27 @@ export type LessonAction =
 export function lessonReducer(state: LessonState, action: LessonAction): LessonState {
   switch (action.type) {
     case "INIT": {
-      const firstStep = action.steps[0]
-      const firstStepAutoComplete =
-        (firstStep?.stepType === "info" && !firstStep?.fullScreen) || firstStep?.stepType === "summary"
-      const firstStepIsInfoFullScreen = firstStep?.stepType === "info" && firstStep?.fullScreen
+      // Auto-inject a summary step if the curriculum data doesn't provide one
+      const steps = [...action.steps]
+      const lastStep = steps[steps.length - 1]
+      const lastStepType = lastStep?.stepType || (lastStep as any)?.type
+      
+      if (steps.length > 0 && lastStepType !== "summary") {
+         steps.push({
+           id: `auto-summary-${Date.now()}`,
+           stepType: "summary",
+           title: "Resumen Final",
+         } as any)
+      }
+
+      const firstStep = steps[0]
+      const st = firstStep?.stepType || (firstStep as any)?.type
+      const isInfoType = st === "info" || st === "story" || st === "concept" || st === "completion"
+      const firstStepAutoComplete = (isInfoType && !firstStep?.fullScreen) || st === "summary"
+      const firstStepIsInfoFullScreen = isInfoType && firstStep?.fullScreen
       return {
-        originalSteps: action.steps,
-        allSteps: action.steps,
+        originalSteps: steps,
+        allSteps: [...steps],
         currentStepIndex: 0,
         answersByStepId: {},
         incorrectSteps: [],
@@ -111,8 +125,9 @@ export function lessonReducer(state: LessonState, action: LessonAction): LessonS
     case "NEXT_STEP": {
       const nextIndex = state.currentStepIndex + 1
       const nextStep = state.allSteps[nextIndex]
-      const nextStepAutoComplete =
-        (nextStep?.stepType === "info" && !nextStep?.fullScreen) || nextStep?.stepType === "summary"
+      const nst = nextStep?.stepType || (nextStep as any)?.type
+      const isNextInfoType = nst === "info" || nst === "story" || nst === "concept" || nst === "completion"
+      const nextStepAutoComplete = (isNextInfoType && !nextStep?.fullScreen) || nextStep?.stepType === "summary"
       const isLastOriginalStep = nextIndex >= state.originalSteps.length
 
       // If we're at the end of original steps and haven't built review steps yet
@@ -127,7 +142,8 @@ export function lessonReducer(state: LessonState, action: LessonAction): LessonS
         }
       }
 
-      const nextStepIsInfoFullScreen = nextStep?.stepType === "info" && nextStep?.fullScreen
+      const nst2 = nextStep?.stepType || (nextStep as any)?.type
+      const nextStepIsInfoFullScreen = (nst2 === "info" || nst2 === "story" || nst2 === "concept" || nst2 === "completion") && nextStep?.fullScreen
 
       return {
         ...state,
@@ -274,9 +290,10 @@ export function lessonReducer(state: LessonState, action: LessonAction): LessonS
 
     case "RESTART_LESSON": {
       const firstStep = state.originalSteps[0]
-      const firstStepAutoComplete =
-        (firstStep?.stepType === "info" && !firstStep?.fullScreen) || firstStep?.stepType === "summary"
-      const firstStepIsInfoFullScreen = firstStep?.stepType === "info" && firstStep?.fullScreen
+      const st = firstStep?.stepType || (firstStep as any)?.type
+      const isInfoType = st === "info" || st === "story" || st === "concept" || st === "completion"
+      const firstStepAutoComplete = (isInfoType && !firstStep?.fullScreen) || firstStep?.stepType === "summary"
+      const firstStepIsInfoFullScreen = isInfoType && firstStep?.fullScreen
       
       return {
         ...state,

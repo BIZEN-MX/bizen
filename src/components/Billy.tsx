@@ -10,6 +10,7 @@ export type BillyMood =
   | "celebrating" 
   | "crying" 
   | "mascot" 
+  | "chatbot"
   | "loading"
 
 interface BillyProps {
@@ -78,6 +79,7 @@ export function Billy({
       case "worried": return "/billy_chatbot.png"
       case "loading": return "/billy_chatbot.png"
       case "crying": return "/billy_llorando.png"
+      case "chatbot": return "/billy_chatbot.png"
       case "thinking": return "/billy_chatbot.png"
       case "mascot": return "/thumbs up.png"
       default: return "/thumbs up.png"

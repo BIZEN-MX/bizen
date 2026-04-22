@@ -573,7 +573,7 @@ export const lessonAuditoriaSuscripcionesSteps: LessonStep[] = [
 // ==============================================================================
 // LECCIÓN 11: Ahorro vs Inversión: El salto cuántico - 15 SLIDES
 // ==============================================================================
-export const lessonAhorroVsInversionSteps: LessonStep[] = [
+export const lessonAhorroVsInversionSmartSteps: LessonStep[] = [
   { id: "aho-11-1", stepType: "billy_talks", body: "Has dominado el ahorro (Retención). Ahora, vamos a preparar el **Salto Cuántico** hacia la Inversión (Multiplicación). No son lo mismo.", fullScreen: true,
     data: { glossary: [{ word: "Ahorro", definition: "Preservación del capital con enfoque en seguridad y liquidez." }, { word: "Inversión", definition: "Exposición del capital al riesgo con el fin de obtener un rendimiento superior (crecimiento)." }] }
   },

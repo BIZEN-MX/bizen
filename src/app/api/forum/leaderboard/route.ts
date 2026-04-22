@@ -1,14 +1,13 @@
 import { NextRequest, NextResponse } from "next/server"
-import { createSupabaseServer } from "@/lib/supabase/server"
 import { prisma } from "@/lib/prisma"
+import { requireAuth } from "@/lib/auth/api-auth"
 
 export async function GET(request: NextRequest) {
   try {
-    const supabase = await createSupabaseServer()
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    const authResult = await requireAuth(request)
     
-    if (authError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    if (!authResult.success) {
+      return authResult.response
     }
 
     const { searchParams } = new URL(request.url)
@@ -35,7 +34,8 @@ export async function GET(request: NextRequest) {
         level: true,
         postsCreated: true,
         commentsCreated: true,
-        acceptedAnswers: true
+        acceptedAnswers: true,
+        avatar: true
       },
       take: 50
     })
@@ -43,7 +43,8 @@ export async function GET(request: NextRequest) {
     // Format with nicknames
     const formatted = users.map(u => ({
       ...u,
-      nickname: u.nickname || u.fullName.split(' ')[0],
+      nickname: u.nickname || (u.fullName ? u.fullName.split(' ')[0] : 'Usuario'),
+      avatar: u.avatar,
       weeklyScore: u.reputation // Simplified - could calculate weekly activity
     }))
 
@@ -53,4 +54,3 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "Failed to fetch leaderboard" }, { status: 500 })
   }
 }
-

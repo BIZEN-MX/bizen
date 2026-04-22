@@ -1,51 +1,108 @@
 import { NextResponse } from 'next/server';
+import { GoogleGenerativeAI } from "@google/generative-ai";
+
+// Cache variables to prevent redundant AI calls
+let lastAnalysis: any = null;
+let lastFetchTime = 0;
+const CACHE_DURATION = 1000 * 60 * 60; // 1 hour
 
 export async function GET() {
-  const ALL_NEWS = [
-    // We import or redefine key news here for calculation
-    // For simplicity in this demo implementation, we'll scan a large sample
-    // In a real scenario, this would scan the database.
-    "récord", "máximos", "gana", "sube", "impulsa", "éxito", "adopción", "crecimiento", "fortalece", "robusto", "resiste", "supera", "ganancias", "positivo", "oportunidad",
-    "cae", "caída", "retrocede", "crisis", "inflación", "presión", "riesgo", "advertencia", "incertidumbre", "desempleo", "deuda", "dudas", "alerta", "temor", "bajista"
-  ];
+  try {
+    const now = Date.now();
+    if (lastAnalysis && (now - lastFetchTime < CACHE_DURATION)) {
+      console.log("[NewsAnalysis] Returning cached analysis");
+      return NextResponse.json(lastAnalysis);
+    }
 
-  // Logic to calculate sentiment based on ALL_NEWS titles and descriptions
-  // This is a "First Implementation" of the AI Sentiment logic
-  
-  const positiveWords = ["récord", "máximos", "gana", "sube", "impulsa", "éxito", "adopción", "crecimiento", "fortalece", "robusto", "resiste", "supera", "ganancias", "positivo", "oportunidad", "hitos", "lidera", "vanguardia", "revoluciona"];
-  const negativeWords = ["cae", "caída", "retrocede", "crisis", "inflación", "presión", "riesgo", "advertencia", "incertidumbre", "desempleo", "deuda", "dudas", "alerta", "temor", "bajista", "tensión", "conflicto", "retrocesos", "pérdida", "advertencia"];
+    const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+    if (!GEMINI_API_KEY) {
+      throw new Error("Missing GEMINI_API_KEY");
+    }
 
-  // In a real app, we'd fetch the actual news array here. 
-  // For now, let's assume we analyzed the 120 articles and found:
-  const posMatches = 42;
-  const negMatches = 15;
-  const totalMatches = posMatches + negMatches;
-  
-  // Dynamic Score Calculation
-  const rawScore = (posMatches / totalMatches) * 100;
-  const sentimentScore = Math.round(rawScore); // e.g. 74
-  
-  const topNarrativas = [
-    "IA Generativa", 
-    "Nearshoring México", 
-    "Bitcoin All-Time High", 
-    "Súper Peso", 
-    "Micro-aprendizaje", 
-    "Soberanía Energética"
-  ];
+    // 1. Fetch news from our own API (internal call style)
+    // We'll use a relative URL if possible, or just the same logic
+    const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http';
+    const host = process.env.NEXT_PUBLIC_APP_URL || 'localhost:3000';
+    
+    // In many environments, fetching from self via HTTP can be tricky. 
+    // Since we are in the same codebase, we could import the news, but they are hardcoded in the route.
+    // Let's try to fetch them.
+    const newsRes = await fetch(`${protocol}://${host}/api/news`, { cache: 'no-store' });
+    const newsData = await newsRes.json();
+    
+    if (!newsData || !Array.isArray(newsData)) {
+      throw new Error("Failed to fetch news data");
+    }
 
-  const metrics = [
-    { name: "Volatilidad VIX", value: "14.2", change: "+2.4%", trend: "up" },
-    { name: "Dominancia BTC", value: "58.2%", change: "+0.5%", trend: "up" },
-    { name: "USD/MXN", value: "16.82", change: "-0.12%", trend: "down" },
-    { name: "Nasdaq 100", value: "18,450", change: "+0.8%", trend: "up" }
-  ];
+    // 2. Prepare context for Gemini
+    const newsContext = newsData.slice(0, 25).map((n: any) => `- ${n.title}: ${n.desc}`).join('\n');
 
-  return NextResponse.json({
-    score: sentimentScore,
-    label: sentimentScore > 60 ? "ALTAMENTE ALCISTA" : sentimentScore > 45 ? "NEUTRAL / ALCISTA" : "BAJISTA",
-    summary: `Billy AI ha analizado 120 indicadores globales. La confianza empresarial en tecnología e infraestructura de IA compensa las tensiones geopolíticas en Medio Oriente. El sentimiento alcista (Bullish) domina con un ${sentimentScore}%, sugiriendo oportunidades de crecimiento en activos de riesgo y divisas emergentes sólidas como el Peso Mexicano.`,
-    topNarrativas,
-    metrics
-  });
+    const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
+    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+
+    const prompt = `
+      Eres Billy, la inteligencia artificial experta en mercados de BIZEN.
+      Tu tarea es analizar los siguientes titulares de noticias financieras recientes y generar un reporte de sentimiento.
+      
+      NOTICIAS:
+      ${newsContext}
+
+      RESPONDE ÚNICAMENTE EN FORMATO JSON con la siguiente estructura:
+      {
+        "score": (número del 0 al 100 donde 0 es bajista total y 100 es alcista total),
+        "label": (string corto: "BAJISTA", "NEUTRAL", "ALCISTA", "MUY ALCISTA"),
+        "summary": (un párrafo de 3 líneas analizando la situación actual de forma profesional pero accesible),
+        "topNarrativas": [lista de 4-5 temas que dominan la conversación],
+        "topAnalyses": [
+          {
+            "id": "string",
+            "topic": "Tema de análisis",
+            "impact": "High/Medium/Low",
+            "sentiment": "Bullish/Bearish/Neutral",
+            "description": "Explicación breve",
+            "correlation": "Cómo afecta a BIZEN"
+          }
+        ],
+        "metrics": [
+          {"name": "Métrica 1", "value": "Valor", "change": "+X%", "trend": "up/down"},
+          {"name": "Métrica 2", "value": "Valor", "change": "+X%", "trend": "up/down"}
+        ]
+      }
+      
+      REGLAS:
+      - Sé realista. Si hay guerra o inflación, el sentimiento debe bajar.
+      - Si hay récords en tech o crypto, el sentimiento debe subir.
+      - Las métricas deben ser coherentes con el texto (puedes inventar valores realistas de mercado como VIX, BTC, MXN o S&P500 basados en las noticias).
+      - NO USES EMOJIS.
+    `;
+
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    const text = response.text();
+    
+    // Clean JSON if Gemini adds markdown blocks
+    const jsonStr = text.replace(/```json/g, '').replace(/```/g, '').trim();
+    const analysis = JSON.parse(jsonStr);
+
+    // Save to cache
+    lastAnalysis = analysis;
+    lastFetchTime = now;
+
+    return NextResponse.json(analysis);
+
+  } catch (error: any) {
+    console.error("❌ [NewsAnalysis:Error]:", error.message);
+    
+    // Safety Fallback (Old logic)
+    return NextResponse.json({
+      score: 65,
+      label: "NEUTRAL / ALCISTA",
+      summary: "Billy AI detectó una conexión limitada, pero basándose en indicadores históricos, el mercado muestra resiliencia en tecnología mientras monitorea la inflación global.",
+      topNarrativas: ["IA Generativa", "Nearshoring", "Crypto Adoption", "Súper Peso"],
+      metrics: [
+        { name: "Volatilidad VIX", value: "14.2", change: "+2.4%", trend: "up" },
+        { name: "Nasdaq 100", value: "18,450", change: "+0.8%", trend: "up" }
+      ]
+    });
+  }
 }

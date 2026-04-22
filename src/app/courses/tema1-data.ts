@@ -89,4 +89,10 @@ export const TEMA1_SUBTEMAS: Tema1Subtema[] = [
       { title: "¿Qué hace cada institución financiera?", slug: "funciones-instituciones-financieras", level: "Intermedio" },
     ]
   },
+  {
+    title: "11. Certificación",
+    lessons: [
+      { title: "Examen de Certificación: Bloque 1", slug: "evaluacion-bloque-1", level: "Avanzado" },
+    ]
+  },
 ]

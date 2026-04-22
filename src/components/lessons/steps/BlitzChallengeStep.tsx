@@ -140,12 +140,12 @@ export function BlitzChallengeStep({ step, onAnswered, actionTrigger, isContinue
       {/* ── Question ── */}
       <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
         {step.description && <StepScenarioCard text={step.description} variant="case" />}
-        <SmartText text={step.question} fontSize="clamp(18px, 3.5vw, 22px)" />
+        <SmartText text={step.question || step.body || step.title || ""} fontSize="clamp(18px, 3.5vw, 22px)" />
       </div>
 
       {/* ── Options ── */}
       <div style={{ display: "flex", flexDirection: "column", gap: "clamp(8px, 1.5vw, 12px)" }}>
-        {step.options.map((option, index) => {
+        {(step.options || []).map((option, index) => {
           const isSelected = selectedOptionId === option.id
           const answered = isSubmitted || timedOut
 
@@ -209,7 +209,7 @@ export function BlitzChallengeStep({ step, onAnswered, actionTrigger, isContinue
                 {['A','B','C','D','E','F'][index]}
               </div>
               <span style={{ flex: 1, fontSize: "clamp(13px, 3vw, 16px)", fontWeight: 500, lineHeight: 1.35 }}>
-                {option.label}
+                {(option as any).label || (option as any).text}
               </span>
               <AnimatePresence>
                 {answered && icon && (

@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
       }
     };
 
-    const [profile, topics, progress, diagnostic, transactions, lessonsCompleted, coursesEnrolled, certificatesCount, inventoryResults] = await Promise.all([
+    const [profile, topics, progress, diagnostic, transactions, lessonsCompleted, coursesEnrolled, certificatesCount, inventoryResults, achievements, investments] = await Promise.all([
       fetchSafe(prisma.profile.findUnique({ where: { userId: user.id } }), "Profile"),
       fetchSafe(prisma.topic.findMany({
         where: { isActive: true },
@@ -50,7 +50,9 @@ export async function GET(request: NextRequest) {
       fetchSafe(prisma.progress.count({ where: { userId: user.id, percent: 100 } }), "CountLessons"),
       fetchSafe(prisma.enrollment.count({ where: { userId: user.id } }), "CountEnrollments"),
       fetchSafe(prisma.certificate.count({ where: { userId: user.id } }), "CountCertificates"),
-      fetchSafe(prisma.userInventoryItem.findMany({ where: { userId: user.id }, select: { productId: true } }), "Inventory")
+      fetchSafe(prisma.userInventoryItem.findMany({ where: { userId: user.id }, select: { productId: true } }), "Inventory"),
+      fetchSafe(prisma.userAchievement.findMany({ where: { userId: user.id }, include: { achievement: true } }), "Achievements"),
+      fetchSafe(prisma.simulator_portfolios.findMany({ where: { user_id: user.id } }), "Investments")
     ]);
 
     if (!profile) {
@@ -128,12 +130,15 @@ export async function GET(request: NextRequest) {
       },
       topics: topics || [],
       progress: Array.isArray(progress) ? progress.map(p => p.lessonId || (p as any).slug).filter(Boolean) : [],
-      diagnostic: diagnostic ? { exists: true, adnProfile: diagnostic.dnaProfile } : { exists: false },
+      diagnostic: diagnostic ? { exists: true, adnProfile: diagnostic.dnaProfile, categoryScores: diagnostic.categoryScores } : { exists: false },
       profile: {
           ...profile,
           adnProfile: profile.dnaProfile || diagnostic?.dnaProfile
       },
-      transactions: transactions || []
+      transactions: transactions || [],
+      achievements: achievements || [],
+      investments: investments || [],
+      inventory: inventoryResults?.map(i => i.productId) || []
     })
 
   } catch (error: any) {

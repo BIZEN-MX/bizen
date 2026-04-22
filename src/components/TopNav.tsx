@@ -23,8 +23,15 @@ import {
   Search,
   Bell,
   Star,
+  MessageCircle,
   ArrowUpRight,
   Crown,
+  ShieldCheck,
+  School,
+  Megaphone,
+  TrendingUp,
+  BookOpen,
+  Brain,
   Play as PlayIcon
 } from "lucide-react"
 import BizcoinIcon from "@/components/BizcoinIcon"
@@ -68,7 +75,8 @@ export default function TopNav() {
   );
 
   const isOnLessonPage = pathname?.includes('/learn/')
-  const isAdminOrTeacher = dbProfile?.role === "school_admin" || dbProfile?.role === "teacher"
+  const isSuperAdmin = userEmail === "diego@bizen.mx";
+  const isAdminOrTeacher = (dbProfile?.role === "school_admin" || dbProfile?.role === "teacher" || dbProfile?.role === "admin" || isSuperAdmin) && userEmail !== "diegopenita31@gmail.com" && userEmail !== "notifications@bizen.mx";
   const isStudentOrGuest = !isAdminOrTeacher
   const protectedRoutes = ['/forum', '/profile', '/cuenta', '/configuracion', '/tienda', '/impacto-social']
 
@@ -146,13 +154,12 @@ export default function TopNav() {
     { label: 'Bites', path: '/bites', icon: <PlayIcon size={16} /> },
     { label: 'Simuladores', path: '/cash-flow', icon: <BarChart2 size={16} /> },
     { label: 'Comunidad', path: '/comunidad', icon: <MessageSquare size={16} /> },
-    { label: 'Tienda', path: '/tienda', icon: <ShoppingBag size={16} /> },
+    { label: 'Tienda', path: '/tienda#bizcoins', icon: <ShoppingBag size={16} /> },
     { label: 'Live', path: '/live/join', icon: <Zap size={16} /> },
   ]
 
   const teacherNavItems = [
     { label: 'Panel Escolar', path: '/teacher/dashboard', icon: <IcoGrid size={16} color="currentColor" /> },
-    { label: 'Mis Cursos', path: '/teacher/courses', icon: <MapIcon size={16} /> },
     { label: 'Live', path: '/live/join', icon: <Zap size={16} /> },
   ]
 
@@ -180,6 +187,26 @@ export default function TopNav() {
     if (user) fetchNotifs()
   }, [user])
 
+  // ── MODO MANTENIMIENTO ───────────────────────────────────────────────────────
+  useEffect(() => {
+    if (!user) return;
+    const email = user?.emailAddresses?.[0]?.emailAddress?.toLowerCase();
+    const isSuperAdminUser = email === "diego@bizen.mx";
+    
+    // Solo verifica en rutas que no sean /maintenance ni /admin
+    if (window.location.pathname.startsWith('/maintenance') || isSuperAdminUser) return;
+    
+    fetch("/api/admin/system")
+      .then(r => r.json())
+      .then(data => {
+        if (data.maintenanceMode) {
+          window.location.href = "/maintenance";
+        }
+      })
+      .catch(e => console.error("Error check maintenance:", e));
+  }, [user]);
+  // ─────────────────────────────────────────────────────────────────────────────
+
   const markAllRead = async () => {
     try {
       await fetch('/api/notifications', {
@@ -198,20 +225,26 @@ export default function TopNav() {
     <>
       <nav className={`topnav-bar ${scrolled ? 'scrolled' : 'not-scrolled'}`} aria-label="Navegación principal">
         <div className="topnav-brand" onClick={() => navigateTo(user ? (isAdminOrTeacher ? '/teacher/dashboard' : '/dashboard') : '/')}>
-          <span className="topnav-logo">
-            {isAnahuac && (
-              <Image 
-                src="/anahuac-logo.png" 
-                alt="Anahuac" 
-                width={20} 
-                height={20} 
-                className="mr-2"
-                style={{ objectFit: 'contain' }}
-              />
+          <div className="topnav-logo" style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+            {isAnahuac ? (
+              <>
+                <Image 
+                  src="/anahuac-logo.png" 
+                  alt="Anahuac University" 
+                  width={32} 
+                  height={32} 
+                  style={{ objectFit: 'contain' }}
+                />
+                <span style={{ color: "#94a3b8", fontSize: "22px", fontWeight: 500, margin: "0 4px" }}>⨯</span>
+                <span className="topnav-logo" style={{ color: "var(--primary)", fontSize: "34px", fontWeight: 600, letterSpacing: "-1.5px" }}>BIZEN</span>
+              </>
+            ) : (
+              <span className="topnav-logo">
+                BIZEN<span className="topnav-logo-dot" />
+              </span>
             )}
-            {isAnahuac ? "LEONES" : "BIZEN"}
-          </span>
-          {mounted && !loading && dbProfile && (
+          </div>
+          {mounted && !loading && dbProfile && !isAnahuac && (
             <span
               className={`topnav-plan-badge ${isBasicPlan ? 'basic' : 'premium'}`}
               onClick={isBasicPlan ? (e) => { e.stopPropagation(); router.push('/payment') } : undefined}
@@ -219,6 +252,7 @@ export default function TopNav() {
               {planLabel}
             </span>
           )}
+
         </div>
 
         {user && (
@@ -251,21 +285,21 @@ export default function TopNav() {
                 </div>
               )}
               {isStudentOrGuest && (
-                <div className="topnav-stat-pill">
-                  <BizcoinIcon size={13} />
-                  {bizcoins.toLocaleString()}
+                <div className="flex items-center gap-2">
+                  <div className="topnav-stat-pill">
+                    <BizcoinIcon size={13} />
+                    {bizcoins.toLocaleString()}
+                  </div>
+                  <button 
+                    className="topnav-icon-btn" 
+                    aria-label="Billy Assistant"
+                    onClick={() => window.dispatchEvent(new CustomEvent('open-billy-chat'))}
+                    style={{ background: 'var(--primary-subtle)', borderRadius: '12px', padding: '4px' }}
+                  >
+                    <MessageCircle size={18} />
+                  </button>
                 </div>
               )}
-
-              <button 
-                className="topnav-icon-btn" 
-                aria-label="Billy Assistant"
-                onClick={() => window.dispatchEvent(new CustomEvent('open-billy-chat'))}
-                style={{ background: 'rgba(15, 98, 254, 0.06)', borderRadius: '12px', padding: '4px', marginRight: '4px' }}
-              >
-                <Billy mood="mascot" size={28} />
-              </button>
-
               <div style={{ position: 'relative' }} ref={notifRef}>
                 <button 
                   className="topnav-icon-btn" 
@@ -326,7 +360,7 @@ export default function TopNav() {
                                 </div>
                                 <div className="notif-meta">
                                   <span>{n.createdAt ? new Date(n.createdAt).toLocaleDateString(undefined, { day: 'numeric', month: 'short' }) : 'Reciente'}</span>
-                                  {isUnread && <span className="topnav-plan-dot" style={{ background: '#0F62FE', width: 4, height: 4 }} />}
+                                  {isUnread && <span className="topnav-plan-dot" style={{ background: 'var(--primary)', width: 4, height: 4 }} />}
                                 </div>
                               </div>
                               {isUnread && <div className="notif-unread-indicator" />}
@@ -394,21 +428,61 @@ export default function TopNav() {
                         <Trophy size={18} /> 
                         <span className="profile-dropdown-nav-label">Rankings</span>
                       </button>
-                      <button className="profile-dropdown-nav-item" onClick={() => navigateTo('/simulators/stocks')}>
-                        <BarChart2 size={18} /> 
-                        <span className="profile-dropdown-nav-label">BIZEN Market</span>
-                      </button>
+                      {!isAdminOrTeacher && (
+                        <button className="profile-dropdown-nav-item" onClick={() => navigateTo('/simulators/stocks')}>
+                          <BarChart2 size={18} /> 
+                          <span className="profile-dropdown-nav-label">BIZEN Market</span>
+                        </button>
+                      )}
                       <button className="profile-dropdown-nav-item" onClick={() => navigateTo('/forum')}>
                         <MessageSquare size={18} /> 
                         <span className="profile-dropdown-nav-label">Foro</span>
                       </button>
                       
-                      <div className="profile-dropdown-divider" />
+                      {isSuperAdmin && (
+                        <>
+                          <button className="profile-dropdown-nav-item" onClick={() => navigateTo('/admin/management')}>
+                            <ShieldCheck size={18} className="text-blue-500" /> 
+                            <span className="profile-dropdown-nav-label text-blue-500 font-bold">Admin Roles</span>
+                          </button>
+                          <button className="profile-dropdown-nav-item" onClick={() => navigateTo('/admin/schools')}>
+                            <School size={18} className="text-emerald-500" /> 
+                            <span className="profile-dropdown-nav-label text-emerald-500 font-bold">Admin Escuelas</span>
+                          </button>
+                          <button className="profile-dropdown-nav-item" onClick={() => navigateTo('/admin/banners')}>
+                            <Megaphone size={18} className="text-purple-500" /> 
+                            <span className="profile-dropdown-nav-label text-purple-500 font-bold">Admin Anuncios</span>
+                          </button>
+                          <button className="profile-dropdown-nav-item" onClick={() => navigateTo('/admin/market')}>
+                            <TrendingUp size={18} className="text-amber-500" /> 
+                            <span className="profile-dropdown-nav-label text-amber-500 font-bold">Admin Sim</span>
+                          </button>
+                          <button className="profile-dropdown-nav-item" onClick={() => navigateTo('/admin/glossary')}>
+                            <BookOpen size={18} className="text-pink-500" /> 
+                            <span className="profile-dropdown-nav-label text-pink-500 font-bold">Admin Glosario</span>
+                          </button>
+                          <button className="profile-dropdown-nav-item" onClick={() => navigateTo('/admin/billy')}>
+                            <Brain size={18} className="text-indigo-500" /> 
+                            <span className="profile-dropdown-nav-label text-indigo-500 font-bold">Admin Billy (IA)</span>
+                          </button>
+                          <button className="profile-dropdown-nav-item" onClick={() => navigateTo('/admin/curriculum')}>
+                            <BookOpen size={18} className="text-teal-400" /> 
+                            <span className="profile-dropdown-nav-label text-teal-400 font-bold">Constructor de Lecciones</span>
+                          </button>
+                          <button className="profile-dropdown-nav-item" onClick={() => navigateTo('/admin/system')}>
+                            <Settings size={18} className="text-slate-500" /> 
+                            <span className="profile-dropdown-nav-label text-slate-500 font-bold">Sistema Maestro</span>
+                          </button>
+                          <div className="profile-dropdown-divider" />
+                        </>
+                      )}
                       
-                      <button className="profile-dropdown-nav-item" onClick={() => navigateTo('/profile')}>
-                        <AvatarDisplay avatar={dbProfile?.avatar} size={18} /> 
-                        <span className="profile-dropdown-nav-label">Mi Perfil</span>
-                      </button>
+                      {!isAdminOrTeacher && (
+                        <button className="profile-dropdown-nav-item" onClick={() => navigateTo('/profile')}>
+                          <AvatarDisplay avatar={dbProfile?.avatar} size={18} /> 
+                          <span className="profile-dropdown-nav-label">Mi Perfil</span>
+                        </button>
+                      )}
                       <button className="profile-dropdown-nav-item" onClick={() => navigateTo('/configuracion')}>
                         <Settings size={18} /> 
                         <span className="profile-dropdown-nav-label">Ajustes</span>
@@ -444,7 +518,7 @@ export default function TopNav() {
              <h3 className="text-xl font-bold text-slate-900 text-center mb-2">¿Quieres salir de la lección?</h3>
              <p className="text-slate-500 text-center mb-8">Tu progreso en esta lección no se guardará si sales ahora.</p>
              <div className="flex flex-col gap-3">
-                <button onClick={confirmExit} className="w-full py-3.5 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-colors">Sí, salir ahora</button>
+                <button onClick={confirmExit} className="w-full py-3.5 bg-primary text-white rounded-xl font-bold hover:brightness-110 transition-colors">Sí, salir ahora</button>
                 <button onClick={() => setShowExitDialog(false)} className="w-full py-3.5 bg-slate-100 text-slate-700 rounded-xl font-bold hover:bg-slate-200 transition-colors">Continuar aprendiendo</button>
              </div>
           </div>

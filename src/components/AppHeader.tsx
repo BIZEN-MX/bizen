@@ -59,24 +59,48 @@ export default function AppHeader() {
           }}
           onClick={handleLogoClick}
         >
-          <Image
-            src={isAnahuac ? "/anahuac-logo.png" : "/bizen-logo.png"}
-            alt={isAnahuac ? "Anahuac Logo" : "BIZEN Logo"}
-            width={isAnahuac ? 24 : 28}
-            height={isAnahuac ? 24 : 28}
-            priority
-            style={{
-              objectFit: "contain"
-            }}
-          />
-          <span style={{
-            fontSize: "18px",
-            fontWeight: 500,
-            color: isAnahuac ? "#f97316" : "#0F62FE",
-            letterSpacing: "0.5px"
-          }}>
-            {isAnahuac ? "LEONES" : "BIZEN"}
-          </span>
+          {isAnahuac ? (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <Image
+                src="/anahuac-logo.png"
+                alt="Anahuac Logo"
+                width={28}
+                height={28}
+                priority
+                style={{ objectFit: 'contain' }}
+              />
+              <span style={{ color: '#94a3b8', fontSize: '20px', fontWeight: 500, margin: "0 4px" }}>⨯</span>
+              <span style={{
+                fontSize: "30px",
+                fontWeight: 600,
+                color: "var(--primary)",
+                letterSpacing: "-1px"
+              }}>
+                BIZEN
+              </span>
+            </div>
+          ) : (
+            <>
+              <Image
+                src="/bizen-logo.png"
+                alt="BIZEN Logo"
+                width={28}
+                height={28}
+                priority
+                style={{
+                  objectFit: "contain"
+                }}
+              />
+              <span style={{
+                fontSize: "18px",
+                fontWeight: 500,
+                color: "#0F62FE",
+                letterSpacing: "0.5px"
+              }}>
+                BIZEN
+              </span>
+            </>
+          )}
         </div>
       </div>
 

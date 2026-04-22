@@ -22,9 +22,10 @@ interface DesktopWidgetsProps {
   totalBites: number
   onCategoryClick: (category: string) => void
   onBillyClick?: () => void
+  isAnahuac?: boolean
 }
 
-export const LeftStatsWidget: React.FC<DesktopWidgetsProps> = ({ bizcoins, streak, activeIndex, totalBites, onBillyClick }) => {
+export const LeftStatsWidget: React.FC<DesktopWidgetsProps> = ({ bizcoins, streak, activeIndex, totalBites, onBillyClick, isAnahuac }) => {
   return (
     <motion.div 
       initial={{ opacity: 0, x: -30 }}
@@ -41,8 +42,8 @@ export const LeftStatsWidget: React.FC<DesktopWidgetsProps> = ({ bizcoins, strea
         boxShadow: "0 20px 40px rgba(0,0,0,0.2)"
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20 }}>
-          <div style={{ width: 40, height: 40, borderRadius: 12, background: "rgba(11, 113, 254, 0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <LayoutGrid size={20} color="#0B71FE" />
+          <div style={{ width: 40, height: 40, borderRadius: 12, background: isAnahuac ? "rgba(255, 89, 0, 0.1)" : "rgba(11, 113, 254, 0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <LayoutGrid size={20} color={isAnahuac ? "#FF5900" : "#0B71FE"} />
           </div>
           <div>
             <h4 style={{ margin: 0, color: "#fff", fontSize: 16, fontWeight: 700 }}>Mi Academia</h4>
@@ -75,14 +76,14 @@ export const LeftStatsWidget: React.FC<DesktopWidgetsProps> = ({ bizcoins, strea
         whileTap={{ scale: 0.98 }}
         onClick={onBillyClick}
         style={{
-          background: "linear-gradient(135deg, #0B71FE 0%, #0448A4 100%)",
+          background: isAnahuac ? "linear-gradient(135deg, #FF5900 0%, #CC4700 100%)" : "linear-gradient(135deg, #0B71FE 0%, #0448A4 100%)",
           borderRadius: 24,
           padding: "24px",
           border: "none",
           color: "#fff",
           textAlign: "left",
           cursor: "pointer",
-          boxShadow: "0 15px 35px rgba(11, 113, 254, 0.2)",
+          boxShadow: isAnahuac ? "0 15px 35px rgba(255, 89, 0, 0.2)" : "0 15px 35px rgba(11, 113, 254, 0.2)",
           display: "block",
           width: "100%",
           marginTop: 20
@@ -105,7 +106,7 @@ export const LeftStatsWidget: React.FC<DesktopWidgetsProps> = ({ bizcoins, strea
   )
 }
 
-export const RightNavigationWidget: React.FC<DesktopWidgetsProps> = ({ onCategoryClick }) => {
+export const RightNavigationWidget: React.FC<DesktopWidgetsProps> = ({ onCategoryClick, isAnahuac }) => {
   const categories = [
     { name: "Inversión", icon: TrendingUp, color: "#10b981" },
     { name: "Ahorro", icon: Target, color: "#3b82f6" },
@@ -163,8 +164,8 @@ export const RightNavigationWidget: React.FC<DesktopWidgetsProps> = ({ onCategor
           marginTop: 24, 
           padding: 16, 
           borderRadius: 16, 
-          background: "linear-gradient(135deg, #0B71FE22 0%, #0B71FE08 100%)",
-          border: "1px solid #0B71FE33"
+          background: isAnahuac ? "linear-gradient(135deg, #FF590022 0%, #FF590008 100%)" : "linear-gradient(135deg, #0B71FE22 0%, #0B71FE08 100%)",
+          border: isAnahuac ? "1px solid #FF590033" : "1px solid #0B71FE33"
         }}>
           <p style={{ margin: 0, fontSize: 12, color: "rgba(255,255,255,0.6)", lineHeight: 1.5 }}>
             <span style={{ color: "#fff", fontWeight: 600 }}>Tip BIZEN:</span> Desliza hacia arriba para ver el siguiente video.

@@ -159,3 +159,54 @@ export const lessonEvaluacionBloque3Steps: LessonStep[] = [
 
   { id: "eval-3-10", stepType: "summary", title: "Certificación: Consumo", body: "Examen finalizado. Has demostrado que el control de tus salidas de capital es una ventaja competitiva.", fullScreen: true },
 ]
+
+// ==============================================================================
+// EVALUACIÓN BLOQUE 4: FINANZAS PARA MI NEGOCIO (TEMA 4)
+// ==============================================================================
+export const lessonEvaluacionBloque4Steps: LessonStep[] = [
+  { id: "eval-4-1", stepType: "billy_talks", body: "Bienvenido al Examen de Certificación Final: Bloque 4. Aquí validaremos si eres capaz de operar una estructura de negocio paramétrica y blindada.", fullScreen: true },
+  
+  { id: "eval-4-2", stepType: "mcq", question: "¿Qué indicador BIZEN determina si tu negocio está 'creciendo' o 'muriendo' independientemente de la facturación?", options: [
+    {id:"o1", label:"Ingresos Brutos Mensuales", isCorrect:false}, 
+    {id:"o2", label:"Utilidad Neta (Dinero real después de TODO)", isCorrect:true},
+    {id:"o3", label:"Número de clientes activos", isCorrect:false}
+  ], isAssessment: true, fullScreen: true },
+
+  { id: "eval-4-3", stepType: "true_false", statement: "El Financiamiento BIZEN debe utilizarse prioritariamente para cubrir hoyos de flujo de efectivo en nóminas.", correctValue: false, explanation: "Falso. El financiamiento se usa exclusivamente para EXPANDIR operaciones con ROI probado, nunca para subsistencia operativa.", isAssessment:true, fullScreen: true },
+
+  { id: "eval-4-4", stepType: "swipe_sorter", question: "Clasifica el Escenario por su Viabilidad Financiera", leftBucket: {label:"Viable (BIZEN)", color:"#10b981"}, rightBucket: {label:"Inviable (Suicidio)", color:"#ef4444"}, items: [
+    {id:"i1", label:"ROI del 30% con un CAT bancario del 15%", correctBucket:"left"}, 
+    {id:"i2", label:"Costo unitario mayor al precio de mercado", correctBucket:"right"}, 
+    {id:"i3", label:"Margen Operativo que cubre costos fijos en 5 días", correctBucket:"left"}, 
+    {id:"i4", label:"Dependencia de un solo cliente que aporta el 90% del flujo", correctBucket:"right"}
+  ], isAssessment: true, fullScreen: true },
+
+  { id: "eval-4-5", stepType: "order", question: "Ruta de Auditoría de Salida (Optimización de Recursos)", items: [
+    {id:"p1", label: "Análisis de Margen de Ganancia Neto", correctOrder: 1}, 
+    {id: "p2", label: "Optimización Fiscal (Ej. RESICO)", correctOrder: 2}, 
+    {id: "p3", label: "Reinversión Paramétrica de Utilidades", correctOrder: 3}
+  ], isAssessment: true, fullScreen: true },
+
+  { id: "eval-4-6", stepType: "match", question: "Relaciona la Herramienta con su Blindaje", leftItems: [
+    {id:"l1", label:"Seguro de Daños"}, 
+    {id:"l2", label:"Acta Constitutiva"}
+  ], rightItems: [
+    {id:"r1", label:"Mitigación de riesgos letales operativos"}, 
+    {id:"r2", label:"Separación de patrimonio personal y societario"}
+  ], correctPairs: [{leftId:"l1", rightId:"r1"}, {leftId:"l2", rightId:"r2"}], isAssessment: true, fullScreen: true },
+
+  { id: "eval-4-7", stepType: "mcq", question: "En el Régimen RESICO, ¿cuál es el beneficio financiero asimétrico más importante para una Persona Física con Actividad Empresarial?", options: [
+    {id:"o1", label: "No tener que pagar IVA de los productos vendidos", isCorrect: false}, 
+    {id:"o2", label: "Pagar un ISR máximo del 2.5%, liberando capital para reinversión", isCorrect: true},
+    {id:"o3", label: "Poder deducir gastos de lujo sin revisión del SAT", isCorrect: false}
+  ], isAssessment: true, fullScreen: true },
+
+  { id: "eval-4-8", stepType: "true_false", statement: "El Punto de Equilibrio es el momento exacto en que la empresa empieza a generar riqueza para los socios.", correctValue: false, explanation: "Falso. El Punto de Equilibrio es solo el nivel de ventas donde no hay ganancia ni pérdida; la riqueza real empieza DESPUÉS de superarlo.", isAssessment:true, fullScreen: true },
+
+  { id: "eval-4-9", stepType: "blitz_challenge", question: "¿Cómo se llama la barrera legal que protege tu propiedad intelectual?", options: [
+    {id:"o1", label:"Moat Jurídico (IMPI/Contratos)", isCorrect:true}, 
+    {id:"o2", label:"Patente de Corso", isCorrect:false}
+  ], timeLimit: 10, isAssessment: true, fullScreen: true },
+
+  { id: "eval-4-10", stepType: "summary", title: "Certificación: Finanzas Empresariales", body: "Examen finalizado. Has demostrado dominio sobre la estructura fáctica de un negocio rentable. Tu certificado final está validado.", fullScreen: true },
+]

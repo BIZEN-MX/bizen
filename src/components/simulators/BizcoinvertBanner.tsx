@@ -111,11 +111,7 @@ export function BizcoinvertBanner({ userEmail }: { userEmail?: string }) {
     email.endsWith('@bizen.mx')
   )
 
-  const isAnahuac = email && (
-    email.endsWith('@anahuac.mx') || 
-    email.endsWith('.anahuac.mx') || 
-    email.endsWith('@bizen.mx')
-  )
+
 
   if (!mounted || !isEligible || enrolled) return null
 
@@ -182,17 +178,12 @@ export function BizcoinvertBanner({ userEmail }: { userEmail?: string }) {
                     Bizcoinvert
                   </span>
                 </h2>
-                {isAnahuac && (
-                  <div className="bg-white/10 p-1.5 rounded border border-white/20 shadow-lg">
-                    <Image src="/anahuac-logo.png" alt="Anáhuac" width={32} height={32} className="object-contain" />
-                  </div>
-                )}
               </div>
 
               {/* Description */}
               <p className="text-white/60 text-[13px] md:text-[14px] leading-relaxed m-0 max-w-[500px]">
-                Compite contra {isAnahuac ? "todos los Leones" : <span>alumnos de <strong className="text-white/85">todas las instituciones educativas</strong></span>} de BIZEN.
-                El {isAnahuac ? "León" : "estudiante"} con el mejor rendimiento en el simulador al final del ciclo mensual se lleva{" "}
+                Compite contra <span>alumnos de <strong className="text-white/85">todas las instituciones educativas</strong></span> de BIZEN.
+                El estudiante con el mejor rendimiento en el simulador al final del ciclo mensual se lleva{" "}
                 <strong className="text-amber-300">50,000 Bizcoins</strong>. Los rankings se actualizan en tiempo real.
               </p>
             </div>
@@ -213,7 +204,7 @@ export function BizcoinvertBanner({ userEmail }: { userEmail?: string }) {
             {/* Feature pills */}
             <div className="flex flex-wrap gap-2">
               {[
-                { icon: <Users size={12} />, label: isAnahuac ? "Exclusivo para Leones" : "Todas las instituciones", color: "text-blue-300" },
+                { icon: <Users size={12} />, label: "Todas las instituciones", color: "text-blue-300" },
                 { icon: <TrendingUp size={12} />, label: "Rankings en tiempo real", color: "text-emerald-400" },
                 { icon: <Zap size={12} />, label: "Sin costo de inscripción", color: "text-amber-300" },
               ].map((f) => (
@@ -232,9 +223,16 @@ export function BizcoinvertBanner({ userEmail }: { userEmail?: string }) {
           <div className="md:w-[320px] shrink-0 flex flex-col items-center justify-between gap-4 p-6 md:p-8 border-t border-white/8 md:border-t-0 md:border-l md:border-white/8">
 
             {/* Prize */}
-            <div className="w-full flex items-center justify-between bg-amber-400/10 border border-amber-400/25 rounded-2xl px-5 py-3.5 shadow-[0_4px_20px_rgba(251,191,36,0.08)]">
+            <motion.div 
+              animate={{ boxShadow: ["0 4px 20px rgba(251,191,36,0.1)", "0 4px 40px rgba(251,191,36,0.3)", "0 4px 20px rgba(251,191,36,0.1)"] }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+              whileHover={{ scale: 1.03 }}
+              className="w-full flex items-center justify-between bg-amber-400/10 border border-amber-400/25 rounded-2xl px-5 py-3.5"
+            >
               <div className="flex items-center gap-2">
-                <Award size={20} className="text-amber-400" />
+                <motion.div animate={{ rotate: [0, -10, 10, -10, 0] }} transition={{ duration: 0.5, delay: 2, repeat: Infinity, repeatDelay: 3 }}>
+                  <Award size={20} className="text-amber-400" />
+                </motion.div>
                 <span className="text-white/55 text-[11px] font-bold uppercase tracking-wider">Premio</span>
               </div>
               <div className="flex items-center gap-2">
@@ -242,7 +240,7 @@ export function BizcoinvertBanner({ userEmail }: { userEmail?: string }) {
                 <span className="text-amber-300 text-[22px] font-black tracking-tight">50,000</span>
                 <span className="text-amber-400/70 text-[12px] font-bold">BZ</span>
               </div>
-            </div>
+            </motion.div>
 
             {/* Countdown */}
             <div className="w-full">

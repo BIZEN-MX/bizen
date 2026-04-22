@@ -1,5 +1,6 @@
 "use client"
 
+import * as React from "react"
 import { useState, useEffect, useRef, useCallback } from "react"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
@@ -408,6 +409,7 @@ function VideoSlide({
   liked,
   saved,
   muted,
+  isAnahuac,
 }: {
   bite: Bite
   isActive: boolean
@@ -417,6 +419,7 @@ function VideoSlide({
   onSave: () => void
   liked: boolean
   saved: boolean
+  isAnahuac: boolean
 }) {
   const videoRef = useRef<HTMLVideoElement>(null)
   const [isPaused, setIsPaused] = useState(false)
@@ -551,7 +554,7 @@ function VideoSlide({
 
       {/* Top Progress Bar */}
       <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: 3, background: "rgba(255,255,255,0.1)", zIndex: 10 }}>
-        <div style={{ width: isActive ? "100%" : "0%", height: "100%", background: "#0B71FE", transition: isActive ? "width 60s linear" : "none" }} />
+        <div style={{ width: isActive ? "100%" : "0%", height: "100%", background: isAnahuac ? "#FF5900" : "#0B71FE", transition: isActive ? "width 60s linear" : "none" }} />
       </div>
 
 
@@ -574,7 +577,7 @@ function VideoSlide({
               width: 36,
               height: 36,
               borderRadius: "50%",
-              background: "#0B71FE",
+              background: isAnahuac ? "#FF5900" : "#0B71FE",
               border: "2px solid #fff",
               display: "flex",
               alignItems: "center",
@@ -587,7 +590,7 @@ function VideoSlide({
           <div>
             <div style={{ fontSize: 15, fontWeight: 700, color: "#fff", display: "flex", alignItems: "center", gap: 5 }}>
               {bite.creatorName ?? "BIZEN Expert"}
-              <CheckCircle2 size={14} color="#0B71FE" fill="#fff" />
+              <CheckCircle2 size={14} color={isAnahuac ? "#FF5900" : "#0B71FE"} fill="#fff" />
             </div>
             <span style={{ fontSize: 11, color: "rgba(255,255,255,0.6)", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em" }}>
               {bite.category}
@@ -679,6 +682,8 @@ export default function BitesPage() {
   const [likes, setLikes] = useState<Record<string, boolean>>({})
   const [saves, setSaves] = useState<Record<string, boolean>>({})
   const [muted, setMuted] = useState(true)
+
+  const isAnahuac = (user?.emailAddresses?.[0]?.emailAddress || user?.email || "").toLowerCase().endsWith('@anahuac.mx') || (user?.emailAddresses?.[0]?.emailAddress || user?.email || "").toLowerCase().endsWith('@bizen.mx') || false;
 
   // Track which slide is in view via IntersectionObserver
   useEffect(() => {
@@ -809,7 +814,7 @@ export default function BitesPage() {
             width: 48,
             height: 48,
             borderRadius: "16px",
-            background: "linear-gradient(135deg, #0B71FE 0%, #0448A4 100%)",
+            background: isAnahuac ? "linear-gradient(135deg, #FF5900 0%, #CC4700 100%)" : "linear-gradient(135deg, #0B71FE 0%, #0448A4 100%)",
             border: "none",
             color: "#fff",
             display: "flex",
@@ -819,7 +824,7 @@ export default function BitesPage() {
             backdropFilter: "blur(20px)",
             transition: "all 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
             marginLeft: 8,
-            boxShadow: "0 8px 16px rgba(11, 113, 254, 0.3)"
+            boxShadow: isAnahuac ? "0 8px 16px rgba(255, 89, 0, 0.3)" : "0 8px 16px rgba(11, 113, 254, 0.3)"
           }}
           onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
           onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
@@ -839,6 +844,7 @@ export default function BitesPage() {
           activeIndex={activeIndex}
           totalBites={BITES.length}
           onCategoryClick={() => {}}
+          isAnahuac={isAnahuac}
           onBillyClick={() => {
             const currentBite = BITES[activeIndex];
             const ctx = currentBite.type === "video" 
@@ -938,6 +944,7 @@ export default function BitesPage() {
                       bite={bite}
                       isActive={idx === activeIndex}
                       muted={muted}
+                      isAnahuac={isAnahuac}
                       onBillyOpen={() => openBilly(`Estoy viendo un video titulado "${bite.title}". ${bite.description}`)}
                       onLike={() => setLikes((l) => ({ ...l, [bite.id]: !l[bite.id] }))}
                       onSave={() => setSaves((s) => ({ ...s, [bite.id]: !s[bite.id] }))}
@@ -1001,9 +1008,9 @@ export default function BitesPage() {
                       width: i === activeIndex ? 20 : 6,
                       height: 6,
                       borderRadius: 999,
-                      background: i === activeIndex ? "#0B71FE" : "rgba(255,255,255,0.25)",
+                      background: i === activeIndex ? (isAnahuac ? "#FF5900" : "#0B71FE") : "rgba(255,255,255,0.25)",
                       transition: "all 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
-                      boxShadow: i === activeIndex ? "0 0 10px rgba(11, 113, 254, 0.5)" : "none"
+                      boxShadow: i === activeIndex ? (isAnahuac ? "0 0 10px rgba(255,89,0,0.5)" : "0 0 10px rgba(11, 113, 254, 0.5)") : "none"
                     }}
                   />
                 ))}
@@ -1018,6 +1025,7 @@ export default function BitesPage() {
           activeIndex={activeIndex}
           totalBites={BITES.length}
           onCategoryClick={() => {}} 
+          isAnahuac={isAnahuac}
         />
       </div>
 

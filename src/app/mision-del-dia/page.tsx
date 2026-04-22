@@ -1,6 +1,7 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
+import * as React from "react"
+import { useState, useEffect, useRef, useMemo } from "react"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
 import {
@@ -34,6 +35,11 @@ const CHALLENGE_TYPE_META: Record<string, { label: string; icon: any; color: str
 export default function MisionDiaPage() {
   const { user, loading, dbProfile, refreshUser, setDbProfile } = useAuth()
   const router = useRouter()
+  
+  const isAnahuac = useMemo(() => {
+    const email = user?.email?.toLowerCase() || (user as any)?.emailAddresses?.[0]?.emailAddress || ""
+    return email.endsWith('@anahuac.mx') || email.includes('.anahuac.mx') || email.endsWith('@bizen.mx');
+  }, [user])
 
   const [earnedRewards, setEarnedRewards] = useState<{ xpAdded: number; newTotalXP: number } | null>(null)
   const [challenge, setChallenge] = useState<(DailyChallenge & { isCompleted?: boolean }) | null>(null)
@@ -196,8 +202,8 @@ export default function MisionDiaPage() {
   return (
     <div className="min-h-screen bg-slate-50 relative overflow-x-hidden pt-6 pb-28 px-4 md:py-12 md:px-10 lg:px-20">
       {/* Background orbs */}
-      <div className="fixed top-[5%] right-[10%] w-[500px] h-[500px] rounded-full pointer-events-none z-0 bg-[radial-gradient(circle,rgba(15,98,254,0.06)_0%,transparent_70%)] animate-pulse" />
-      <div className="fixed bottom-[10%] left-[5%] w-[400px] h-[400px] rounded-full pointer-events-none z-0 bg-[radial-gradient(circle,rgba(139,92,246,0.04)_0%,transparent_70%)] animate-pulse" style={{ animationDelay: '1s' }} />
+      <div className={`fixed top-[5%] right-[10%] w-[500px] h-[500px] rounded-full pointer-events-none z-0 ${isAnahuac ? 'bg-[radial-gradient(circle,rgba(255,89,0,0.08)_0%,transparent_70%)]' : 'bg-[radial-gradient(circle,rgba(15,98,254,0.06)_0%,transparent_70%)]'} animate-pulse`} />
+      <div className={`fixed bottom-[10%] left-[5%] w-[400px] h-[400px] rounded-full pointer-events-none z-0 ${isAnahuac ? 'bg-[radial-gradient(circle,rgba(255,89,0,0.05)_0%,transparent_70%)]' : 'bg-[radial-gradient(circle,rgba(139,92,246,0.04)_0%,transparent_70%)]'} animate-pulse`} style={{ animationDelay: '1s' }} />
 
 
         {/* ══ EVIDENCE MODAL ══ */}
@@ -218,7 +224,7 @@ export default function MisionDiaPage() {
                 className="relative w-full max-w-[540px] bg-white rounded-[32px] shadow-2xl overflow-hidden z-10"
               >
                 {/* Dark banner header */}
-                <div className="relative bg-gradient-to-br from-slate-900 via-blue-900 to-blue-700 p-8 md:p-10 pb-6 overflow-hidden">
+                <div className={`relative p-8 md:p-10 pb-6 overflow-hidden ${isAnahuac ? 'bg-gradient-to-br from-[#1c0a00] via-[#4a1a00] to-[#9c3700]' : 'bg-gradient-to-br from-slate-900 via-blue-900 to-blue-700'}`}>
                   {/* Decorative orbs in banner */}
                   <div className="absolute -top-10 -right-10 w-40 h-40 rounded-full bg-[radial-gradient(circle,rgba(99,179,255,0.2)_0%,transparent_70%)] pointer-events-none" />
                   <div className="absolute -bottom-8 -left-5 w-32 h-32 rounded-full bg-[radial-gradient(circle,rgba(139,92,246,0.15)_0%,transparent_70%)] pointer-events-none" />
@@ -249,7 +255,7 @@ export default function MisionDiaPage() {
                     {/* Misión pill */}
                     {challenge?.title && (
                       <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-3 py-1.5 text-[11px] font-bold text-white/80 mt-4 uppercase tracking-wider">
-                        <Target size={11} className="text-blue-400" />
+                        <Target size={11} className={isAnahuac ? "text-orange-400" : "text-blue-400"} />
                         {challenge.title}
                       </div>
                     )}
@@ -261,7 +267,7 @@ export default function MisionDiaPage() {
                   <div className="relative group">
                     <textarea
                       ref={textareaRef}
-                      className="w-full p-5 bg-slate-50 border-2 border-slate-100 rounded-2xl text-slate-700 text-[15px] leading-relaxed resize-none outline-none focus:border-blue-500 focus:bg-white focus:shadow-lg focus:shadow-blue-500/5 transition-all"
+                      className={`w-full p-5 bg-slate-50 border-2 border-slate-100 rounded-2xl text-slate-700 text-[15px] leading-relaxed resize-none outline-none focus:bg-white focus:shadow-lg transition-all ${isAnahuac ? "focus:border-orange-500 focus:shadow-orange-500/5" : "focus:border-blue-500 focus:shadow-blue-500/5"}`}
                       rows={5}
                       maxLength={charLimit}
                       placeholder="Ej: Hoy revisé mis gastos de la última semana y encontré que gasto $350 en suscripciones de streaming..."
@@ -315,10 +321,10 @@ export default function MisionDiaPage() {
                     ) : (
                       <button
                         onClick={() => fileInputRef.current?.click()}
-                        className="w-full p-6 bg-slate-50 border-2 border-dashed border-slate-200 rounded-2xl flex flex-col items-center gap-2 hover:border-blue-500 hover:bg-blue-50/30 transition-all group"
+                        className={`w-full p-6 bg-slate-50 border-2 border-dashed border-slate-200 rounded-2xl flex flex-col items-center gap-2 transition-all group ${isAnahuac ? 'hover:border-orange-500 hover:bg-orange-50/30' : 'hover:border-blue-500 hover:bg-blue-50/30'}`}
                       >
                         <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-sm border border-slate-100 group-hover:scale-110 transition-transform">
-                          <Camera size={24} className="text-blue-600" />
+                          <Camera size={24} className={isAnahuac ? "text-orange-600" : "text-blue-600"} />
                         </div>
                         <span className="text-sm font-bold text-slate-700 mt-1">Adjuntar evidencia visual</span>
                         <span className="text-[11px] font-medium text-slate-400 uppercase tracking-widest">PNG, JPG (máx. 5MB)</span>
@@ -333,17 +339,17 @@ export default function MisionDiaPage() {
                     >
                       Cerrar
                     </button>
-                    <button
-                      onClick={handleEvidenceSubmit}
-                      disabled={!canSubmit || submitting}
-                      className={`flex-[2] flex items-center justify-center gap-2 py-4 rounded-2xl font-bold transition-all shadow-lg text-[15px] ${
-                        canSubmit && !submitting 
-                          ? "bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow-blue-500/25 hover:-translate-y-1 hover:shadow-blue-500/35" 
-                          : "bg-slate-200 text-slate-400 cursor-not-allowed shadow-none"
-                      }`}
-                    >
-                      {submitting ? "Publicando..." : <><Send size={18} /> Publicar evidencia</>}
-                    </button>
+                      <button
+                        onClick={handleEvidenceSubmit}
+                        disabled={!canSubmit || submitting}
+                        className={`flex-[2] flex items-center justify-center gap-2 py-4 rounded-2xl font-bold transition-all shadow-lg text-[15px] ${
+                          canSubmit && !submitting 
+                            ? (isAnahuac ? "bg-gradient-to-r from-orange-600 to-orange-500 text-white shadow-orange-500/25 hover:-translate-y-1 hover:shadow-orange-500/35" : "bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow-blue-500/25 hover:-translate-y-1 hover:shadow-blue-500/35")
+                            : "bg-slate-200 text-slate-400 cursor-not-allowed shadow-none"
+                        }`}
+                      >
+                        {submitting ? "Publicando..." : <><Send size={18} /> Publicar evidencia</>}
+                      </button>
                   </div>
                 </div>
               </motion.div>
@@ -441,7 +447,11 @@ export default function MisionDiaPage() {
                       whileHover={{ y: -4, scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                       onClick={() => setShowEvidence(true)}
-                      className="group flex items-center justify-center gap-3 px-10 py-5 bg-gradient-to-r from-blue-600 to-blue-500 text-white rounded-[24px] font-bold text-lg shadow-xl shadow-blue-600/30 hover:shadow-blue-600/50 transition-all border border-blue-400/20"
+                      className={`group flex items-center justify-center gap-3 px-10 py-5 text-white rounded-[24px] font-bold text-lg shadow-xl transition-all border ${
+                        isAnahuac 
+                          ? "bg-gradient-to-r from-orange-600 to-orange-500 shadow-orange-600/30 hover:shadow-orange-600/50 border-orange-400/20" 
+                          : "bg-gradient-to-r from-blue-600 to-blue-500 shadow-blue-600/30 hover:shadow-blue-600/50 border-blue-400/20"
+                      }`}
                     >
                       <SquareCheckBig size={22} className="group-hover:rotate-12 transition-transform" />
                       Completar mi misión hoy
@@ -460,17 +470,17 @@ export default function MisionDiaPage() {
                   <div className="absolute top-0 right-0 w-32 h-32 bg-blue-50 rounded-full -mr-10 -mt-10 group-hover:scale-110 transition-transform" />
                   
                   <div className="relative z-10">
-                    <div className="w-14 h-14 bg-blue-600 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-600/20 mb-8">
+                    <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg mb-8 ${isAnahuac ? "bg-orange-600 shadow-orange-600/20" : "bg-blue-600 shadow-blue-600/20"}`}>
                       <PenLine size={24} className="text-white" />
                     </div>
-                    <p className="text-[11px] font-extrabold text-blue-600 uppercase tracking-[0.2em] mb-3">Guía rápida</p>
+                    <p className={`text-[11px] font-extrabold uppercase tracking-[0.2em] mb-3 ${isAnahuac ? "text-orange-600" : "text-blue-600"}`}>Guía rápida</p>
                     <h3 className="text-xl font-extrabold text-slate-900 mb-6">Tres pasos al éxito</h3>
                     
                     <div className="space-y-5">
                       {[
-                        { icon: <Brain size={16} />, color: "text-indigo-500", bg: "bg-indigo-50", text: "Analiza el reto con atención" },
+                        { icon: <Brain size={16} />, color: isAnahuac ? "text-orange-500" : "text-indigo-500", bg: isAnahuac ? "bg-orange-50" : "bg-indigo-50", text: "Analiza el reto con atención" },
                         { icon: <SquareCheckBig size={16} />, color: "text-emerald-500", bg: "bg-emerald-50", text: "Realiza la acción financiera" },
-                        { icon: <Send size={16} />, color: "text-blue-500", bg: "bg-blue-50", text: "Publica y gana XP" },
+                        { icon: <Send size={16} />, color: isAnahuac ? "text-orange-500" : "text-blue-500", bg: isAnahuac ? "bg-orange-50" : "bg-blue-50", text: "Publica y gana XP" },
                       ].map((item, i) => (
                         <div key={i} className="flex items-center gap-4">
                           <div className={`w-8 h-8 ${item.bg} ${item.color} rounded-lg flex items-center justify-center shrink-0`}>
@@ -521,7 +531,7 @@ export default function MisionDiaPage() {
             >
               <div className="relative overflow-hidden bg-slate-900 rounded-[40px] p-8 md:p-16 text-center border border-white/5 shadow-2xl">
                 {/* Background decorative elements */}
-                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_75%_0%,rgba(15,98,254,0.18)_0%,transparent_65%),radial-gradient(ellipse_at_15%_100%,rgba(99,102,241,0.12)_0%,transparent_55%)] pointer-events-none" />
+                <div className={`absolute inset-0 pointer-events-none ${isAnahuac ? 'bg-[radial-gradient(ellipse_at_75%_0%,rgba(255,89,0,0.18)_0%,transparent_65%),radial-gradient(ellipse_at_15%_100%,rgba(255,140,77,0.12)_0%,transparent_55%)]' : 'bg-[radial-gradient(ellipse_at_75%_0%,rgba(15,98,254,0.18)_0%,transparent_65%),radial-gradient(ellipse_at_15%_100%,rgba(99,102,241,0.12)_0%,transparent_55%)]'}`} />
                 
                 <div className="relative z-10">
                   {/* Floating trophy */}
@@ -547,8 +557,8 @@ export default function MisionDiaPage() {
                   </div>
 
                   <div className="inline-flex items-center gap-2 px-6 py-2 bg-white/10 border border-white/10 rounded-full mb-8">
-                    <Flame size={18} className="text-blue-400" />
-                    <span className="text-sm font-bold text-blue-300">
+                    <Flame size={18} className={isAnahuac ? "text-orange-400" : "text-blue-400"} />
+                    <span className={`text-sm font-bold ${isAnahuac ? "text-orange-300" : "text-blue-300"}`}>
                       {streak} {streak === 1 ? "día" : "días"} seguidos
                     </span>
                   </div>
@@ -567,7 +577,7 @@ export default function MisionDiaPage() {
                       className={`flex items-center justify-center gap-3 w-full py-5 rounded-[22px] font-bold text-lg transition-all ${
                         submitted 
                           ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/20 cursor-default" 
-                          : "bg-blue-600 text-white shadow-xl shadow-blue-600/30 hover:bg-blue-500"
+                          : (isAnahuac ? "bg-orange-600 text-white shadow-xl shadow-orange-600/30 hover:bg-orange-500" : "bg-blue-600 text-white shadow-xl shadow-blue-600/30 hover:bg-blue-500")
                       }`}
                     >
                       {submitted ? <CheckCircle size={22} /> : <FileText size={22} />}

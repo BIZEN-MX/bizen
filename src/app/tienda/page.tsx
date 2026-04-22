@@ -205,6 +205,15 @@ export default function TiendaPage() {
         if (loading) return
         if (!user) { router.push("/login"); return }
 
+        // Auto-switch to bizcoins tab if URL hash is #bizcoins
+        if (typeof window !== "undefined" && window.location.hash === "#bizcoins") {
+            setActiveTab("bizcoins")
+            // Smooth scroll after a tick so the section renders first
+            setTimeout(() => {
+                document.getElementById("tienda-tabs")?.scrollIntoView({ behavior: "smooth", block: "start" })
+            }, 300)
+        }
+
         const fetchAll = async () => {
             setLoadingStats(true)
             try {
@@ -572,6 +581,7 @@ export default function TiendaPage() {
 
                 {/* ── NAVIGATION TABS ── */}
                 <div 
+                    id="tienda-tabs"
                     className="flex flex-nowrap overflow-x-auto gap-2 md:gap-4 mb-8 border-b-2 border-slate-200 animate-[fadeIn_0.5s_ease_0.12s_both] relative overflow-y-hidden pb-0.5 custom-scrollbar-hide"
                 >
                     {[
@@ -669,26 +679,36 @@ export default function TiendaPage() {
                                         }}
                                     >
                                         {/* ── Card hero ── */}
-                                        <div className="relative h-[180px] flex items-center justify-center overflow-hidden" style={{ background: product.bg }}>
-                                            {/* Ambient glow orb */}
-                                            <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 w-[120px] h-[60px] rounded-full blur-[12px] pointer-events-none" style={{ background: `radial-gradient(circle, ${product.accent}60 0%, transparent 70%)` }} />
+                                        <div className="relative h-[210px] flex items-center justify-center overflow-hidden" style={{ background: product.bg }}>
+                                            {/* Dot-grid pattern overlay */}
+                                            <div className="absolute inset-0 pointer-events-none opacity-20" style={{ backgroundImage: 'radial-gradient(rgba(255,255,255,0.7) 1px, transparent 1px)', backgroundSize: '18px 18px' }} />
+                                            {/* Top-left diagonal lines */}
+                                            <div className="absolute inset-0 pointer-events-none opacity-10" style={{ backgroundImage: `repeating-linear-gradient(45deg, rgba(255,255,255,0.5) 0px, rgba(255,255,255,0.5) 1px, transparent 1px, transparent 18px)` }} />
+                                            {/* Bottom ambient glow */}
+                                            <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-[160px] h-[80px] rounded-full blur-[20px] pointer-events-none" style={{ background: `radial-gradient(circle, ${product.accent}80 0%, transparent 70%)` }} />
+                                            {/* Top right soft light */}
+                                            <div className="absolute -top-10 -right-10 w-[120px] h-[120px] rounded-full blur-[30px] pointer-events-none opacity-40" style={{ background: `radial-gradient(circle, ${product.accent}90 0%, transparent 80%)` }} />
                                             {/* Shine sweep for Legendario */}
                                             {product.badge === "Legendario" && (
                                                 <div className="absolute top-0 -left-full w-[60%] h-full bg-gradient-to-r from-transparent via-white/10 to-transparent animate-[scanline_3s_ease-in-out_infinite] pointer-events-none" />
                                             )}
+                                            {/* Category label top-left */}
+                                            <div className="absolute bottom-3 left-3 px-2.5 py-1 rounded-lg bg-black/30 backdrop-blur-sm border border-white/10 text-white text-[10px] font-bold tracking-widest uppercase">
+                                                {product.category}
+                                            </div>
                                             {/* Icon */}
-                                            <div className="relative z-10 drop-shadow-[0_6px_16px_rgba(0,0,0,0.3)] animate-[float_3.5s_ease-in-out_infinite]" style={{ animationDelay: `${idx * 0.3}s` }}>
+                                            <div className="relative z-10 drop-shadow-[0_8px_24px_rgba(0,0,0,0.4)] scale-110 animate-[float_3.5s_ease-in-out_infinite]" style={{ animationDelay: `${idx * 0.3}s` }}>
                                                 {product.icon}
                                             </div>
 
                                             {/* Rarity / Owned badge */}
                                             {isOwned ? (
-                                                <div className="absolute top-3 right-3 flex items-center gap-1.5 bg-emerald-500/20 border border-emerald-500/50 backdrop-blur-sm text-emerald-500 text-[10px] font-black px-2.5 py-1.5 rounded-full shadow-[0_4px_12px_rgba(16,185,129,0.3)] tracking-wider">
+                                                <div className="absolute top-3 right-3 flex items-center gap-1.5 bg-emerald-500/20 border border-emerald-500/50 backdrop-blur-sm text-emerald-400 text-[10px] font-black px-2.5 py-1.5 rounded-full shadow-[0_4px_12px_rgba(16,185,129,0.3)] tracking-wider">
                                                     <CheckCircle2 size={12} /> ADQUIRIDO
                                                 </div>
                                             ) : product.badge && RARITY_STYLES[product.badge] ? (
                                                 <div 
-                                                    className="absolute top-3 right-3 flex items-center gap-1.5 bg-black/35 backdrop-blur-md text-white text-[10px] font-black px-3 py-1.5 rounded-full tracking-wider uppercase"
+                                                    className="absolute top-3 right-3 flex items-center gap-1.5 bg-black/40 backdrop-blur-md text-white text-[10px] font-black px-3 py-1.5 rounded-full tracking-wider uppercase"
                                                     style={{ 
                                                         border: `1px solid ${RARITY_STYLES[product.badge].glow.replace("rgba","rgba").replace(/,[\d.]+\)$/, ",0.6)")}`,
                                                         boxShadow: `0 4px 14px ${RARITY_STYLES[product.badge].glow}`
@@ -711,8 +731,10 @@ export default function TiendaPage() {
 
                                             {/* Insufficient funds lock */}
                                             {!canAfford && !isOwned && (
-                                                <div className="absolute bottom-3 left-3 bg-black/50 backdrop-blur-sm text-white text-[10px] font-bold px-2.5 py-1.5 rounded-full flex items-center gap-1.5">
-                                                    <Lock size={11} /> Saldo insuficiente
+                                                <div className="absolute inset-0 bg-black/20 backdrop-blur-[1px] flex items-end justify-start p-3">
+                                                    <div className="bg-black/60 backdrop-blur-sm text-white text-[10px] font-bold px-2.5 py-1.5 rounded-full flex items-center gap-1.5">
+                                                        <Lock size={11} /> Saldo insuficiente
+                                                    </div>
                                                 </div>
                                             )}
                                         </div>

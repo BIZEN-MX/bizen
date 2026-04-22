@@ -27,6 +27,7 @@ import {
 } from "lucide-react";
 import { CheckIcon, CrossIcon } from "@/components/CustomIcons";
 import * as React from "react";
+import { TickerTape } from "@/components/simulators/stocks/TickerTape";
 import Hero3DScene from "@/components/landing/Hero3DScene";
 import { PremiumButton } from "@/components/ui/PremiumButton";
 
@@ -36,7 +37,6 @@ const NAV_LINKS: { label: string; href: string; persona?: "instituciones" | "est
   { label: "Somos BIZEN", href: "#sobre-bizen" },
   { label: "Perfil educativo", href: "#perfiles" },
   { label: "Impacto social", href: "#impacto" },
-  { label: "Blog", href: "#problema" },
 ];
 
 // Force dynamic rendering to avoid prerendering issues
@@ -206,7 +206,9 @@ export default function WelcomePage() {
     position: "relative" as const,
   };
 
-  if (!mounted) return <div style={{ minHeight: '100vh', background: '#010a1c' }} />;
+  if (!mounted || (user && !loading)) {
+    return <div style={{ minHeight: '100vh', background: '#010a1c' }} />;
+  }
 
   return (
     <div
@@ -575,13 +577,7 @@ export default function WelcomePage() {
                 width: "100%",
               }}
             >
-              {[
-                { label: "Inicio", href: "/" },
-                { label: "Somos BIZEN", href: "#sobre-bizen" },
-                { label: "Perfil educativo", href: "#perfiles" },
-                { label: "Impacto social", href: "#impacto" },
-                { label: "Blog", href: "#problema" },
-              ].map((link) => (
+              {NAV_LINKS.map((link) => (
                 <Link
                   key={link.label}
                   href={link.href}
@@ -1519,52 +1515,20 @@ export default function WelcomePage() {
               >
                 Empresas que ya confían
               </p>
-
-              {/* Logos carousel */}
-              <div style={{ overflow: "hidden", width: "100%" }}>
-                <div
-                  className="logos-carousel-track"
+              <div style={{ marginTop: "clamp(40px, 8vw, 80px)" }}>
+                <p
                   style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "clamp(40px, 6vw, 80px)",
-                    animation: "scroll-logos 30s linear infinite",
+                    fontSize: "clamp(12px, 1.1vw, 14px)",
+                    color: "rgba(255, 255, 255, 0.4)",
+                    fontWeight: 600,
+                    margin: "0 0 20px 0",
+                    letterSpacing: "0.15em",
+                    textTransform: "uppercase",
                   }}
                 >
-                  {[...logoCarouselLogos, ...logoCarouselLogos].map(
-                    (logo, i) => {
-                      const isGoogle = logo.src.includes("google");
-                      return (
-                        <div
-                          key={i}
-                          style={{
-                            flexShrink: 0,
-                            height: isGoogle
-                              ? "clamp(28px, 3.5vw, 42px)"
-                              : "clamp(40px, 5vw, 60px)",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                          }}
-                        >
-                          <Image
-                            src={logo.src}
-                            alt={logo.alt}
-                            width={isGoogle ? 140 : 160}
-                            height={isGoogle ? 40 : 50}
-                            style={{
-                              height: isGoogle ? "32px" : "48px",
-                              width: "auto",
-                              objectFit: "contain",
-                              filter: "brightness(0) invert(1)",
-                              opacity: 0.55,
-                            }}
-                          />
-                        </div>
-                      );
-                    },
-                  )}
-                </div>
+                  Mercado en Vivo — BIZEN Market
+                </p>
+                <TickerTape marketData={[]} />
               </div>
             </div>
           </div>
@@ -4285,6 +4249,13 @@ function LandingContent({
     "docentes" | "estudiantes" | "padres"
   >("docentes");
   const [activeAdventureSlide, setActiveAdventureSlide] = React.useState(0);
+
+  React.useEffect(() => {
+    const timer = setInterval(() => {
+      setActiveAdventureSlide((prev) => (prev + 1) % 3);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, []);
 
   return (
     <>

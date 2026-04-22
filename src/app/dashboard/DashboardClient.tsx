@@ -10,7 +10,7 @@ import { useAuth } from "@/contexts/AuthContext"
 import PageLoader from "@/components/PageLoader"
 import DailyChallengeWidget from "@/components/DailyChallengeWidget"
 import { SUBTEMAS_BY_COURSE } from "@/data/lessons/courseLessonsOrder"
-import { Palette, ShoppingBag, Send, Search, Loader2, Check, X, History, ArrowUpRight, ArrowDownLeft, Flame, Shield, Target, Coins, BookOpen, TrendingUp, BrainCircuit, ChevronRight, RefreshCw, Newspaper } from "lucide-react"
+import { Palette, ShoppingBag, Send, Search, Loader2, Check, X, History, ArrowUpRight, ArrowDownLeft, Flame, Shield, Target, Coins, BookOpen, TrendingUp, BrainCircuit, ChevronRight, RefreshCw, Newspaper, Trophy, Megaphone } from "lucide-react"
 import BizenVirtualCard from "@/components/BizenVirtualCard"
 import DNAEvolutionScreen from "@/components/bizen/DNAEvolutionScreen"
 import BillyLabWidget from "@/components/bizen/BillyLabWidget"
@@ -252,11 +252,17 @@ function XPRing({ pct, level }: { pct: number; level: number }) {
 export default function DashboardContent() {
   const { user, loading, dbProfile } = useAuth()
   const router = useRouter()
-  const isAdminOrTeacher = dbProfile?.role === "school_admin" || dbProfile?.role === "teacher" || dbProfile?.role === "admin"
+  const userEmail = (user?.email || (user as any)?.emailAddresses?.[0]?.emailAddress || "").toLowerCase()
+  const isSuperAdmin = userEmail === "diego@bizen.mx"
+  const isAdminOrTeacher = dbProfile?.role === "school_admin" || dbProfile?.role === "teacher" || dbProfile?.role === "admin" || isSuperAdmin
+
+  const isAnahuac = useMemo(() => {
+    return userEmail.endsWith('@anahuac.mx') || userEmail.includes('.anahuac.mx') || userEmail.endsWith('@bizen.mx');
+  }, [userEmail])
+
   const isInstitutional = useMemo(() => {
-    const email = user?.email?.toLowerCase() || ""
-    return email.endsWith(".edu") || email.includes(".edu.")
-  }, [user])
+    return userEmail.endsWith(".edu") || userEmail.includes(".edu.") || isAnahuac
+  }, [userEmail, isAnahuac])
 
   const [stats,            setStats]            = useState<Stats | null>(null)
   const [topics,           setTopics]           = useState<Topic[]>([])
@@ -273,6 +279,7 @@ export default function DashboardContent() {
   const [news, setNews] = useState<any[]>([])
   const [loadingNews, setLoadingNews] = useState(true)
   const [activeNewsIndex, setActiveNewsIndex] = useState(0)
+  const [globalBanner, setGlobalBanner] = useState<any>(null)
 
   useEffect(() => {
     if (news.length > 0) {
@@ -308,7 +315,27 @@ export default function DashboardContent() {
     if (searchParams.get("showEvolution") === "true") {
       setShowEvolution(true)
     }
-  }, [searchParams])
+    // Handle ADN test triggers from Billy or Gatekept lessons
+    if (searchParams.get("startADN") === "true" || searchParams.get("startTest") === "true") {
+      router.push("/diagnostic/1")
+    }
+  }, [searchParams, router])
+
+  // Graduation status: Completing Tema 1-4 (The Core Curriculum)
+  const isCoreGraduated = useMemo(() => {
+    try {
+      const coreThemes = [0, 1, 2, 3]; // Themes 1, 2, 3, 4
+      return coreThemes.every(idx => {
+        const sub = SUBTEMAS_BY_COURSE[idx];
+        if (!sub) return true;
+        const lessons = sub.flatMap(s => (s.lessons || []).map((l: any) => l.slug));
+        if (lessons.length === 0) return true;
+        return lessons.every(slug => completedLessons.includes(slug));
+      });
+    } catch (e) {
+      return false;
+    }
+  }, [completedLessons]);
 
   /* next incomplete topic + lesson info — same logic as /courses but finding first lesson */
   const nextLessonInfo = useMemo(() => {
@@ -401,19 +428,28 @@ export default function DashboardContent() {
     }
   }, [user, router]) // Removed 'stats' from dependency list
 
-  const fetchNews = async () => {
+  const fetchNewsAndBanner = async () => {
     try {
-      const res = await fetch("/api/news")
-      if (res.ok) setNews(await res.json())
+      const [resNews, resBanner] = await Promise.all([
+        fetch("/api/news"),
+        fetch("/api/admin/banner")
+      ])
+      if (resNews.ok) setNews(await resNews.json())
+      if (resBanner.ok) {
+        const data = await resBanner.json()
+        if (data.banner && data.banner.isActive) {
+          setGlobalBanner(data.banner)
+        }
+      }
     } catch (err) {
-      console.error("News fetch error:", err)
+      console.error("Fetch error:", err)
     } finally {
       setLoadingNews(false)
     }
   }
 
   useEffect(() => {
-    fetchNews()
+    fetchNewsAndBanner()
   }, [])
 
   useEffect(() => {
@@ -421,7 +457,7 @@ export default function DashboardContent() {
     if (!user)   { router.replace("/login"); return }
 
     // Redirigir administradores y profesores
-    if (dbProfile?.role === "school_admin" || dbProfile?.role === "teacher" || dbProfile?.role === "admin") {
+    if (dbProfile?.role === "school_admin" || dbProfile?.role === "teacher" || dbProfile?.role === "admin" || isSuperAdmin) {
       router.replace("/teacher/dashboard")
       return
     }
@@ -460,7 +496,7 @@ export default function DashboardContent() {
       <div className="fixed top-[40%] left-[20%] w-[400px] h-[400px] bg-emerald-500 opacity-[0.03] rounded-full blur-[90px] pointer-events-none z-0" />
 
       {/* ── CONTENT WRAPPER ── */}
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div className="relative z-10 w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
         
         {/* Real-Time Sync Indicator */}
         <div className="flex justify-end mb-4 pr-1">
@@ -495,6 +531,43 @@ export default function DashboardContent() {
              }
            }}
         >
+          {/* GLOBAL BANNER */}
+          {globalBanner && (
+            <motion.div 
+              variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
+              className={`w-full rounded-2xl overflow-hidden shadow-lg border border-white/10 mb-6 cursor-pointer transform hover:scale-[1.01] transition-transform`}
+              onClick={() => globalBanner.link && globalBanner.linkText && router.push(globalBanner.link)}
+            >
+              <div className={`p-4 sm:px-6 relative flex flex-col sm:flex-row sm:items-center justify-between gap-4 ${
+                globalBanner.color === "orange" ? "bg-gradient-to-r from-orange-500 to-amber-600" :
+                globalBanner.color === "emerald" ? "bg-gradient-to-r from-emerald-500 to-teal-600" :
+                globalBanner.color === "purple" ? "bg-gradient-to-r from-purple-500 to-fuchsia-600" :
+                globalBanner.color === "red" ? "bg-gradient-to-r from-red-500 to-rose-600" :
+                "bg-gradient-to-r from-blue-600 to-indigo-600"
+              }`}>
+                <div className="flex items-center gap-4 relative z-10">
+                  <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white border border-white/30 shrink-0">
+                    <Megaphone size={18} />
+                  </div>
+                  <div>
+                    <h3 className="font-black text-white text-[15px] sm:text-base leading-tight mb-0.5">{globalBanner.title}</h3>
+                    <p className="text-white/90 font-medium text-[13px] leading-snug m-0 pr-4">{globalBanner.text}</p>
+                  </div>
+                </div>
+                {globalBanner.link && globalBanner.linkText && (
+                  <button 
+                    onClick={(e) => { e.stopPropagation(); router.push(globalBanner.link); }}
+                    className="bg-white text-slate-900 px-5 py-2.5 rounded-xl text-[13px] font-black shadow-md hover:scale-105 transition-transform shrink-0 whitespace-nowrap self-start sm:self-auto"
+                  >
+                    {globalBanner.linkText}
+                  </button>
+                )}
+                {/* Decorative glow */}
+                <div className="absolute top-0 right-0 w-[150px] h-full bg-white/10 blur-[30px] rounded-full pointer-events-none" />
+              </div>
+            </motion.div>
+          )}
+
           {/* HERO */}
           <motion.div 
             variants={{
@@ -534,6 +607,23 @@ export default function DashboardContent() {
                     {getGreeting()}, <span className="bg-gradient-to-r from-blue-300 via-emerald-300 to-indigo-300 bg-clip-text text-transparent">{firstName}</span>
                   </h1>
                 </div>
+                
+                {/* Institutional Tag with Mascot (Conditional) */}
+                {isAnahuac && (
+                  <motion.div 
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="flex items-center gap-3 mb-4 mt-2"
+                  >
+                    <div className="w-12 h-12 rounded-xl bg-white flex items-center justify-center p-1.5 shadow-lg border border-orange-200">
+                      <img src="/León Anáhuac.png" alt="León Anáhuac" className="w-full h-full object-contain" />
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="text-[10px] font-black text-[#FF5900] uppercase tracking-widest leading-none mb-1">Comunidad Institucional</span>
+                      <span className="text-sm font-bold text-white text-opacity-80">Experiencia Anáhuac Activa</span>
+                    </div>
+                  </motion.div>
+                )}
 
                 <p className="text-[14px] md:text-[15px] text-white/80 mb-5 leading-snug max-w-2xl font-medium">
                   {isAdminOrTeacher 
@@ -619,14 +709,30 @@ export default function DashboardContent() {
                     <BizenVirtualCard
                       bizcoins={bizcoins}
                       holderName={dbProfile?.fullName || user?.email?.split("@")[0] || ""}
-                      animationDelay=".12s"
-                      colorTheme={dbProfile?.cardTheme || "blue"}
+                      colorTheme={dbProfile?.cardTheme || (isAnahuac ? "anahuac" : "blue")}
                       level={dbProfile?.level || 1}
                       onTransferClick={() => router.push("/transfer")}
                       onRedeemClick={() => router.push("/tienda")}
                       pattern={(dbProfile?.settings as any)?.cardCustomizations?.pattern || "none"}
                       showBillySticker={(dbProfile?.settings as any)?.cardCustomizations?.showBillySticker || false}
                     />
+                  </div>
+                </motion.div>
+              )}
+
+              {/* GRADUATION BADGE — ONLY FOR CORE GRADUATES */}
+              {isCoreGraduated && (
+                <motion.div 
+                  initial={{ x: 20, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  className="bg-gradient-to-r from-amber-400 to-amber-600 px-6 py-3 rounded-2xl shadow-xl border border-white/20 flex items-center gap-3 relative overflow-hidden group cursor-pointer"
+                  onClick={() => setShowEvolution(true)}
+                >
+                  <div className="absolute inset-0 bg-white/10 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+                  <Trophy size={18} className="text-white" />
+                  <div className="flex flex-col">
+                    <span className="text-[10px] font-black text-white uppercase tracking-widest leading-none mb-0.5">Estatus BIZEN</span>
+                    <span className="text-sm font-black text-white leading-none">Graduado Core 🎓</span>
                   </div>
                 </motion.div>
               )}
@@ -651,12 +757,12 @@ export default function DashboardContent() {
             }}
             className="mb-8"
           >
-            {activeDnaProfile && activeDnaProfile.includes("Billy") ? (
+            {activeDnaProfile && (activeDnaProfile.includes("Billy") || isCoreGraduated) ? (
               <BillyLabWidget 
-                adnProfile={activeDnaProfile}
+                adnProfile={activeDnaProfile || "Aspirante BIZEN"}
                 adnScore={liveProfile?.adnScore || adnResult?.adnScore || 0}
-                nextTopicId={activeDnaProfile === "Billy Inversionista" ? "tema-09" : (activeDnaProfile === "Billy Estratega" ? "tema-07" : "tema-06")}
-                nextTopicTitle={activeDnaProfile === "Billy Inversionista" ? "Estrategias de Inversión" : (activeDnaProfile === "Billy Estratega" ? "Sistema de Crédito" : "Presupuesto Real")}
+                nextTopicId={activeDnaProfile === "Billy Inversionista" ? "tema-09" : (activeDnaProfile === "Billy Estratega" ? "tema-07" : "tema-05")}
+                nextTopicTitle={activeDnaProfile === "Billy Inversionista" ? "Estrategias de Inversión" : (activeDnaProfile === "Billy Estratega" ? "Sistema de Crédito" : "Ahorro Inteligente")}
               />
             ) : hasCompletedDiagnostic && adnInfo ? (
               <motion.div 
@@ -922,7 +1028,7 @@ export default function DashboardContent() {
                 Portal Completo
               </motion.button>
               <button 
-                onClick={fetchNews} 
+                onClick={fetchNewsAndBanner} 
                 className="bg-white border border-slate-200 text-slate-400 w-11 h-11 flex items-center justify-center rounded-xl cursor-pointer transition-all hover:bg-slate-50"
               >
                 <RefreshCw size={18} className={loadingNews ? "animate-spin" : ""} />

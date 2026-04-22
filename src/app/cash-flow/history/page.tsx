@@ -8,6 +8,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/contexts/AuthContext';
 import { 
   ChevronLeft, 
   Trash2, 
@@ -89,17 +90,29 @@ const simulatorConfig: Record<string, { name: string; icon: any; color: string; 
 
 function RunCard({ 
   run, 
-  onDelete 
+  onDelete,
+  isAnahuac 
 }: { 
   run: SimulatorRun; 
-  onDelete: (id: string) => void 
+  onDelete: (id: string) => void;
+  isAnahuac: boolean; 
 }) {
-  const config = simulatorConfig[run.simulator_slug] || { 
+  let config = simulatorConfig[run.simulator_slug] || { 
     name: run.simulator_slug, 
     icon: History, 
     color: '#0B71FE', 
     bg: '#f8fafc' 
   };
+
+  if (isAnahuac && config.color === '#0B71FE') {
+    config = { ...config, color: '#FF5900' };
+  }
+
+  const brandPrimary = isAnahuac ? '#FF5900' : '#0B71FE';
+  const brandPrimary30 = isAnahuac ? '#FF590030' : '#0B71FE30';
+  const brandPrimary08 = isAnahuac ? 'rgba(255, 89, 0, 0.08)' : 'rgba(11, 113, 254, 0.08)';
+  const brandPrimary20 = isAnahuac ? 'rgba(255, 89, 0, 0.2)' : 'rgba(11, 113, 254, 0.2)';
+  const brandPrimary30_rgba = isAnahuac ? 'rgba(255, 89, 0, 0.3)' : 'rgba(11, 113, 254, 0.3)';
   const Icon = config.icon;
 
   const formatDate = (dateString: string) => {
@@ -121,12 +134,12 @@ function RunCard({
       style={{
         background: 'white',
         borderRadius: 20,
-        border: `1px solid ${hovered ? '#0B71FE30' : '#E8ECF1'}`,
+        border: `1px solid ${hovered ? brandPrimary30 : '#E8ECF1'}`,
         padding: '20px 24px',
         display: 'flex',
         flexDirection: 'column',
         gap: 16,
-        boxShadow: hovered ? '0 8px 32px rgba(11, 113, 254, 0.08)' : '0 2px 12px rgba(0,0,0,0.02)',
+        boxShadow: hovered ? `0 8px 32px ${brandPrimary08}` : '0 2px 12px rgba(0,0,0,0.02)',
         transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
         position: 'relative',
         overflow: 'hidden'
@@ -207,13 +220,13 @@ function RunCard({
           style={{
             display: 'flex', alignItems: 'center', gap: 8,
             padding: '8px 16px', borderRadius: 12,
-            background: '#0B71FE', color: 'white',
+            background: brandPrimary, color: 'white',
             fontSize: 14, fontWeight: 700, textDecoration: 'none',
-            boxShadow: '0 4px 12px rgba(11, 113, 254, 0.2)',
+            boxShadow: `0 4px 12px ${brandPrimary20}`,
             transition: 'all 0.2s'
           }}
-          onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 6px 16px rgba(11, 113, 254, 0.3)'; }}
-          onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(11, 113, 254, 0.2)'; }}
+          onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = `0 6px 16px ${brandPrimary30_rgba}`; }}
+          onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = `0 4px 12px ${brandPrimary20}`; }}
         >
           Cargar Simulación
           <ArrowRight size={14} strokeWidth={2.5} />
@@ -231,6 +244,9 @@ export default function HistoryPage() {
   const [error, setError] = React.useState('');
   const [filterSlug, setFilterSlug] = React.useState<string>('all');
   const router = useRouter();
+  const { user } = useAuth();
+  const isAnahuac = (user?.emailAddresses?.[0]?.emailAddress || user?.email || "").toLowerCase().endsWith('@anahuac.mx') || (user?.emailAddresses?.[0]?.emailAddress || user?.email || "").toLowerCase().endsWith('@bizen.mx') || false;
+  const brandPrimary = isAnahuac ? '#FF5900' : '#0B71FE';
 
   const loadRuns = React.useCallback(async () => {
     setLoading(true);
@@ -306,8 +322,8 @@ export default function HistoryPage() {
           color: #64748B;
           white-space: nowrap;
         }
-        .category-chip:hover { border-color: #0B71FE; color: #0B71FE; }
-        .category-chip.active { background: #0B71FE; color: white; border-color: #0B71FE; box-shadow: 0 4px 12px rgba(11, 113, 254, 0.2); }
+        .category-chip:hover { border-color: ${brandPrimary}; color: ${brandPrimary}; }
+        .category-chip.active { background: ${brandPrimary}; color: white; border-color: ${brandPrimary}; box-shadow: 0 4px 12px ${isAnahuac ? 'rgba(255, 89, 0, 0.2)' : 'rgba(11, 113, 254, 0.2)'}; }
       `}</style>
 
       <div className="history-container">
@@ -322,7 +338,7 @@ export default function HistoryPage() {
                 fontWeight: 800, 
                 margin: '0 0 12px',
                 letterSpacing: '-0.04em',
-                background: 'linear-gradient(135deg, #0F172A 0%, #0B71FE 100%)',
+                background: `linear-gradient(135deg, #0F172A 0%, ${brandPrimary} 100%)`,
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent'
               }}>
@@ -400,9 +416,9 @@ export default function HistoryPage() {
               </p>
             </div>
             <Link href="/cash-flow" style={{ 
-              padding: '14px 32px', borderRadius: 16, background: '#0B71FE', color: 'white',
+              padding: '14px 32px', borderRadius: 16, background: brandPrimary, color: 'white',
               fontSize: 16, fontWeight: 700, textDecoration: 'none',
-              boxShadow: '0 8px 16px rgba(11, 113, 254, 0.25)',
+              boxShadow: `0 8px 16px ${isAnahuac ? 'rgba(255, 89, 0, 0.25)' : 'rgba(11, 113, 254, 0.25)'}`,
               transition: 'all 0.2s'
             }} onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-2px)'} onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}>
               Explorar Simuladores
@@ -415,7 +431,7 @@ export default function HistoryPage() {
             gap: 24 
           }}>
             {runs.map(run => (
-              <RunCard key={run.id} run={run} onDelete={handleDelete} />
+              <RunCard key={run.id} run={run} onDelete={handleDelete} isAnahuac={isAnahuac} />
             ))}
           </div>
         )}

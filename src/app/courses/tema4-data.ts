@@ -178,4 +178,10 @@ export const TEMA4_SUBTEMAS: Tema4Subtema[] = [
       { title: "¿Cómo optimizar tus recursos?", slug: "optimizacion-recursos", level: "Avanzado" },
     ]
   },
+  {
+    title: "22. Certificación",
+    lessons: [
+      { title: "Examen de Certificación: Bloque 4", slug: "evaluacion-bloque-4", level: "Avanzado" },
+    ]
+  },
 ]

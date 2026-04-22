@@ -26,7 +26,7 @@ export default async function TeacherLayout({
         redirect('/login')
     }
 
-    if (userProfile.role !== 'teacher' && userProfile.role !== 'school_admin') {
+    if (userProfile.role !== 'teacher' && userProfile.role !== 'school_admin' && userProfile.role !== 'admin') {
         // Kick them out to the student dashboard immediately
         redirect('/dashboard')
     }

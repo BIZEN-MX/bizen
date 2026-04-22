@@ -1,5 +1,6 @@
 "use client"
 
+import * as React from "react"
 import { useEffect, useState, Suspense } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"

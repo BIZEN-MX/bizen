@@ -1,15 +1,16 @@
-import { NextResponse } from "next/server"
-import { createSupabaseServer } from "@/lib/supabase/server"
+import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
+import { requireAuth } from "@/lib/auth/api-auth"
 
-export async function GET() {
+export async function GET(request: NextRequest) {
     try {
-        const supabase = await createSupabaseServer()
-        const { data: { user }, error: authError } = await supabase.auth.getUser()
+        const authResult = await requireAuth(request)
 
-        if (authError || !user) {
-            return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+        if (!authResult.success) {
+            return authResult.response
         }
+
+        const { user } = authResult.data
 
         const profile = await prisma.profile.findUnique({
             where: { userId: user.id },
@@ -62,7 +63,7 @@ export async function GET() {
 
         let simulatorsPlayed = 0
         try {
-            simulatorsPlayed = await (prisma as any).gameSession.count({
+            simulatorsPlayed = await prisma.gameSession.count({
                 where: { userId: user.id }
             })
         } catch (e: any) { console.warn("Games count failed:", e.message) }

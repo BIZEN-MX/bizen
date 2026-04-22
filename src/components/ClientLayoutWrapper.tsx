@@ -113,7 +113,11 @@ function InnerClientWrapper({ children }: { children: React.ReactNode }) {
   const isConfigPage = pathname === '/configuracion'
   const hideAppNavigation = isAuthPage || isNewsPage || isDiagnosticPage || onboardingActive || isLessonInteractivePage || isTransferPage || isHistoryPage || isMetasPage || isInvestmentsPage || isToolsPageExclude || isLivePage || isSimulatorPage || isBitesPage || isConfigPage;
 
-  const hideChat = hideAppNavigation;
+  const userEmail = (user?.email || user?.emailAddresses?.[0]?.emailAddress || "").toLowerCase();
+  const isSuperAdmin = userEmail === "diego@bizen.mx"
+  const isAdminOrTeacher = dbProfile?.role === "school_admin" || dbProfile?.role === "teacher" || dbProfile?.role === "admin" || isSuperAdmin
+
+  const hideChat = hideAppNavigation || isAdminOrTeacher;
 
   // Detect mobile screen size (≤767px)
   useEffect(() => {

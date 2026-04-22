@@ -81,7 +81,7 @@ export async function roleMiddleware(request: NextRequest) {
 
         if (profile.role !== 'school_admin') {
           // Not an admin - redirect based on role
-          const redirectPath = profile.role === 'teacher' ? '/teacher/courses' : '/dashboard'
+          const redirectPath = (profile.role === 'teacher' || profile.role === 'school_admin' || profile.role === 'admin') ? '/teacher/dashboard' : '/dashboard'
           return NextResponse.redirect(new URL(redirectPath, request.url))
         }
       }

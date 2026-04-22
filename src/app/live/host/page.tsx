@@ -85,6 +85,7 @@ export default function HostPage() {
 
   useEffect(() => { if (user) loadTemplates() }, [user, loadTemplates])
 
+
   const handleSaveTemplate = async () => {
     if (!saveTitle.trim() || questions.length === 0) return
     setSaveSaving(true)
@@ -153,6 +154,30 @@ export default function HostPage() {
     setSessionTitle(quiz.title)
     setHostStatus("setup")
   }
+
+  // ── Auto-launch from URL or SessionStorage ──────────────────────────────────
+  useEffect(() => {
+    if (typeof window === "undefined") return
+    
+    const searchParams = new URLSearchParams(window.location.search)
+    let launchId = searchParams.get("launch")
+    
+    // Check sessionStorage if URL param is missing (e.g. after login redirect)
+    if (!launchId) {
+      launchId = sessionStorage.getItem("pending_live_launch")
+    }
+
+    if (launchId && !authLoading && user) {
+      const quiz = QUIZ_CATALOG.find(q => q.id === launchId)
+      if (quiz) {
+        handleSelectQuiz(quiz)
+        // Clean up session and URL
+        sessionStorage.removeItem("pending_live_launch")
+        const newUrl = window.location.pathname
+        window.history.replaceState({}, "", newUrl)
+      }
+    }
+  }, [authLoading, user])
 
   const handleCreateSession = async () => {
     if (!user) return

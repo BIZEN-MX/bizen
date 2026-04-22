@@ -29,9 +29,17 @@ export async function GET(
       return NextResponse.json({ error: 'Lesson not found' }, { status: 404 })
     }
 
-    // Role bypass: Admins and Teachers can skip anything
-    const role = user.user_metadata?.role || 'student'
-    const isAdmin = ['admin', 'school_admin', 'teacher'].includes(role)
+    // --- FETCH PROFILE FOR ROLE ---
+    const profile = await prisma.profile.findUnique({
+      where: { userId: user.id }
+    })
+    const role = profile?.role || 'student'
+
+    // Role bypass: Admins, Teachers or BIZEN staff
+    const isAdmin = 
+      ['admin', 'school_admin', 'teacher'].includes(role) || 
+      user.emailAddresses.some(e => e.emailAddress.endsWith('@bizen.mx'))
+
     const isTopic1 = currentLesson.course?.topicId === 'tema-01'
 
     if (!isAdmin && currentLesson.order > 1) {
@@ -84,7 +92,7 @@ export async function GET(
     // Prepare response
     const responseData = {
       ...currentLesson,
-      steps: staticSteps?.length ? staticSteps : dbSteps
+      steps: dbSteps.length > 0 ? dbSteps : staticSteps
     }
 
     // Final check for steps

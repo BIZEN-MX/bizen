@@ -6,14 +6,14 @@ import { Lightbulb, HelpCircle, CheckSquare, List, Layers, MoveHorizontal, PenLi
 type ExerciseType = "info" | "mcq" | "true_false" | "multi_select" | "order" | "match" | "fill_blanks" | "image_choice"
 
 const config: Record<ExerciseType, { label: string; color: string; bg: string; border: string; Icon: React.ElementType }> = {
-  info: { label: "Nueva lección", color: "#0F62FE", bg: "#EFF6FF", border: "#BFDBFE", Icon: Lightbulb },
-  mcq: { label: "Selecciona la respuesta correcta", color: "#0F62FE", bg: "#EFF6FF", border: "#BFDBFE", Icon: HelpCircle },
-  true_false: { label: "¿Verdadero o falso?", color: "#0F62FE", bg: "#EFF6FF", border: "#BFDBFE", Icon: CheckSquare },
-  multi_select: { label: "Selecciona todas las correctas", color: "#0F62FE", bg: "#EFF6FF", border: "#BFDBFE", Icon: List },
-  order: { label: "Ordena los elementos", color: "#0F62FE", bg: "#EFF6FF", border: "#BFDBFE", Icon: Layers },
-  match: { label: "Une los pares", color: "#0F62FE", bg: "#EFF6FF", border: "#BFDBFE", Icon: MoveHorizontal },
-  fill_blanks: { label: "Completa el espacio", color: "#0F62FE", bg: "#EFF6FF", border: "#BFDBFE", Icon: PenLine },
-  image_choice: { label: "Elige la imagen correcta", color: "#0F62FE", bg: "#EFF6FF", border: "#BFDBFE", Icon: HelpCircle },
+  info: { label: "Nueva lección", color: "var(--primary)", bg: "var(--primary-subtle)", border: "transparent", Icon: Lightbulb },
+  mcq: { label: "Selecciona la respuesta correcta", color: "var(--primary)", bg: "var(--primary-subtle)", border: "transparent", Icon: HelpCircle },
+  true_false: { label: "¿Verdadero o falso?", color: "var(--primary)", bg: "var(--primary-subtle)", border: "transparent", Icon: CheckSquare },
+  multi_select: { label: "Selecciona todas las correctas", color: "var(--primary)", bg: "var(--primary-subtle)", border: "transparent", Icon: List },
+  order: { label: "Ordena los elementos", color: "var(--primary)", bg: "var(--primary-subtle)", border: "transparent", Icon: Layers },
+  match: { label: "Une los pares", color: "var(--primary)", bg: "var(--primary-subtle)", border: "transparent", Icon: MoveHorizontal },
+  fill_blanks: { label: "Completa el espacio", color: "var(--primary)", bg: "var(--primary-subtle)", border: "transparent", Icon: PenLine },
+  image_choice: { label: "Elige la imagen correcta", color: "var(--primary)", bg: "var(--primary-subtle)", border: "transparent", Icon: HelpCircle },
 }
 
 interface ExerciseInstructionProps {

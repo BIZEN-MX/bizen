@@ -4,9 +4,11 @@ import React, { useRef, useState, useCallback, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { motion } from "framer-motion"
 import { Wifi, Send, Gift, CreditCard } from "lucide-react"
+import { useAuth } from "@/contexts/AuthContext"
+import Image from "next/image"
 
 // Types & Themes
-export type CardTheme = "blue" | "emerald" | "violet" | "rose" | "pink" | "amber" | "slate" | "obsidian"
+export type CardTheme = "blue" | "emerald" | "violet" | "rose" | "pink" | "amber" | "slate" | "obsidian" | "anahuac"
 export type CardTier = "plastic" | "metal" | "carbon" | "legendary"
 
 export function getTierFromLevel(level: number): CardTier {
@@ -27,7 +29,6 @@ interface BizenVirtualCardProps {
   onRedeemClick?: () => void
   hideButtons?: boolean
   pattern?: "none" | "geometric" | "circuit" | "dots"
-  showBillySticker?: boolean
 }
 
 const THEMES: Record<CardTheme, {
@@ -106,6 +107,14 @@ const THEMES: Record<CardTheme, {
     shadowIdle: "0 20px 50px rgba(0,0,0,0.7)", borderGlow: "rgba(113,113,122,0.3)",
     accentColor: "#a1a1aa",
   },
+  anahuac: {
+    bg: "#FF5900",
+    highlight: "linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 60%)",
+    orb1: "rgba(255,255,255,0.15)", orb2: "rgba(255,255,255,0.1)", orb3: "rgba(0,0,0,0.1)",
+    textGlow: "rgba(255,255,255,0.4)", shadowHover: "0 35px 80px rgba(255,89,0,0.5), 0 0 120px rgba(255,89,0,0.15)",
+    shadowIdle: "0 20px 50px rgba(255,89,0,0.3)", borderGlow: "rgba(255,255,255,0.2)",
+    accentColor: "#ffffff",
+  },
 }
 
 const TIER_CONFIG: Record<CardTier, {
@@ -150,7 +159,7 @@ const BizenWordmark = ({ accentColor }: { accentColor: string }) => (
 export default function BizenVirtualCard({
   bizcoins, holderName, animationDelay = "0s",
   colorTheme = "blue", level = 1, showTierBadge = true,
-  onTransferClick, onRedeemClick, hideButtons = false, pattern = "none", showBillySticker = false
+  onTransferClick, onRedeemClick, hideButtons = false, pattern = "none"
 }: BizenVirtualCardProps) {
   const router = useRouter()
   const cardRef = useRef<HTMLDivElement>(null)
@@ -161,7 +170,17 @@ export default function BizenVirtualCard({
   const rafRef = useRef<number | null>(null)
   const countRafRef = useRef<number | null>(null)
 
-  const theme = THEMES[colorTheme] || THEMES.blue
+  const { user } = useAuth()
+  const userEmail = (user?.email || (user as any)?.emailAddresses?.[0]?.emailAddress || "").toLowerCase()
+  const isAnahuac = colorTheme === 'anahuac' || userEmail.endsWith('@anahuac.mx') || userEmail.includes('.anahuac.mx') || userEmail.endsWith('@bizen.mx')
+  
+  let finalColorTheme = colorTheme
+  if (!colorTheme && isAnahuac) {
+    finalColorTheme = 'anahuac'
+  }
+
+  let theme = THEMES[finalColorTheme] || THEMES.blue
+
   const tier = getTierFromLevel(level)
   const tierCfg = TIER_CONFIG[tier]
 
@@ -252,7 +271,14 @@ export default function BizenVirtualCard({
           
           {/* Top Header */}
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-            <BizenWordmark accentColor={theme.accentColor} />
+            {isAnahuac ? (
+              <div style={{ display: "flex", alignItems: "center", gap: "2cqw" }}>
+                <Image src="/anahuac-logo.png" alt="Anahuac" width={24} height={24} style={{ filter: "brightness(2)" }} />
+                <span style={{ fontSize: "clamp(18px, 6.5cqw, 24px)", fontWeight: 600, color: "white", letterSpacing: "0.02cqw", transform: "translateY(1px)" }}>x BIZEN</span>
+              </div>
+            ) : (
+              <BizenWordmark accentColor={theme.accentColor} />
+            )}
             <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
               <Wifi size={18} style={{ opacity: 0.4, transform: "rotate(90deg)" }} />
               <CreditCard size={18} style={{ opacity: 0.4 }} />
@@ -277,7 +303,9 @@ export default function BizenVirtualCard({
               </div>
               <div>
                 <div style={{ fontSize: "clamp(6px, 1.8cqw, 8px)", fontWeight: 400, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.15em", marginBottom: 2 }}>Titular</div>
-                <div style={{ fontSize: "clamp(10px, 3.2cqw, 14px)", fontWeight: 400, letterSpacing: "0.02em" }}>{displayName}</div>
+                <div style={{ fontSize: "clamp(10px, 3.2cqw, 14px)", fontWeight: 400, letterSpacing: "0.02em", display: "flex", alignItems: "center", gap: 8 }}>
+                  {displayName}
+                </div>
               </div>
             </div>
 
@@ -313,12 +341,7 @@ export default function BizenVirtualCard({
             </div>
           </div>
 
-          {/* Billy Sticker */}
-          {showBillySticker && (
-            <div style={{ position: "absolute", top: 80, left: 180, width: 44, height: 44, transform: "rotate(-12deg)", opacity: 0.8, filter: "drop-shadow(0 4px 10px rgba(0,0,0,0.3))" }}>
-              <img src="/billy_chatbot.png" alt="Billy" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
-            </div>
-          )}
+          {/* Logos are handled in the header section */}
         </div>
       </div>
     </motion.div>

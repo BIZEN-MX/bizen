@@ -111,7 +111,7 @@ export default function DNAEvolutionScreen({
               />
             </div>
             <h2 style={{ fontSize: 24, fontWeight: 500, letterSpacing: -0.5, marginBottom: 8, color: "white" }}>Recalibrando ADN BIZEN</h2>
-            <p style={{ color: "rgba(255,255,255,0.6)", fontSize: 16 }}>Analizando trayectoria en Cimientos (01-05)...</p>
+            <p style={{ color: "rgba(255,255,255,0.6)", fontSize: 16 }}>Analizando trayectoria en Cimientos (01-04)...</p>
           </motion.div>
         )}
 

@@ -21,7 +21,22 @@ export const TickerTape = ({ marketData }: { marketData: any[] }) => {
         flexShrink: 0,
       }}
     >
-      <div className="bizen-ticker-track" style={{ display: "flex", alignItems: "center" }}>
+      <style>{`
+        @keyframes tickerScroll {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+        .bizen-ticker-track {
+          display: flex;
+          align-items: center;
+          animation: tickerScroll 35s linear infinite;
+          will-change: transform;
+        }
+        .bizen-ticker-track:hover {
+          animation-play-state: paused;
+        }
+      `}</style>
+      <div className="bizen-ticker-track">
         {[...displayData, ...displayData].map((s: any, i: number) => {
           const chg = s.changePercent ?? s.change ?? 0;
           const up  = chg >= 0;
@@ -35,7 +50,19 @@ export const TickerTape = ({ marketData }: { marketData: any[] }) => {
               {/* Price */}
               <span style={{ fontSize: 18, fontWeight: 700, color: "white", fontFamily: "'JetBrains Mono',monospace" }}>{s.price?.toFixed(0) ?? "—"}</span>
               {/* Change */}
-              <span style={{ fontSize: 14, fontWeight: 700, color: up ? "#34d399" : "#f87171", background: up ? "rgba(52,211,153,0.13)" : "rgba(248,113,113,0.13)", border: "1px solid " + (up ? "rgba(52,211,153,0.3)" : "rgba(248,113,113,0.3)"), borderRadius: 8, padding: "4px 10px", display: "inline-flex", alignItems: "center", gap: 4, fontFamily: "'JetBrains Mono',monospace" }}>
+              <span style={{ 
+                fontSize: 14, 
+                fontWeight: 700, 
+                color: up ? "#10b981" : "#ef4444", 
+                background: up ? "rgba(16,185,129,0.15)" : "rgba(239,68,68,0.15)", 
+                border: "1px solid " + (up ? "rgba(16,185,129,0.3)" : "rgba(239,68,68,0.3)"), 
+                borderRadius: 8, 
+                padding: "4px 10px", 
+                display: "inline-flex", 
+                alignItems: "center", 
+                gap: 4, 
+                fontFamily: "'JetBrains Mono',monospace" 
+              }}>
                 {up ? "▲" : "▼"} {Math.abs(chg).toFixed(2)}%
               </span>
             </div>

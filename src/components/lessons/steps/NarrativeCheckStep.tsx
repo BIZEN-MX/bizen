@@ -2,7 +2,7 @@
 
 import React, { useState, useCallback } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { CheckCircle2, Lightbulb } from "lucide-react"
+import { CheckCircle2, Lightbulb, Zap } from "lucide-react"
 import { haptic } from "@/utils/hapticFeedback"
 import { playCorrectSound } from "../lessonSounds"
 import { BaseLessonStep } from "@/types/lessonTypes"
@@ -51,7 +51,7 @@ export function NarrativeCheckStep({ step, onAnswered, isContinueEnabled }: Narr
       display: "flex", flexDirection: "column", gap: 24,
       maxWidth: 520, margin: "0 auto", width: "100%",
     }}>
-      {/* Billy prompt card */}
+      {/* Bizen prompt card */}
       <div style={{
         background: "linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)",
         border: "2px solid #bfdbfe",
@@ -59,14 +59,12 @@ export function NarrativeCheckStep({ step, onAnswered, isContinueEnabled }: Narr
         padding: "20px 24px",
         display: "flex", gap: 16, alignItems: "flex-start",
       }}>
-        <img
-          src="/billy_chatbot.png"
-          alt="Billy"
-          style={{ width: 56, height: 56, objectFit: "contain", flexShrink: 0 }}
-        />
+        <div style={{ width: 48, height: 48, borderRadius: "50%", background: "#3b82f6", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, boxShadow: "0 4px 12px rgba(59,130,246,0.3)" }}>
+          <Zap size={24} color="white" />
+        </div>
         <div>
           <p style={{ fontSize: 13, fontWeight: 700, color: "#1d4ed8", margin: "0 0 4px", textTransform: "uppercase", letterSpacing: "0.05em" }}>
-            Billy Insights
+            BIZEN Insight
           </p>
           <p style={{ fontSize: "clamp(16px, 2.5vw, 18px)", fontWeight: 600, color: "#1e293b", margin: 0, lineHeight: 1.4 }}>
             {step.question}

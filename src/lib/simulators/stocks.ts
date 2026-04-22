@@ -25,6 +25,14 @@ export async function executePendingOrders() {
 
   console.log(`[stocks] Found ${latestPrices.length} price records for ${symbolsToFetch.length} requested symbols.`);
 
+  // 3. Fetch Global Market Config
+  const configProfile = await prisma.profile.findUnique({
+    where: { userId: "GLOBAL_CONFIG_MARKET" },
+    select: { settings: true }
+  });
+  const config = (configProfile?.settings as any) || { commissionMarket: 0.15, commissionLimit: 0.10 };
+
+
   const priceMap = new Map();
   latestPrices.forEach(p => {
       priceMap.set(p.symbol, p);
@@ -69,8 +77,11 @@ export async function executePendingOrders() {
       const bizcoinMultiplier = 1;
       const executionPriceBizcoins = executionPrice * bizcoinMultiplier;
       const notional = Number(order.quantity) * executionPriceBizcoins;
-      const slippage = order.order_type === 'market' ? notional * 0.0005 : 0;
-      const totalFees = (notional * 0.001) + slippage;
+      
+      const marketFeeRatio = (Number(config.commissionMarket) ?? 0.15) / 100;
+      const limitFeeRatio = (Number(config.commissionLimit) ?? 0.10) / 100;
+      const feeRatio = order.order_type === 'market' ? marketFeeRatio : limitFeeRatio;
+      const totalFees = notional * feeRatio;
       
       await prisma.$transaction(async (tx) => {
           const currentPortfolio = await tx.simulator_portfolios.findUnique({

@@ -2,6 +2,8 @@
 
 import React, { useEffect, useState, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
+import Image from 'next/image'
+import { useAuth } from '@/contexts/AuthContext'
 import PageLoader from '@/components/PageLoader'
 import DailyChallengeWidget from '@/components/DailyChallengeWidget'
 import {
@@ -177,6 +179,10 @@ function CategoryBar({ label, score, max = 100 }: { label: string; score: number
 // ─── Main Component ───────────────────────────────────────────────
 export default function AdminDashboardPage() {
     const router = useRouter()
+    const { user } = useAuth()
+    const userEmail = (user?.email || "").toLowerCase()
+    const isAnahuac = userEmail.endsWith('@anahuac.mx') || userEmail.endsWith('@bizen.mx')
+    
     const [data, setData] = useState<DashboardData | null>(null)
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
@@ -194,12 +200,19 @@ export default function AdminDashboardPage() {
     useEffect(() => {
         setMounted(true)
         fetch('/api/school-admin/dashboard')
-            .then(r => {
-                if (!r.ok) { if (r.status === 401 || r.status === 403) router.push('/login'); throw new Error() }
+            .then(async r => {
+                if (!r.ok) { 
+                    if (r.status === 401) {
+                        router.push('/login');
+                        return;
+                    }
+                    const errData = await r.json().catch(() => ({}));
+                    throw new Error(errData.error || `Error del servidor (${r.status})`); 
+                }
                 return r.json()
             })
             .then(setData)
-            .catch(e => setError(e.message || 'Error'))
+            .catch(e => setError(e.message || 'No se pudo conectar con el servidor'))
             .finally(() => setLoading(false))
     }, [router])
 
@@ -251,38 +264,34 @@ export default function AdminDashboardPage() {
         )
     }
 
-    const diagScore = data.kpis.diagnosticStats.avgScore
-    const roi = data.kpis.institutionalROI
-    const atRisk = data.kpis.studentsAtRisk
-    const engagementRate = data.kpis.totalStudents > 0
+    const diagScore = data.kpis?.diagnosticStats?.avgScore ?? 0
+    const roi = data.kpis?.institutionalROI ?? 0
+    const atRisk = data.kpis?.studentsAtRisk ?? 0
+    const engagementRate = data.kpis?.totalStudents > 0
         ? Math.round((data.students.filter(s => (s.averageProgress ?? 0) > 20).length / data.kpis.totalStudents) * 100)
         : 0
 
     // Synthetic per-category scores from strengths/weaknesses for demo bar chart
     const ALL_CATEGORIES = ['Educación', 'Ahorro', 'Mentalidad', 'Objetivos', 'Deuda', 'Entorno', 'Crédito', 'Aprendizaje', 'Gastos', 'Gestión']
     const categoryData = ALL_CATEGORIES.map(cat => {
-        const isStrength = data.kpis.diagnosticStats.strengths.includes(cat)
-        const isWeakness = data.kpis.diagnosticStats.weaknesses.includes(cat)
+        const isStrength = data.kpis?.diagnosticStats?.strengths?.includes(cat)
+        const isWeakness = data.kpis?.diagnosticStats?.weaknesses?.includes(cat)
         const base = diagScore
         return { label: cat, score: isStrength ? Math.min(100, base + 20) : isWeakness ? Math.max(0, base - 25) : base }
     })
     categoryData.sort((a, b) => b.score - a.score)
 
     const kpis = [
-        { id: 'students', label: 'Alumnos Activos', value: data.kpis.totalStudents, icon: <Users size={20} />, accent: '#0F62FE', sub: `${engagementRate}% con progreso`, change: engagementRate, positive: true },
-        { id: 'lessons', label: 'Lecciones Completadas', value: data.kpis.totalCompletedLessons, icon: <BookOpen size={20} />, accent: '#7c3aed', sub: `${data.kpis.avgModulesCompleted} prom. / alumno`, change: null, positive: true },
-        { id: 'roi', label: 'Market ROI', value: Math.abs(roi), decimals: 1, suffix: '%', prefix: roi < 0 ? '-' : '+', icon: <TrendingUp size={20} />, accent: roi >= 0 ? '#059669' : '#dc2626', sub: 'Portafolios simulados', positive: roi >= 0 },
-        { id: 'quiz', label: 'Intentos por Quiz', value: data.kpis.avgAttemptsPerQuiz, decimals: 1, icon: <Target size={20} />, accent: '#d97706', sub: 'Promedio hasta aprobar', positive: data.kpis.avgAttemptsPerQuiz <= 2 },
-        { id: 'risk', label: 'En Riesgo', value: atRisk, icon: atRisk > 0 ? <AlertTriangle size={20} /> : <Activity size={20} />, accent: atRisk > 0 ? '#ef4444' : '#64748b', sub: 'Inactivos > 3 días', positive: atRisk === 0 },
+        { id: 'students', label: 'Alumnos Activos', value: data.kpis.totalStudents, icon: <Users size={20} />, colorClass: 'text-blue-600', bgClass: 'bg-blue-50', accentHex: '#0F62FE', sub: `${engagementRate}% con progreso`, positive: true },
+        { id: 'lessons', label: 'Lecciones Completadas', value: data.kpis.totalCompletedLessons, icon: <BookOpen size={20} />, colorClass: 'text-violet-600', bgClass: 'bg-violet-50', accentHex: '#7c3aed', sub: `${data.kpis.avgModulesCompleted} prom. / alumno`, positive: true },
+        { id: 'roi', label: 'Market ROI', value: Math.abs(roi), decimals: 1, suffix: '%', prefix: roi < 0 ? '-' : '+', icon: <TrendingUp size={20} />, colorClass: roi >= 0 ? 'text-emerald-600' : 'text-red-600', bgClass: roi >= 0 ? 'bg-emerald-50' : 'bg-red-50', accentHex: roi >= 0 ? '#059669' : '#dc2626', sub: 'Portafolios simulados', positive: roi >= 0 },
+        { id: 'quiz', label: 'Intentos por Quiz', value: data.kpis.avgAttemptsPerQuiz, decimals: 1, icon: <Target size={20} />, colorClass: 'text-amber-600', bgClass: 'bg-amber-50', accentHex: '#d97706', sub: 'Promedio hasta aprobar', positive: data.kpis.avgAttemptsPerQuiz <= 2 },
+        { id: 'risk', label: 'En Riesgo', value: atRisk, icon: atRisk > 0 ? <AlertTriangle size={20} /> : <Activity size={20} />, colorClass: atRisk > 0 ? 'text-red-500' : 'text-slate-500', bgClass: atRisk > 0 ? 'bg-red-50' : 'bg-slate-50', accentHex: atRisk > 0 ? '#ef4444' : '#64748b', sub: 'Inactivos > 3 días', positive: atRisk === 0 },
     ]
 
     return (
-        <div className="adm-root min-h-screen bg-slate-50 relative pb-10">
+        <div className="min-h-screen bg-slate-50 relative pb-10 pl-0 max-[1160px]:pl-0 max-[767px]:pl-0 max-[767px]:pb-[90px]">
             <style>{`
-                .adm-root { padding-left: 0 !important; }
-                @media (max-width: 1160px) { .adm-root { padding-left: 0 !important; } }
-                @media (max-width: 767px) { .adm-root { padding-left: 0 !important; padding-bottom: 90px !important; } }
-
                 @keyframes fadeSlideUp {
                     from { opacity: 0; transform: translateY(18px); }
                     to { opacity: 1; transform: translateY(0); }
@@ -299,38 +308,50 @@ export default function AdminDashboardPage() {
                 .animate-fadeSlideUp { animation: fadeSlideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both; }
                 .animate-glowPulse { animation: glowPulse 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
                 .animate-slideInRight { animation: slideInRight 0.4s cubic-bezier(0.16, 1, 0.3, 1) both; }
-                .search-inp:focus { border-color: #0F62FE !important; box-shadow: 0 0 0 3px rgba(15,98,254,0.12) !important; outline: none; }
             `}</style>
 
             <div className="px-5 md:px-8 lg:px-11 max-w-[1440px] mx-auto box-border pt-8 md:pt-10">
 
                 {/* ── HERO HEADER ── */}
-                <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-3xl p-7 md:p-10 mb-8 relative overflow-hidden shadow-xl shadow-slate-200 space-y-6 animate-fadeSlideUp flex flex-col md:flex-row justify-between md:items-end gap-6">
-                    <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_75%_50%,rgba(15,98,254,0.15)_0%,transparent_65%),radial-gradient(ellipse_at_20%_80%,rgba(124,58,237,0.1)_0%,transparent_60%)]" />
+                <div className={`rounded-3xl p-7 md:p-10 mb-8 relative overflow-hidden shadow-2xl animate-fadeSlideUp flex flex-col md:flex-row justify-between md:items-end gap-6 ${isAnahuac ? 'bg-[#FF5900]' : 'bg-gradient-to-br from-[#020c20] via-[#0a1a40] to-[#0f2060]'}`}>
+                    {/* Dot-grid overlay */}
+                    <div className="absolute inset-0 pointer-events-none opacity-20" style={{ backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.35) 1px, transparent 1px)', backgroundSize: '28px 28px' }} />
+                    {/* Ambient glow */}
+                    <div className={`absolute inset-0 pointer-events-none ${isAnahuac ? 'bg-[radial-gradient(ellipse_at_80%_20%,rgba(255,255,255,0.2)_0%,transparent_60%)]' : 'bg-[radial-gradient(ellipse_at_80%_20%,rgba(15,98,254,0.25)_0%,transparent_60%),radial-gradient(ellipse_at_10%_90%,rgba(124,58,237,0.15)_0%,transparent_50%)]'}`} />
+                    {/* Decorative rings */}
+                    <div className="absolute -right-16 -top-16 w-72 h-72 rounded-full border border-white/5 pointer-events-none" />
+                    <div className="absolute -right-6 -top-6 w-48 h-48 rounded-full border border-white/8 pointer-events-none" />
+                    <div className="absolute right-32 -bottom-20 w-56 h-56 rounded-full border border-white/5 pointer-events-none" />
 
                     <div className="relative z-10 flex flex-col">
-                        <div className="flex items-center gap-2 mb-3 md:mb-4">
-                            <div className="w-1.5 h-1.5 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.8)]" />
-                            <span className="text-[10px] md:text-xs font-bold text-white/50 tracking-[0.15em] uppercase">Panel Institucional · BIZEN</span>
+                        <div className="flex items-center gap-2.5 mb-4">
+                            <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full border text-[10px] font-bold uppercase tracking-[0.15em] ${isAnahuac ? 'bg-white/10 border-white/20 text-white/80' : 'bg-blue-500/10 border-blue-500/20 text-blue-300'}`}>
+                                <div className={`w-1.5 h-1.5 rounded-full animate-pulse ${isAnahuac ? 'bg-white' : 'bg-blue-400'}`} />
+                                Panel Institucional · BIZEN
+                            </div>
                         </div>
-                        <h1 className="m-0 text-3xl md:text-4xl font-bold text-white tracking-tight leading-tight">
+                        {isAnahuac && (
+                            <Image src="/anahuac-logo.png" alt="Anáhuac Logo" width={80} height={80} className="object-contain mb-3" />
+                        )}
+                        <h1 className="m-0 text-3xl md:text-5xl font-bold text-white tracking-tight leading-none mb-3">
                             Panel de Control
                         </h1>
-                        <p className="m-0 mt-2 text-sm text-white/60 font-medium">
+                        <p className={`m-0 text-sm font-medium flex items-center gap-2 ${isAnahuac ? 'text-white/80' : 'text-white/50'}`}>
+                            <Calendar size={13} className="shrink-0" />
                             {data.school || 'Tu Institución'} · Actualizado hace unos momentos
                         </p>
                     </div>
 
                     <div className="relative z-10 flex flex-wrap gap-3">
                         <button onClick={() => generateImpactReport(data)}
-                            className="flex items-center justify-center gap-2 px-5 py-2.5 bg-blue-600 rounded-xl text-white text-sm font-semibold cursor-pointer transition-all hover:bg-blue-500 hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-blue-600/30">
+                            className="flex items-center justify-center gap-2 px-5 py-2.5 bg-blue-600 rounded-xl text-white text-sm font-semibold cursor-pointer transition-all hover:bg-blue-500 hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-blue-900/40">
                             <FileText size={16} /> Reporte Ejecutivo
                         </button>
                         <button onClick={() => exportCSV(data.students)}
-                            className="flex items-center justify-center gap-2 px-5 py-2.5 bg-white/10 hover:bg-white/15 border border-white/10 rounded-xl text-white/90 text-sm font-medium cursor-pointer transition-all hover:scale-[1.02] active:scale-[0.98]">
+                            className="flex items-center justify-center gap-2 px-5 py-2.5 bg-white/10 hover:bg-white/15 border border-white/15 rounded-xl text-white/90 text-sm font-medium cursor-pointer transition-all hover:scale-[1.02] active:scale-[0.98] backdrop-blur-sm">
                             <Download size={16} /> Exportar CSV
                         </button>
-                        <div className="hidden sm:flex items-center justify-center gap-2 px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl">
+                        <div className="hidden sm:flex items-center justify-center gap-2 px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl backdrop-blur-sm">
                             <Shield size={14} className="text-white/40" />
                             <span className="text-xs text-white/50 font-medium">Acceso Admin</span>
                         </div>
@@ -362,53 +383,54 @@ export default function AdminDashboardPage() {
                 {/* ── KPI GRID ── */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 mb-8">
                     {kpis.map((kpi, i) => (
-                        <div key={kpi.id} 
-                             className="bg-white rounded-2xl p-5 md:p-6 border border-slate-200 shadow-sm hover:shadow-md transition-all relative overflow-hidden animate-fadeSlideUp group" 
-                             style={{ animationDelay: `${i * 0.05}s` }}>
-                            
-                            {/* Accent border top */}
-                            <div className="absolute top-0 left-0 right-0 h-1 transition-all group-hover:h-1.5" style={{ background: kpi.accent }} />
+                        <div key={kpi.id}
+                             className="bg-white rounded-2xl p-5 md:p-6 border border-slate-100 shadow-[0_2px_12px_rgba(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.10)] hover:-translate-y-0.5 transition-all duration-300 relative overflow-hidden animate-fadeSlideUp group"
+                             style={{ animationDelay: `${i * 0.06}s` }}>
 
-                            <div className="flex justify-between items-start mb-4">
-                                <div className="w-11 h-11 rounded-xl flex items-center justify-center" style={{ background: `${kpi.accent}15`, color: kpi.accent }}>
+                            {/* Colored top bar */}
+                            <div className="absolute top-0 left-0 right-0 h-[3px] rounded-t-2xl transition-all duration-300 group-hover:h-1" style={{ background: kpi.accentHex }} />
+
+                            {/* Decorative corner shape */}
+                            <div className="absolute -right-5 -bottom-5 w-20 h-20 rounded-full opacity-[0.06] transition-all duration-300 group-hover:opacity-[0.10] group-hover:scale-110" style={{ background: kpi.accentHex }} />
+                            <div className="absolute -right-2 -bottom-2 w-10 h-10 rounded-full opacity-[0.04]" style={{ background: kpi.accentHex }} />
+
+                            <div className="flex justify-between items-start mb-5">
+                                <div className={`w-11 h-11 rounded-xl flex items-center justify-center shadow-sm ${kpi.bgClass} ${kpi.colorClass} group-hover:scale-105 transition-transform duration-300`}>
                                     {kpi.icon}
                                 </div>
-                                <span className={`text-[10px] font-bold px-2 py-1 rounded-md uppercase tracking-wider ${kpi.positive ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}`}>
-                                    {kpi.positive ? '↑ Bien' : '↓ Atención'}
+                                <span className={`text-[9px] font-extrabold px-2.5 py-1 rounded-lg uppercase tracking-widest border ${
+                                    kpi.positive
+                                        ? 'bg-emerald-50 text-emerald-700 border-emerald-100'
+                                        : 'bg-red-50 text-red-600 border-red-100'
+                                }`}>
+                                    {kpi.positive ? '▲ Bien' : '▼ Atención'}
                                 </span>
                             </div>
 
-                            <div className="text-3xl font-extrabold text-slate-900 tracking-tight leading-none mb-1.5">
-                                {(kpi as any).prefix && <span className="text-[0.65em] font-bold mr-0.5 align-baseline" style={{ color: kpi.accent }}>{(kpi as any).prefix}</span>}
+                            <div className="text-3xl font-black text-slate-900 tracking-tight leading-none mb-2">
+                                {(kpi as any).prefix && <span className="text-[0.6em] font-bold mr-0.5 align-baseline" style={{ color: kpi.accentHex }}>{(kpi as any).prefix}</span>}
                                 {mounted ? <AnimatedCounter value={kpi.value} decimals={(kpi as any).decimals ?? 0} /> : kpi.value}
-                                {(kpi as any).suffix && <span className="text-[0.6em] font-medium text-slate-400 ml-0.5 align-baseline">{(kpi as any).suffix}</span>}
+                                {(kpi as any).suffix && <span className="text-[0.55em] font-semibold text-slate-400 ml-1 align-baseline">{(kpi as any).suffix}</span>}
                             </div>
-                            <div className="text-[11px] font-bold text-slate-500 mb-1 uppercase tracking-widest">{kpi.label}</div>
-                            <div className="text-[11.5px] font-medium text-slate-400 truncate">{kpi.sub}</div>
+                            <div className="text-[10px] font-black text-slate-400 mb-1.5 uppercase tracking-[0.12em]">{kpi.label}</div>
+                            <div className="text-[11px] font-medium text-slate-400 truncate">{kpi.sub}</div>
                         </div>
                     ))}
                 </div>
                 
-                {/* ── DAILY CHALLENGE PREVIEW ── */}
-                <div className="mb-8 animate-fadeSlideUp" style={{ animationDelay: '0.15s' }}>
-                    <div className="flex items-center gap-2.5 mb-4">
-                        <div className="w-8 h-8 rounded-lg bg-red-100 flex items-center justify-center">
-                            <Target size={16} className="text-red-500" strokeWidth={2.5} />
-                        </div>
-                        <span className="text-lg font-bold text-slate-900 tracking-tight">Misión del Día (Previo)</span>
-                    </div>
-                    <DailyChallengeWidget dashboardPreviewMode={true} />
-                </div>
+
 
                 {/* ── DIAGNOSTIC + COMMUNITY GRID ── */}
                 <div className="grid grid-cols-1 xl:grid-cols-[1.3fr_0.8fr] gap-5 mb-8">
 
                     {/* Diagnostic Card (wider) */}
-                    <div className="bg-white rounded-3xl p-6 md:p-8 border border-slate-200 shadow-sm animate-fadeSlideUp" style={{ animationDelay: '0.2s' }}>
-                        <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
+                    <div className="bg-white rounded-3xl p-6 md:p-8 border border-slate-100 shadow-[0_2px_16px_rgba(0,0,0,0.05)] animate-fadeSlideUp relative overflow-hidden" style={{ animationDelay: '0.2s' }}>
+                        {/* Subtle background decoration */}
+                        <div className="absolute top-0 right-0 w-64 h-64 rounded-full opacity-[0.03] -translate-y-1/2 translate-x-1/3" style={{ background: 'radial-gradient(circle, #0F62FE, transparent)' }} />
+                        <div className="flex flex-wrap items-center justify-between gap-4 mb-8 relative z-10">
                             <div className="flex items-center gap-4">
-                                <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600">
-                                    <Brain size={24} />
+                                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center text-white shadow-lg shadow-blue-200">
+                                    <Brain size={22} />
                                 </div>
                                 <div>
                                     <h3 className="m-0 text-lg font-bold text-slate-900">Diagnóstico Financiero</h3>
@@ -417,7 +439,7 @@ export default function AdminDashboardPage() {
                                     </p>
                                 </div>
                             </div>
-                            <span className="text-xs px-3.5 py-1.5 rounded-lg bg-blue-50 text-blue-700 font-bold uppercase tracking-wider">
+                            <span className="text-[10px] px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-100 text-blue-700 font-bold uppercase tracking-widest">
                                 IQ Financiero Global
                             </span>
                         </div>
@@ -451,10 +473,12 @@ export default function AdminDashboardPage() {
                     </div>
 
                     {/* Community Leaders */}
-                    <div className="bg-white rounded-3xl p-6 md:p-8 border border-slate-200 shadow-sm animate-fadeSlideUp flex flex-col" style={{ animationDelay: '0.25s' }}>
-                        <div className="flex items-center gap-4 mb-6">
-                            <div className="w-12 h-12 rounded-2xl bg-purple-50 flex items-center justify-center text-purple-600">
-                                <Star size={24} />
+                    <div className="bg-white rounded-3xl p-6 md:p-8 border border-slate-100 shadow-[0_2px_16px_rgba(0,0,0,0.05)] animate-fadeSlideUp flex flex-col relative overflow-hidden" style={{ animationDelay: '0.25s' }}>
+                        {/* Decorative shape */}
+                        <div className="absolute -top-8 -right-8 w-32 h-32 rounded-full opacity-[0.04]" style={{ background: 'radial-gradient(circle, #7c3aed, transparent)' }} />
+                        <div className="flex items-center gap-4 mb-6 relative z-10">
+                            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-500 to-violet-700 flex items-center justify-center text-white shadow-lg shadow-purple-200">
+                                <Star size={20} />
                             </div>
                             <div>
                                 <h3 className="m-0 text-lg font-bold text-slate-900">Cuadro de Honor</h3>
@@ -514,7 +538,7 @@ export default function AdminDashboardPage() {
                         <div className="w-full sm:w-80 relative">
                             <Search size={16} className="text-slate-400 absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
                             <input type="text" placeholder="Buscar por nombre..." value={search} onChange={e => setSearch(e.target.value)}
-                                className="search-inp w-full py-3 pr-4 pl-11 rounded-xl border-2 border-slate-200 text-sm font-medium text-slate-900 bg-slate-50 transition-all placeholder:text-slate-400 placeholder:font-normal hover:border-slate-300" />
+                                className="w-full py-3 pr-4 pl-11 rounded-xl border-2 border-slate-200 text-sm font-medium text-slate-900 bg-slate-50 transition-all placeholder:text-slate-400 placeholder:font-normal hover:border-slate-300 focus:border-blue-600 focus:ring-4 focus:ring-blue-600/10 outline-none" />
                         </div>
                     </div>
 
@@ -598,7 +622,7 @@ export default function AdminDashboardPage() {
                                             </td>
                                             <td className="py-3.5 px-6 text-right">
                                                 <button 
-                                                    className="row-btn inline-flex items-center gap-1.5 px-4 py-2 bg-white hover:bg-blue-50 text-blue-700 border border-slate-200 hover:border-blue-200 rounded-xl text-xs font-bold cursor-pointer transition-all disabled:opacity-60 disabled:cursor-not-allowed shadow-sm"
+                                                    className="inline-flex items-center gap-1.5 px-4 py-2 bg-white hover:bg-blue-50 text-blue-700 border border-slate-200 hover:border-blue-200 rounded-xl text-xs font-bold cursor-pointer transition-all disabled:opacity-60 disabled:cursor-not-allowed shadow-sm"
                                                     onClick={() => setSelectedStudentId(student.id)}
                                                     disabled={loadingDetail && selectedStudentId === student.id}
                                                 >
@@ -629,10 +653,14 @@ export default function AdminDashboardPage() {
                                 Mostrando <strong className="text-slate-900 font-bold">{filteredStudents.length}</strong> de <strong className="text-slate-900 font-bold">{data.students.length}</strong> alumnos
                             </span>
                             <div className="flex items-center gap-5 bg-white px-4 py-2 rounded-xl border border-slate-200 shadow-sm">
-                                {[['#10b981', '≥ 70%'], ['#0F62FE', '40–70%'], ['#f59e0b', '< 40%']].map(([c, l]) => (
-                                    <div key={l} className="flex items-center gap-2">
-                                        <div className="w-2.5 h-2.5 rounded-full" style={{ background: c }} />
-                                        <span className="text-xs font-bold text-slate-600">{l}</span>
+                                {[
+                                    { color: 'bg-emerald-500', label: '≥ 70%' },
+                                    { color: 'bg-blue-600', label: '40–70%' },
+                                    { color: 'bg-amber-500', label: '< 40%' }
+                                ].map((item) => (
+                                    <div key={item.label} className="flex items-center gap-2">
+                                        <div className={`w-2.5 h-2.5 rounded-full ${item.color}`} />
+                                        <span className="text-xs font-bold text-slate-600">{item.label}</span>
                                     </div>
                                 ))}
                             </div>

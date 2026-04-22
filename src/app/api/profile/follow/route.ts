@@ -1,14 +1,13 @@
 import { NextRequest, NextResponse } from "next/server"
-import { createSupabaseServer } from "@/lib/supabase/server"
 import { prisma } from "@/lib/prisma"
+import { auth } from "@clerk/nextjs/server"
 
 // POST /api/profile/follow - Follow a user
 export async function POST(request: NextRequest) {
   try {
-    const supabase = await createSupabaseServer()
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    const { userId } = await auth()
     
-    if (authError || !user) {
+    if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
@@ -19,7 +18,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "followingId is required" }, { status: 400 })
     }
 
-    if (followingId === user.id) {
+    if (followingId === userId) {
       return NextResponse.json({ error: "Cannot follow yourself" }, { status: 400 })
     }
 
@@ -27,7 +26,7 @@ export async function POST(request: NextRequest) {
     const existingFollow = await prisma.userFollow.findUnique({
       where: {
         followerId_followingId: {
-          followerId: user.id,
+          followerId: userId,
           followingId: followingId
         }
       }
@@ -40,7 +39,7 @@ export async function POST(request: NextRequest) {
     // Create the follow relationship
     const follow = await prisma.userFollow.create({
       data: {
-        followerId: user.id,
+        followerId: userId,
         followingId: followingId
       }
     })
@@ -65,10 +64,9 @@ export async function POST(request: NextRequest) {
 // DELETE /api/profile/follow - Unfollow a user
 export async function DELETE(request: NextRequest) {
   try {
-    const supabase = await createSupabaseServer()
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    const { userId } = await auth()
     
-    if (authError || !user) {
+    if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
@@ -83,7 +81,7 @@ export async function DELETE(request: NextRequest) {
     await prisma.userFollow.delete({
       where: {
         followerId_followingId: {
-          followerId: user.id,
+          followerId: userId,
           followingId: followingId
         }
       }
@@ -108,17 +106,16 @@ export async function DELETE(request: NextRequest) {
 // GET /api/profile/follow?userId=xxx - Check if current user is following a specific user
 export async function GET(request: NextRequest) {
   try {
-    const supabase = await createSupabaseServer()
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    const { userId: currentUserId } = await auth()
     
-    if (authError || !user) {
+    if (!currentUserId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
     const { searchParams } = new URL(request.url)
-    const userId = searchParams.get("userId")
+    const targetUserId = searchParams.get("userId")
 
-    if (!userId) {
+    if (!targetUserId) {
       return NextResponse.json({ error: "userId is required" }, { status: 400 })
     }
 
@@ -126,8 +123,8 @@ export async function GET(request: NextRequest) {
     const follow = await prisma.userFollow.findUnique({
       where: {
         followerId_followingId: {
-          followerId: user.id,
-          followingId: userId
+          followerId: currentUserId,
+          followingId: targetUserId
         }
       }
     })
@@ -141,4 +138,3 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "Failed to check follow status" }, { status: 500 })
   }
 }
-

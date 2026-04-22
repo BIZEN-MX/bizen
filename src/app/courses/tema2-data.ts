@@ -99,4 +99,10 @@ export const TEMA2_SUBTEMAS: Tema2Subtema[] = [
       { title: "¿Qué hábitos financieros son saludables?", slug: "habitos-financieros", level: "Básico" },
     ]
   },
+  {
+    title: "12. Certificación",
+    lessons: [
+      { title: "Examen de Certificación: Bloque 2", slug: "evaluacion-bloque-2", level: "Avanzado" },
+    ]
+  },
 ]

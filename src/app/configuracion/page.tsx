@@ -18,10 +18,10 @@ import BizenVirtualCard, { CardTheme } from "@/components/BizenVirtualCard"
 export const dynamic = 'force-dynamic'
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
-function Toggle({ checked, onChange }: { checked: boolean; onChange: (v: boolean) => void }) {
+function Toggle({ checked, onChange, isAnahuac }: { checked: boolean; onChange: (v: boolean) => void; isAnahuac?: boolean }) {
   return (
     <button type="button" role="switch" aria-checked={checked} onClick={() => onChange(!checked)}
-      className={`relative inline-flex items-center w-11 h-[26px] rounded-full shrink-0 transition-colors duration-200 outline-none ${checked ? "bg-gradient-to-br from-blue-700 to-blue-500 shadow-[0_0_12px_rgba(15,98,254,0.4)]" : "bg-white/10"}`}
+      className={`relative inline-flex items-center w-11 h-[26px] rounded-full shrink-0 transition-colors duration-200 outline-none ${checked ? (isAnahuac ? "bg-[#FF5900] shadow-[0_0_12px_rgba(255,89,0,0.4)]" : "bg-gradient-to-br from-blue-700 to-blue-500 shadow-[0_0_12px_rgba(15,98,254,0.4)]") : "bg-white/10"}`}
     >
       <span className={`absolute w-5 h-5 rounded-full bg-white shadow-md transition-all duration-200 ${checked ? "left-[21px]" : "left-[3px]"}`} />
     </button>
@@ -40,15 +40,15 @@ function FieldRow({ label, desc, children }: { label:string;desc?:string;childre
   )
 }
 
-function ToggleRow({ label,desc,checked,onChange }:{label:string;desc?:string;checked:boolean;onChange:(v:boolean)=>void}) {
-  return <FieldRow label={label} desc={desc}><Toggle checked={checked} onChange={onChange} /></FieldRow>
+function ToggleRow({ label,desc,checked,onChange,isAnahuac }:{label:string;desc?:string;checked:boolean;onChange:(v:boolean)=>void;isAnahuac?:boolean}) {
+  return <FieldRow label={label} desc={desc}><Toggle checked={checked} onChange={onChange} isAnahuac={isAnahuac} /></FieldRow>
 }
 
-function SectionCard({ title, icon, children }: { title: string; icon: React.ReactNode; children: React.ReactNode }) {
+function SectionCard({ title, icon, children, isAnahuac }: { title: string; icon: React.ReactNode; children: React.ReactNode; isAnahuac?: boolean }) {
   return (
     <div className="bg-white/5 rounded-2xl border border-white/10 shadow-[0_4px_24px_rgba(0,0,0,0.4)] mb-4 overflow-hidden backdrop-blur-md">
       <div className="px-6 py-4 border-b border-white/10 flex items-center gap-3 bg-white/5">
-        <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-700 to-blue-500 flex items-center justify-center shrink-0 shadow-[0_4px_12px_rgba(15,98,254,0.35)]">
+        <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 shadow-lg ${isAnahuac ? 'bg-[#FF5900]' : 'bg-gradient-to-br from-blue-700 to-blue-500 shadow-blue-600/30'}`}>
           {icon}
         </div>
         <span className="text-lg font-semibold text-white">{title}</span>
@@ -66,18 +66,18 @@ function FieldLabel({ children }:{children:React.ReactNode}) {
   )
 }
 
-function StyledInput({ value,onChange,placeholder,type="text",disabled }:{value:string;onChange:(v:string)=>void;placeholder?:string;type?:string;disabled?:boolean}) {
+function StyledInput({ value,onChange,placeholder,type="text",disabled,isAnahuac }:{value:string;onChange:(v:string)=>void;placeholder?:string;type?:string;disabled?:boolean;isAnahuac?:boolean}) {
   return (
     <input type={type} value={value} onChange={e=>onChange(e.target.value)} placeholder={placeholder} disabled={disabled}
-      className={`w-full px-4 py-3 text-base rounded-xl border border-white/10 outline-none transition-all duration-200 focus:bg-blue-600/5 focus:border-blue-600 focus:shadow-[0_0_0_3px_rgba(15,98,254,0.15)] ${disabled ? 'text-white/40 bg-white/5' : 'text-white bg-white/5'}`}
+      className={`w-full px-4 py-3 text-base rounded-xl border border-white/10 outline-none transition-all duration-200 focus:bg-white/5 ${isAnahuac ? 'focus:border-[#FF5900] focus:shadow-[0_0_0_3px_rgba(255,89,0,0.15)]' : 'focus:border-blue-600 focus:shadow-[0_0_0_3px_rgba(15,98,254,0.15)]'} ${disabled ? 'text-white/40 bg-white/5' : 'text-white bg-white/5'}`}
     />
   )
 }
 
-function SaveBtn({ onClick,loading,label="Guardar cambios" }:{onClick:()=>void;loading?:boolean;label?:string}) {
+function SaveBtn({ onClick,loading,label="Guardar cambios",isAnahuac }:{onClick:()=>void;loading?:boolean;label?:string;isAnahuac?:boolean}) {
   return (
     <button onClick={onClick} disabled={loading}
-      className="inline-flex mt-5 items-center justify-center gap-2 px-7 py-3 bg-gradient-to-br from-blue-700 to-blue-500 border-none rounded-xl text-white text-base font-semibold transition-all duration-200 cursor-pointer shadow-[0_4px_16px_rgba(15,98,254,0.3)] hover:shadow-[0_8px_24px_rgba(15,98,254,0.5)] hover:-translate-y-px hover:from-blue-800 hover:to-blue-600 disabled:opacity-65 disabled:pointer-events-none disabled:transform-none"
+      className={`inline-flex mt-5 items-center justify-center gap-2 px-7 py-3 border-none rounded-xl text-white text-base font-semibold transition-all duration-200 cursor-pointer shadow-lg hover:-translate-y-px disabled:opacity-65 disabled:pointer-events-none disabled:transform-none ${isAnahuac ? 'bg-[#FF5900] shadow-orange-600/20 hover:bg-[#E65000]' : 'bg-gradient-to-br from-blue-700 to-blue-500 shadow-blue-600/30 hover:from-blue-800 hover:to-blue-600'}`}
     >
       <Save size={14}/>{loading?"Guardando...":label}
     </button>
@@ -88,6 +88,8 @@ function SaveBtn({ onClick,loading,label="Guardar cambios" }:{onClick:()=>void;l
 function SettingsContent() {
   const router=useRouter()
   const {user,dbProfile,refreshUser}=useAuth()
+  const userEmail = (user?.email || (user as any)?.emailAddresses?.[0]?.emailAddress || "").toLowerCase()
+  const isAnahuac = userEmail.endsWith('@anahuac.mx') || userEmail.includes('.anahuac.mx') || userEmail.endsWith('@bizen.mx')
   const {settings,updateSettings,resetSettings}=useSettings()
   const [supabase,setSupabase]=useState<ReturnType<typeof createClientMicrocred>|null>(null)
   const [activeSection,setActiveSection]=useState("general")
@@ -184,10 +186,10 @@ function SettingsContent() {
 
       <div className="relative w-full">
         {/* ── Hero ── */}
-        <div className="relative overflow-hidden bg-gradient-to-br from-[#060c1d] via-[#0a1628] to-[#080f20] border-b border-white/10 px-[clamp(24px,5vw,48px)] py-[clamp(32px,5vw,56px)] pb-[clamp(64px,8vw,88px)]">
+        <div className={`relative overflow-hidden border-b border-white/10 px-[clamp(24px,5vw,48px)] py-[clamp(32px,5vw,56px)] pb-[clamp(64px,8vw,88px)] ${isAnahuac ? 'bg-[#080f1e]' : 'bg-gradient-to-br from-[#060c1d] via-[#0a1628] to-[#080f20]'}`}>
           {/* Ambient orbs */}
-          <div className="absolute -top-[40%] -right-[5%] w-[500px] h-[500px] rounded-full pointer-events-none bg-[radial-gradient(circle,rgba(15,98,254,0.18)_0%,transparent_65%)]" />
-          <div className="absolute -bottom-[30%] left-[5%] w-[380px] h-[380px] rounded-full pointer-events-none bg-[radial-gradient(circle,rgba(15,98,254,0.1)_0%,transparent_65%)]" />
+          <div className={`absolute -top-[40%] -right-[5%] w-[500px] h-[500px] rounded-full pointer-events-none ${isAnahuac ? 'bg-[radial-gradient(circle,rgba(255,89,0,0.12)_0%,transparent_65%)]' : 'bg-[radial-gradient(circle,rgba(15,98,254,0.18)_0%,transparent_65%)]'}`} />
+          <div className={`absolute -bottom-[30%] left-[5%] w-[380px] h-[380px] rounded-full pointer-events-none ${isAnahuac ? 'bg-[radial-gradient(circle,rgba(255,89,0,0.08)_0%,transparent_65%)]' : 'bg-[radial-gradient(circle,rgba(15,98,254,0.1)_0%,transparent_65%)]'}`} />
 
 
           <div className="relative z-10 flex items-center justify-between flex-wrap gap-5 max-w-6xl mx-auto">
@@ -200,9 +202,9 @@ function SettingsContent() {
                 >
                   <ArrowLeft size={18} />
                 </button>
-                <div className="inline-flex items-center gap-2 bg-blue-500/10 border border-blue-500/25 rounded-full px-3.5 py-1.5">
-                  <Settings size={12} className="text-blue-500"/>
-                  <span className="text-[11px] font-bold text-blue-500 uppercase tracking-widest">Configuración</span>
+                <div className={`inline-flex items-center gap-2 border rounded-full px-3.5 py-1.5 ${isAnahuac ? 'bg-[#FF5900]/10 border-[#FF5900]/25' : 'bg-blue-500/10 border-blue-500/25'}`}>
+                  <Settings size={12} className={isAnahuac ? 'text-[#FF5900]' : 'text-blue-500'}/>
+                  <span className={`text-[11px] font-bold uppercase tracking-widest ${isAnahuac ? 'text-[#FF5900]' : 'text-blue-500'}`}>Configuración</span>
                 </div>
               </div>
               <h1 className="text-[clamp(24px,4vw,36px)] font-bold text-white mb-2 tracking-tight leading-tight">
@@ -214,8 +216,8 @@ function SettingsContent() {
             </div>
 
             {/* User badge */}
-            <div className="inline-flex items-center gap-3.5 bg-white/5 backdrop-blur-xl border border-white/10 rounded-full pl-2 pr-5 py-2 shadow-[0_4px_24px_rgba(0,0,0,0.3)]">
-              <div className="w-11 h-11 rounded-full bg-gradient-to-br from-blue-700 to-blue-500 flex items-center justify-center shrink-0 overflow-hidden shadow-[0_0_20px_rgba(15,98,254,0.5)] border-2 border-white/15">
+            <div className="inline-flex items-center gap-3.5 bg-white/5 backdrop-blur-xl border border-white/10 rounded-full pl-2 pr-5 py-2 shadow-xl">
+              <div className={`w-11 h-11 rounded-full flex items-center justify-center shrink-0 overflow-hidden border-2 border-white/15 shadow-lg ${isAnahuac ? 'bg-[#FF5900] shadow-orange-600/40' : 'bg-gradient-to-br from-blue-700 to-blue-500 shadow-blue-600/50'}`}>
                 <AvatarDisplay avatar={avatar||{type:"character",id:"robot",character:"robot"}} size={34}/>
               </div>
               <div>
@@ -239,13 +241,13 @@ function SettingsContent() {
                 const active=activeSection===s.id
                 return (
                   <button key={s.id} onClick={()=>setActiveSection(s.id)}
-                    className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-[10px] text-[15px] transition-all duration-200 outline-none hover:bg-white/5 ${active ? "bg-blue-500/15 text-white font-semibold shadow-[inset_0_0_0_1px_rgba(15,98,254,0.3)]" : "text-white/60 font-normal bg-transparent"}`}
+                    className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-[10px] text-[15px] transition-all duration-200 outline-none hover:bg-white/5 ${active ? (isAnahuac ? "bg-[#FF5900]/15 text-white font-semibold shadow-[inset_0_0_0_1px_rgba(255,89,0,0.3)]" : "bg-blue-500/15 text-white font-semibold shadow-[inset_0_0_0_1px_rgba(15,98,254,0.3)]") : "text-white/60 font-normal bg-transparent"}`}
                   >
-                    <div className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 transition-all duration-200 ${active ? "bg-gradient-to-br from-blue-700 to-blue-500 shadow-[0_4px_10px_rgba(15,98,254,0.35)]" : "bg-white/5 border border-white/10"}`}>
+                    <div className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 transition-all duration-200 ${active ? (isAnahuac ? "bg-[#FF5900] shadow-orange-600/30" : "bg-gradient-to-br from-blue-700 to-blue-500 shadow-blue-600/35") : "bg-white/5 border border-white/10"}`}>
                       <div className={active ? "text-white" : "text-white/40"}>{s.icon}</div>
                     </div>
                     {s.label}
-                    {active&&<ChevronRight size={12} className="text-blue-500 ml-auto"/>}
+                    {active&&<ChevronRight size={12} className={`${isAnahuac ? 'text-[#FF5900]' : 'text-blue-500'} ml-auto`}/>}
                   </button>
                 )
               })}
@@ -285,12 +287,12 @@ function SettingsContent() {
             {/* ── GENERAL ── */}
             {activeSection==="general"&&(
               <div className="section-card">
-                <SectionCard title="Preferencias del sistema" icon={<Zap size={15} color="white"/>}>
-                  <ToggleRow label="Efectos de Sonido" desc="Activar efectos de sonido en la app" checked={settings.soundsEnabled} onChange={v=>updateSettings({soundsEnabled:v})}/>
-                  <ToggleRow label="Animaciones" desc="Mostrar animaciones y transiciones suaves" checked={settings.animationsEnabled} onChange={v=>updateSettings({animationsEnabled:v})}/>
+                <SectionCard title="Preferencias del sistema" icon={<Zap size={15} color="white"/>} isAnahuac={isAnahuac}>
+                  <ToggleRow label="Efectos de Sonido" desc="Activar efectos de sonido en la app" checked={settings.soundsEnabled} onChange={v=>updateSettings({soundsEnabled:v})} isAnahuac={isAnahuac}/>
+                  <ToggleRow label="Animaciones" desc="Mostrar animaciones y transiciones suaves" checked={settings.animationsEnabled} onChange={v=>updateSettings({animationsEnabled:v})} isAnahuac={isAnahuac}/>
                   <div className="pb-1"/>
                 </SectionCard>
-                <SaveBtn onClick={saveGlobalSettings} loading={saving}/>
+                <SaveBtn onClick={saveGlobalSettings} loading={saving} isAnahuac={isAnahuac}/>
               </div>
             )}
 
@@ -298,43 +300,43 @@ function SettingsContent() {
             {activeSection==="profile"&&user&&(
               <div className="section-card">
                 {/* Identity preview */}
-                <div className="bg-white/5 rounded-2xl border border-white/10 shadow-[0_4px_24px_rgba(0,0,0,0.4)] mb-4 flex items-center gap-4 px-6 py-5.5 backdrop-blur-md bg-gradient-to-br from-blue-500/5 to-transparent">
-                  <div className="w-[60px] h-[60px] rounded-2xl bg-gradient-to-br from-blue-700 to-blue-500 flex items-center justify-center shrink-0 shadow-[0_8px_24px_rgba(15,98,254,0.4)]">
+                <div className={`bg-white/5 rounded-2xl border border-white/10 shadow-xl mb-4 flex items-center gap-4 px-6 py-5.5 backdrop-blur-md ${isAnahuac ? 'bg-gradient-to-br from-[#FF5900]/5 to-transparent' : 'bg-gradient-to-br from-blue-500/5 to-transparent'}`}>
+                  <div className={`w-[60px] h-[60px] rounded-2xl flex items-center justify-center shrink-0 shadow-lg ${isAnahuac ? 'bg-[#FF5900] shadow-orange-600/30' : 'bg-gradient-to-br from-blue-700 to-blue-500 shadow-xl shadow-blue-600/40'}`}>
                     <AvatarDisplay avatar={avatar||{type:"character",id:"robot",character:"robot"}} size={44} frame={dbProfile?.inventory?.includes("2")?"vip":dbProfile?.inventory?.includes("1")?"ambassador":null}/>
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="text-[19px] font-bold text-white truncate">{fullName||"(Sin nombre)"}</div>
                     <div className="text-[15px] text-white/60 mt-1 truncate">{username?`@${username.replace("@","")}`:user.email}</div>
                   </div>
-                  <div className="flex items-center gap-1.5 bg-blue-500/10 border border-blue-500/20 rounded-full px-3.5 py-1.5 shrink-0 hidden sm:flex">
-                    <Award size={13} className="text-blue-500"/>
-                    <span className="text-xs font-semibold text-blue-500">{roleLabel()}</span>
+                  <div className={`flex items-center gap-1.5 border rounded-full px-3.5 py-1.5 shrink-0 hidden sm:flex ${isAnahuac ? 'bg-[#FF5900]/10 border-[#FF5900]/20' : 'bg-blue-500/10 border-blue-500/20'}`}>
+                    <Award size={13} className={isAnahuac ? 'text-[#FF5900]' : 'text-blue-500'}/>
+                    <span className={`text-xs font-semibold ${isAnahuac ? 'text-[#FF5900]' : 'text-blue-500'}`}>{roleLabel()}</span>
                   </div>
                 </div>
 
-                <SectionCard title="Información personal" icon={<User size={15} color="white"/>}>
+                <SectionCard title="Información personal" icon={<User size={15} color="white"/>} isAnahuac={isAnahuac}>
                   <div className="py-3.5 grid gap-3.5">
                     <div>
                       <FieldLabel>Nombre completo</FieldLabel>
-                      <StyledInput value={fullName} onChange={setFullName} placeholder="Tu nombre completo"/>
+                      <StyledInput value={fullName} onChange={setFullName} placeholder="Tu nombre completo" isAnahuac={isAnahuac}/>
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                       <div>
                         <FieldLabel>@Username</FieldLabel>
-                        <StyledInput value={username} onChange={setUsername} placeholder="usuario123"/>
+                        <StyledInput value={username} onChange={setUsername} placeholder="usuario123" isAnahuac={isAnahuac}/>
                       </div>
                       <div>
                         <FieldLabel>Fecha de nacimiento</FieldLabel>
                         <input type="date" value={birthDate} onChange={e=>setBirthDate(e.target.value)}
                           max={new Date().toISOString().split("T")[0]}
-                          className="w-full px-4 py-3 text-base rounded-xl border border-white/10 bg-white/5 text-white outline-none transition-all duration-200 focus:bg-blue-600/5 focus:border-blue-600 focus:shadow-[0_0_0_3px_rgba(15,98,254,0.15)]"
+                          className={`w-full px-4 py-3 text-base rounded-xl border border-white/10 bg-white/5 text-white outline-none transition-all duration-200 focus:bg-white/5 ${isAnahuac ? 'focus:border-[#FF5900] focus:shadow-[0_0_0_3px_rgba(255,89,0,0.15)]' : 'focus:border-blue-600 focus:shadow-[0_0_0_3px_rgba(15,98,254,0.15)]'}`}
                         />
                       </div>
                     </div>
                     <div>
                       <FieldLabel>Bio</FieldLabel>
                       <textarea value={bio} onChange={e=>setBio(e.target.value)} placeholder="Cuéntale algo a tu comunidad..."
-                        className="w-full min-h-[80px] px-4 py-3 text-base rounded-xl border border-white/10 bg-white/5 text-white outline-none transition-all duration-200 focus:bg-blue-600/5 focus:border-blue-600 focus:shadow-[0_0_0_3px_rgba(15,98,254,0.15)] resize-y"
+                        className={`w-full min-h-[80px] px-4 py-3 text-base rounded-xl border border-white/10 bg-white/5 text-white outline-none transition-all duration-200 focus:bg-white/5 resize-y ${isAnahuac ? 'focus:border-[#FF5900] focus:shadow-[0_0_0_3px_rgba(255,89,0,0.15)]' : 'focus:border-blue-600 focus:shadow-[0_0_0_3px_rgba(15,98,254,0.15)]'}`}
                       />
                     </div>
                     {dbProfile?.role!=="particular"&&(
@@ -342,7 +344,7 @@ function SettingsContent() {
                         <FieldLabel>Mi Escuela</FieldLabel>
                         <div className="relative">
                           <select value={schoolId} onChange={e=>setSchoolId(e.target.value)}
-                            className="w-full px-4 py-3 pr-10 text-base rounded-xl border border-white/10 bg-white/5 text-white outline-none transition-all duration-200 focus:bg-blue-600/5 focus:border-blue-600 focus:shadow-[0_0_0_3px_rgba(15,98,254,0.15)] appearance-none cursor-pointer"
+                            className={`w-full px-4 py-3 pr-10 text-base rounded-xl border border-white/10 bg-white/5 text-white outline-none transition-all duration-200 focus:bg-white/5 appearance-none cursor-pointer ${isAnahuac ? 'focus:border-[#FF5900] focus:shadow-[0_0_0_3px_rgba(255,89,0,0.15)]' : 'focus:border-blue-600 focus:shadow-[0_0_0_3px_rgba(15,98,254,0.15)]'}`}
                           >
                             <option value="">Selecciona tu escuela</option>
                             {schools.map(s=><option key={s.id} value={s.id}>{s.name}</option>)}
@@ -354,15 +356,15 @@ function SettingsContent() {
                   </div>
                 </SectionCard>
 
-                <SaveBtn onClick={saveProfile} loading={saving} label="Actualizar perfil"/>
+                <SaveBtn onClick={saveProfile} loading={saving} label="Actualizar perfil" isAnahuac={isAnahuac}/>
 
-                <div className="mt-6 p-5 bg-gradient-to-br from-blue-500/10 to-blue-500/5 rounded-xl flex items-center gap-4 border border-blue-500/20">
-                  <div className="w-10 h-10 rounded-full bg-blue-500/15 flex items-center justify-center shrink-0 border border-blue-500/25">
-                    <Sparkles size={18} className="text-blue-500"/>
+                <div className={`mt-6 p-5 rounded-xl flex items-center gap-4 border ${isAnahuac ? 'bg-[#FF5900]/10 border-[#FF5900]/20' : 'bg-gradient-to-br from-blue-500/10 to-blue-500/5 border-blue-500/20'}`}>
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 border ${isAnahuac ? 'bg-[#FF5900]/15 border-[#FF5900]/25' : 'bg-blue-500/15 border-blue-500/25'}`}>
+                    <Sparkles size={18} className={isAnahuac ? 'text-[#FF5900]' : 'text-blue-500'}/>
                   </div>
                   <div>
-                    <div className="text-[15px] font-bold text-blue-500">Consejo de Billy</div>
-                    <div className="text-sm text-blue-100/70 mt-1 leading-relaxed">Tener un nombre de usuario único te ayuda a destacar en los rankings globales. ¡Elige uno que te represente!</div>
+                    <div className={`text-[15px] font-bold ${isAnahuac ? 'text-[#FF5900]' : 'text-blue-500'}`}>Consejo de Billy</div>
+                    <div className={`text-sm mt-1 leading-relaxed ${isAnahuac ? 'text-white/70' : 'text-blue-100/70'}`}>Tener un nombre de usuario único te ayuda a destacar en los rankings globales. ¡Elige uno que te represente!</div>
                   </div>
                 </div>
               </div>
@@ -371,7 +373,7 @@ function SettingsContent() {
             {/* ── ACCOUNT ── */}
             {activeSection==="account"&&user&&(
               <div className="section-card">
-                <SectionCard title="Correo electrónico" icon={<User size={15} color="white"/>}>
+                <SectionCard title="Correo electrónico" icon={<User size={15} color="white"/>} isAnahuac={isAnahuac}>
                   <div className="flex items-center justify-between py-3.5">
                     <div>
                       <div className="text-base font-semibold text-white">{user.email}</div>
@@ -383,16 +385,16 @@ function SettingsContent() {
                   </div>
                 </SectionCard>
 
-                <SectionCard title="Teléfono" icon={<Phone size={15} color="white"/>}>
+                <SectionCard title="Teléfono" icon={<Phone size={15} color="white"/>} isAnahuac={isAnahuac}>
                   <div className="py-3.5">
                     <FieldLabel>Número de contacto</FieldLabel>
                     <div className="flex gap-2.5">
                       <input type="tel" value={phone} onChange={e=>setPhone(e.target.value)}
                         placeholder="+52 123 456 7890" 
-                        className="flex-1 px-4 py-3 text-base rounded-xl border border-white/10 bg-white/5 text-white outline-none transition-all duration-200 focus:bg-blue-600/5 focus:border-blue-600 focus:shadow-[0_0_0_3px_rgba(15,98,254,0.15)]"
+                        className={`flex-1 px-4 py-3 text-base rounded-xl border border-white/10 bg-white/5 text-white outline-none transition-all duration-200 focus:bg-white/5 ${isAnahuac ? 'focus:border-[#FF5900] focus:shadow-[0_0_0_3px_rgba(255,89,0,0.15)]' : 'focus:border-blue-600 focus:shadow-[0_0_0_3px_rgba(15,98,254,0.15)]'}`}
                       />
                       <button onClick={savePhone} disabled={saving}
-                        className="px-6 bg-gradient-to-br from-blue-700 to-blue-500 border-none rounded-xl text-white text-[15px] font-semibold cursor-pointer transition-colors hover:from-blue-800 hover:to-blue-600 whitespace-nowrap shadow-[0_4px_12px_rgba(15,98,254,0.3)] disabled:opacity-60"
+                        className={`px-6 border-none rounded-xl text-white text-[15px] font-semibold cursor-pointer transition-all duration-200 whitespace-nowrap shadow-lg disabled:opacity-60 ${isAnahuac ? 'bg-[#FF5900] shadow-orange-600/20 hover:bg-[#E65000]' : 'bg-gradient-to-br from-blue-700 to-blue-500 shadow-blue-600/30 hover:from-blue-800 hover:to-blue-600'}`}
                       >
                         {saving?"...":"Guardar"}
                       </button>
@@ -400,7 +402,7 @@ function SettingsContent() {
                   </div>
                 </SectionCard>
 
-                <SectionCard title="Contraseña" icon={<Lock size={15} color="white"/>}>
+                <SectionCard title="Contraseña" icon={<Lock size={15} color="white"/>} isAnahuac={isAnahuac}>
                   <div className={`pt-3.5 ${showPwFields ? 'pb-0' : 'pb-3.5'}`}>
                     <div className="flex items-center justify-between">
                       <div className="text-sm text-white/40 tracking-widest">
@@ -416,19 +418,19 @@ function SettingsContent() {
                       <div className="flex flex-col gap-2.5 mt-3.5 pb-3.5 animate-[fadeUp_0.2s_ease_both]">
                         <input type="password" value={pw.new} onChange={e=>setPw({...pw,new:e.target.value})}
                           placeholder="Nueva contraseña (mín. 6 caracteres)" 
-                          className="w-full px-4 py-3 text-base rounded-xl border border-white/10 bg-white/5 text-white outline-none transition-all duration-200 focus:bg-blue-600/5 focus:border-blue-600 focus:shadow-[0_0_0_3px_rgba(15,98,254,0.15)]"
+                          className={`w-full px-4 py-3 text-base rounded-xl border border-white/10 bg-white/5 text-white outline-none transition-all duration-200 focus:bg-white/5 ${isAnahuac ? 'focus:border-[#FF5900] focus:shadow-[0_0_0_3px_rgba(255,89,0,0.15)]' : 'focus:border-blue-600 focus:shadow-[0_0_0_3px_rgba(15,98,254,0.15)]'}`}
                         />
                         <input type="password" value={pw.confirm} onChange={e=>setPw({...pw,confirm:e.target.value})}
                           placeholder="Confirmar contraseña" 
-                          className="w-full px-4 py-3 text-base rounded-xl border border-white/10 bg-white/5 text-white outline-none transition-all duration-200 focus:bg-blue-600/5 focus:border-blue-600 focus:shadow-[0_0_0_3px_rgba(15,98,254,0.15)]"
+                          className={`w-full px-4 py-3 text-base rounded-xl border border-white/10 bg-white/5 text-white outline-none transition-all duration-200 focus:bg-white/5 ${isAnahuac ? 'focus:border-[#FF5900] focus:shadow-[0_0_0_3px_rgba(255,89,0,0.15)]' : 'focus:border-blue-600 focus:shadow-[0_0_0_3px_rgba(15,98,254,0.15)]'}`}
                         />
-                        <SaveBtn onClick={savePw} loading={saving} label="Actualizar contraseña"/>
+                        <SaveBtn onClick={savePw} loading={saving} label="Actualizar contraseña" isAnahuac={isAnahuac}/>
                       </div>
                     )}
                   </div>
                 </SectionCard>
 
-                <SectionCard title="Sesión y cuenta" icon={<LogOut size={15} color="white"/>}>
+                <SectionCard title="Sesión y cuenta" icon={<LogOut size={15} color="white"/>} isAnahuac={isAnahuac}>
                   <div className="pt-3.5 flex flex-col gap-3">
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-1 mt-1">
                       {[
@@ -457,7 +459,7 @@ function SettingsContent() {
             {/* ── PRIVACY ── */}
             {activeSection==="privacy"&&(
               <div className="section-card">
-                <SectionCard title="Visibilidad" icon={<Shield size={15} color="white"/>}>
+                <SectionCard title="Visibilidad" icon={<Shield size={15} color="white"/>} isAnahuac={isAnahuac}>
                   <div className="py-3.5 flex flex-col gap-3.5">
                     {[{k:"profileVisibility",l:"Visibilidad de Perfil en P2P"}].map(({k,l})=>(
                       <div key={k}>
@@ -465,7 +467,7 @@ function SettingsContent() {
                         <div className="relative max-w-[300px]">
                           <select value={(settings.privacy as any)[k]}
                             onChange={e=>updateSettings({privacy:{...settings.privacy,[k]:e.target.value as any}})}
-                            className="w-full px-4 py-3 pr-10 text-base rounded-xl border border-white/10 bg-white/5 text-white outline-none transition-all duration-200 focus:bg-blue-600/5 focus:border-blue-600 focus:shadow-[0_0_0_3px_rgba(15,98,254,0.15)] appearance-none cursor-pointer"
+                            className={`w-full px-4 py-3 pr-10 text-base rounded-xl border border-white/10 bg-white/5 text-white outline-none transition-all duration-200 focus:bg-white/5 appearance-none cursor-pointer ${isAnahuac ? 'focus:border-[#FF5900] focus:shadow-[0_0_0_3px_rgba(255,89,0,0.15)]' : 'focus:border-blue-600 focus:shadow-[0_0_0_3px_rgba(15,98,254,0.15)]'}`}
                           >
                             <option value="public">Público (Aparecer en búsquedas)</option>
                             <option value="private">Privado (Modo incógnito)</option>
@@ -476,14 +478,15 @@ function SettingsContent() {
                     ))}
                   </div>
                 </SectionCard>
-                <SectionCard title="Interacciones" icon={<Shield size={15} color="white"/>}>
+                <SectionCard title="Interacciones" icon={<Shield size={15} color="white"/>} isAnahuac={isAnahuac}>
                   <ToggleRow label="Mostrar Progreso" desc="Permitir que otros vean tu balance y nivel"
                     checked={settings.privacy.showProgress}
                     onChange={v=>updateSettings({privacy:{...settings.privacy,showProgress:v}})}
+                    isAnahuac={isAnahuac}
                   />
                   <div className="pb-1"/>
                 </SectionCard>
-                <SaveBtn onClick={saveGlobalSettings} loading={saving} label="Guardar privacidad"/>
+                <SaveBtn onClick={saveGlobalSettings} loading={saving} label="Guardar privacidad" isAnahuac={isAnahuac}/>
               </div>
             )}
 
@@ -520,10 +523,10 @@ function SettingsContent() {
 export default function SettingsPage() {
   return (
     <Suspense fallback={
-      <div className="flex-1 flex items-center justify-center text-[15px] font-semibold text-blue-600 bg-[#080f1e] min-h-screen">
+      <div className="flex-1 flex items-center justify-center text-[15px] font-semibold bg-[#080f1e] min-h-screen">
         <div className="text-center">
-          <Settings size={32} className="text-blue-600 mb-3 opacity-60 mx-auto"/>
-          <div>Cargando configuración...</div>
+          <Settings size={32} className="text-white/20 mb-3 animate-spin duration-1000 mx-auto"/>
+          <div className="text-white/40">Cargando configuración...</div>
         </div>
       </div>
     }>

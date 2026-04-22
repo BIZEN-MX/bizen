@@ -119,6 +119,8 @@ const XPBar = ({ initialXP, xpEarned, delay }: { initialXP: number; xpEarned: nu
 
 export const SummaryStep: React.FC<SummaryStepProps> = ({ step, onAnswered, onRestart, actionTrigger }) => {
   const { user, dbProfile } = useAuth()
+  const userEmail = user?.email?.toLowerCase() || ""
+  const isAnahuac = userEmail.endsWith('@anahuac.mx') || userEmail.endsWith('@bizen.mx')
   const [phase, setPhase] = useState<'celebration' | 'stats'>('celebration')
   const [isGenerating, setIsGenerating] = useState(false)
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -268,7 +270,7 @@ export const SummaryStep: React.FC<SummaryStepProps> = ({ step, onAnswered, onRe
               transition={{ delay: 0.2 }}
               style={{ position: "relative" }}
             >
-              <div className="w-[130px] h-[130px] rounded-full bg-gradient-to-br from-[#0F62FE] to-blue-500 flex items-center justify-center shadow-[0_20px_40px_rgba(15,98,254,0.3)]">
+              <div className={`w-[130px] h-[130px] rounded-full flex items-center justify-center ${isAnahuac ? 'bg-primary shadow-[0_20px_40px_rgba(255,89,0,0.3)]' : 'bg-gradient-to-br from-[#0F62FE] to-blue-500 shadow-[0_20px_40px_rgba(15,98,254,0.3)]'}`}>
                 <Trophy size={60} color="white" />
               </div>
             </motion.div>
@@ -330,7 +332,7 @@ export const SummaryStep: React.FC<SummaryStepProps> = ({ step, onAnswered, onRe
               <motion.div
                 initial={{ scale: 0.9, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
-                className="bg-gradient-to-br from-blue-900 to-indigo-950 rounded-[24px] p-7 flex flex-col items-center gap-5 text-center border-[1.5px] border-blue-400/30"
+                className={`rounded-[24px] p-7 flex flex-col items-center gap-5 text-center border-[1.5px] ${isAnahuac ? 'bg-[#431A03] border-primary/30' : 'bg-gradient-to-br from-blue-900 to-indigo-950 border-blue-400/30'}`}
               >
                 <CheckCircle2 size={40} color="#10b981" />
                 <h3 style={{ fontSize: 20, fontWeight: 900, color: "white", margin: 0 }}>¡GRADUACIÓN EXITOSA!</h3>

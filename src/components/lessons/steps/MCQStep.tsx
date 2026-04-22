@@ -62,7 +62,7 @@ export function MCQStep({ step, onAnswered, selectedOptionId: initialSelected, a
           animate={{ y: 0, opacity: 1 }}
           style={{ fontSize: "clamp(20px, 3vw, 26px)", fontWeight: 500, color: "#111827", margin: 0, lineHeight: 1.35 }}
         >
-          <InlineSegments segments={parseInlineSegments(step.question)} />
+          <InlineSegments segments={parseInlineSegments(step.question || (step as any).body || (step as any).title || "")} />
         </motion.h3>
         {step.description && <StepScenarioCard text={step.description} />}
       </div>
@@ -103,7 +103,7 @@ export function MCQStep({ step, onAnswered, selectedOptionId: initialSelected, a
               labelClasses += "bg-gray-50 border-gray-200 text-gray-400"
             }
           } else if (isSelected) {
-            containerClasses += "bg-blue-50 border-[#0F62FE] text-blue-700 "
+            containerClasses += "bg-primary/5 border-primary text-primary "
             shadowClass = "shadow-[0_2px_0_0_#93C5FD]"
             labelClasses += "bg-blue-100 border-blue-500 text-blue-700"
           } else {
@@ -132,8 +132,7 @@ export function MCQStep({ step, onAnswered, selectedOptionId: initialSelected, a
 
               {/* Text */}
               <span style={{ flex: 1, fontSize: "clamp(13px, 3vw, 16px)", fontWeight: 500, lineHeight: 1.35 }}>
-
-                {option.label}
+                {(option as any).label || (option as any).text}
               </span>
 
               {/* Feedback icon */}

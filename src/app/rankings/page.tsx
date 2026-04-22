@@ -56,7 +56,9 @@ function RankBadge({ rank }: { rank: number }) {
 }
 
 export default function RankingsPage() {
-    const { dbProfile } = useAuth()
+    const { dbProfile, user } = useAuth()
+    const userEmail = typeof user?.email === 'string' ? user.email.toLowerCase() : ""
+    const isAnahuac = userEmail.endsWith('@anahuac.mx') || userEmail.endsWith('@bizen.mx')
     const isParticular = dbProfile?.role === 'particular'
 
     const [activeTab, setActiveTab] = useState<"users" | "schools">("users")
@@ -161,21 +163,21 @@ export default function RankingsPage() {
                     <div className="inline-flex gap-2 mb-7 bg-white p-1.5 rounded-2xl border-2 border-slate-200/50 shadow-sm">
                         <button
                             onClick={() => setActiveTab("users")}
-                            className={`flex items-center gap-2 px-6 py-2.5 rounded-xl font-medium text-sm transition-all focus:outline-none ${activeTab === "users" ? "bg-blue-600 text-white shadow-[0_4px_15px_rgba(37,99,235,0.3)] shadow-blue-500/30 scale-[1.02]" : "bg-transparent text-slate-500 hover:text-slate-700 hover:bg-slate-50"}`}
+                            className={`flex items-center gap-2 px-6 py-2.5 rounded-xl font-medium text-sm transition-all focus:outline-none ${activeTab === "users" ? (isAnahuac ? "bg-primary text-white shadow-[0_4px_15px_rgba(255,89,0,0.3)] shadow-primary/30 scale-[1.02]" : "bg-blue-600 text-white shadow-[0_4px_15px_rgba(37,99,235,0.3)] shadow-blue-500/30 scale-[1.02]") : "bg-transparent text-slate-500 hover:text-slate-700 hover:bg-slate-50"}`}
                         >
                             <Users size={16} />
                             {isParticular ? "Usuarios" : "Estudiantes"}
                         </button>
                         <button
                             onClick={() => setActiveTab("schools")}
-                            className={`flex items-center gap-2 px-6 py-2.5 rounded-xl font-medium text-sm transition-all focus:outline-none ${activeTab === "schools" ? "bg-blue-600 text-white shadow-[0_4px_15px_rgba(37,99,235,0.3)] shadow-blue-500/30 scale-[1.02]" : "bg-transparent text-slate-500 hover:text-slate-700 hover:bg-slate-50"}`}
+                            className={`flex items-center gap-2 px-6 py-2.5 rounded-xl font-medium text-sm transition-all focus:outline-none ${activeTab === "schools" ? (isAnahuac ? "bg-primary text-white shadow-[0_4px_15px_rgba(255,89,0,0.3)] shadow-primary/30 scale-[1.02]" : "bg-blue-600 text-white shadow-[0_4px_15px_rgba(37,99,235,0.3)] shadow-blue-500/30 scale-[1.02]") : "bg-transparent text-slate-500 hover:text-slate-700 hover:bg-slate-50"}`}
                         >
                             <School size={16} />
                             Escuelas
                         </button>
                     </div>
                 ) : (
-                    <div className="inline-flex items-center gap-2.5 px-5 py-2.5 bg-blue-600 text-white rounded-xl font-medium text-sm mb-7 shadow-[0_4px_15px_rgba(37,99,235,0.3)]">
+                    <div className={`inline-flex items-center gap-2.5 px-5 py-2.5 text-white rounded-xl font-medium text-sm mb-7 shadow-[0_4px_15px_rgba(37,99,235,0.3)] ${isAnahuac ? "bg-primary shadow-primary/30" : "bg-blue-600"}`}>
                         <Users size={16} />
                         Ranking de Particulares
                     </div>

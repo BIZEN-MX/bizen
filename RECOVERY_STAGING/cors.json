@@ -1,8 +1,0 @@
-[
-  {
-    "origin": ["http://localhost:3004", "https://bizen.mx", "https://bizen-frontend-zotieuj2ga-uc.a.run.app"],
-    "method": ["GET", "HEAD", "OPTIONS"],
-    "responseHeader": ["Content-Type", "Range"],
-    "maxAgeSeconds": 3600
-  }
-]

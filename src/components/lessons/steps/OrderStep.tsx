@@ -35,6 +35,7 @@ export function OrderStep({
     if (initialOrder?.length === itemIds.length) return initialOrder
 
     const correctOrderIds = [...step.items]
+      .map((it, idx) => ({ ...it, correctOrder: it.correctOrder ?? (idx + 1) }))
       .sort((a, b) => a.correctOrder - b.correctOrder)
       .map((it) => it.id)
 
@@ -63,7 +64,8 @@ export function OrderStep({
 
     const allCorrect = orderedItemIds.every((id, index) => {
       const item = step.items.find((it) => it.id === id)
-      return item && item.correctOrder === index + 1
+      const expectedOrder = item?.correctOrder ?? (step.items.findIndex(i => i.id === id) + 1)
+      return item && expectedOrder === index + 1
     })
 
     setHasChecked(true)
@@ -105,7 +107,7 @@ export function OrderStep({
           margin: 0,
           lineHeight: 1.3,
         }}>
-          {step.question || "Pon los elementos en el orden correcto"}
+          {step.question || (step as any).body || (step as any).title || "Pon los elementos en el orden correcto"}
         </h3>
 
         {step.description && <StepScenarioCard text={step.description} />}
@@ -159,7 +161,8 @@ export function OrderStep({
           let boxShadow = "0 3px 0 0 #E5E7EB"
 
           if (showFeedback) {
-            const isCorrect = item.correctOrder === index + 1
+            const expectedOrder = item.correctOrder ?? (step.items.findIndex(i => i.id === itemId) + 1)
+            const isCorrect = expectedOrder === index + 1
             if (isCorrect) {
               borderColor = "#3B82F6"
               background = "#EFF6FF"
@@ -195,7 +198,8 @@ export function OrderStep({
                 width: "clamp(30px, 8vw, 36px)",
                 height: "clamp(30px, 8vw, 36px)",
                 borderRadius: 10,
-                background: showFeedback ? (item.correctOrder === index + 1 ? "#3B82F620" : "#EF444420") : "#F3F4F6",
+                // Fix for implicit correct order calculation here as well
+                background: showFeedback ? (((item.correctOrder ?? (step.items.findIndex(i => i.id === itemId) + 1)) === index + 1) ? "#3B82F620" : "#EF444420") : "#F3F4F6",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -213,7 +217,7 @@ export function OrderStep({
                 })}
               </div>
               <span style={{ flex: 1, fontSize: "clamp(15px, 3.5vw, 18px)", fontWeight: 500, color, }}>
-                {item.label}
+                {(item as any).label || (item as any).text}
               </span>
               {!hasChecked && (
                 <div style={{ color: "#D1D5DB" }}>
@@ -224,7 +228,7 @@ export function OrderStep({
               )}
               {showFeedback && (
                 <div style={{ flexShrink: 0 }}>
-                  {item.correctOrder === index + 1 ? (
+                  {((item.correctOrder ?? (step.items.findIndex(i => i.id === itemId) + 1)) === index + 1) ? (
                     <CheckCircle2 size={22} color="#10B981" strokeWidth={3} />
                   ) : (
                     <XCircle size={22} color="#EF4444" strokeWidth={3} />

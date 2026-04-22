@@ -16,8 +16,19 @@ interface MindsetTranslatorStepProps {
 }
 
 export function MindsetTranslatorStep({ step, onAnswered, actionTrigger, isContinueEnabled }: MindsetTranslatorStepProps) {
+  // Backwards compatibility layer: Support both 'beliefs' array and direct 'limitingBelief' + 'options' format
+  const normalizedBeliefs = step.beliefs || ((step as any).limitingBelief ? [{
+    id: "normalized-belief-1",
+    original: (step as any).limitingBelief,
+    healthyOptions: ((step as any).options || []).map((o: any) => ({
+      ...o,
+      label: o.label || o.text,
+      isCorrect: o.isCorrect ?? o.isLogical ?? false
+    }))
+  }] : [])
+
   const [currentBeliefIndex, setCurrentBeliefIndex] = useState(0)
-  const currentBelief = step.beliefs[currentBeliefIndex]
+  const currentBelief = normalizedBeliefs[currentBeliefIndex] || { id: "error", original: "Error loading belief", healthyOptions: [] }
   const [selectedOptionId, setSelectedOptionId] = useState<string | null>(null)
   const [isWrong, setIsWrong] = useState(false)
   

@@ -14,9 +14,6 @@ import {
   Zap,
   BarChart2,
   TrendingDown,
-  TrendingUp,
-  Clock,
-  Wallet,
   AlertTriangle,
   CheckCircle2,
   CircleDollarSign,
@@ -27,9 +24,9 @@ import {
   Target,
   Info,
   Sparkles,
-  Send,
+  Brain,
 } from 'lucide-react';
-import Image from 'next/image';
+// import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
 import { NumberField } from './NumberField';
 import { SaveRunButton } from './SaveRunButton';
@@ -520,13 +517,14 @@ export function CreditCardPayoffSimulator() {
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
                     <div style={{
-                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      width: 48, height: 48, borderRadius: '50%', background: 'linear-gradient(135deg, #1e3a8a, #2563eb)',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 12px rgba(37,99,235,0.3)',
                     }}>
-                      <Image src="/billy_chatbot.png" alt="Billy" width={48} height={48} style={{ objectPosition: 'top' }} />
+                      <Brain size={24} color="#fff" />
                     </div>
                     <div>
-                      <div style={{ fontSize: 13, fontWeight: 700, color: '#2563eb', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Análisis de Billy</div>
-                      <div style={{ fontSize: 13, color: '#64748b' }}>IA Mentor Financiero</div>
+                      <div style={{ fontSize: 13, fontWeight: 700, color: '#2563eb', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Análisis BIZEN</div>
+                      <div style={{ fontSize: 13, color: '#64748b' }}>IA Financiera</div>
                     </div>
                   </div>
                   <button
@@ -569,7 +567,7 @@ export function CreditCardPayoffSimulator() {
                   </div>
                 ) : (
                   <p style={{ fontSize: 14, color: '#94a3b8', fontStyle: 'italic', textAlign: 'center', margin: '10px 0' }}>
-                    Billy puede ayudarte a planear la mejor estrategia para liquidar esta tarjeta. ¡Pruébalo!
+                    BIZEN puede ayudarte a estructurar la mejor estrategia para liquidar esta tarjeta rápida y matemáticamente. ¡Analizar ahora!
                   </p>
                 )}
               </div>

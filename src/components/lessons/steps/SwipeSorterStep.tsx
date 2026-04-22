@@ -104,7 +104,7 @@ function SwipeCard({
       {/* Card Face */}
       <div className="bg-white rounded-[24px] border-2 border-gray-200 shadow-[0_8px_32px_rgba(0,0,0,0.08),0_2px_8px_rgba(0,0,0,0.06)] p-[24px_28px] flex flex-col gap-2">
         <p className="text-[clamp(18px,3.5vw,22px)] font-bold text-gray-900 m-0 leading-[1.2]">
-          {item.label}
+          {(item as any).label || (item as any).text}
         </p>
         {item.sublabel && (
           <p className="text-sm text-gray-500 m-0 font-medium">
@@ -112,7 +112,7 @@ function SwipeCard({
           </p>
         )}
         {item.amount && (
-          <p className="text-[26px] font-[800] text-[#0F62FE] m-0 tracking-[-0.02em]">
+          <p className="text-[26px] font-[800] text-primary m-0 tracking-[-0.02em]">
             {item.amount}
           </p>
         )}
@@ -131,9 +131,20 @@ export function SwipeSorterStep({ step, onAnswered }: SwipeSorterStepProps) {
   const currentItem: SwipeSorterItem | undefined = step.items[currentIndex]
   const totalItems = step.items.length
 
+  const leftCategoryLabel = step.leftBucket?.label || (step.categories && step.categories[0]) || "left"
+  const rightCategoryLabel = step.rightBucket?.label || (step.categories && step.categories[1]) || "right"
+
   const commitSwipe = (bucket: "left" | "right") => {
     if (!currentItem || isDone) return
-    const isCorrect = currentItem.correctBucket === bucket
+    
+    // Determine bucket labels using either new array 'categories' or old 'leftBucket/rightBucket'
+    const targetBucketLabel = bucket === "left" ? leftCategoryLabel : rightCategoryLabel
+    
+    // Check if correctBucket matches the bucket ID ("left"/"right") 
+    // OR if currentItem.category matches the label of the chosen bucket
+    const isCorrect = currentItem.correctBucket === bucket || 
+                      currentItem.category === targetBucketLabel ||
+                      currentItem.category === bucket
 
     if (isCorrect) { haptic.success(); playCorrectSound() }
     else { haptic.error(); playIncorrectSound() }
@@ -159,8 +170,19 @@ export function SwipeSorterStep({ step, onAnswered }: SwipeSorterStepProps) {
     }, 450)
   }
 
-  const leftColor = step.leftBucket?.color || "#2563eb"
-  const rightColor = step.rightBucket?.color || "#f59e0b"
+  // Robust bucket label discovery
+  const leftLabel = step.leftBucket?.label || 
+                   (step as any).data?.leftBucket?.label || 
+                   step.items?.find(it => it.correctBucket === "left" || it.category === "left")?.category ||
+                   "Absorbe Valor"; // Ultimate fallback for Tema 1
+
+  const rightLabel = step.rightBucket?.label || 
+                    (step as any).data?.rightBucket?.label || 
+                    step.items?.find(it => it.correctBucket === "right" || it.category === "right")?.category ||
+                    "Inyecta Valor"; // Ultimate fallback for Tema 1
+
+  const leftColor = step.leftBucket?.color || (step as any).data?.leftBucket?.color || "#EF4444"
+  const rightColor = step.rightBucket?.color || (step as any).data?.rightBucket?.color || "#10B981"
 
   if (isDone) {
     const correctCount = results.filter(r => r.correct).length
@@ -187,7 +209,7 @@ export function SwipeSorterStep({ step, onAnswered }: SwipeSorterStepProps) {
           </div>
           <p style={{ fontSize: 26, fontWeight: 800, color: "#111827", margin: 0 }}>{correctCount}/{totalItems} correctos</p>
           <p style={{ fontSize: 14, color: "#6b7280", margin: 0, textAlign: "center" }}>
-            {pct >= 80 ? "¡Excelente clasificación! Tienes muy claro qué es necesidad y qué es deseo." : "Buen intento. Cada elección revela tu mentalidad financiera."}
+            {pct >= 80 ? "¡Excelente clasificación! Tienes muy claro estos conceptos." : "Buen intento. Cada elección revela tu mentalidad financiera."}
           </p>
         </div>
 
@@ -197,7 +219,7 @@ export function SwipeSorterStep({ step, onAnswered }: SwipeSorterStepProps) {
             if (!item) return null
             return (
               <motion.div
-                key={r.id}
+                key={`${r.id}-${i}`}
                 initial={{ opacity: 0, x: -12 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: i * 0.06 }}
@@ -210,10 +232,14 @@ export function SwipeSorterStep({ step, onAnswered }: SwipeSorterStepProps) {
                   {r.correct ? <CheckCircle2 size={20} color="#2563eb" strokeWidth={2.5} /> : <XCircle size={20} color="#ef4444" strokeWidth={2.5} />}
                 </div>
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <p style={{ margin: 0, fontSize: 14, fontWeight: 700, color: "#111827" }}>{item.label}</p>
+                  <p style={{ margin: 0, fontSize: 14, fontWeight: 700, color: "#111827" }}>{(item as any).label || (item as any).text}</p>
                   {!r.correct && (
                     <p style={{ margin: "2px 0 0", fontSize: 12, color: "#ef4444", fontWeight: 500 }}>
-                      Era: <strong>{item.correctBucket === "left" ? step.leftBucket?.label || "A" : step.rightBucket?.label || "B"}</strong>
+                      Era: <strong>{
+                        (item.correctBucket === "left" || (item as any).category === leftCategoryLabel || (item as any).category === "left")
+                          ? leftCategoryLabel
+                          : rightCategoryLabel
+                      }</strong>
                     </p>
                   )}
                 </div>
@@ -229,8 +255,15 @@ export function SwipeSorterStep({ step, onAnswered }: SwipeSorterStepProps) {
     <div style={{ display: "flex", flexDirection: "column", gap: 24, maxWidth: 480, margin: "0 auto", width: "100%", userSelect: "none" }}>
 
       <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-        {step.question && <h2 style={{ fontSize: "clamp(20px, 4vw, 24px)", fontWeight: 800, color: "#111827", margin: 0, textAlign: "center" }}>{step.question}</h2>}
+        {(step.question || step.body || step.title) && (
+          <h2 style={{ fontSize: "clamp(20px, 4vw, 24px)", fontWeight: 800, color: "#111827", margin: 0, textAlign: "center" }}>
+            {step.question || step.body || step.title}
+          </h2>
+        )}
         {step.description && <StepScenarioCard text={step.description} variant="context" />}
+        <p style={{ fontSize: 13, color: "#64748b", margin: "4px 0 0", textAlign: "center", fontWeight: 500 }}>
+          Desliza la tarjeta hacia la categoría correcta
+        </p>
       </div>
 
       <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
@@ -239,7 +272,7 @@ export function SwipeSorterStep({ step, onAnswered }: SwipeSorterStepProps) {
           <span style={{ fontSize: 12, fontWeight: 700, color: "#94a3b8" }}>{results.filter(r => r.correct).length} CORRECTAS</span>
         </div>
         <div style={{ height: 6, borderRadius: 999, background: "#f1f5f9", overflow: "hidden" }}>
-          <motion.div animate={{ width: `${(currentIndex / totalItems) * 100}%` }} style={{ height: "100%", background: "#0F62FE" }} />
+          <motion.div animate={{ width: `${(currentIndex / totalItems) * 100}%` }} style={{ height: "100%", background: "#0B71FE" }} />
         </div>
       </div>
 
@@ -251,8 +284,8 @@ export function SwipeSorterStep({ step, onAnswered }: SwipeSorterStepProps) {
             <SwipeCard
               key={currentItem.id}
               item={currentItem}
-              leftLabel={step.leftBucket?.label || "A"}
-              rightLabel={step.rightBucket?.label || "B"}
+              leftLabel={leftLabel}
+              rightLabel={rightLabel}
               leftColor={leftColor}
               rightColor={rightColor}
               onSwipe={commitSwipe}
@@ -285,16 +318,26 @@ export function SwipeSorterStep({ step, onAnswered }: SwipeSorterStepProps) {
         <button
           onClick={() => commitSwipe("left")}
           className="flex-1 p-[18px] rounded-[20px] border-2 bg-white font-[800] text-[15px] cursor-pointer flex items-center justify-center gap-[10px] active:scale-[0.98] transition-transform duration-150"
-          style={{ borderColor: leftColor, color: leftColor, boxShadow: `0 6px 0 ${leftColor}20` }}
+          style={{ 
+            borderColor: leftColor, 
+            color: leftColor, 
+            boxShadow: `0 6px 0 ${leftColor}20` 
+          }}
         >
-          <ArrowLeft size={18} strokeWidth={3} /> {step.leftBucket?.label || "Izquierda"}
+          <ArrowLeft size={18} strokeWidth={3} /> 
+          {leftLabel}
         </button>
         <button
           onClick={() => commitSwipe("right")}
           className="flex-1 p-[18px] rounded-[20px] border-2 bg-white font-[800] text-[15px] cursor-pointer flex items-center justify-center gap-[10px] active:scale-[0.98] transition-transform duration-150"
-          style={{ borderColor: rightColor, color: rightColor, boxShadow: `0 6px 0 ${rightColor}20` }}
+          style={{ 
+            borderColor: rightColor, 
+            color: rightColor, 
+            boxShadow: `0 6px 0 ${rightColor}20` 
+          }}
         >
-          {step.rightBucket?.label || "Derecha"} <ArrowRight size={18} strokeWidth={3} />
+          {rightLabel} 
+          <ArrowRight size={18} strokeWidth={3} />
         </button>
       </div>
     </div>

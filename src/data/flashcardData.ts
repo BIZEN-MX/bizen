@@ -1,6 +1,7 @@
 export interface Flashcard {
   id: string;
   concept: string;
+  /** REGLA DE ORO: Máximo 200 caracteres. Si requiere más, crea otra tarjeta. */
   definition: string;
 }
 

@@ -85,6 +85,8 @@ const CATEGORY_ACCENT: Record<string, string> = {
 
 export default function CombinedSimulatorsPage() {
   const { user, loading: authLoading, dbProfile } = useAuth()
+  const userEmail = user?.email?.toLowerCase() || ""
+  const isAnahuac = userEmail.endsWith('@anahuac.mx') || userEmail.endsWith('@bizen.mx')
   const streak = dbProfile?.currentStreak || 0
   const router = useRouter()
 
@@ -247,15 +249,15 @@ export default function CombinedSimulatorsPage() {
 
           {/* Header removed */}
 
-          <div className="flex mb-8 md:mb-12 bg-blue-500/5 border border-blue-500/10 p-5 px-6 rounded-[20px] items-center gap-2 md:gap-4 shadow-[0_2px_10px_rgba(0,0,0,0.02)] overflow-x-auto scrollbar-hide">
+          <div className={`flex mb-8 md:mb-12 p-5 px-6 rounded-[20px] items-center gap-2 md:gap-4 shadow-[0_2px_10px_rgba(0,0,0,0.02)] overflow-x-auto scrollbar-hide ${isAnahuac ? "bg-primary/5 border border-primary/10" : "bg-blue-500/5 border border-blue-500/10"}`}>
             <button 
-              className={`px-[22px] py-[10px] rounded-xl font-medium text-[15px] whitespace-nowrap transition-all duration-300 ${activeTab === "simulators" ? "bg-gradient-to-br from-blue-600 to-blue-800 text-white shadow-[0_4px_20px_rgba(11,113,254,0.4)]" : "bg-slate-100 text-slate-500 hover:bg-slate-200 hover:text-slate-800"}`} 
+              className={`px-[22px] py-[10px] rounded-xl font-medium text-[15px] whitespace-nowrap transition-all duration-300 ${activeTab === "simulators" ? (isAnahuac ? "bg-primary text-white shadow-[0_4px_20px_rgba(255,89,0,0.4)]" : "bg-gradient-to-br from-blue-600 to-blue-800 text-white shadow-[0_4px_20px_rgba(11,113,254,0.4)]") : "bg-slate-100 text-slate-500 hover:bg-slate-200 hover:text-slate-800"}`} 
               onClick={() => setActiveTab("simulators")}
             >
               Simuladores Financieros
             </button>
             <button 
-              className={`px-[22px] py-[10px] rounded-xl font-medium text-[15px] whitespace-nowrap transition-all duration-300 ${activeTab === "cashflow" ? "bg-gradient-to-br from-blue-600 to-blue-800 text-white shadow-[0_4_20px_rgba(11,113,254,0.4)]" : "bg-slate-100 text-slate-500 hover:bg-slate-200 hover:text-slate-800"}`} 
+              className={`px-[22px] py-[10px] rounded-xl font-medium text-[15px] whitespace-nowrap transition-all duration-300 ${activeTab === "cashflow" ? (isAnahuac ? "bg-primary text-white shadow-[0_4px_20px_rgba(255,89,0,0.4)]" : "bg-gradient-to-br from-blue-600 to-blue-800 text-white shadow-[0_4_20px_rgba(11,113,254,0.4)]") : "bg-slate-100 text-slate-500 hover:bg-slate-200 hover:text-slate-800"}`} 
               onClick={() => setActiveTab("cashflow")}
             >
               Cashflow Game
@@ -276,11 +278,11 @@ export default function CombinedSimulatorsPage() {
               <div>
                 {/* Disclaimer - Dark Glassmorphism */}
                 <div className="bg-white px-6 py-4 rounded-[20px] border border-slate-100 shadow-[0_4px_20px_rgba(11,113,254,0.05)] flex items-center gap-4 h-full mb-10 max-w-[960px]">
-                  <div className="w-10 h-10 rounded-full bg-blue-500/10 flex items-center justify-center shrink-0">
-                    <BarChart2 size={18} className="text-blue-600" />
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${isAnahuac ? "bg-primary/10" : "bg-blue-500/10"}`}>
+                    <BarChart2 size={18} className={isAnahuac ? "text-primary" : "text-blue-600"} />
                   </div>
-                  <p className="text-[14px] text-blue-800 leading-relaxed m-0">
-                    <span className="text-blue-600 font-medium">Propósito educativo:</span> Estos simuladores son herramientas de aprendizaje. Los resultados son aproximaciones y no constituyen asesoría financiera profesional.
+                  <p className={`text-[14px] leading-relaxed m-0 ${isAnahuac ? "text-primary/90" : "text-blue-800"}`}>
+                    <span className={`font-medium ${isAnahuac ? "text-primary" : "text-blue-600"}`}>Propósito educativo:</span> Estos simuladores son herramientas de aprendizaje. Los resultados son aproximaciones y no constituyen asesoría financiera profesional.
                   </p>
                 </div>
 
@@ -319,7 +321,7 @@ export default function CombinedSimulatorsPage() {
 
                     {/* AI Budget Planner Card */}
                     <Link href="/tools/budget" className="no-underline">
-                      <div className="bg-white rounded-[20px] p-6 border border-slate-100 flex flex-col shadow-[0_4px_12px_rgba(0,0,0,0.03)] h-full relative overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(11,113,254,0.15)] group">
+                      <div className={`bg-white rounded-[20px] p-6 border border-slate-100 flex flex-col shadow-[0_4px_12px_rgba(0,0,0,0.03)] h-full relative overflow-hidden transition-all duration-300 hover:-translate-y-1 group ${isAnahuac ? "hover:shadow-[0_12px_40px_rgba(255,89,0,0.15)]" : "hover:shadow-[0_12px_40px_rgba(11,113,254,0.15)]"}`}>
                         <div className="flex items-start justify-between mb-5">
                           <div className="w-13 h-13 rounded-2xl bg-indigo-500/15 border border-indigo-500/25 flex items-center justify-center shadow-[0_0_20px_rgba(99,102,241,0.2)]">
                             <BarChart2 size={24} className="text-indigo-500" />
@@ -334,7 +336,7 @@ export default function CombinedSimulatorsPage() {
                         <p className="text-[14px] text-slate-500 leading-relaxed flex-1 mb-6">
                           Organiza tus ingresos y gastos en tiempo real. Billy analiza tu presupuesto con IA y te dice exactamente qué mejorar.
                         </p>
-                        <button className="w-full py-3.5 bg-gradient-to-br from-indigo-500 to-indigo-600 text-white border border-indigo-500/40 rounded-xl text-[14px] font-semibold cursor-pointer flex items-center justify-center gap-2 shadow-[0_4px_20px_rgba(99,102,241,0.25)] tracking-wide group-hover:shadow-[0_6px_25px_rgba(99,102,241,0.35)] transition-shadow">
+                        <button className={`w-full py-3.5 text-white border rounded-xl text-[14px] font-semibold cursor-pointer flex items-center justify-center gap-2 tracking-wide transition-shadow ${isAnahuac ? "bg-primary border-primary/40 shadow-[0_4px_20px_rgba(255,89,0,0.25)] group-hover:shadow-[0_6px_25px_rgba(255,89,0,0.35)]" : "bg-gradient-to-br from-indigo-500 to-indigo-600 border-indigo-500/40 shadow-[0_4px_20px_rgba(99,102,241,0.25)] group-hover:shadow-[0_6px_25px_rgba(99,102,241,0.35)]"}`}>
                           Abrir Herramienta <ChevronRight size={16} />
                         </button>
                       </div>
@@ -342,7 +344,7 @@ export default function CombinedSimulatorsPage() {
 
                     {/* AI Vision Board Card */}
                     <Link href="/tools/vision" className="no-underline">
-                      <div className="bg-white rounded-[20px] p-6 border border-slate-100 flex flex-col shadow-[0_4px_12px_rgba(0,0,0,0.03)] h-full relative overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(11,113,254,0.15)] group">
+                      <div className={`bg-white rounded-[20px] p-6 border border-slate-100 flex flex-col shadow-[0_4px_12px_rgba(0,0,0,0.03)] h-full relative overflow-hidden transition-all duration-300 hover:-translate-y-1 group ${isAnahuac ? "hover:shadow-[0_12px_40px_rgba(255,89,0,0.15)]" : "hover:shadow-[0_12px_40px_rgba(11,113,254,0.15)]"}`}>
                         <div className="flex items-start justify-between mb-5">
                           <div className="w-13 h-13 rounded-2xl bg-purple-500/15 border border-purple-500/25 flex items-center justify-center shadow-[0_0_20px_rgba(139,92,246,0.2)]">
                             <Brain size={24} className="text-purple-500" />
@@ -357,7 +359,7 @@ export default function CombinedSimulatorsPage() {
                         <p className="text-[14px] text-slate-500 leading-relaxed flex-1 mb-6">
                           Escribe tus metas financieras y la IA las transforma en un plan estructurado con roadmap de 30-60-90 días.
                         </p>
-                        <button className="w-full py-3.5 bg-gradient-to-br from-purple-500 to-purple-600 text-white border border-purple-500/40 rounded-xl text-[14px] font-semibold cursor-pointer flex items-center justify-center gap-2 shadow-[0_4px_20px_rgba(139,92,246,0.25)] tracking-wide group-hover:shadow-[0_6px_25px_rgba(139,92,246,0.35)] transition-shadow">
+                        <button className={`w-full py-3.5 text-white border rounded-xl text-[14px] font-semibold cursor-pointer flex items-center justify-center gap-2 tracking-wide transition-shadow ${isAnahuac ? "bg-primary border-primary/40 shadow-[0_4px_20px_rgba(255,89,0,0.25)] group-hover:shadow-[0_6px_25px_rgba(255,89,0,0.35)]" : "bg-gradient-to-br from-purple-500 to-purple-600 border-purple-500/40 shadow-[0_4px_20px_rgba(139,92,246,0.25)] group-hover:shadow-[0_6px_25px_rgba(139,92,246,0.35)]"}`}>
                           Abrir Herramienta <ChevronRight size={16} />
                         </button>
                       </div>
@@ -366,16 +368,16 @@ export default function CombinedSimulatorsPage() {
                     {/* Separator before classic simulators */}
                     <div className="col-span-full pb-1 pt-2">
                       <div className="flex items-center gap-2.5">
-                        <div className="inline-flex items-center gap-1.5 bg-blue-500/10 border border-blue-500/20 rounded-full px-3.5 py-1.5 text-[11px] font-bold text-blue-600 tracking-wider uppercase">
+                        <div className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-[11px] font-bold tracking-wider uppercase ${isAnahuac ? "bg-primary/10 border border-primary/20 text-primary" : "bg-blue-500/10 border border-blue-500/20 text-blue-600"}`}>
                           Simuladores Educativos
                         </div>
-                        <div className="flex-1 h-px bg-blue-500/10" />
+                        <div className={`flex-1 h-px ${isAnahuac ? "bg-primary/10" : "bg-blue-500/10"}`} />
                        </div>
                     </div>
 
                     {/* Simulador Crédito (Beta) */}
                     <Link href="/simulators/credit" className="no-underline">
-                      <div className="bg-gradient-to-br from-[#020b18] to-[#061440] border border-white/10 rounded-[20px] p-6 flex flex-col shadow-[0_4px_12px_rgba(0,0,0,0.03)] h-full relative overflow-hidden transition-all duration-400 hover:-translate-y-2.5 hover:scale-[1.02] hover:shadow-[0_30px_60px_rgba(11,113,254,0.3)] hover:border-blue-500/50 hover:bg-gradient-to-br hover:from-[#040f24] hover:to-[#0b2160] group">
+                      <div className={`bg-gradient-to-br from-[#020b18] to-[#061440] border border-white/10 rounded-[20px] p-6 flex flex-col shadow-[0_4px_12px_rgba(0,0,0,0.03)] h-full relative overflow-hidden transition-all duration-400 hover:-translate-y-2.5 hover:scale-[1.02] group ${isAnahuac ? "hover:shadow-[0_30px_60px_rgba(255,89,0,0.2)] hover:border-primary/50 hover:from-[#331100] hover:to-[#0f0500]" : "hover:shadow-[0_30px_60px_rgba(11,113,254,0.3)] hover:border-blue-500/50 hover:from-[#040f24] hover:to-[#0b2160]"}`}>
                         <div className="flex items-start justify-between mb-5">
                           <div className="w-13 h-13 rounded-2xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center shadow-[0_0_20px_rgba(245,158,11,0.2)]">
                             <CreditCard size={24} className="text-amber-500" />
@@ -390,7 +392,7 @@ export default function CombinedSimulatorsPage() {
                         <p className="text-[14px] text-white/60 leading-relaxed flex-1 mb-6">
                           Descubre cómo funcionan las tarjetas de crédito, los préstamos y compras a Meses Sin Intereses.
                         </p>
-                        <button className="w-full py-3.5 bg-gradient-to-br from-amber-500 to-amber-600 text-white border border-amber-500/40 rounded-xl text-[14px] font-semibold cursor-pointer flex items-center justify-center gap-2 shadow-[0_4px_20px_rgba(245,158,11,0.3)] tracking-wide group-hover:shadow-[0_6px_25px_rgba(245,158,11,0.4)] transition-shadow">
+                        <button className={`w-full py-3.5 text-white border rounded-xl text-[14px] font-semibold cursor-pointer flex items-center justify-center gap-2 tracking-wide transition-shadow ${isAnahuac ? "bg-primary border-primary/40 shadow-[0_4px_20px_rgba(255,89,0,0.3)] group-hover:shadow-[0_6px_25px_rgba(255,89,0,0.4)]" : "bg-gradient-to-br from-amber-500 to-amber-600 border-amber-500/40 shadow-[0_4px_20px_rgba(245,158,11,0.3)] group-hover:shadow-[0_6px_25px_rgba(245,158,11,0.4)]"}`}>
                           Abrir Simulador
                           <ChevronRight size={16} />
                         </button>
@@ -402,7 +404,7 @@ export default function CombinedSimulatorsPage() {
                       const accent = CATEGORY_ACCENT[simulator.category] || '#0B71FE'
                       return (
                         <Link key={simulator.id} href={`/cash-flow/${simulator.slug}`} className="no-underline">
-                          <div className="bg-gradient-to-br from-[#020b18] to-[#061440] border border-white/10 rounded-[20px] p-6 flex flex-col shadow-[0_4px_12px_rgba(0,0,0,0.03)] h-full relative overflow-hidden transition-all duration-400 hover:-translate-y-2.5 hover:scale-[1.02] hover:shadow-[0_30px_60px_rgba(11,113,254,0.3)] hover:border-blue-500/50 hover:bg-gradient-to-br hover:from-[#040f24] hover:to-[#0b2160] group">
+                          <div className={`bg-gradient-to-br from-[#020b18] to-[#061440] border border-white/10 rounded-[20px] p-6 flex flex-col shadow-[0_4px_12px_rgba(0,0,0,0.03)] h-full relative overflow-hidden transition-all duration-400 hover:-translate-y-2.5 hover:scale-[1.02] group ${isAnahuac ? "hover:shadow-[0_30px_60px_rgba(255,89,0,0.2)] hover:border-primary/50 hover:from-[#331100] hover:to-[#0f0500]" : "hover:shadow-[0_30px_60px_rgba(11,113,254,0.3)] hover:border-blue-500/50 hover:from-[#040f24] hover:to-[#0b2160]"}`}>
                             {/* Icon + category */}
                             <div className="flex items-start justify-between mb-5">
                               <div className="w-13 h-13 rounded-2xl flex items-center justify-center" style={{ background: `${accent}20`, border: `1px solid ${accent}30`, boxShadow: `0 0 20px ${accent}20` }}>
@@ -418,7 +420,10 @@ export default function CombinedSimulatorsPage() {
                             <p className="text-[14px] text-white/60 leading-relaxed flex-1 mb-6">
                               {simulator.description}
                             </p>
-                            <button className="w-full py-3.5 text-white rounded-xl text-[14px] font-semibold cursor-pointer flex items-center justify-center gap-2 transition-shadow group-hover:brightness-110 tracking-wide" style={{ background: `linear-gradient(135deg, ${accent}ee, ${accent}99)`, border: `1px solid ${accent}40`, boxShadow: `0 4px 20px ${accent}30` }}>
+                            <button 
+                              className="w-full py-3.5 text-white rounded-xl text-[14px] font-semibold cursor-pointer flex items-center justify-center gap-2 transition-shadow group-hover:brightness-110 tracking-wide" 
+                              style={isAnahuac ? { background: '#FF5900', border: '1px solid rgba(255,89,0,0.4)', boxShadow: '0 4px 20px rgba(255,89,0,0.3)' } : { background: `linear-gradient(135deg, ${accent}ee, ${accent}99)`, border: `1px solid ${accent}40`, boxShadow: `0 4px 20px ${accent}30` }}
+                            >
                               Abrir Simulador
                               <ChevronRight size={16} />
                             </button>
@@ -437,8 +442,8 @@ export default function CombinedSimulatorsPage() {
                 {isMobile ? (
                   /* Mobile: info card */
                   <div className="bg-gradient-to-br from-slate-900 to-indigo-950 rounded-3xl p-10 text-center max-w-[480px] mx-auto border border-slate-100 shadow-[0_20px_60px_rgba(0,0,0,0.3)]">
-                    <div className="w-[72px] h-[72px] rounded-full bg-blue-500/15 flex items-center justify-center mx-auto mb-5">
-                      <Laptop size={36} className="text-blue-500" />
+                    <div className={`w-[72px] h-[72px] rounded-full flex items-center justify-center mx-auto mb-5 ${isAnahuac ? "bg-primary/20" : "bg-blue-500/15"}`}>
+                      <Laptop size={36} className={isAnahuac ? "text-primary" : "text-blue-500"} />
                     </div>
                     <h2 className="text-[22px] font-medium mb-3.5 text-white">Mejor experiencia en laptop</h2>
                     <p className="text-slate-400 leading-relaxed mb-5 text-[15px]">
@@ -485,7 +490,7 @@ export default function CombinedSimulatorsPage() {
                           <h2 className="text-[clamp(20px,2vw,26px)] font-bold text-slate-800 m-0 leading-none">Mis Partidas</h2>
                           <button
                             onClick={() => setShowNewGame(true)}
-                            className="px-5 py-2.5 bg-gradient-to-br from-blue-600 to-blue-800 text-white border-none rounded-xl text-[14px] font-semibold cursor-pointer transition-all duration-200 flex items-center gap-2 shadow-[0_4px_12px_rgba(11,113,254,0.25)] hover:-translate-y-0.5 hover:shadow-[0_6px_16px_rgba(11,113,254,0.35)]"
+                            className={`px-5 py-2.5 text-white border-none rounded-xl text-[14px] font-semibold cursor-pointer transition-all duration-200 flex items-center gap-2 hover:-translate-y-0.5 ${isAnahuac ? "bg-primary shadow-[0_4px_12px_rgba(255,89,0,0.25)] hover:shadow-[0_6px_16px_rgba(255,89,0,0.35)]" : "bg-gradient-to-br from-blue-600 to-blue-800 shadow-[0_4px_12px_rgba(11,113,254,0.25)] hover:shadow-[0_6px_16px_rgba(11,113,254,0.35)]"}`}
                           >
                             <Plus size={16} />
                             Nueva Partida
@@ -494,11 +499,11 @@ export default function CombinedSimulatorsPage() {
 
                         <div className="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-5">
                           {games.map((game) => game.player && (
-                            <div key={game.id} className="bg-white rounded-3xl p-[clamp(16px,3vw,32px)] border border-slate-100 shadow-[0_8px_30px_rgba(0,0,0,0.04)] flex flex-col h-full relative overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_16px_40px_rgba(0,0,0,0.08)] hover:border-blue-500/20 group">
+                            <div key={game.id} className={`bg-white rounded-3xl p-[clamp(16px,3vw,32px)] border border-slate-100 shadow-[0_8px_30px_rgba(0,0,0,0.04)] flex flex-col h-full relative overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_16px_40px_rgba(0,0,0,0.08)] group ${isAnahuac ? "hover:border-primary/30" : "hover:border-blue-500/20"}`}>
                               <div className="flex justify-between items-start mb-4">
                                 <div>
                                   <div className="flex items-center gap-2 mb-1">
-                                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-700 to-blue-500 flex items-center justify-center shadow-[0_0_10px_rgba(59,130,246,0.3)]">
+                                    <div className={`w-8 h-8 rounded-full flex items-center justify-center ${isAnahuac ? "bg-primary shadow-[0_0_10px_rgba(255,89,0,0.3)]" : "bg-gradient-to-br from-blue-700 to-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.3)]"}`}>
                                       <Briefcase size={15} className="text-white" />
                                     </div>
                                     <div className="text-[17px] font-medium text-slate-800">{game.player.profession}</div>
@@ -517,16 +522,16 @@ export default function CombinedSimulatorsPage() {
                                   <div className="text-[11px] text-slate-500 font-medium mb-0.5">Efectivo</div>
                                   <div className="font-medium text-emerald-600 text-[16px]">${game.player.cashOnHand.toLocaleString()}</div>
                                 </div>
-                                <div className="bg-blue-500/10 p-2.5 rounded-xl border border-blue-500/15">
+                                <div className={isAnahuac ? "bg-primary/10 p-2.5 rounded-xl border border-primary/20" : "bg-blue-500/10 p-2.5 rounded-xl border border-blue-500/15"}>
                                   <div className="text-[11px] text-slate-500 font-medium mb-0.5">Ingreso Pasivo</div>
-                                  <div className="font-medium text-blue-600 text-[16px]">${game.player.passiveIncome.toLocaleString()}</div>
+                                  <div className={`font-medium text-[16px] ${isAnahuac ? "text-primary/90" : "text-blue-600"}`}>${game.player.passiveIncome.toLocaleString()}</div>
                                 </div>
                               </div>
 
                               <div className="flex gap-2.5 mt-auto">
                                 <button
                                   onClick={() => router.push(`/cash-flow/game/${game.id}`)}
-                                  className="flex-1 py-2.5 bg-gradient-to-br from-indigo-600 to-indigo-500 text-white border-none rounded-xl font-medium cursor-pointer text-[14px] flex items-center justify-center gap-1.5 transition-all shadow-[0_4px_12px_rgba(99,102,241,0.25)] hover:-translate-y-0.5"
+                                  className={`flex-1 py-2.5 text-white border-none rounded-xl font-medium cursor-pointer text-[14px] flex items-center justify-center gap-1.5 transition-all hover:-translate-y-0.5 ${isAnahuac ? "bg-primary shadow-[0_4px_12px_rgba(255,89,0,0.25)]" : "bg-gradient-to-br from-indigo-600 to-indigo-500 shadow-[0_4px_12px_rgba(99,102,241,0.25)]"}`}
                                 >
                                   <Play size={14} className="fill-white" />
                                   Continuar
@@ -567,14 +572,14 @@ export default function CombinedSimulatorsPage() {
                               return (
                                 <div
                                   key={prof.id}
-                                  className={`prof-card p-[22px] rounded-[20px] cursor-pointer transition-all duration-300 ${isSel ? "border-[1.5px] border-blue-500/30 bg-blue-500/10 shadow-[0_12px_24px_rgba(11,113,254,0.08)]" : "border border-slate-100 bg-slate-50 hover:-translate-y-1 hover:border-blue-500/60 hover:shadow-[0_12px_40px_rgba(11,113,254,0.2)]"}`}
+                                  className={`prof-card p-[22px] rounded-[20px] cursor-pointer transition-all duration-300 ${isSel ? (isAnahuac ? "border-[1.5px] border-primary/30 bg-primary/10 shadow-[0_12px_24px_rgba(255,89,0,0.08)]" : "border-[1.5px] border-blue-500/30 bg-blue-500/10 shadow-[0_12px_24px_rgba(11,113,254,0.08)]") : (isAnahuac ? "border border-slate-100 bg-slate-50 hover:-translate-y-1 hover:border-primary/60 hover:shadow-[0_12px_40px_rgba(255,89,0,0.2)]" : "border border-slate-100 bg-slate-50 hover:-translate-y-1 hover:border-blue-500/60 hover:shadow-[0_12px_40px_rgba(11,113,254,0.2)]")}`}
                                   onClick={() => setSelectedProfession(prof.id)}
                                 >
                                   <div className="flex items-center gap-2.5 mb-2.5">
-                                    <div className={`w-[38px] h-[38px] rounded-xl flex items-center justify-center border ${isSel ? "bg-blue-500/10 border-blue-500/20" : "bg-slate-100 border-slate-200"}`}>
-                                      <Briefcase size={18} className={isSel ? "text-blue-500" : "text-slate-500"} />
+                                    <div className={`w-[38px] h-[38px] rounded-xl flex items-center justify-center border ${isSel ? (isAnahuac ? "bg-primary/10 border-primary/20" : "bg-blue-500/10 border-blue-500/20") : "bg-slate-100 border-slate-200"}`}>
+                                      <Briefcase size={18} className={isSel ? (isAnahuac ? "text-primary" : "text-blue-500") : "text-slate-500"} />
                                     </div>
-                                    <h3 className={`text-[17px] font-bold m-0 ${isSel ? "text-blue-600" : "text-slate-800"}`}>{prof.name}</h3>
+                                    <h3 className={`text-[17px] font-bold m-0 ${isSel ? (isAnahuac ? "text-primary" : "text-blue-600") : "text-slate-800"}`}>{prof.name}</h3>
                                   </div>
                                   {prof.description && (
                                     <div className="text-[13px] text-slate-500 mb-3.5 leading-relaxed">{prof.description}</div>
@@ -608,7 +613,7 @@ export default function CombinedSimulatorsPage() {
                             <button
                               onClick={startGame}
                               disabled={startingGame}
-                              className={`px-10 py-3.5 rounded-xl text-[clamp(15px,1.5vw,18px)] font-medium flex items-center gap-2.5 ${startingGame ? "bg-slate-400 text-white cursor-not-allowed" : "animate-[shimmer-slide_2.5s_linear_infinite] [background-size:200%_100%] bg-[linear-gradient(135deg,#059669_0%,#0B71FE_60%,#059669_100%)] text-white cursor-pointer shadow-[0_8px_24px_rgba(11,113,254,0.35)]"}`}
+                              className={`px-10 py-3.5 rounded-xl text-[clamp(15px,1.5vw,18px)] font-medium flex items-center gap-2.5 transition-all ${startingGame ? "bg-slate-400 text-white cursor-not-allowed" : (isAnahuac ? "bg-primary hover:bg-orange-600 text-white cursor-pointer shadow-[0_8px_24px_rgba(255,89,0,0.35)] hover:-translate-y-1" : "animate-[shimmer-slide_2.5s_linear_infinite] [background-size:200%_100%] bg-[linear-gradient(135deg,#059669_0%,#0B71FE_60%,#059669_100%)] text-white cursor-pointer shadow-[0_8px_24px_rgba(11,113,254,0.35)]")}`}
                             >
                               <Play size={20} fill="white" />
                               {startingGame ? "Iniciando..." : "Comenzar Juego"}

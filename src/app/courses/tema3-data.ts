@@ -170,4 +170,10 @@ export const TEMA3_SUBTEMAS: Tema3Subtema[] = [
       { title: "¿Quién protege al inversionista?", slug: "proteccion-usuario", level: "Básico" },
     ]
   },
+  {
+    title: "21. Certificación",
+    lessons: [
+      { title: "Examen de Certificación: Bloque 3", slug: "evaluacion-bloque-3", level: "Avanzado" },
+    ]
+  },
 ]

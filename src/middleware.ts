@@ -3,33 +3,34 @@ import { NextResponse } from "next/server";
 
 const isProtectedRoute = createRouteMatcher([
   "/dashboard(.*)", 
-  "/api/wallet(.*)",
-  "/api/profile(.*)",
-  "/api/simulators(.*)"
+  "/courses(.*)",
+  "/settings(.*)",
+  "/teacher(.*)",
+  "/admin(.*)",
 ]);
 
-const isSimulatorIngestRoute = createRouteMatcher(["/api/simulators/stocks/ingest(.*)"]);
+const isApiRoute = createRouteMatcher(["/api/(.*)"]);
 
 export default clerkMiddleware(async (auth, req) => {
-  if (isSimulatorIngestRoute(req)) {
+  const session = await auth();
+  const url = new URL(req.url);
+
+  // Allow API routes to handle their own auth to return JSON errors instead of redirects
+  if (isApiRoute(req)) {
     return NextResponse.next();
   }
+
+  // FAST REDIRECT: If user is authenticated and hits public auth routes or landing, skip to dashboard
+  // This prevents the "flash" of the landing page for 2 seconds.
+  if (session.userId && ["/", "/login", "/signup"].includes(url.pathname)) {
+    return NextResponse.redirect(new URL("/dashboard", req.url));
+  }
+
   if (isProtectedRoute(req)) {
-    const session = await auth();
-    console.log("Middleware Auth Debug:", {
-      userId: session.userId,
-      isLoaded: session.isLoaded,
-      url: req.url,
-      cookies: req.headers.get("cookie"),
-      secretKeyLength: process.env.CLERK_SECRET_KEY?.length,
-      publishableKey: process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
-    });
-    
     if (!session.userId) {
       console.log("User not authenticated, protecting route...");
+      await auth.protect();
     }
-    
-    await auth.protect();
   }
   return NextResponse.next();
 });

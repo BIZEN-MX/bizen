@@ -49,7 +49,7 @@ export default function MarkCompleteButton({ moduleId, section }: Props) {
           padding: "10px 14px",
           borderRadius: 10,
           border: "1px solid rgba(0,0,0,.15)",
-          background: "#0F62FE",
+          background: "var(--primary)",
           color: "#fff",
           fontWeight: 500,
           cursor: "pointer",

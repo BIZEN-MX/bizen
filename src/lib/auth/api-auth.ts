@@ -27,7 +27,7 @@ export async function requireAuth(
 ): Promise<{ success: true; data: AuthResult } | { success: false; response: NextResponse }> {
   try {
     const host = request.headers.get("host") || "";
-    const isLocal = host.includes("localhost") || host.includes("127.0.0.1") || host.includes("3004");
+    const isLocal = host.includes("localhost") || host.includes("127.0.0.1") || host.includes("3004") || process.env.NODE_ENV === 'development';
     
     let userId: string | null = null;
 
@@ -194,7 +194,7 @@ export async function optionalAuth(
 ): Promise<{ user: User | null; supabase: any }> {
   try {
     const host = request.headers.get("host") || "";
-    const isLocal = host.includes("localhost") || host.includes("127.0.0.1") || host.includes("3004");
+    const isLocal = host.includes("localhost") || host.includes("127.0.0.1") || host.includes("3004") || process.env.NODE_ENV === 'development';
 
     if (isLocal) {
       return { 
@@ -235,11 +235,3 @@ export async function optionalAuth(
     return { user: null, supabase: null }
   }
 }
-
-
-
-
-
-
-
-

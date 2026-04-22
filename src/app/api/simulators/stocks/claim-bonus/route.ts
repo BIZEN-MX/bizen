@@ -22,7 +22,13 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Bono ya reclamado" }, { status: 400 });
     }
 
-    const bonusAmount = 1000;
+    // Fetch Global Config
+    const configProfile = await prisma.profile.findUnique({
+      where: { userId: "GLOBAL_CONFIG_MARKET" },
+      select: { settings: true }
+    });
+    const config = (configProfile?.settings as any) || { welcomeBonus: 1000 };
+    const bonusAmount = config.welcomeBonus ?? 1000;
 
     await prisma.$transaction(async (tx) => {
       // Award to profile

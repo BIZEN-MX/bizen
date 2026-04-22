@@ -1,5 +1,6 @@
 "use client"
 
+import * as React from "react"
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
@@ -51,6 +52,8 @@ export default function NewThreadPage() {
   const { user, loading } = useAuth()
   const router = useRouter()
 
+  const isAnahuac = (user?.email || (user as any)?.emailAddresses?.[0]?.emailAddress || "").toLowerCase().endsWith("@anahuac.mx") || (user?.email || "").toLowerCase().includes(".anahuac.mx") || (user?.email || "").toLowerCase().endsWith("@bizen.mx")
+
   const [topics, setTopics] = useState<ForumTopic[]>([])
   const [title, setTitle] = useState("")
   const [body, setBody] = useState("")
@@ -62,7 +65,8 @@ export default function NewThreadPage() {
   const [showPreview, setShowPreview] = useState(false)
 
   const selectedTopic = topics.find(t => t.id === selectedTopicId)
-  const accent = selectedTopic ? topicColor(selectedTopic.slug) : "#0F62FE"
+  const defaultInstitutionalAccent = isAnahuac ? "#FF5900" : "#0F62FE"
+  const accent = selectedTopic ? topicColor(selectedTopic.slug) : defaultInstitutionalAccent
   const canSubmit = title.trim().length > 5 && body.trim().length > 10 && !!selectedTopicId
 
 
@@ -116,7 +120,7 @@ export default function NewThreadPage() {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-12 border-4 border-blue-900/10 border-t-blue-900 rounded-full animate-spin" />
+          <div className={`w-12 h-12 border-4 rounded-full animate-spin ${isAnahuac ? "border-orange-900/10 border-t-orange-600" : "border-blue-900/10 border-t-blue-900"}`} />
           <span className="text-sm font-medium text-slate-500">Cargando formulario...</span>
         </div>
       </div>
@@ -129,14 +133,14 @@ export default function NewThreadPage() {
     <div className="min-h-screen bg-slate-50 font-sans pb-32">
       <div className="max-w-[1200px] mx-auto px-4 md:px-8 py-8 md:py-12">
         {/* ── HERO ────────────────────────────────────────────────── */}
-        <div className="relative rounded-[2rem] overflow-hidden mb-8 md:mb-12 shadow-2xl shadow-blue-900/20" style={{ background: `linear-gradient(135deg, #0f172a 0%, #1e3a8a 60%, ${accent} 100%)` }}>
+        <div className="relative rounded-[2rem] overflow-hidden mb-8 md:mb-12 shadow-2xl shadow-blue-900/20" style={{ background: isAnahuac ? `linear-gradient(135deg, #1c0a00 0%, #4a1a00 60%, ${accent} 100%)` : `linear-gradient(135deg, #0f172a 0%, #1e3a8a 60%, ${accent} 100%)` }}>
           <div className="absolute top-[-20%] right-[-5%] w-80 h-80 rounded-full blur-[80px]" style={{ background: `${accent}40` }} />
           <div className="absolute bottom-[-30%] left-[5%] w-60 h-60 bg-indigo-500/20 rounded-full blur-[60px]" />
 
           <div className="relative z-10 px-6 py-10 md:px-12 md:py-16">
             <button
               onClick={() => router.push("/forum")}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded-full text-blue-200 text-xs font-bold uppercase tracking-widest transition-all mb-8"
+              className={`inline-flex items-center gap-2 px-4 py-2 border border-white/20 rounded-full text-xs font-bold uppercase tracking-widest transition-all mb-8 ${isAnahuac ? "bg-orange-500/10 hover:bg-orange-500/20 text-orange-200" : "bg-white/10 hover:bg-white/20 text-blue-200"}`}
             >
               <ChevronLeft size={16} /> Volver al Foro
             </button>
@@ -149,7 +153,7 @@ export default function NewThreadPage() {
                 <h1 className="text-3xl md:text-5xl font-black text-white tracking-tight mb-2">
                   Crear Nuevo Tema
                 </h1>
-                <p className="text-lg text-blue-200 font-medium">
+                <p className={`text-lg font-medium ${isAnahuac ? "text-orange-200" : "text-blue-200"}`}>
                   Comparte una pregunta, idea o proyecto con la comunidad
                 </p>
               </div>
@@ -176,7 +180,7 @@ export default function NewThreadPage() {
                   placeholder="¿Cuál es el título de tu tema? Sé específico..."
                   maxLength={150}
                   required
-                  className="w-full px-5 py-4 text-base font-medium border-2 border-slate-100 rounded-2xl bg-slate-50 text-slate-900 outline-none transition-all placeholder:text-slate-400 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10"
+                  className={`w-full px-5 py-4 text-base font-medium border-2 border-slate-100 rounded-2xl bg-slate-50 text-slate-900 outline-none transition-all placeholder:text-slate-400 focus:bg-white focus:ring-4 ${isAnahuac ? "focus:border-orange-500 focus:ring-orange-500/10" : "focus:border-blue-500 focus:ring-blue-500/10"}`}
                 />
                 <div className="mt-3 flex justify-between items-center px-1">
                   {title.length > 5
@@ -247,7 +251,7 @@ export default function NewThreadPage() {
                       onKeyDown={e => { if (e.key === "Enter") { e.preventDefault(); handleAddTag() } }}
                       placeholder={selectedTags.length >= 5 ? "Límite alcanzado" : "Escribe y presiona Enter..."}
                       disabled={selectedTags.length >= 5}
-                      className="w-full pl-11 pr-5 py-3.5 text-sm font-medium border-2 border-slate-100 rounded-xl bg-slate-50 text-slate-900 outline-none transition-all placeholder:text-slate-400 focus:bg-white focus:border-blue-500 disabled:opacity-50"
+                      className={`w-full pl-11 pr-5 py-3.5 text-sm font-medium border-2 border-slate-100 rounded-xl bg-slate-50 text-slate-900 outline-none transition-all placeholder:text-slate-400 focus:bg-white disabled:opacity-50 ${isAnahuac ? "focus:border-orange-500" : "focus:border-blue-500"}`}
                     />
                   </div>
                   <button
@@ -283,7 +287,7 @@ export default function NewThreadPage() {
                     onChange={e => setBody(e.target.value)}
                     placeholder={"¿Cuál es tu pregunta o idea?\n\nDescríbela con suficiente detalle para que la comunidad pueda ayudarte.\nUsa este espacio para explicar el contexto, lo que ya has intentado, etc."}
                     required
-                    className="w-full min-h-[320px] p-5 text-base font-medium leading-relaxed border-2 border-slate-100 rounded-2xl bg-slate-50 text-slate-900 outline-none resize-y transition-all placeholder:text-slate-400 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10"
+                    className={`w-full min-h-[320px] p-5 text-base font-medium leading-relaxed border-2 border-slate-100 rounded-2xl bg-slate-50 text-slate-900 outline-none resize-y transition-all placeholder:text-slate-400 focus:bg-white focus:ring-4 ${isAnahuac ? "focus:border-orange-500 focus:ring-orange-500/10" : "focus:border-blue-500 focus:ring-blue-500/10"}`}
                   />
                 ) : (
                   <div className="w-full min-h-[320px] p-5 text-base font-medium leading-relaxed border-2 border-slate-100 rounded-2xl bg-slate-50 text-slate-900 whitespace-pre-wrap overflow-y-auto">
@@ -350,10 +354,10 @@ export default function NewThreadPage() {
             </div>
 
             {/* Tips Card */}
-            <div className="rounded-3xl p-6 md:p-8 shadow-xl shadow-blue-900/20 bg-gradient-to-br from-slate-900 to-blue-900">
+            <div className={`rounded-3xl p-6 md:p-8 shadow-xl shadow-blue-900/20 ${isAnahuac ? "bg-gradient-to-br from-[#1c0a00] to-[#4a1a00]" : "bg-gradient-to-br from-slate-900 to-blue-900"}`}>
               <div className="flex items-center gap-3 mb-6">
-                <Lightbulb size={20} className="text-blue-400" />
-                <span className="text-xs font-black text-blue-200 uppercase tracking-widest">Consejos</span>
+                <Lightbulb size={20} className={isAnahuac ? "text-orange-400" : "text-blue-400"} />
+                <span className={`text-xs font-black uppercase tracking-widest ${isAnahuac ? "text-orange-200" : "text-blue-200"}`}>Consejos</span>
               </div>
               <ul className="space-y-4">
                 {[
@@ -364,8 +368,8 @@ export default function NewThreadPage() {
                   "No compartas información personal",
                 ].map((tip, i) => (
                   <li key={i} className="flex items-start gap-3">
-                    <div className="w-1.5 h-1.5 rounded-full bg-blue-400 shrink-0 mt-2" />
-                    <span className="text-sm font-medium text-blue-100/90 leading-relaxed">{tip}</span>
+                    <div className={`w-1.5 h-1.5 rounded-full shrink-0 mt-2 ${isAnahuac ? "bg-orange-400" : "bg-blue-400"}`} />
+                    <span className={`text-sm font-medium leading-relaxed ${isAnahuac ? "text-orange-100/90" : "text-blue-100/90"}`}>{tip}</span>
                   </li>
                 ))}
               </ul>

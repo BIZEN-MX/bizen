@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react"
 import { useParams, useRouter } from "next/navigation"
 import CoursePageTemplate from "@/components/CoursePageTemplate"
 import PageLoader from "@/components/PageLoader"
+import { SUBTEMAS_BY_COURSE } from "@/data/lessons/courseLessonsOrder"
 
 export default function DynamicTopicPage() {
     const params = useParams()
@@ -74,7 +75,7 @@ export default function DynamicTopicPage() {
 
     // Map DB topics to CoursePageTemplate expected format
     // Topic (dt) -> Course (subtheme) -> Lesson
-    const subtemas = (topicData.courses || []).map((course: any) => ({
+    let subtemas = (topicData.courses || []).map((course: any) => ({
         title: course.title,
         lessons: (course.lessons || []).map((lesson: any) => ({
             title: lesson.title,
@@ -82,6 +83,23 @@ export default function DynamicTopicPage() {
             courseId: course.id
         }))
     }))
+
+    // FALLBACK/OVERRIDE: For Temas 1-4, use the static data to ensure new lessons (like exams) are shown
+    // even if not yet synced to the production database via API.
+    const topicNum = parseInt(id.replace('tema-', ''))
+    if (topicNum >= 1 && topicNum <= 4) {
+        const staticData = SUBTEMAS_BY_COURSE[topicNum - 1]
+        if (staticData) {
+            subtemas = staticData.map((s: any) => ({
+                title: s.title,
+                lessons: s.lessons.map((l: any) => ({
+                    title: l.title,
+                    slug: l.slug,
+                    level: l.level
+                }))
+            }))
+        }
+    }
 
     return (
         <CoursePageTemplate

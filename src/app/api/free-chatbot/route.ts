@@ -29,7 +29,9 @@ export async function POST(request: NextRequest) {
       userName = "Estudiante",
       xp = 0,
       level = 1,
-      currentPath = ""
+      currentPath = "",
+      adnProfile = "Sin Diagnosticar",
+      userContext = null
     } = validation.data
 
     // Context analysis
@@ -48,6 +50,26 @@ export async function POST(request: NextRequest) {
     }
 
     const userStats = `\nESTADÍSTICAS DEL USUARIO: XP: ${xp}, Nivel: ${level}.`
+    const dnaContext = adnProfile !== "Sin Diagnosticar" ? `\nADN FINANCIERO: ${adnProfile}.` : ""
+    
+    // Extended Real Context
+    let realDataContext = "";
+    if (userContext) {
+      const { stats, transactions, diagnostic, progress } = userContext;
+      realDataContext = `
+DATOS FINANCIEROS REALES (BIZEN 2026):
+- Saldo Actual: ${stats?.bizcoins || 0} Bizcoins.
+- Lecciones Completadas: ${stats?.lessonsCompleted || 0}.
+- Racha (Streak): ${stats?.currentStreak || 0} días.
+- Cursos Inscritos: ${stats?.coursesEnrolled || 0}.
+- Logros Obtenidos: ${userContext.achievements?.join(', ') || 'Ninguno aún'}.
+- Inversiones Activas: ${userContext.investments?.length > 0 ? userContext.investments.map((i:any) => `${i.symbol}: ${i.amount} unidades`).join(', ') : 'Sin inversiones en el simulador'}.
+- Últimos Movimientos: ${transactions?.map((t:any) => `${t.description} (${t.amount} BC)`).join(', ') || 'Sin transacciones'}.
+- Perfil ADN: ${diagnostic?.adnProfile || adnProfile}.
+- Desglose ADN: ${diagnostic?.categoryScores ? JSON.stringify(diagnostic.categoryScores) : 'Sin detalle'}.
+- Inventario (Tienda): ${userContext.inventory?.join(', ') || 'Sin artículos comprados'}.
+`;
+    }
 
     if (!GEMINI_API_KEY) {
       return NextResponse.json(
@@ -70,26 +92,33 @@ export async function POST(request: NextRequest) {
       })
     }
 
-    const systemPrompt = `Eres Billy, el mentor asistente de BIZEN. BIZEN enseña educación financiera a jóvenes.
-ESTÁS HABLANDO CON: ${userName}. Dirígete a esta persona por su nombre de forma natural pero NO LO SALUDES EN CADA MENSAJE, ve directo al grano.${userStats}${contextDescription}
-
-PERSONALIDAD:
+    // Fetch Global Prompt
+    const configProfile = await prisma.profile.findUnique({
+      where: { userId: "GLOBAL_CONFIG_BILLY" },
+      select: { settings: true }
+    });
+    
+    // Fallback default Si no existe
+    const defaultPrompt = `Eres Billy, el mentor asistente de BIZEN. BIZEN enseña educación financiera a jóvenes.
+PERSONALIDAD SEGÚN ADN:
+- Si no hay ADN diagnosticado, sé un guía general entusiasta.
 - Eres relajado, profesional, entusiasta y educado.
-- Tienes un tono moderno y amigable pero SIN usar modismos excesivos, jerga informal o palabras altisonantes.
-- ESTÁ ESTRICTAMENTE PROHIBIDO usar palabras como "wey", "neta", o cualquier tipo de lenguaje vulgar o excesivamente informal.
 - NO USES EMOJIS: Tienes prohibido usar emojis en tus respuestas. Mantén el texto limpio.
 
 REGLAS DE INTERACCIÓN Y FORMATO:
-- DIRECTO AL GRANO: NUNCA saludes al inicio de tu respuesta (sin "¡Hola!", "¡Qué tal!", etc.). Responde directamente lo que se pregunta.
-- SÉ CONCISO Y CLARO: Tus respuestas deben ser directas. No des información de sobra ni repitas lo que el usuario ya sabe. Usa 1 o 2 párrafos cortos como máximo.
-- Evita los bloques masivos de texto. Si hay mucha información, resume a los puntos clave usando viñetas.
+- DIRECTO AL GRANO: NUNCA saludes al inicio de tu respuesta. Responde directamente.
+- SÉ CONCISO Y CLARO: Usa 1 o 2 párrafos cortos como máximo.
 
 LO QUE HACES:
 1. EDUCACIÓN: Explica conceptos pero NO des asesoría financiera real. Sé un guía que motiva.
-2. CONTEXTO BIZEN: Conoces los temas de Identidad Digital, Finanzas Personales, Presupuesto, Inversiones, Emprendimiento y Bienestar.
-3. SOPORTE: Problemas técnicos a soporte@bizen.mx.
+2. CONTEXTO BIZEN: Conoces los temas de Identidad Digital, Finanzas Personales, Inversiones.
+3. SOPORTE: Problemas técnicos a soporte@bizen.mx.`
 
-RECUERDA: Tu objetivo es que el usuario aprenda sin aburrirse. Sé muy claro, moderno y motivador. NO USES EMOJIS y VE DIRECTO AL GRANO sin saludar en cada mensaje.`
+    const basePrompt = (configProfile?.settings as any)?.prompt || defaultPrompt;
+
+    const systemPrompt = `ESTÁS HABLANDO CON: ${userName}. Dirígete a esta persona por su nombre de forma natural pero NO LO SALUDES EN CADA MENSAJE, ve directo al grano.${userStats}${dnaContext}${realDataContext}${contextDescription}
+
+${basePrompt}`
 
     const genAI = new GoogleGenerativeAI(GEMINI_API_KEY)
     

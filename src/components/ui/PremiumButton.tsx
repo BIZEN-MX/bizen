@@ -41,10 +41,10 @@ export const PremiumButton = React.forwardRef<HTMLButtonElement, PremiumButtonPr
     }
 
     const variants = {
-      primary: "bg-gradient-to-br from-[#0F62FE] via-[#1983FD] to-[#0D4FE0] text-white shadow-[0_4px_16px_rgba(15,98,254,0.3)] hover:shadow-[0_8px_24px_rgba(15,98,254,0.45)] border border-white/20",
-      secondary: "bg-white/5 backdrop-blur-xl text-white border border-white/10 hover:bg-white/10 hover:border-white/20 shadow-lg",
-      outline: "bg-transparent text-[#0F62FE] border border-[#0F62FE]/30 hover:bg-[#0F62FE]/5 hover:border-[#0F62FE]/60",
-      minimal: "bg-transparent text-slate-500 hover:text-[#0F62FE] hover:bg-[#0F62FE]/5",
+      primary: "bg-primary bg-gradient-to-br from-[#0F62FE] via-[#1983FD] to-[#0D4FE0] text-white shadow-[0_4px_16px_rgba(255,89,0,0.3)] hover:shadow-[0_8px_24px_rgba(255,89,0,0.45)] border border-white/20",
+      secondary: "bg-emerald-600 text-white shadow-[0_4px_16px_rgba(5,150,105,0.3)]",
+      outline: "bg-transparent text-primary border border-primary/30 hover:bg-primary/5 hover:border-primary/60",
+      minimal: "bg-transparent text-slate-500 hover:text-primary hover:bg-primary/5",
     };
 
     const sizes = {

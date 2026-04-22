@@ -1,6 +1,7 @@
 "use client"
 
-import React, { useEffect, useState } from "react"
+import * as React from "react"
+import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
 import { useLessonProgress } from "@/hooks/useLessonProgress"
@@ -48,6 +49,7 @@ import {
 } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import PageLoader from "@/components/PageLoader"
+import { Billy } from "@/components/Billy"
 
 interface Lesson {
   id: string
@@ -73,6 +75,7 @@ const APPROX_TOTAL_LESSONS = 450
 
 export default function CoursesPage() {
   const { user, dbProfile, loading } = useAuth()
+  const adnProfile = dbProfile?.dnaProfile || "Sin Diagnosticar"
   const router = useRouter()
   const { completedLessons } = useLessonProgress()
   // Icon mapping for dynamic topics
@@ -118,6 +121,9 @@ export default function CoursesPage() {
   const hasActiveStripe = dbProfile?.subscriptionStatus === 'active';
   const isInstitutional = !!dbProfile?.schoolId || (dbProfile?.role && dbProfile.role !== 'particular');
   const hasPremiumAccess = hasActiveLicense || hasActiveStripe || isInstitutional;
+
+  const userEmail = user?.email?.toLowerCase() || ""
+  const isAnahuac = userEmail.endsWith('@anahuac.mx') || userEmail.endsWith('@bizen.mx')
 
   const completedCount = completedLessons.length
   const progressPct = Math.min(100, Math.round((completedCount / APPROX_TOTAL_LESSONS) * 100))
@@ -274,9 +280,9 @@ export default function CoursesPage() {
         <section className="relative z-10 w-full flex flex-col items-stretch m-0 p-0 box-border">
           {/* Hero Header */}
           <div
-            className="courses-hero relative flex flex-col md:flex-row items-center justify-between gap-10 rounded-[40px] overflow-hidden my-8 mx-auto w-[calc(100%-48px)] max-w-[1400px] p-[clamp(32px,5vw,48px)_clamp(32px,6vw,80px)] shadow-[0_25px_60px_rgba(11,113,254,0.25)] box-border"
+            className={`courses-hero relative flex flex-col md:flex-row items-center justify-between gap-10 rounded-[40px] overflow-hidden my-8 mx-auto w-[calc(100%-48px)] max-w-[1440px] p-[clamp(32px,5vw,48px)_clamp(32px,6vw,80px)] shadow-[0_25px_60px_rgba(0,0,0,0.15)] box-border`}
             style={{
-              background: "linear-gradient(145deg, #0f1c3f 0%, #0B71FE 100%)",
+              background: isAnahuac ? "#FF5900" : "linear-gradient(145deg, #0f1c3f 0%, #0B71FE 100%)",
             }}
           >
             {/* Glowing background details */}
@@ -348,6 +354,44 @@ export default function CoursesPage() {
 
           </div>
 
+          {/* ── ADN REMINDER BANNER (NUDGE) ─────────────────────────────────── */}
+          {adnProfile === "Sin Diagnosticar" && (
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="w-[calc(100%-48px)] max-w-[1440px] mx-auto mt-6 mb-2"
+            >
+              <div className="relative overflow-hidden bg-white/40 backdrop-blur-xl border border-white/80 rounded-[32px] p-6 pr-8 shadow-[0_20px_50px_rgba(37,99,235,0.06)] flex items-center justify-between gap-6 group">
+                {/* Decorative Pattern */}
+                <div className="absolute right-0 top-0 h-full w-48 opacity-[0.03] pointer-events-none group-hover:opacity-[0.05] transition-opacity">
+                   <Dna className="w-full h-full text-blue-600" />
+                </div>
+
+                <div className="flex items-center gap-6">
+                  <div className="shrink-0 relative">
+                     <div className="absolute inset-0 bg-blue-500/20 blur-xl rounded-full scale-125 animate-pulse" />
+                     <Billy mood="chatbot" size={64} className="relative z-10" />
+                  </div>
+                  <div>
+                    <h4 className="text-lg font-bold text-slate-900 mb-1">
+                      ¡Tu ADN Financiero está incompleto! 🧬
+                    </h4>
+                    <p className="text-sm text-slate-500 font-medium max-w-[500px]">
+                      Desbloquea lecciones prioritarias y tips personalizados de Billy haciendo tu test diagnóstico ahora mismo.
+                    </p>
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => router.push('/dashboard?startTest=true')}
+                  className={`relative z-10 px-6 py-3.5 rounded-2xl font-bold text-sm transition-all duration-300 hover:scale-105 active:scale-95 shadow-lg shadow-blue-500/20 cursor-pointer ${isAnahuac ? 'bg-primary text-white' : 'bg-blue-600 text-white'}`}
+                >
+                  ¡Comenzar Test ahora!
+                </button>
+              </div>
+            </motion.div>
+          )}
+
           {/* ── BILLY INSIGHT SECTION ────────────────────────────────────────── */}
           {(insight || loadingInsight) && (
             <motion.div 
@@ -357,19 +401,13 @@ export default function CoursesPage() {
               className="w-full max-w-none mx-auto mb-8 box-border px-6"
             >
               <div className="bg-white/70 backdrop-blur-xl rounded-3xl py-4 px-5 border border-white/80 shadow-[0_10px_30px_rgba(0,0,0,0.03)] flex items-center gap-4">
-                <div className="w-[52px] h-[52px] flex items-center justify-center shrink-0 relative">
-                  <Image 
-                    src="/billy_chatbot.png" 
-                    alt="Billy" 
-                    width={52} 
-                    height={52} 
-                    className={`object-contain drop-shadow-[0_4px_8px_rgba(0,0,0,0.08)] ${loadingInsight ? "opacity-60" : "opacity-100"}`}
-                  />
+                <div className={`w-[52px] h-[52px] flex items-center justify-center shrink-0 relative rounded-full ${isAnahuac ? "bg-primary/10 text-primary" : "bg-blue-600/10 text-blue-600"}`}>
+                  <Brain size={26} className={loadingInsight ? "opacity-60" : "opacity-100"} />
                   {loadingInsight && (
                     <motion.div 
                       animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.6, 0.3] }}
                       transition={{ duration: 1.5, repeat: Infinity }}
-                      className="absolute inset-0 rounded-full bg-blue-500/20"
+                      className={`absolute inset-0 rounded-full ${isAnahuac ? "bg-primary/20" : "bg-blue-500/20"}`}
                     />
                   )}
                 </div>
@@ -395,16 +433,28 @@ export default function CoursesPage() {
             aria-label="Temas"
           >
             {(() => {
-              const allTopics = dbTopics.map((dt, idx) => ({
+              const allTopics = dbTopics.slice(0, 4).map((dt, idx) => ({
                 id: dt.id,
                 title: dt.title,
                 icon: ICON_MAP[dt.icon || "BookOpen"] || BookOpen,
                 category: dt.level || "General",
-                catColor: CATEGORY_COLORS[dt.level] || "#3b82f6",
+                catColor: isAnahuac ? "#FF5900" : (CATEGORY_COLORS[dt.level] || "#3b82f6"),
                 lessons: dt._count?.courses || 0,
                 displayOrder: idx + 1,
                 bannerUrl: dt.bannerUrl
               }))
+
+              const getAdnKeywords = () => {
+                  const profile = dbProfile?.dnaProfile || "Sin Diagnosticar"
+                  switch (profile) {
+                      case "Gastador Digital": return ["deuda", "crédito", "presupuesto", "ahorro", "gastos", "tarjeta", "financiamiento"]
+                      case "Ahorrador Estancado": return ["inversión", "patrimonio", "inflación", "crecimiento", "pasivo", "interés compuesto", "bursátil"]
+                      case "Explorador Arriesgado": return ["riesgo", "seguridad", "estafas", "análisis", "fondo", "diversificación", "pérdida"]
+                      case "Maestro BIZEN": return ["emprender", "negocio", "optimización", "futuro", "modelo", "flujo", "utilidad", "escalar"]
+                      default: return []
+                  }
+              }
+              const adnKeywords = getAdnKeywords()
 
               if (dbTopics.length === 0 && !loadingData) {
                 return (
@@ -418,7 +468,7 @@ export default function CoursesPage() {
                     </p>
                     <button 
                       onClick={() => setRefreshKey(k => k + 1)}
-                      className="mt-5 px-5 py-2.5 bg-blue-600 text-white border-none rounded-xl cursor-pointer font-medium hover:bg-blue-700 transition"
+                      className={`mt-5 px-5 py-2.5 text-white border-none rounded-xl cursor-pointer font-medium transition ${isAnahuac ? 'bg-primary hover:bg-primary/90' : 'bg-blue-600 hover:bg-blue-700'}`}
                     >
                       Reintentar
                     </button>
@@ -429,9 +479,8 @@ export default function CoursesPage() {
               return (
                 <div className="grid grid-cols-[repeat(auto-fill,minmax(320px,1fr))] gap-6 w-full max-w-none px-6">
                   {allTopics.map((topic) => {
-                    const isDnaSpecialist = dbProfile?.adnProfile === "Billy Inversionista";
-                    const isDnaRecommended = isDnaSpecialist && (topic.id === "tema-09" || topic.id === "tema-10");
-                    const isDnaSkipped = isDnaSpecialist && (topic.id === "tema-06" || topic.id === "tema-07" || topic.id === "tema-08");
+                    const isDnaRecommended = adnKeywords.some(kw => topic.title.toLowerCase().includes(kw))
+                    const isDnaSkipped = false
 
                     // Topics are now unlocked at entry level to allow access to the first 3 free lessons
                     const isAlwaysUnlocked = true;
@@ -511,7 +560,7 @@ export default function CoursesPage() {
                              >
                                <topic.icon size={24} color={isDnaRecommended ? "#fff" : topic.catColor} />
                              </div>
-                             <div className={`text-[11px] font-bold tracking-widest ${isDnaRecommended ? "text-blue-300" : "text-slate-400"}`}>
+                             <div className={`text-[11px] font-bold tracking-widest ${isDnaRecommended ? (isAnahuac ? "text-primary/90" : "text-blue-300") : "text-slate-400"}`}>
                                 #{topic.displayOrder.toString().padStart(2, "0")}
                              </div>
                            </div>
@@ -524,7 +573,7 @@ export default function CoursesPage() {
                            </h3>
                            
                            {isDnaRecommended && (
-                             <div className="flex items-center gap-1.5 text-[11px] text-blue-300 font-semibold mb-3">
+                             <div className={`flex items-center gap-1.5 text-[11px] font-semibold mb-3 ${isAnahuac ? "text-primary/90" : "text-blue-300"}`}>
                                <Sparkles size={14} /> RECOMENDADO BILLY ADN
                              </div>
                            )}
@@ -565,12 +614,12 @@ export default function CoursesPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-blue-600/20 backdrop-blur-md z-[9999] flex items-center justify-center p-6"
+            className={`fixed inset-0 backdrop-blur-md z-[9999] flex items-center justify-center p-6 ${isAnahuac ? "bg-primary/20" : "bg-blue-600/20"}`}
           >
             <motion.div 
               initial={{ scale: 0.9, y: 20 }}
               animate={{ scale: 1, y: 0 }}
-              className="bg-white rounded-[40px] pt-12 px-10 pb-10 max-w-[480px] w-full text-center relative shadow-[0_30px_60px_rgba(0,0,0,0.12)] border border-blue-600/10"
+              className={`bg-white rounded-[40px] pt-12 px-10 pb-10 max-w-[480px] w-full text-center relative border ${isAnahuac ? "border-[3px] border-primary shadow-[0_30px_60px_rgba(255,89,0,0.15)]" : "border-blue-600/10 shadow-[0_30px_60px_rgba(0,0,0,0.12)]"}`}
             >
               {/* Image */}
               <div className="relative w-[200px] h-[200px] mx-auto mb-6">
@@ -582,17 +631,17 @@ export default function CoursesPage() {
                 />
               </div>
 
-              <h2 className="text-[28px] font-extrabold text-blue-900 m-0 mb-3 leading-[1.2]">
+              <h2 className={`text-[28px] font-extrabold m-0 mb-3 leading-[1.2] ${isAnahuac ? 'text-primary' : 'text-blue-900'}`}>
                 ¡Empecemos Bien! 🚀
               </h2>
               <p className="text-[16px] text-slate-500 leading-relaxed mb-8">
-                Billy me recomendó que inicies por el curso de <strong className="text-blue-600">Introducción a las Finanzas</strong> para que domines los cimientos antes de avanzar.
+                El IA Mentor recomienda que inicies por el curso de <strong className={isAnahuac ? 'text-primary' : 'text-blue-600'}>Introducción a las Finanzas</strong> para que domines los cimientos antes de avanzar.
               </p>
 
               <div className="flex flex-col gap-3">
                 <button 
                   onClick={() => router.push('/courses/tema-01')}
-                  className="p-4 bg-blue-600 text-white border-none rounded-2xl text-[16px] font-bold cursor-pointer shadow-[0_10px_20px_rgba(11,113,254,0.2)] hover:-translate-y-0.5 transition-transform"
+                  className={`p-4 text-white border-none rounded-2xl text-[16px] font-bold cursor-pointer hover:-translate-y-0.5 transition-transform ${isAnahuac ? 'bg-primary shadow-[0_10px_25px_rgba(255,89,0,0.3)]' : 'bg-blue-600 shadow-[0_10px_20px_rgba(11,113,254,0.3)]'}`}
                 >
                   Ir al curso recomendado
                 </button>
@@ -604,7 +653,7 @@ export default function CoursesPage() {
                       router.push(`/courses/${pendingTopicId}`)
                     }
                   }}
-                  className="p-4 bg-blue-600/5 text-slate-500 border-none rounded-2xl text-[15px] font-semibold cursor-pointer hover:bg-blue-600/10 transition-colors"
+                  className={`p-4 border-[2px] rounded-2xl text-[15px] font-bold cursor-pointer transition-colors ${isAnahuac ? 'border-primary text-primary hover:bg-primary/10' : 'border-transparent bg-blue-600/5 text-slate-500 hover:bg-blue-600/10'}`}
                 >
                    Continuar de todos modos
                 </button>
@@ -791,8 +840,7 @@ export default function CoursesPage() {
             onClick={(e) => e.stopPropagation()}
             className="bg-white rounded-[28px] py-10 px-8 max-w-[380px] w-[90%] flex flex-col items-center gap-5 shadow-[0_32px_80px_rgba(0,0,0,0.22)] animate-[seqCardIn_0.35s_cubic-bezier(0.34,1.56,0.64,1)] relative overflow-hidden text-center"
           >
-            {/* Top gradient bar */}
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-900 via-blue-500 to-blue-400" />
+            <div className={`absolute top-0 left-0 right-0 h-1 ${isAnahuac ? 'bg-primary' : 'bg-gradient-to-r from-blue-900 via-blue-500 to-blue-400'}`} />
 
             {/* Mascot Image */}
             <div className="w-[120px] h-[120px] relative -mb-2.5">
@@ -816,10 +864,9 @@ export default function CoursesPage() {
               Para desbloquear este tema, primero debes completar todos los cursos del tema anterior.
             </div>
 
-            {/* Dismiss */}
             <button
               onClick={() => setTopicWarning(false)}
-              className="mt-1 px-8 py-3 bg-gradient-to-br from-blue-900 to-blue-500 text-white border-none rounded-xl text-[14px] font-medium cursor-pointer shadow-[0_6px_20px_rgba(37,99,235,0.35)] transition-all duration-200 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:-translate-y-[3px] hover:shadow-[0_12px_28px_rgba(37,99,235,0.45)] active:translate-y-0 active:opacity-85"
+              className={`mt-1 px-8 py-3 text-white border-none rounded-xl text-[14px] font-medium cursor-pointer shadow-[0_6px_20px_rgba(0,0,0,0.15)] transition-all duration-200 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:-translate-y-[3px] hover:shadow-[0_12px_28px_rgba(0,0,0,0.25)] active:translate-y-0 active:opacity-85 ${isAnahuac ? 'bg-primary' : 'bg-gradient-to-br from-blue-900 to-blue-500'}`}
             >
               Entendido
             </button>

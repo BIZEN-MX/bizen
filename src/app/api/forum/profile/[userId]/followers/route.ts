@@ -1,63 +1,70 @@
 import { NextRequest, NextResponse } from "next/server"
-import { createSupabaseServer } from "@/lib/supabase/server"
 import { prisma } from "@/lib/prisma"
+import { requireAuth } from "@/lib/auth/api-auth"
 
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ userId: string }> }
 ) {
   try {
-    const { userId } = await params
-    const supabase = await createSupabaseServer()
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    const { userId: targetUserId } = await params
+    const authResult = await requireAuth(request)
 
-    if (authError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    if (!authResult.success) {
+      return authResult.response
     }
 
     const { searchParams } = new URL(request.url)
     const limit = Math.min(parseInt(searchParams.get('limit') || '50'), 100)
     const skip = parseInt(searchParams.get('skip') || '0')
 
-    // Get followers (users who are following this userId)
-    const followers = await prisma.userFollow.findMany({
-      where: { followingId: userId },
-      include: {
-        follower: {
-          select: {
-            userId: true,
-            nickname: true,
-            fullName: true,
-            reputation: true,
-            level: true,
-            avatar: true,
-            inventory: { select: { productId: true } }
-          }
-        }
-      },
+    // Get followers records first
+    const followRecords = await prisma.userFollow.findMany({
+      where: { followingId: targetUserId },
       orderBy: { createdAt: 'desc' },
       take: limit,
       skip: skip
     })
 
-    const total = await prisma.userFollow.count({
-      where: { followingId: userId }
+    const followerIds = followRecords.map(f => f.followerId)
+
+    // Fetch profile details for these followers
+    const profiles = await prisma.profile.findMany({
+      where: { userId: { in: followerIds } },
+      select: {
+        userId: true,
+        nickname: true,
+        fullName: true,
+        reputation: true,
+        level: true,
+        avatar: true,
+        inventory: { select: { productId: true } }
+      }
     })
 
-    const formatted = (followers as any[]).map(f => {
-      const parts = (f.follower.fullName || '').trim().split(/\s+/)
+    // Map back to maintain order and include followedAt
+    const formatted = followRecords.map(f => {
+      const profile = profiles.find(p => p.userId === f.followerId)
+      if (!profile) return null
+
+      const parts = (profile.fullName || '').trim().split(/\s+/)
       const safeName = parts.length >= 2
         ? `${parts[0]} ${parts[parts.length - 1][0]}.`
         : (parts[0] || 'Usuario')
+
       return {
-        userId: f.follower.userId,
-        nickname: f.follower.nickname || safeName,
-        reputation: f.follower.reputation,
-        level: f.follower.level,
-        avatar: f.follower.avatar,
-        inventory: f.follower.inventory?.map((i: any) => i.productId) || [],
+        userId: profile.userId,
+        nickname: profile.nickname || safeName,
+        reputation: profile.reputation,
+        level: profile.level,
+        avatar: profile.avatar,
+        inventory: (profile as any).inventory?.map((i: any) => i.productId) || [],
         followedAt: f.createdAt
       }
+    }).filter(Boolean)
+
+    const total = await prisma.userFollow.count({
+      where: { followingId: targetUserId }
     })
 
     return NextResponse.json({

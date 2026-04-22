@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/contexts/AuthContext";
 import { 
   ArrowLeft, 
   Newspaper, 
@@ -28,6 +29,9 @@ export default function NewsPage() {
   const [activeCategory, setActiveCategory] = useState("Todas");
   const [activeTab, setActiveTab] = useState<"news" | "analysis">("news");
   const router = useRouter();
+  const { user } = useAuth();
+  const userEmail = (user?.email || (user as any)?.emailAddresses?.[0]?.emailAddress || "").toLowerCase();
+  const isAnahuac = userEmail.endsWith('@anahuac.mx') || userEmail.includes('.anahuac.mx') || userEmail.endsWith('@bizen.mx');
 
   const fetchNews = async () => {
     try {
@@ -61,8 +65,8 @@ export default function NewsPage() {
   return (
     <div className="min-h-screen bg-slate-50 pb-20">
       {/* Decorative Orbs */}
-      <div className="fixed top-0 right-0 w-[500px] h-[500px] bg-blue-100/30 rounded-full blur-[120px] pointer-events-none -z-10" />
-      <div className="fixed bottom-0 left-0 w-[600px] h-[600px] bg-indigo-100/20 rounded-full blur-[120px] pointer-events-none -z-10" />
+      <div className={`fixed top-0 right-0 w-[500px] h-[500px] ${isAnahuac ? 'bg-orange-100/30' : 'bg-blue-100/30'} rounded-full blur-[120px] pointer-events-none -z-10`} />
+      <div className={`fixed bottom-0 left-0 w-[600px] h-[600px] ${isAnahuac ? 'bg-orange-100/20' : 'bg-indigo-100/20'} rounded-full blur-[120px] pointer-events-none -z-10`} />
 
       <div className="max-w-[1400px] mx-auto px-6 pt-12">
         {/* Header Section */}
@@ -70,15 +74,22 @@ export default function NewsPage() {
           <div className="flex items-center gap-6">
             <button 
               onClick={() => router.back()}
-              className="w-12 h-12 rounded-2xl bg-white border border-slate-200 flex items-center justify-center text-slate-500 hover:text-blue-600 hover:border-blue-200 hover:shadow-lg hover:shadow-blue-500/10 transition-all active:scale-95"
+              className={`w-12 h-12 rounded-2xl bg-white border border-slate-200 flex items-center justify-center text-slate-500 hover:${isAnahuac ? 'text-[#FF5900] border-orange-200 shadow-orange-500/10' : 'text-blue-600 border-blue-200 shadow-blue-500/10'} transition-all active:scale-95 hover:shadow-lg`}
             >
               <ArrowLeft size={22} />
             </button>
-            <div>
-              <h1 className="text-4xl font-black text-slate-900 tracking-tight">
-                Noticias <span className="text-blue-600">BIZEN</span>
-              </h1>
-              <p className="text-slate-500 font-medium">El pulso del mercado financiero en tiempo real.</p>
+            <div className="flex items-center gap-5">
+              {isAnahuac && (
+                <div className="w-16 h-16 rounded-2xl bg-white border border-orange-100 flex items-center justify-center p-2 shadow-sm">
+                  <img src="/León Anáhuac.png" alt="León Anáhuac" className="w-full h-full object-contain" />
+                </div>
+              )}
+              <div>
+                <h1 className="text-4xl font-black text-slate-900 tracking-tight">
+                  Noticias <span className={isAnahuac ? "text-[#FF5900]" : "text-blue-600"}>BIZEN</span>
+                </h1>
+                <p className="text-slate-500 font-medium">El pulso del mercado financiero en tiempo real.</p>
+              </div>
             </div>
           </div>
           
@@ -89,7 +100,7 @@ export default function NewsPage() {
                 onClick={() => setActiveTab("news")}
                 className={`flex-1 md:flex-none px-6 py-2.5 rounded-xl text-sm font-bold flex items-center justify-center gap-2 transition-all duration-300 ${
                   activeTab === "news" 
-                  ? "bg-white text-blue-600 shadow-sm shadow-blue-500/10 ring-1 ring-black/5" 
+                  ? `bg-white ${isAnahuac ? 'text-[#FF5900]' : 'text-blue-600'} shadow-sm ${isAnahuac ? 'shadow-orange-500/10' : 'shadow-blue-500/10'} ring-1 ring-black/5` 
                   : "text-slate-500 hover:text-slate-700"
                 }`}
               >
@@ -99,7 +110,7 @@ export default function NewsPage() {
                 onClick={() => setActiveTab("analysis")}
                 className={`flex-1 md:flex-none px-6 py-2.5 rounded-xl text-sm font-bold flex items-center justify-center gap-2 transition-all duration-300 ${
                   activeTab === "analysis" 
-                  ? "bg-white text-blue-600 shadow-sm shadow-blue-500/10 ring-1 ring-black/5" 
+                  ? `bg-white ${isAnahuac ? 'text-[#FF5900]' : 'text-blue-600'} shadow-sm ${isAnahuac ? 'shadow-orange-500/10' : 'shadow-blue-500/10'} ring-1 ring-black/5` 
                   : "text-slate-500 hover:text-slate-700"
                 }`}
               >
@@ -109,13 +120,13 @@ export default function NewsPage() {
 
             {/* Search Bar */}
             <div className="relative group w-full md:w-[320px]">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-500 transition-colors" size={18} />
+              <Search className={`absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:${isAnahuac ? 'text-[#FF5900]' : 'text-blue-500'} transition-colors`} size={18} />
               <input 
                 type="text" 
                 placeholder="Buscar noticias..." 
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-12 pr-4 py-3.5 bg-white border border-slate-200 rounded-2xl text-sm font-semibold outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all placeholder:text-slate-400 shadow-sm"
+                className={`w-full pl-12 pr-4 py-3.5 bg-white border border-slate-200 rounded-2xl text-sm font-semibold outline-none focus:ring-4 ${isAnahuac ? 'focus:ring-orange-500/10 focus:border-orange-500' : 'focus:ring-blue-500/10 focus:border-blue-500'} transition-all placeholder:text-slate-400 shadow-sm`}
               />
             </div>
           </div>
@@ -129,8 +140,8 @@ export default function NewsPage() {
               onClick={() => setActiveCategory(cat)}
               className={`px-5 py-2.5 rounded-xl text-sm font-bold whitespace-nowrap transition-all duration-300 border ${
                 activeCategory === cat 
-                ? "bg-blue-600 text-white border-blue-600 shadow-lg shadow-blue-600/20 active:scale-95" 
-                : "bg-white text-slate-500 border-slate-200 hover:border-blue-300 hover:text-blue-500 shadow-sm"
+                ? `${isAnahuac ? 'bg-[#FF5900] border-[#FF5900] shadow-orange-600/20' : 'bg-blue-600 border-blue-600 shadow-blue-600/20'} text-white shadow-lg active:scale-95` 
+                : `bg-white text-slate-500 border-slate-200 hover:border-${isAnahuac ? 'orange' : 'blue'}-300 hover:text-${isAnahuac ? '[#FF5900]' : 'blue-500'} shadow-sm`
               }`}
             >
               {cat}
@@ -164,7 +175,7 @@ export default function NewsPage() {
                 
                 <div className="absolute bottom-0 left-0 p-8 md:p-12 w-full max-w-[1000px]">
                   <div className="flex items-center gap-3 mb-6">
-                    <span className="px-4 py-1.5 bg-blue-600 rounded-full text-[10px] font-black text-white uppercase tracking-widest">PRO DESTACADO</span>
+                    <span className={`px-4 py-1.5 ${isAnahuac ? 'bg-[#FF5900]' : 'bg-blue-600'} rounded-full text-[10px] font-black text-white uppercase tracking-widest`}>PRO DESTACADO</span>
                     <span className="text-white/70 text-sm font-semibold">{filteredNews[0].source} • {filteredNews[0].time}</span>
                   </div>
                   <h2 className="text-3xl md:text-5xl font-black text-white mb-6 leading-tight tracking-tight">
@@ -218,12 +229,12 @@ export default function NewsPage() {
 
                     <div className="p-8 flex flex-col flex-1">
                       <div className="flex items-center gap-2 mb-4">
-                        <span className="text-xs font-black text-blue-600 uppercase">{item.source}</span>
+                        <span className={`text-xs font-black ${isAnahuac ? 'text-[#FF5900]' : 'text-blue-600'} uppercase`}>{item.source}</span>
                         <span className="text-slate-200">•</span>
                         <span className="text-xs font-bold text-slate-400 uppercase tracking-tighter">{item.time}</span>
                       </div>
                       
-                      <h3 className="text-xl font-bold text-slate-900 leading-snug mb-4 group-hover:text-blue-600 transition-colors line-clamp-2">
+                      <h3 className={`text-xl font-bold text-slate-900 leading-snug mb-4 group-hover:${isAnahuac ? 'text-[#FF5900]' : 'text-blue-600'} transition-colors line-clamp-2`}>
                         {item.title}
                       </h3>
                       <p className="text-slate-500 text-sm font-medium leading-relaxed mb-8 line-clamp-3">
@@ -235,7 +246,7 @@ export default function NewsPage() {
                           <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">AUTOR</span>
                           <span className="text-sm font-bold text-slate-800">{item.author || "Redacción BIZEN"}</span>
                         </div>
-                        <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-colors">
+                        <div className={`w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400 hover:${isAnahuac ? 'text-[#FF5900] bg-orange-50' : 'text-blue-600 bg-blue-50'} transition-colors`}>
                           <Share2 size={18} />
                         </div>
                       </div>
@@ -261,7 +272,7 @@ export default function NewsPage() {
             <p className="text-slate-500 font-medium mb-8">Intenta ajustar tus filtros o búsqueda.</p>
             <button 
               onClick={() => { setSearchTerm(""); setActiveCategory("Todas"); }}
-              className="px-8 py-3.5 bg-blue-600 text-white font-bold rounded-2xl hover:bg-blue-700 transition"
+              className={`px-8 py-3.5 ${isAnahuac ? 'bg-[#FF5900] hover:bg-orange-700' : 'bg-blue-600 hover:bg-blue-700'} text-white font-bold rounded-2xl transition`}
             >
               Restablecer filtros
             </button>

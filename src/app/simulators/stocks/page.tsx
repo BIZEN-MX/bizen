@@ -134,6 +134,7 @@ export function StockSimulatorContent({ tradeSymbol }: { tradeSymbol?: string })
     }
   }, [tradeSymbol]);
   const [hasEntered, setHasEntered] = useState(false);
+  const [claimedBonusAmount, setClaimedBonusAmount] = useState(1000);
   // --- Professional Trading Features ---
   const [chartType, setChartType] = useState<"area" | "candle">("area");
   const [showSMA, setShowSMA] = useState(false);
@@ -294,6 +295,8 @@ export function StockSimulatorContent({ tradeSymbol }: { tradeSymbol?: string })
         method: "POST",
       });
       if (res.ok) {
+        const data = await res.json();
+        setClaimedBonusAmount(data.bonusAmount || 1000);
         // Capture balance BEFORE refresh to avoid double-counting in animation
         setBonusStartBalance(dbProfile?.bizcoins || 0);
         setShowBonusAnim(true);
@@ -631,19 +634,8 @@ export function StockSimulatorContent({ tradeSymbol }: { tradeSymbol?: string })
         `}</style>
 
         {/* Ticker Tape */}
-        <div className="bg-[#0B1E5E] py-2.5 overflow-hidden border-b border-white/10">
-          {typeof TICKER_STOCKS !== 'undefined' && (
-            <div className="preview-ticker">
-              {[...TICKER_STOCKS, ...TICKER_STOCKS].map((t, i) => (
-                <span key={i} className="inline-flex items-center gap-2.5 text-[13px] font-bold text-white shrink-0">
-                  <StockLogo symbol={t.symbol} size={22} />
-                  <span className="text-white/85 font-semibold">{t.symbol}</span>
-                  <span className={t.change >= 0 ? "text-emerald-400" : "text-red-400"}>{t.change >= 0 ? "▲" : "▼"} {Math.abs(t.change)}%</span>
-                  <span className="text-white/15 mx-2.5">|</span>
-                </span>
-              ))}
-            </div>
-          )}
+        <div className="w-full overflow-hidden">
+          <TickerTape marketData={processedMarketData} />
         </div>
 
         {/* Hero */}
@@ -653,38 +645,40 @@ export function StockSimulatorContent({ tradeSymbol }: { tradeSymbol?: string })
               <ReturnButton href="/cash-flow" label="Volver" />
             </div>
 
-            {isAnahuac && (
-              <div className="mb-6">
-                <Image src="/anahuac-logo.png" alt="Anáhuac Logo" width={80} height={80} className="object-contain" />
-              </div>
-            )}
-
             <div className="inline-flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/30 rounded-full px-3.5 py-1 mb-5 text-[12px] font-bold text-emerald-600 tracking-widest uppercase">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block shadow-[0_0_6px_#10b981]" />
               Simulador Educativo — Sin dinero real
             </div>
-            <h1 className="text-[clamp(32px,5vw,54px)] font-extrabold text-[#0B1E5E] m-0 mb-4 tracking-[-0.03em] leading-[1.1]">
-              {isAnahuac ? "Leones, aprendan a invertir " : "Aprende a invertir "}<br />en <span className="bg-gradient-to-br from-blue-600 to-emerald-500 bg-clip-text text-transparent">mercados reales</span>
+            <h1 className={`flex flex-col items-start justify-start text-[clamp(36px,5.5vw,60px)] font-extrabold ${isAnahuac ? 'text-[#FF5900]' : 'text-[#0B1E5E]'} m-0 mb-4 tracking-[-0.03em] leading-[1.05]`}>
+              {isAnahuac ? (
+                <span className="inline-flex items-center gap-[2px]">
+                  <Image src="/anahuac-logo.png" alt="A" width={60} height={60} className="object-contain h-[0.80em] w-auto -mb-[0.06em]" />
+                  <span>prende a invertir</span>
+                </span>
+              ) : (
+                <span>Aprende a invertir</span>
+              )}
+              <span className={`bg-gradient-to-br ${isAnahuac ? 'from-orange-500 to-amber-500' : 'from-blue-600 to-emerald-500'} bg-clip-text text-transparent`}>
+                en mercados reales
+              </span>
             </h1>
             <p className="text-[17px] text-slate-500 leading-relaxed m-0 mb-8 max-w-[480px]">
-              {isAnahuac 
-                ? "Practica como un verdadero León con Bizcoins en acciones del S&P 500, ETFs y más. Compite en el mercado sin arriesgar dinero real."
-                : <span>Practica con <strong>Bizcoins</strong> en acciones del S&P 500, ETFs y más. Compite contra el mercado sin arriesgar dinero real.</span>}
+              <span>Practica con <strong className={isAnahuac ? 'text-[#FF5900]' : 'text-[#0B1E5E]'}>Bizcoins</strong> en acciones del S&P 500, ETFs y más. Compite contra el mercado sin arriesgar dinero real.</span>
             </p>
             <div className="flex gap-3 flex-wrap">
               {!user ? (
                 <>
-                  <Link href="/login" className="inline-flex items-center gap-2 px-7 py-3.5 bg-gradient-to-br from-[#0B1E5E] to-blue-800 text-white rounded-xl font-bold text-[16px] no-underline shadow-[0_8px_24px_rgba(11,30,94,0.3)] transition-all hover:-translate-y-0.5 hover:shadow-[0_12px_28px_rgba(11,30,94,0.4)] hover:brightness-105">
+                  <Link href="/login" className={`inline-flex items-center gap-2 px-7 py-3.5 bg-gradient-to-br ${isAnahuac ? 'from-[#FF5900] to-[#CC4700]' : 'from-[#0B1E5E] to-blue-800'} text-white rounded-xl font-bold text-[16px] no-underline shadow-lg transition-all hover:-translate-y-0.5 hover:shadow-xl hover:brightness-105`}>
                     <Rocket size={18} /> Comenzar Gratis
                   </Link>
-                  <Link href="/login" className="inline-flex items-center gap-2 px-6 py-3.5 bg-white text-[#0B1E5E] rounded-xl font-semibold text-[15px] no-underline border-[1.5px] border-slate-200 transition-all hover:bg-slate-50 hover:-translate-y-0.5 hover:border-slate-300">
+                  <Link href="/login" className={`inline-flex items-center gap-2 px-6 py-3.5 bg-white ${isAnahuac ? 'text-[#FF5900]' : 'text-[#0B1E5E]'} rounded-xl font-semibold text-[15px] no-underline border-[1.5px] border-slate-200 transition-all hover:bg-slate-50 hover:-translate-y-0.5 hover:border-slate-300`}>
                     Iniciar Sesión
                   </Link>
                 </>
               ) : (
                 <button 
                   onClick={() => setHasEntered(true)} 
-                  className="inline-flex items-center gap-2 px-7 py-3.5 bg-gradient-to-br from-[#0B1E5E] to-blue-800 text-white border-none cursor-pointer rounded-xl font-bold text-[16px] shadow-[0_8px_24px_rgba(11,30,94,0.3)] transition-all hover:-translate-y-0.5 hover:shadow-[0_12px_28px_rgba(11,30,94,0.4)] hover:brightness-105"
+                  className={`inline-flex items-center gap-2 px-7 py-3.5 bg-gradient-to-br ${isAnahuac ? 'from-[#FF5900] to-[#CC4700]' : 'from-[#0B1E5E] to-blue-800'} text-white border-none cursor-pointer rounded-xl font-bold text-[16px] shadow-lg transition-all hover:-translate-y-0.5 hover:shadow-xl hover:brightness-105`}
                 >
                   <Rocket size={18} /> Entrar al Simulador
                 </button>
@@ -693,7 +687,7 @@ export function StockSimulatorContent({ tradeSymbol }: { tradeSymbol?: string })
             <div className="flex gap-7 mt-9 flex-wrap">
               {[{val: user ? `${cash.toLocaleString("es-MX", { maximumFractionDigits: 0 })} bz` : "1,000 bz", label: user ? "Tu saldo libre" : "Bono inicial"}, {val: `${processedMarketData.length || "15+"}`, label: "Activos listados"}, {val: "0%", label: "Riesgo real"}].map((s, i) => (
                 <div key={i}>
-                  <p className="text-[22px] font-extrabold text-[#0B1E5E] m-0 mb-0.5">{s.val}</p>
+                  <p className={`text-[22px] font-extrabold ${isAnahuac ? 'text-[#FF5900]' : 'text-[#0B1E5E]'} m-0 mb-0.5`}>{s.val}</p>
                   <p className="text-[12px] text-slate-400 font-semibold m-0 uppercase tracking-widest">{s.label}</p>
                 </div>
               ))}
@@ -705,13 +699,13 @@ export function StockSimulatorContent({ tradeSymbol }: { tradeSymbol?: string })
             <div className="preview-float relative">
               {!user && (
                 <div className="absolute inset-0 bg-slate-50/60 backdrop-blur-md rounded-[28px] z-10 flex flex-col items-center justify-center gap-3">
-                  <div className="w-14 h-14 rounded-2xl bg-[#0B1E5E] flex items-center justify-center"><Shield size={26} color="white" /></div>
-                  <p className="text-[15px] font-bold text-[#0B1E5E] m-0">Inicia sesión para ver tu portafolio</p>
+                  <div className={`w-14 h-14 rounded-2xl ${isAnahuac ? 'bg-[#FF5900]' : 'bg-[#0B1E5E]'} flex items-center justify-center`}><Shield size={26} color="white" /></div>
+                  <p className={`text-[15px] font-bold ${isAnahuac ? 'text-[#FF5900]' : 'text-[#0B1E5E]'} m-0`}>Inicia sesión para ver tu portafolio</p>
                   <p className="text-[13px] text-slate-500 m-0">Datos reales, dinero simulado</p>
                 </div>
               )}
               <div className={`bg-white rounded-[28px] border-[1.5px] border-slate-200 shadow-[0_24px_60px_rgba(0,0,0,0.08)] overflow-hidden ${!user ? 'blur-[2px]' : ''}`}>
-                <div className="p-5 px-6 bg-gradient-to-br from-[#0B1E5E] to-blue-800 text-white">
+                <div className={`p-5 px-6 bg-gradient-to-br ${isAnahuac ? 'from-[#FF5900] to-[#CC4700]' : 'from-[#0B1E5E] to-blue-800'} text-white`}>
                   <div className="text-[12px] opacity-60 font-semibold tracking-widest uppercase">Portafolio Total</div>
                   <div className="text-[36px] font-black tracking-[-0.02em] m-0 mt-1.5 mb-0.5">
                     bz {(user ? totalValue : 1284).toLocaleString("es-MX", { maximumFractionDigits: 0 })}
@@ -724,7 +718,7 @@ export function StockSimulatorContent({ tradeSymbol }: { tradeSymbol?: string })
                   {(!user || !portfolio?.holdings?.length) ? (
                     [{s:"AAPL",v:"bz 312",c:"+12.4%"},{s:"VOO",v:"bz 510",c:"+5.1%"},{s:"NVDA",v:"bz 462",c:"+41.2%"}].map((h,i) => (
                       <div key={i} className="flex justify-between items-center p-2.5 px-3.5 bg-slate-50 rounded-xl border border-slate-200">
-                        <span className="font-bold text-[#0B1E5E]">{h.s}</span>
+                        <span className={`font-bold ${isAnahuac ? 'text-[#FF5900]' : 'text-[#0B1E5E]'}`}>{h.s}</span>
                         <span className="font-semibold text-slate-800">{h.v}</span>
                         <span className="font-bold text-emerald-500 text-[13px]">{h.c}</span>
                       </div>
@@ -736,7 +730,7 @@ export function StockSimulatorContent({ tradeSymbol }: { tradeSymbol?: string })
                       const pchg = mData ? mData.change : 0
                       return (
                         <div key={i} className="flex justify-between items-center p-2.5 px-3.5 bg-slate-50 rounded-xl border border-slate-200">
-                          <span className="font-bold text-[#0B1E5E]">{h.symbol}</span>
+                          <span className={`font-bold ${isAnahuac ? 'text-[#FF5900]' : 'text-[#0B1E5E]'}`}>{h.symbol}</span>
                           <span className="font-semibold text-slate-800">bz {val.toLocaleString("es-MX", { maximumFractionDigits: 0 })}</span>
                           <span className={`font-bold text-[13px] ${pchg >= 0 ? "text-emerald-500" : "text-red-500"}`}>
                             {pchg > 0 && '+'}{pchg.toFixed(1)}%
@@ -761,14 +755,14 @@ export function StockSimulatorContent({ tradeSymbol }: { tradeSymbol?: string })
         <div className="bg-white border-t border-slate-200 px-[clamp(20px,4vw,60px)] py-8">
           <div className="max-w-[1100px] mx-auto grid grid-cols-2 md:grid-cols-4 gap-6">
             {[
-              { icon: <TrendingUp size={28} className="text-[#0B1E5E]"/>, title: "Datos Reales", desc: "Precios EOD del mercado" },
-              { icon: <Target size={28} className="text-[#0B1E5E]"/>, title: "Sin Riesgo", desc: "Todo con Bizcoins simulados" },
-              { icon: <Flame size={28} className="text-[#0B1E5E]"/>, title: "Rankings", desc: "Compite con otros estudiantes" },
-              { icon: <Zap size={28} className="text-[#0B1E5E]"/>, title: "Órdenes", desc: "Ejecución al precio de cierre" },
+              { icon: <TrendingUp size={28} className={isAnahuac ? 'text-[#FF5900]' : 'text-[#0B1E5E]'}/>, title: "Datos Reales", desc: "Precios EOD del mercado" },
+              { icon: <Target size={28} className={isAnahuac ? 'text-[#FF5900]' : 'text-[#0B1E5E]'}/>, title: "Sin Riesgo", desc: "Todo con Bizcoins simulados" },
+              { icon: <Flame size={28} className={isAnahuac ? 'text-[#FF5900]' : 'text-[#0B1E5E]'}/>, title: "Rankings", desc: "Compite con otros estudiantes" },
+              { icon: <Zap size={28} className={isAnahuac ? 'text-[#FF5900]' : 'text-[#0B1E5E]'}/>, title: "Órdenes", desc: "Ejecución al precio de cierre" },
             ].map((f, i) => (
               <div key={i} className="text-center">
                 <div className="flex justify-center mb-3">{f.icon}</div>
-                <div className="text-[14px] font-bold text-[#0B1E5E] mb-1">{f.title}</div>
+                <div className={`text-[14px] font-bold ${isAnahuac ? 'text-[#FF5900]' : 'text-[#0B1E5E]'} mb-1`}>{f.title}</div>
                 <div className="text-[12px] text-slate-400">{f.desc}</div>
               </div>
             ))}
@@ -914,7 +908,7 @@ export function StockSimulatorContent({ tradeSymbol }: { tradeSymbol?: string })
                               key={type}
                               onClick={() => setChartType(type)}
                               className={`px-3 py-1 rounded-md text-[11px] font-bold cursor-pointer border-none font-sans ${
-                                chartType === type ? "bg-blue-500/30 text-blue-300" : "bg-transparent text-white/35"
+                                chartType === type ? (isAnahuac ? "bg-orange-500/30 text-orange-300" : "bg-blue-500/30 text-blue-300") : "bg-transparent text-white/35"
                               }`}
                             >
                               <span className="flex items-center gap-1.5">
@@ -1228,7 +1222,7 @@ export function StockSimulatorContent({ tradeSymbol }: { tradeSymbol?: string })
                         </div>
                         {/* Risk/Reward Ratio */}
                         {slVal > 0 && tpVal > 0 && currentPrice > 0 && (
-                          <div className="mt-3 px-3.5 py-2.5 bg-blue-500/10 border border-blue-500/20 rounded-[10px]">
+                          <div className={`mt-3 px-3.5 py-2.5 rounded-[10px] ${isAnahuac ? 'bg-orange-500/10 border border-orange-500/20' : 'bg-blue-500/10 border border-blue-500/20'}`}>
                             <div className="flex justify-between items-center">
                               <span className="text-[11px] text-white/50">Ratio Riesgo/Beneficio</span>
                               <span className={`text-[13px] font-extrabold ${(() => {
@@ -1429,7 +1423,7 @@ export function StockSimulatorContent({ tradeSymbol }: { tradeSymbol?: string })
         @keyframes numberGlow { 0%,100%{opacity:1} 50%{opacity:0.6;filter:brightness(1.3)} }
         @keyframes ticker { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
         @keyframes tickerScroll { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
-        .bizen-ticker-track { animation: tickerScroll 90s linear infinite; display:flex; gap:0; will-change:transform; }
+        .bizen-ticker-track { animation: tickerScroll 35s linear infinite; display:flex; gap:0; will-change:transform; }
         .bizen-ticker-track:hover { animation-play-state: paused; }
         .bizen-ticker-bar { overflow:hidden; position:relative; }
         .bizen-ticker-bar::before, .bizen-ticker-bar::after {
@@ -1686,17 +1680,13 @@ export function StockSimulatorContent({ tradeSymbol }: { tradeSymbol?: string })
                   <div className="absolute top-0 left-0 w-full h-[120px] bg-gradient-to-br from-[#0B1E5E] to-blue-900" />
                   <div className="relative z-10 flex flex-col items-center text-center mt-6">
                     <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-lg mb-6 border-[6px] border-[#f8fafc] overflow-hidden">
-                      {isAnahuac ? (
-                        <Image src="/anahuac-logo.png" alt="Anáhuac Logo" width={48} height={48} className="object-contain" />
-                      ) : (
-                        <Gift size={36} className="text-emerald-500" />
-                      )}
+                      <Gift size={36} className="text-emerald-500" />
                     </div>
                     <h2 className="text-[28px] leading-[1.1] font-black text-[#0B1E5E] tracking-tight mb-4">
-                      {isAnahuac ? "¡Bienvenido León," : "¡Bienvenido a"} <br/> BIZEN Market!
+                      ¡Bienvenido a <br/> BIZEN Market!
                     </h2>
                     <p className="text-slate-500 text-[15px] mb-8 leading-relaxed px-2">
-                       Como regalo de bienvenida, {isAnahuac ? "los Leones de BIZEN reciben" : "tienes"} un bono promocional listo para empezar a invertir. Dales un buen uso y domina el mercado.
+                       Como regalo de bienvenida, tienes un bono promocional listo para empezar a invertir. Dales un buen uso y domina el mercado.
                     </p>
                     <button
                       onClick={claimBonus}
@@ -1716,11 +1706,7 @@ export function StockSimulatorContent({ tradeSymbol }: { tradeSymbol?: string })
             <div>
               <ReturnButton href="/cash-flow" label="Volver" />
 
-              {isAnahuac && (
-                <div className="mb-4 mt-2">
-                  <Image src="/anahuac-logo.png" alt="Anáhuac Logo" width={56} height={56} className="object-contain" />
-                </div>
-              )}
+
 
               <div className="flex flex-col">
                 <div className="inline-flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/25 rounded-full px-3.5 py-1 mb-4 self-start text-[12px] font-semibold text-emerald-600 tracking-widest uppercase">
@@ -1728,21 +1714,19 @@ export function StockSimulatorContent({ tradeSymbol }: { tradeSymbol?: string })
                   Simulador Educativo — Sin dinero real
                 </div>
               </div>
-              <h1 className="text-[clamp(32px,5vw,56px)] font-black m-0 mb-3 text-[#0B1E5E] tracking-[-0.04em] leading-[1.08]">
-                {isAnahuac ? "Leones explorando " : "Aprende a invertir "}
-                <span className="bg-gradient-to-br from-emerald-500 to-emerald-600 bg-clip-text text-transparent">
+              <h1 className={`text-[clamp(32px,5vw,56px)] font-black m-0 mb-3 ${isAnahuac ? 'text-[#FF5900]' : 'text-[#0B1E5E]'} tracking-[-0.04em] leading-[1.08]`}>
+                Aprende a invertir{" "}
+                <span className={`bg-gradient-to-br ${isAnahuac ? 'from-orange-500 to-amber-500' : 'from-emerald-500 to-emerald-600'} bg-clip-text text-transparent`}>
                   en mercados reales
                 </span>
               </h1>
               <p className="text-[16px] text-slate-500 m-0 mb-5 leading-relaxed max-w-[520px]">
-                {isAnahuac 
-                  ? "Aplica todo el conocimiento Leones con Bizcoins en acciones del S&P 500, ETFs y más. Compite en bolsa real."
-                  : <span>Practica con <strong className="text-[#0B1E5E] font-bold">Bizcoins</strong> en acciones del S&P 500, ETFs y más. Compite contra el mercado sin arriesgar dinero real.</span>}
+                <span>Practica con <strong className={`font-bold ${isAnahuac ? 'text-[#FF5900]' : 'text-[#0B1E5E]'}`}>Bizcoins</strong> en acciones del S&P 500, ETFs y más. Compite contra el mercado sin arriesgar dinero real.</span>
               </p>
             </div>
             
             <div className="flex items-center gap-2 mb-5">
-              <div className="bg-blue-50 text-blue-600 px-3 py-1.5 rounded-lg text-[12px] font-black uppercase tracking-wider border border-blue-100 flex items-center gap-2 shadow-sm">
+              <div className={`px-3 py-1.5 rounded-lg text-[12px] font-black uppercase tracking-wider border flex items-center gap-2 shadow-sm ${isAnahuac ? 'bg-orange-50 text-orange-600 border-orange-100' : 'bg-blue-50 text-blue-600 border-blue-100'}`}>
                 <Info size={14} />
                 1 BZ = $1 USD
               </div>
@@ -2013,7 +1997,7 @@ export function StockSimulatorContent({ tradeSymbol }: { tradeSymbol?: string })
                 </div>
 
                 <BizenVirtualCard
-                  bizcoins={Number(bonusStartBalance) + 1000}
+                  bizcoins={Number(bonusStartBalance) + claimedBonusAmount}
                   holderName={
                     dbProfile?.fullName ||
                     user?.user_metadata?.full_name ||
@@ -2024,14 +2008,13 @@ export function StockSimulatorContent({ tradeSymbol }: { tradeSymbol?: string })
                   hideButtons={true}
                 />
 
-                {/* Floating Value */}
                 <motion.div
                   initial={{ opacity: 0, y: 100 }}
                   animate={{ opacity: [0, 1, 1, 0], y: [100, -180] }}
                   transition={{ duration: 3, times: [0, 0.2, 0.8, 1] }}
                   className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[72px] font-black text-emerald-400 drop-shadow-[0_10px_40px_rgba(16,185,129,0.6)] pointer-events-none whitespace-nowrap z-20 flex items-center justify-center gap-4"
                 >
-                  +1,000 <span className="text-[52px]">bz</span>
+                  +{claimedBonusAmount.toLocaleString()} <span className="text-[52px]">bz</span>
                 </motion.div>
 
                 <div className="mt-10 flex justify-center">

@@ -120,7 +120,7 @@ export function MultiSelectStep({
               shadowClass = "shadow-none"
             }
           } else if (isSelected) {
-            containerClasses += "bg-blue-50 border-[#0F62FE] text-blue-700 "
+            containerClasses += "bg-primary/5 border-primary text-primary "
             shadowClass = "shadow-[0_2px_0_0_#93C5FD]"
           } else {
             containerClasses += "bg-white border-gray-200 text-gray-700 "
@@ -140,7 +140,7 @@ export function MultiSelectStep({
               className={`${containerClasses} ${shadowClass} ${cursorClass}`}
             >
               <div 
-                className={`w-[20px] h-[20px] rounded-[4px] border-2 flex items-center justify-center text-white text-[12px] shrink-0 ${isSelected ? 'border-[#0F62FE] bg-[#0F62FE]' : 'border-gray-200 bg-transparent'}`}
+                className={`w-[20px] h-[20px] rounded-[4px] border-2 flex items-center justify-center text-white text-[12px] shrink-0 ${isSelected ? 'border-primary bg-primary' : 'border-gray-200 bg-transparent'}`}
               >
                 {isSelected && "✓"}
               </div>

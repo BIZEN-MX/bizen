@@ -8,7 +8,9 @@ export const chatbotMessageSchema = z.object({
   userName: z.string().max(50).optional(),
   xp: z.number().optional(),
   level: z.number().optional(),
-  currentPath: z.string().optional()
+  currentPath: z.string().optional(),
+  adnProfile: z.string().optional(),
+  userContext: z.any().optional()
 })
 
 export type ChatbotMessageData = z.infer<typeof chatbotMessageSchema>

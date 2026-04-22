@@ -34,10 +34,12 @@ export default function MobileFooterNav() {
   const [pendingNavigation, setPendingNavigation] = useState<string | null>(null)
   const [showProfilePanel, setShowProfilePanel] = useState(false)
 
-  const isAdminOrTeacher = dbProfile?.role === "school_admin" || dbProfile?.role === "teacher"
+  const userEmail = (user?.email || user?.emailAddresses?.[0]?.emailAddress || "").toLowerCase();
+  const isSuperAdmin = userEmail === "diego@bizen.mx"
+  const isAdminOrTeacher = dbProfile?.role === "school_admin" || dbProfile?.role === "teacher" || dbProfile?.role === "admin" || isSuperAdmin
   const canHostLive = isAdminOrTeacher || dbProfile?.role === "institutional" || dbProfile?.role === "student"
   const isStudentOrGuest = !isAdminOrTeacher
-  const isInstitutional = dbProfile?.role === 'student' || dbProfile?.role === 'teacher' || dbProfile?.role === 'school_admin' || dbProfile?.role === 'admin'
+  const isInstitutional = dbProfile?.role === 'student' || dbProfile?.role === 'teacher' || dbProfile?.role === 'school_admin' || dbProfile?.role === 'admin' || isSuperAdmin
 
   const isOnLessonPage = pathname?.includes('/learn/')
   const protectedRoutes = ['/forum', '/profile', '/cuenta', '/configuracion', '/tienda', '/impacto-social', '/teacher/dashboard', '/teacher/courses']
@@ -101,32 +103,19 @@ export default function MobileFooterNav() {
       icon: MessageSquare,
       active: isActivePath("/comunidad") || isActivePath("/forum")
     },
-    {
+    ...(!isAdminOrTeacher ? [{
       path: "/profile",
       label: "Perfil",
       icon: User,
       active: isActivePath("/profile") || isActivePath("/configuracion"),
       isProfileButton: true
-    }
+    }] : [])
   ] : [
     {
       path: "/teacher/dashboard",
       label: "Panel escolar",
       icon: BarChart2,
       active: isActivePath("/teacher/dashboard")
-    },
-    {
-      path: "/teacher/courses",
-      label: "Mis cursos",
-      icon: MapIcon,
-      active: isActivePath("/teacher/courses")
-    },
-    {
-      path: "/profile",
-      label: "Perfil",
-      icon: User,
-      active: isActivePath("/profile") || isActivePath("/configuracion"),
-      isProfileButton: true
     }
   ]
 
@@ -480,34 +469,35 @@ export default function MobileFooterNav() {
                 <span>Noticias BIZEN</span>
               </button>
 
-              {/* Perfil */}
-              <button
-                onClick={() => {
-                  setShowProfilePanel(false)
-                  navigateTo("/profile")
-                }}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "14px",
-                  padding: "14px 18px",
-                  background: pathname === "/profile" ? "rgba(15, 98, 254, 0.08)" : "transparent",
-                  border: "none",
-                  borderRadius: "16px",
-                  cursor: "pointer",
-                  fontSize: 16,
-                  fontWeight: 600,
-                  color: pathname === "/profile" ? "#0F62FE" : "#1e293b",
-                  width: "100%",
-                  textAlign: "left",
-                  transition: "all 0.2s ease"
-                }}
-              >
-                <div style={{ width: 36, height: 36, borderRadius: "10px", background: "rgba(15, 98, 254, 0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  <User size={20} color="#0F62FE" strokeWidth={2.5} />
-                </div>
-                <span>Perfil</span>
-              </button>
+              {!isAdminOrTeacher && (
+                <button
+                  onClick={() => {
+                    setShowProfilePanel(false)
+                    navigateTo("/profile")
+                  }}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "14px",
+                    padding: "14px 18px",
+                    background: pathname === "/profile" ? "rgba(15, 98, 254, 0.08)" : "transparent",
+                    border: "none",
+                    borderRadius: "16px",
+                    cursor: "pointer",
+                    fontSize: 16,
+                    fontWeight: 600,
+                    color: pathname === "/profile" ? "#0F62FE" : "#1e293b",
+                    width: "100%",
+                    textAlign: "left",
+                    transition: "all 0.2s ease"
+                  }}
+                >
+                  <div style={{ width: 36, height: 36, borderRadius: "10px", background: "rgba(15, 98, 254, 0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <User size={20} color="#0F62FE" strokeWidth={2.5} />
+                  </div>
+                  <span>Perfil</span>
+                </button>
+              )}
 
               {/* Tienda */}
               {isStudentOrGuest && (

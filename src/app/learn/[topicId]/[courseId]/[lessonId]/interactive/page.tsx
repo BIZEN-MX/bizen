@@ -45,27 +45,30 @@ function InteractiveLessonContent() {
       try {
         setLoadingLesson(true)
         const res = await fetch(`/api/lessons/${lessonIdStr}`)
+        
+        // If not found in DB, we don't throw, we just let the registry fallback handle it
         if (!res.ok) {
-          const errorData = await res.json().catch(() => ({}))
-          throw new Error(errorData.error || `API error: ${res.status}`)
+          console.warn(`Lesson ${lessonIdStr} not found in DB, attempting registry fallback...`)
+          setLoadingLesson(false)
+          return
         }
+        
         const data = await res.json()
 
         // Map DB/Static steps to Engine format
         const formattedSteps = (data.steps || []).map((step: any) => {
-          const mainType = step.stepType || step.type; // Fallback to DB 'type' if stepType missing
+          const mainType = step.stepType || step.type; 
           const extraData = typeof step.data === 'string' ? JSON.parse(step.data) : (step.data || {});
           
           return {
             ...step,
             ...extraData,
-            stepType: mainType, // Standardize as stepType for the Engine
+            stepType: mainType,
             mood: extraData.mood || step.mood || (mainType === "billy_talks" ? "thinking" : undefined),
           }
         })
 
         setDbLesson({ ...data, steps: formattedSteps })
-        setProgress(prev => ({ ...prev, totalSteps: formattedSteps.length || 1 }))
       } catch (err: any) {
         console.error("Error fetching lesson:", err)
       } finally {
@@ -79,10 +82,10 @@ function InteractiveLessonContent() {
   // Get steps from registry as fallback if DB fails or is still loading
   const registrySteps = useMemo(() => getStepsForLesson(lessonIdStr), [lessonIdStr])
 
-  // Final lesson steps with fallback (Curriculum Design > Database)
+  // Final lesson steps with fallback (Database > Registry static files)
   const lessonSteps = useMemo(() => {
-    if (registrySteps && registrySteps.length > 0) return registrySteps
-    return dbLesson?.steps || []
+    if (dbLesson?.steps && dbLesson.steps.length > 0) return dbLesson.steps
+    return registrySteps || []
   }, [dbLesson, registrySteps])
 
   // ── Access & Locking Check ────────────────────────────────────────────────
@@ -139,7 +142,13 @@ function InteractiveLessonContent() {
   const isPremiumLesson = (currentLessonIdx + 1) > 3
   const isPaywalled = isPremiumLesson && !hasPremiumAccess
 
-  const isLocked = !loading && !loadingLesson && (isTopicLocked || isPaywalled || isSequenceLocked)
+  const isAdmin = useMemo(() => {
+    return dbProfile?.role === 'admin' || 
+           dbProfile?.role === 'teacher' || 
+           user?.emailAddresses?.some(e => e.emailAddress.endsWith('@bizen.mx'))
+  }, [dbProfile, user])
+
+  const isLocked = !loading && !loadingLesson && !isAdmin && (isTopicLocked || isPaywalled || isSequenceLocked)
 
   useEffect(() => {
     if (isLocked) {
@@ -245,7 +254,8 @@ function InteractiveLessonContent() {
     if (isTopicFinished && !showTopicSplash) {
       console.log("[InteractivePage] Topic Finished! Showing Splash Overlay.");
       // Calculate average accuracy
-      const assessmentSteps = lessonSteps.filter(s => ["mcq", "true_false", "multi_select", "order", "match", "fill_blanks"].includes(s.stepType))
+      const assessmentTypes = ["mcq", "true_false", "multi_select", "order", "match", "fill_blanks", "image_choice", "blitz_challenge", "mindset_translator", "influence_detective", "swipe_sorter", "impulse_meter", "narrative_check"]
+      const assessmentSteps = lessonSteps.filter(s => assessmentTypes.includes(s.stepType || (s as any).type))
       let lessonAccuracy = 100
       if (assessmentSteps.length > 0 && lastLessonAnswers.current) {
          const correctCount = Object.values(lastLessonAnswers.current).filter((a: any) => a.isCorrect).length
@@ -261,8 +271,8 @@ function InteractiveLessonContent() {
     }
 
     // Normal Exit Logic
-    const redirectUrl = topicIdStr === "tema-05" 
-      ? "/adn-evolution" 
+    const redirectUrl = topicIdStr === "tema-04" 
+      ? "/dashboard?showEvolution=true" 
       : `/courses/${topicIdStr || 'tema-01'}`;
     
     console.log("[InteractivePage] Redirecting to:", redirectUrl);
@@ -304,8 +314,8 @@ function InteractiveLessonContent() {
             lessonsCompleted={splashData.lessons}
             onClose={() => {
               setShowTopicSplash(false)
-              if (topicIdStr === "tema-05") {
-                router.push("/adn-evolution")
+              if (topicIdStr === "tema-04") {
+                router.push("/dashboard?showEvolution=true")
               } else {
                 router.push(`/courses/${topicIdStr || 'tema-01'}`)
               }

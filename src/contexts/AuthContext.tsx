@@ -133,6 +133,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, [clerkUser, userLoaded])
 
+  useEffect(() => {
+    if (user?.email) {
+      const email = user.email.toLowerCase()
+      if (email.endsWith('@anahuac.mx') || email.includes('.anahuac.mx') || email.endsWith('@bizen.mx')) {
+        document.documentElement.classList.add('theme-anahuac')
+      } else {
+        document.documentElement.classList.remove('theme-anahuac')
+      }
+    } else {
+      document.documentElement.classList.remove('theme-anahuac')
+    }
+  }, [user])
+
   const refreshUser = async () => {
     if (clerkUser) {
       await fetchDbProfile()

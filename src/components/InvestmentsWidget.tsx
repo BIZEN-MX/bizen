@@ -47,7 +47,7 @@ export default function InvestmentsWidget() {
             </div>
         </div>
         
-        <div className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center text-[#0F62FE] shadow-xl group-hover:shadow-white/20 group-hover:scale-110 transition-all duration-300">
+        <div className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center text-primary shadow-xl shadow-primary/10 group-hover:shadow-white/20 group-hover:scale-110 transition-all duration-300">
           <ArrowRight size={24} strokeWidth={2.5} />
         </div>
       </div>

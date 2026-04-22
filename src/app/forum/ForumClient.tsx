@@ -2,6 +2,7 @@
 
 import { useEffect, useState, Suspense, useRef, useCallback } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
+import Image from "next/image"
 import { useAuth } from "@/contexts/AuthContext"
 import Link from "next/link"
 import { AvatarDisplay } from "@/components/AvatarDisplay"
@@ -101,6 +102,7 @@ function EvidenceCard({
   onTransferClick: (userId: string, name: string) => void
   onDeletePost: (postId: string) => void
   onDeleteComment: (postId: string, commentId: string) => void
+  isAnahuac?: boolean
 }) {
   const [expanded, setExpanded] = useState(false)
   const [showComments, setShowComments] = useState(false)
@@ -174,7 +176,7 @@ function EvidenceCard({
           {!post.isMe && (
             <button 
               onClick={() => onTransferClick(post.authorUserId, post.authorDisplay)}
-              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-blue-500/10 text-blue-600 border border-blue-500/20 text-[11px] font-bold cursor-pointer transition-all hover:bg-blue-500/20"
+              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[11px] font-bold cursor-pointer transition-all hover:bg-opacity-20 ${isAnahuac ? "bg-primary/10 text-primary border border-primary/20" : "bg-blue-500/10 text-blue-600 border border-blue-500/20"}`}
             >
               <Gift size={13} /> Regalar
             </button>
@@ -315,6 +317,8 @@ function EvidenceCard({
 // ── Main Forum Content ─────────────────────────────────────────────────────────
 export default function ForumContent() {
   const { user, loading, dbProfile } = useAuth()
+  const userEmail = (user?.email || (user as any)?.emailAddresses?.[0]?.emailAddress || "").toLowerCase()
+  const isAnahuac = userEmail.endsWith('@anahuac.mx') || userEmail.includes('.anahuac.mx') || userEmail.endsWith('@bizen.mx')
   const streak = dbProfile?.currentStreak || 0
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -519,11 +523,18 @@ export default function ForumContent() {
       <main className="flex-1 w-full max-w-[1600px] mx-auto px-4 md:px-8 lg:px-12 xl:px-24 py-8 md:py-12 pb-32">
 
         {/* ── Page Header ── */}
-        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-12">
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-12 relative">
           <div className="max-w-2xl">
-            <h1 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tighter mb-4 leading-tight">
-              Foro de la Comunidad
-            </h1>
+            <div className="flex items-center gap-5 mb-4">
+              {isAnahuac && (
+                <div className="shrink-0 bg-white p-2 rounded-2xl shadow-lg border border-orange-100 animate-in fade-in zoom-in duration-700">
+                  <Image src="/anahuac-logo.png" alt="Anáhuac Logo" width={70} height={70} className="object-contain" />
+                </div>
+              )}
+              <h1 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tighter leading-tight">
+                Foro de la Comunidad
+              </h1>
+            </div>
             <p className="text-base md:text-lg text-slate-500 font-medium leading-relaxed">
               Comparte tus aprendizajes, resuelve dudas y colabora con otros usuarios en su camino financiero.
             </p>
@@ -537,19 +548,19 @@ export default function ForumContent() {
         <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 lg:gap-8 items-start sm:items-center mb-12 overflow-x-auto pb-4 hide-scrollbar">
           <div className="flex gap-3 bg-white p-2 rounded-2xl shadow-sm border border-slate-100 flex-nowrap shrink-0">
             <button 
-              className={`flex items-center gap-2 px-5 py-3 rounded-xl font-bold text-sm whitespace-nowrap transition-all duration-300 ${activeTab === "mision-del-dia" ? "bg-gradient-to-b from-blue-500 to-blue-600 text-white shadow-md shadow-blue-500/20" : "bg-transparent text-slate-500 hover:bg-slate-50 hover:text-slate-800"}`} 
+              className={`flex items-center gap-2 px-5 py-3 rounded-xl font-bold text-sm whitespace-nowrap transition-all duration-300 ${activeTab === "mision-del-dia" ? (isAnahuac ? "bg-primary text-white shadow-md shadow-primary/20 scale-[1.02]" : "bg-gradient-to-b from-blue-500 to-blue-600 text-white shadow-md shadow-blue-500/20 scale-[1.02]") : "bg-transparent text-slate-500 hover:bg-slate-50 hover:text-slate-800"}`} 
               onClick={() => setActiveTab("mision-del-dia")}
             >
               <Target size={18} /> Misión del día
             </button>
             <button 
-              className={`flex items-center gap-2 px-5 py-3 rounded-xl font-bold text-sm whitespace-nowrap transition-all duration-300 ${activeTab === "preguntas" ? "bg-gradient-to-b from-blue-500 to-blue-600 text-white shadow-md shadow-blue-500/20" : "bg-transparent text-slate-500 hover:bg-slate-50 hover:text-slate-800"}`} 
+              className={`flex items-center gap-2 px-5 py-3 rounded-xl font-bold text-sm whitespace-nowrap transition-all duration-300 ${activeTab === "preguntas" ? (isAnahuac ? "bg-primary text-white shadow-md shadow-primary/20 scale-[1.02]" : "bg-gradient-to-b from-blue-500 to-blue-600 text-white shadow-md shadow-blue-500/20 scale-[1.02]") : "bg-transparent text-slate-500 hover:bg-slate-50 hover:text-slate-800"}`} 
               onClick={() => setActiveTab("preguntas")}
             >
               <MessageCircle size={18} /> Preguntas rápidas
             </button>
             <button 
-              className={`flex items-center gap-2 px-5 py-3 rounded-xl font-bold text-sm whitespace-nowrap transition-all duration-300 ${activeTab === "proyectos" ? "bg-gradient-to-b from-blue-500 to-blue-600 text-white shadow-md shadow-blue-500/20" : "bg-transparent text-slate-500 hover:bg-slate-50 hover:text-slate-800"}`} 
+              className={`flex items-center gap-2 px-5 py-3 rounded-xl font-bold text-sm whitespace-nowrap transition-all duration-300 ${activeTab === "proyectos" ? (isAnahuac ? "bg-primary text-white shadow-md shadow-primary/20 scale-[1.02]" : "bg-gradient-to-b from-blue-500 to-blue-600 text-white shadow-md shadow-blue-500/20 scale-[1.02]") : "bg-transparent text-slate-500 hover:bg-slate-50 hover:text-slate-800"}`} 
               onClick={() => setActiveTab("proyectos")}
             >
               <Briefcase size={18} /> Proyectos
@@ -563,8 +574,8 @@ export default function ForumContent() {
               <BookOpen size={18} /> Guardados
             </Link>
             {!isAdminOrTeacher && (
-              <Link href="/forum/new" className="flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-black text-sm uppercase tracking-widest transition-all shadow-xl shadow-blue-600/20 hover:-translate-y-0.5">
-                <span>+</span> Crear Tema
+              <Link href="/forum/new" className={`flex items-center gap-2 px-6 py-3 !text-white rounded-xl font-black text-sm uppercase tracking-widest transition-all shadow-xl hover:-translate-y-0.5 ${isAnahuac ? "bg-primary hover:bg-orange-600 shadow-primary/20" : "bg-blue-600 hover:bg-blue-700 shadow-blue-600/20"}`}>
+                <span className="!text-white">+</span> <span className="!text-white">Crear Tema</span>
               </Link>
             )}
           </div>
@@ -577,7 +588,7 @@ export default function ForumContent() {
               <div>
                 {/* Today's challenge banner */}
                 {todayChallenge && (
-                  <div className="relative overflow-hidden mb-8 p-6 md:p-10 rounded-[32px] flex items-center justify-between flex-wrap gap-6 bg-gradient-to-br from-slate-900 to-blue-900 border border-white/10 shadow-[0_24px_48px_-12px_rgba(15,98,254,0.4)]">
+                  <div className={`relative overflow-hidden mb-8 p-6 md:p-10 rounded-[32px] flex items-center justify-between flex-wrap gap-6 border border-white/10 shadow-xl ${isAnahuac ? 'bg-[#FF5900]' : 'bg-gradient-to-br from-slate-900 to-blue-900 shadow-blue-600/30'}`}>
                     {/* Decorative elements */}
                     <div className="absolute -top-[20%] -right-[10%] w-[300px] h-[300px] bg-[radial-gradient(circle,rgba(96,165,250,0.15)0%,transparent_70%)] rounded-full" />
                     <div className="absolute -bottom-[10%] left-[5%] w-[200px] h-[200px] bg-[radial-gradient(circle,rgba(139,92,246,0.1)0%,transparent_70%)] rounded-full" />
@@ -602,7 +613,7 @@ export default function ForumContent() {
                 {isTeacher && (
                   <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-4 mb-8">
                     {[
-                      { label: "Evidencias hoy", value: evidencePosts.length, color: "#0F62FE", bg: "rgba(15,98,254,0.05)", icon: <NoteIcon size={24} color="#0F62FE" /> },
+                      { label: "Evidencias hoy", value: evidencePosts.length, color: isAnahuac ? "#FF5900" : "#0F62FE", bg: isAnahuac ? "rgba(255,89,0,0.05)" : "rgba(15,98,254,0.05)", icon: <NoteIcon size={24} color={isAnahuac ? "#FF5900" : "#0F62FE"} /> },
                       { label: "Validadas", value: validatedToday, color: "#10b981", bg: "rgba(16,185,129,0.05)", icon: <CheckCircle size={24} color="#10b981" /> },
                       { label: "Pendientes", value: pendingToday, color: "#F59E0B", bg: "rgba(245,158,11,0.05)", icon: <AlertCircle size={24} color="#F59E0B" /> },
                     ].map(({ label, value, color, bg, icon }) => (
@@ -684,6 +695,7 @@ export default function ForumContent() {
                       onTransferClick={(uid) => router.push(`/transfer?target=${uid}`)}
                       onDeletePost={handleDeleteEvidencePost}
                       onDeleteComment={handleDeleteEvidenceComment}
+                      isAnahuac={isAnahuac}
                     />
                   ))
                 )}
@@ -697,8 +709,8 @@ export default function ForumContent() {
               <div className="w-full">
                 {/* Topic selector row */}
                 <div className="flex flex-wrap items-center gap-3 mb-8">
-                  <button
-                    className={`px-5 py-2.5 rounded-full font-bold text-sm transition-all ${selectedTopic === "all" ? "bg-gradient-to-r from-blue-700 to-blue-500 text-white shadow-md" : "bg-slate-100 text-slate-500 hover:bg-slate-200"}`}
+                   <button
+                    className={`px-5 py-2.5 rounded-full font-bold text-sm transition-all ${selectedTopic === "all" ? (isAnahuac ? "bg-primary text-white shadow-md shadow-primary/20" : "bg-gradient-to-r from-blue-700 to-blue-500 text-white shadow-md") : "bg-slate-100 text-slate-500 hover:bg-slate-200"}`}
                     onClick={() => setSelectedTopic("all")}
                   >
                     #Todos
@@ -707,7 +719,7 @@ export default function ForumContent() {
                   {(topics.length > 0 ? topics.map(t => t.slug) : ["ahorro", "presupuesto", "deuda", "inversion", "emprendimiento"]).map(tag => (
                     <button 
                       key={tag} 
-                      className={`px-5 py-2.5 rounded-full font-bold text-sm transition-all ${selectedTopic === tag ? "bg-gradient-to-r from-blue-700 to-blue-500 text-white shadow-md" : "bg-slate-100 text-slate-500 hover:bg-slate-200"}`}
+                      className={`px-5 py-2.5 rounded-full font-bold text-sm transition-all ${selectedTopic === tag ? (isAnahuac ? "bg-primary text-white shadow-md shadow-primary/20" : "bg-gradient-to-r from-blue-700 to-blue-500 text-white shadow-md") : "bg-slate-100 text-slate-500 hover:bg-slate-200"}`}
                       onClick={() => setSelectedTopic(tag)}>
                       #{tag}
                     </button>
@@ -756,7 +768,7 @@ export default function ForumContent() {
                             </div>
                             <div className="flex-1 min-w-0 p-5 sm:p-6 lg:p-8">
                               <div className="flex items-start gap-3 mb-4">
-                                <h3 className="flex-1 text-lg sm:text-xl font-black text-slate-800 leading-snug group-hover:text-blue-600 transition-colors line-clamp-2">
+                                <h3 className={`flex-1 text-lg sm:text-xl font-black text-slate-800 leading-snug transition-colors line-clamp-2 ${isAnahuac ? 'group-hover:text-primary' : 'group-hover:text-blue-600'}`}>
                                   {thread.title}
                                 </h3>
                                 {thread.status !== 'open' && (

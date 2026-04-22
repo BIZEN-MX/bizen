@@ -8,7 +8,7 @@ import { ArrowLeft, ChevronDown } from "lucide-react"
 import { IconBolt, IconGamepad } from "@/components/live/LiveIcons"
 import { AVATARS, AvatarSvg } from "@/components/live/LiveAvatars"
 import { QUIZ_CATALOG } from "@/data/live-quizzes"
-import { IconMoney, IconChart, IconCard, IconBriefcase, IconClock, IconQuestion, IconStar, IconBitcoin, IconFileText, IconBrain, IconUmbrella } from "@/components/live/LiveIcons"
+import { IconMoney, IconChart, IconCard, IconBriefcase, IconClock, IconQuestion, IconStar, IconBitcoin, IconFileText, IconBrain, IconUmbrella, IconPlus } from "@/components/live/LiveIcons"
 
 function QuizIcon({ icon, size = 32 }: { icon: string; size?: number }) {
   const props = { size, color: "white" }
@@ -217,6 +217,23 @@ export default function JoinPage() {
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           background-clip: text;
+        }
+
+        .glass-card-premium {
+          position: relative;
+        }
+        .glass-card-premium::before {
+          content: "";
+          position: absolute;
+          inset: 0;
+          background: radial-gradient(800px circle at var(--mouse-x, 0) var(--mouse-y, 0), rgba(255, 255, 255, 0.05), transparent 40%);
+          opacity: 0;
+          transition: opacity 0.4s ease;
+          pointer-events: none;
+          z-index: 2;
+        }
+        .glass-card-premium:hover::before {
+          opacity: 1;
         }
       `}</style>
 
@@ -542,14 +559,14 @@ export default function JoinPage() {
                 </motion.button>
 
                 <button
-                  onClick={() => { setStep("pin"); setError("") }}
+                  onClick={() => setStep("pin")}
                   style={{
-                    width: "100%", padding: "10px", background: "transparent", border: "none",
-                    color: "rgba(255,255,255,0.3)", fontSize: 13, cursor: "pointer",
-                    transition: "color 0.2s",
+                    width: "100%", background: "none", border: "none",
+                    color: "rgba(255,255,255,0.5)", fontSize: 14, fontWeight: 600,
+                    cursor: "pointer", transition: "color 0.2s"
                   }}
-                  onMouseEnter={e => { e.currentTarget.style.color = "rgba(255,255,255,0.6)" }}
-                  onMouseLeave={e => { e.currentTarget.style.color = "rgba(255,255,255,0.3)" }}
+                  onMouseEnter={e => e.currentTarget.style.color = "white"}
+                  onMouseLeave={e => e.currentTarget.style.color = "rgba(255,255,255,0.5)"}
                 >
                   ← Cambiar PIN
                 </button>
@@ -560,88 +577,262 @@ export default function JoinPage() {
         
         {/* ── SOLO PLAY SECTION ── */}
         <motion.div
+          onMouseMove={(e) => {
+            const cards = document.getElementsByClassName("glass-card-premium");
+            for (const card of cards as any) {
+              const rect = card.getBoundingClientRect();
+              const x = e.clientX - rect.left;
+              const y = e.clientY - rect.top;
+              card.style.setProperty("--mouse-x", `${x}px`);
+              card.style.setProperty("--mouse-y", `${y}px`);
+            }
+          }}
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4, duration: 0.6 }}
-          style={{ width: "100%", maxWidth: 900, marginTop: 40, paddingBottom: 60 }}
+          style={{ width: "100%", maxWidth: 1100, marginTop: 60, paddingBottom: 100 }}
         >
-          <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 24, padding: "0 10px" }}>
-            <div style={{ width: 40, height: 40, borderRadius: 12, background: "rgba(15,98,254,0.15)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <IconStar size={20} color="#0F62FE" />
-            </div>
-            <div>
-              <h2 style={{ margin: 0, color: "white", fontSize: 22, fontWeight: 700 }}>Retos en Solitario</h2>
-              <p style={{ margin: 0, color: "rgba(255,255,255,0.4)", fontSize: 13 }}>Pon a prueba tus conocimientos y gana XP</p>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 40, padding: "0 10px" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+              <div style={{ 
+                width: 56, height: 56, borderRadius: 20, 
+                background: "linear-gradient(135deg, rgba(15,98,254,0.25), rgba(15,98,254,0.1))", 
+                border: "1px solid rgba(15,98,254,0.3)",
+                display: "flex", alignItems: "center", justifyContent: "center",
+                boxShadow: "0 12px 24px rgba(15,98,254,0.15)",
+                position: "relative",
+                overflow: "hidden"
+              }}>
+                <div style={{ position: "absolute", inset: 0, background: "linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent)", animation: "shimmer 2s infinite" }} />
+                <IconGamepad size={28} color="#0F62FE" />
+              </div>
+              <div>
+                <h2 style={{ margin: 0, color: "white", fontSize: 28, fontWeight: 900, letterSpacing: "-0.03em" }}>Retos en Solitario</h2>
+                <p style={{ margin: 0, color: "rgba(255,255,255,0.45)", fontSize: 16, fontWeight: 500 }}>Domina tus finanzas compitiendo contra ti mismo</p>
+              </div>
             </div>
           </div>
 
           <div style={{ 
             display: "grid", 
-            gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", 
-            gap: 20 
+            gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", 
+            gap: 28 
           }}>
+            {/* ── CREATE CUSTOM CARD ── */}
+            <motion.div
+              className="glass-card-premium"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.45 }}
+              whileHover={{ y: -8, scale: 1.02 }}
+              onClick={() => router.push("/live/host")}
+              style={{
+                background: "rgba(15,98,254,0.04)",
+                backdropFilter: "blur(24px)",
+                WebkitBackdropFilter: "blur(24px)",
+                border: "2px dashed rgba(15,98,254,0.25)",
+                borderRadius: 36,
+                padding: "36px",
+                cursor: "pointer",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                textAlign: "center",
+                minHeight: "280px",
+                position: "relative",
+                overflow: "hidden",
+                transition: "all 0.5s cubic-bezier(0.22, 1, 0.36, 1)"
+              }}
+            >
+              <div 
+                style={{ 
+                  position: "absolute", inset: 0, pointerEvents: "none",
+                  background: "radial-gradient(600px circle at var(--mouse-x, 0) var(--mouse-y, 0), rgba(15,98,254,0.1), transparent 40%)",
+                  transition: "opacity 0.2s"
+                }} 
+              />
+              <div style={{ 
+                width: 72, height: 72, borderRadius: 24, 
+                background: "rgba(15,98,254,0.12)", 
+                display: "flex", alignItems: "center", justifyContent: "center", 
+                marginBottom: 24,
+                border: "1px solid rgba(15,98,254,0.3)",
+                boxShadow: "0 0 30px rgba(15,98,254,0.1)"
+              }}>
+                <IconPlus size={36} color="#0F62FE" />
+              </div>
+              <h3 style={{ margin: "0 0 12px 0", color: "white", fontSize: 22, fontWeight: 800 }}>Crear mi propio Quiz</h3>
+              <p style={{ margin: 0, color: "rgba(255,255,255,0.45)", fontSize: 14, lineHeight: 1.6, maxWidth: "220px" }}>
+                Diseña tus propias preguntas y personaliza tu experiencia Live.
+              </p>
+            </motion.div>
+
             {QUIZ_CATALOG.map((quiz, i) => (
               <motion.div
                 key={quiz.id}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.5 + (i * 0.05) }}
-                whileHover={{ y: -4, scale: 1.02 }}
+                className="glass-card-premium"
+                initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                transition={{ delay: 0.5 + (i * 0.08), duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                whileHover={{ y: -10 }}
                 onClick={() => {
-                  if (!nickname.trim()) { setError("Primero escribe tu nombre arriba"); setStep("profile"); return }
+                  if (!nickname.trim()) { 
+                    setError("Primero escribe tu nombre arriba"); 
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    return 
+                  }
                   sessionStorage.setItem("live_nickname", nickname)
                   sessionStorage.setItem("live_emoji", selectedEmoji)
                   router.push(`/live/play?session=solo&quizId=${quiz.id}`)
                 }}
                 style={{
-                  background: "rgba(255,255,255,0.04)",
-                  backdropFilter: "blur(20px)",
-                  WebkitBackdropFilter: "blur(20px)",
-                  border: "1px solid rgba(255,255,255,0.08)",
-                  borderRadius: 24,
-                  padding: "24px",
+                  background: "rgba(255,255,255,0.03)",
+                  backdropFilter: "blur(28px)",
+                  WebkitBackdropFilter: "blur(28px)",
+                  border: "1px solid rgba(255,255,255,0.1)",
+                  borderRadius: 36,
+                  padding: "0",
                   cursor: "pointer",
                   position: "relative",
                   overflow: "hidden",
-                  transition: "all 0.3s ease"
+                  display: "flex",
+                  flexDirection: "column",
+                  transition: "all 0.5s cubic-bezier(0.22, 1, 0.36, 1)",
+                  boxShadow: "0 30px 60px rgba(0,0,0,0.3)"
                 }}
               >
-                {/* Decorative glow */}
-                <div style={{ position: "absolute", top: "-20%", right: "-10%", width: "100px", height: "100px", background: quiz.glow || "rgba(15,98,254,0.15)", borderRadius: "50%", filter: "blur(30px)", opacity: 0.4 }} />
+                <div 
+                  style={{ 
+                    position: "absolute", inset: 0, pointerEvents: "none",
+                    background: `radial-gradient(600px circle at var(--mouse-x, 0) var(--mouse-y, 0), ${quiz.glow || "rgba(255,255,255,0.05)"}, transparent 40%)`,
+                    transition: "opacity 0.2s"
+                  }} 
+                />
                 
-                <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 16 }}>
-                  <div style={{ 
-                    width: 48, height: 48, borderRadius: 14, 
-                    background: quiz.gradient || "linear-gradient(135deg, #0056E7, #1983FD)",
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    boxShadow: `0 8px 16px ${quiz.glow || "rgba(0,0,0,0.3)"}`
-                  }}>
-                    <QuizIcon icon={quiz.icon} size={24} />
-                  </div>
-                  <div style={{ flex: 1 }}>
-                    <h3 style={{ margin: 0, color: "white", fontSize: 16, fontWeight: 700 }}>{quiz.title}</h3>
-                    <span style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.05em" }}>{quiz.category}</span>
-                  </div>
-                </div>
-                
-                <p style={{ margin: "0 0 20px 0", color: "rgba(255,255,255,0.5)", fontSize: 13, lineHeight: 1.5, height: "40px", overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical" }}>
-                  {quiz.description}
-                </p>
+                {/* Visual Header */}
+                <div style={{ 
+                  height: "120px", 
+                  background: quiz.gradient || "linear-gradient(135deg, #0056E7, #1983FD)",
+                  position: "relative",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  overflow: "hidden"
+                }}>
+                  {/* Abstract background shapes */}
+                  <div style={{ position: "absolute", top: "-50%", left: "-20%", width: "120%", height: "120%", background: "radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 60%)", opacity: 0.5 }} />
+                  <div style={{ position: "absolute", bottom: "-30%", right: "-10%", width: "80%", height: "80%", background: "radial-gradient(circle, rgba(0,0,0,0.2) 0%, transparent 60%)", opacity: 0.3 }} />
+                  
+                  <motion.div 
+                    whileHover={{ scale: 1.1, rotate: 5 }}
+                    style={{ position: "relative", zIndex: 1 }}
+                  >
+                    <QuizIcon icon={quiz.icon} size={48} />
+                  </motion.div>
 
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <div style={{ display: "flex", gap: 3 }}>
+                  {/* Difficulty overlay */}
+                  <div style={{ 
+                    position: "absolute", bottom: 12, right: 16, 
+                    display: "flex", gap: 4, background: "rgba(0,0,0,0.2)", 
+                    padding: "6px 10px", borderRadius: 12, backdropFilter: "blur(8px)" 
+                  }}>
                     {[1, 2, 3].map(dot => (
-                      <div key={dot} style={{ width: 6, height: 6, borderRadius: "50%", background: dot <= quiz.difficulty ? "#fbbf24" : "rgba(255,255,255,0.1)" }} />
+                      <div key={dot} style={{ width: 6, height: 6, borderRadius: "50%", background: dot <= quiz.difficulty ? "#fbbf24" : "rgba(255,255,255,0.2)" }} />
                     ))}
                   </div>
-                  <div style={{ display: "flex", alignItems: "center", gap: 4, color: "#fbbf24", fontSize: 12, fontWeight: 700 }}>
-                    <IconBolt size={12} /> Jugar
+
+                  {/* Category Chip */}
+                  <div style={{ 
+                    position: "absolute", top: 12, left: 16, 
+                    background: "rgba(255,255,255,0.15)", border: "1px solid rgba(255,255,255,0.2)",
+                    padding: "4px 10px", borderRadius: 8, backdropFilter: "blur(8px)"
+                  }}>
+                    <span style={{ fontSize: 10, fontWeight: 800, color: "white", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                      {quiz.category}
+                    </span>
                   </div>
                 </div>
+
+                {/* Content Area */}
+                <div style={{ padding: "24px", display: "flex", flexDirection: "column", flex: 1 }}>
+                  <h3 style={{ margin: "0 0 10px 0", color: "white", fontSize: 19, fontWeight: 800, lineHeight: 1.2 }}>{quiz.title}</h3>
+                  <p style={{ margin: "0 0 24px 0", color: "rgba(255,255,255,0.45)", fontSize: 14, lineHeight: 1.6, flex: 1 }}>
+                    {quiz.description}
+                  </p>
+
+                  {/* Stats Row */}
+                  <div style={{ display: "flex", gap: 16, marginBottom: 24, padding: "12px", background: "rgba(255,255,255,0.03)", borderRadius: 16 }}>
+                    <div style={{ flex: 1, textAlign: "center" }}>
+                      <div style={{ color: "rgba(255,255,255,0.3)", fontSize: 10, textTransform: "uppercase", fontWeight: 700, marginBottom: 2 }}>Preguntas</div>
+                      <div style={{ color: "white", fontSize: 15, fontWeight: 800 }}>{quiz.questionCount || 8}</div>
+                    </div>
+                    <div style={{ width: 1, background: "rgba(255,255,255,0.08)" }} />
+                    <div style={{ flex: 1, textAlign: "center" }}>
+                      <div style={{ color: "rgba(255,255,255,0.3)", fontSize: 10, textTransform: "uppercase", fontWeight: 700, marginBottom: 2 }}>Tiempo</div>
+                      <div style={{ color: "white", fontSize: 15, fontWeight: 800 }}>{quiz.estimatedMinutes || 10}m</div>
+                    </div>
+                  </div>
+
+                  {/* Buttons Row */}
+                  <div style={{ display: "flex", gap: 10 }}>
+                    <motion.button
+                      whileHover={{ scale: 1.02, background: "rgba(255,255,255,0.08)" }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (!nickname.trim()) { 
+                          setError("Primero escribe tu nombre arriba"); 
+                          window.scrollTo({ top: 0, behavior: 'smooth' });
+                          return 
+                        }
+                        sessionStorage.setItem("live_nickname", nickname)
+                        sessionStorage.setItem("live_emoji", selectedEmoji)
+                        router.push(`/live/play?session=solo&quizId=${quiz.id}`)
+                      }}
+                      style={{ 
+                        flex: 1, height: "46px", borderRadius: 14, 
+                        background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", 
+                        color: "white", fontSize: 14, fontWeight: 700, 
+                        cursor: "pointer", transition: "all 0.2s" 
+                      }}
+                    >
+                      Solo
+                    </motion.button>
+                    
+                    <motion.button
+                      whileHover={{ scale: 1.02, filter: "brightness(1.1)", boxShadow: `0 8px 20px ${quiz.glow || "rgba(0,0,0,0.3)"}` }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        sessionStorage.setItem("pending_live_launch", quiz.id);
+                        router.push(`/live/host?launch=${quiz.id}`)
+                      }}
+                      style={{ 
+                        flex: 1.5, height: "46px", borderRadius: 14, 
+                        background: quiz.gradient || "linear-gradient(135deg, #0056E7, #1983FD)", 
+                        color: "white", fontSize: 14, fontWeight: 800, 
+                        border: "none", cursor: "pointer",
+                        display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
+                        boxShadow: `0 4px 12px ${quiz.glow || "rgba(0,0,0,0.2)"}`
+                      }}
+                    >
+                      <IconBolt size={14} color="white" /> Ser Host
+                    </motion.button>
+                  </div>
+                </div>
+
+                {/* Decorative spotlight effect on hover */}
+                <div style={{ 
+                  position: "absolute", inset: 0, pointerEvents: "none",
+                  background: `radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), ${quiz.glow || "rgba(25,131,253,0.15)"} 0%, transparent 80%)`,
+                  opacity: 0, transition: "opacity 0.3s"
+                }} className="card-spotlight" />
               </motion.div>
             ))}
           </div>
         </motion.div>
+
       </div>
     </>
   )

@@ -1,18 +1,22 @@
-import { NextResponse } from "next/server"
-import { createSupabaseServer } from "@/lib/supabase/server"
+import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
+import { auth } from "@clerk/nextjs/server"
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    const supabase = await createSupabaseServer()
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    const { userId } = await auth()
     
-    if (authError || !user) {
+    if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
-    // Get user join date from Supabase auth
-    const joinDate = user.created_at ? new Date(user.created_at) : null
+    // Get user join date from profile
+    const profile = await prisma.profile.findUnique({
+      where: { userId },
+      select: { createdAt: true }
+    })
+
+    const joinDate = profile?.createdAt || null
 
     // Get real followers and following counts from user_follows table
     let followersCount = 0
@@ -21,17 +25,15 @@ export async function GET() {
     try {
       // Count how many users are following this user (followers)
       followersCount = await prisma.userFollow.count({
-        where: { followingId: user.id }
+        where: { followingId: userId }
       })
 
       // Count how many users this user is following (following)
       followingCount = await prisma.userFollow.count({
-        where: { followerId: user.id }
+        where: { followerId: userId }
       })
     } catch (error) {
       console.error("Error fetching follow counts:", error)
-      // If the table doesn't exist yet, return 0
-      // This will happen until the migration is run
       followersCount = 0
       followingCount = 0
     }
@@ -46,4 +48,3 @@ export async function GET() {
     return NextResponse.json({ error: "Failed to fetch profile stats" }, { status: 500 })
   }
 }
-

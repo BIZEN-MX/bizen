@@ -322,7 +322,7 @@ export function InlineSegments({ segments }: { segments: Segment[] }) {
 const BULLET_ICONS = ["●", "◆", "▸", "→"]
 
 export function SmartText({ text, fontSize = "clamp(16px, 2.5vw, 20px)", align = "left" }: SmartTextProps) {
-    const rawLines = text.split("\n")
+    const rawLines = (text || "").split("\n")
 
     type Block =
         | { kind: "paragraph"; lines: string[] }

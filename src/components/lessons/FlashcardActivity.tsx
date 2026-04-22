@@ -74,6 +74,15 @@ export default function FlashcardActivity({ cards, onClose, title = "Repaso de C
   const [lastAnswerCorrect, setLastAnswerCorrect] = useState<boolean | null>(null)
   const [feedbackVisible, setFeedbackVisible] = useState(false)
   const scoreRef = useRef(0)
+  
+  // Rule Enforcement: Max 200 characters per definition
+  useEffect(() => {
+    cards.forEach(card => {
+      if (card.definition.length > 200) {
+        console.warn(`[REGLA DE ORO] La flashcard "${card.concept}" excede los 200 caracteres (${card.definition.length}).`);
+      }
+    });
+  }, [cards])
 
   // Prepare exam options
   useEffect(() => {

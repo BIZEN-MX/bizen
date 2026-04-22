@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
     });
 
     const isEduEmail = isInstitutionalEmail(userEmail);
-    const SPECIAL_ADMINS = ['diegopenita31@gmail.com', 'diego@bizen.mx'];
+    const SPECIAL_ADMINS = ['diego@bizen.mx'];
     const isSpecialAdmin = SPECIAL_ADMINS.includes(userEmail.toLowerCase());
 
     if (profile && isSpecialAdmin && (profile.role !== 'school_admin' || profile.schoolId !== 'sch_1')) {
@@ -204,7 +204,7 @@ export async function PATCH(request: NextRequest) {
     }
 
     const isEduEmail = isInstitutionalEmail(userEmail);
-    const isSpecialAdmin = userEmail.toLowerCase() === 'diegopenita31@gmail.com';
+    const isSpecialAdmin = userEmail.toLowerCase() === 'diego@bizen.mx';
 
     // 2. Logic Protection (Role Downgrading for non-institutional)
     const canUpdateRole = isEduEmail || isSpecialAdmin;
