@@ -111,7 +111,8 @@ function InnerClientWrapper({ children }: { children: React.ReactNode }) {
   const isToolsPageExclude = isBudgetTool || isVisionTool
   const isMetasPage = pathname === '/metas' || pathname?.startsWith('/metas/')
   const isConfigPage = pathname === '/configuracion'
-  const hideAppNavigation = isAuthPage || isNewsPage || isDiagnosticPage || onboardingActive || isLessonInteractivePage || isTransferPage || isHistoryPage || isMetasPage || isInvestmentsPage || isToolsPageExclude || isLivePage || isSimulatorPage || isBitesPage || isConfigPage;
+  const isAdminPage = pathname?.startsWith('/admin')
+  const hideAppNavigation = isAuthPage || isNewsPage || isDiagnosticPage || onboardingActive || isLessonInteractivePage || isTransferPage || isHistoryPage || isMetasPage || isInvestmentsPage || isToolsPageExclude || isLivePage || isSimulatorPage || isBitesPage || isConfigPage || isAdminPage;
 
   const userEmail = (user?.email || user?.emailAddresses?.[0]?.emailAddress || "").toLowerCase();
   const isSuperAdmin = userEmail === "diego@bizen.mx"
