@@ -90,13 +90,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({ 
       users, 
-      schools, 
-      debug: { 
-        clerkUsersCount: clerkUsers.length, 
-        dbProfilesMatched: profiles.length, 
-        searchParam: emailSearch,
-        clerkIds: clerkUsers.map(u => u.id)
-      } 
+      schools
     })
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 })
