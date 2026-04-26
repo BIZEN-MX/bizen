@@ -7,6 +7,7 @@ import { AvatarDisplay } from "@/components/AvatarDisplay"
 import { useAuth } from "@/contexts/AuthContext"
 import PageLoader from "@/components/PageLoader"
 import { motion, AnimatePresence, LayoutGroup } from "framer-motion"
+import { getPusherClient } from "@/lib/pusher-client"
 
 interface UserRank {
     rank: number
@@ -94,12 +95,19 @@ export default function RankingsPage() {
     useEffect(() => {
         fetchRankings()
         
-        // Real-time polling every 10 seconds
-        const interval = setInterval(() => {
-            fetchRankings(true)
-        }, 10000)
+        // Pusher Real-time listener
+        const pusher = getPusherClient()
+        const channel = pusher.subscribe('rankings-channel')
         
-        return () => clearInterval(interval)
+        channel.bind('xp-updated', (data: any) => {
+            console.log("⚡ Real-time update from Pusher:", data)
+            // Refresh rankings silently when someone updates their XP
+            fetchRankings(true)
+        })
+        
+        return () => {
+            pusher.unsubscribe('rankings-channel')
+        }
     }, [])
 
     if (isInitialLoading) return <PageLoader />
@@ -111,6 +119,7 @@ export default function RankingsPage() {
           0%, 100% { transform: translateY(0);   }
           50%       { transform: translateY(-6px); }
         }
+        .ranking-header-h1, .ranking-header-p { color: #ffffff !important; opacity: 1 !important; -webkit-text-fill-color: #ffffff !important; font-weight: 500 !important; }
       `}</style>
             <div className="relative z-10 w-full max-w-[1200px] mx-auto box-border">
                 {/* ── HERO HEADER ── */}
@@ -143,10 +152,10 @@ export default function RankingsPage() {
                                     </div>
                                 )}
                             </div>
-                            <h1 className="text-3xl md:text-5xl font-semibold text-white mb-2.5 tracking-tight leading-tight">
+                            <h1 className="text-3xl md:text-5xl font-medium text-white mb-2.5 tracking-tight leading-tight ranking-header-h1">
                                 Rankings BIZEN
                             </h1>
-                            <p className="text-sm md:text-base text-blue-200 m-0 max-w-lg">
+                            <p className="text-sm md:text-base text-white m-0 max-w-lg ranking-header-p">
                                 {isParticular ? "Los mejores usuarios de la plataforma." : "Los mejores estudiantes y escuelas de la plataforma."} ¿Estás en el top?
                             </p>
                         </div>

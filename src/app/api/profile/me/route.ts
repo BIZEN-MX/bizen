@@ -108,10 +108,10 @@ export async function GET(request: NextRequest) {
 
       const activeDatesSet = new Set<string>()
       for (const e of (weeklyEvidence as any[])) {
-        if (e.createdAt) activeDatesSet.add(new Date(e.createdAt).toISOString().split("T")[0])
+        if (e.createdAt) activeDatesSet.add(new Date(e.createdAt).toLocaleDateString("en-CA", { timeZone: "America/Mexico_City" }))
       }
       for (const p of (weeklyProgress as any[])) {
-        if (p.completedAt) activeDatesSet.add(new Date(p.completedAt).toISOString().split("T")[0])
+        if (p.completedAt) activeDatesSet.add(new Date(p.completedAt).toLocaleDateString("en-CA", { timeZone: "America/Mexico_City" }))
       }
       weeklyActiveDays = Array.from(activeDatesSet)
     } catch (e: any) {

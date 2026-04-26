@@ -182,6 +182,7 @@ function SettingsContent() {
         @keyframes scaleIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
         .section-card { animation: fadeUp 0.3s ease both; }
         input[type="date"]::-webkit-calendar-picker-indicator { opacity: 0.4; cursor: pointer; filter: invert(1); }
+        .config-header-h1, .config-header-p { color: #ffffff !important; opacity: 1 !important; -webkit-text-fill-color: #ffffff !important; font-weight: 500 !important; }
       `}</style>
 
       <div className="relative w-full">
@@ -207,10 +208,10 @@ function SettingsContent() {
                   <span className={`text-[11px] font-bold uppercase tracking-widest ${isAnahuac ? 'text-[#FF5900]' : 'text-blue-500'}`}>Configuración</span>
                 </div>
               </div>
-              <h1 className="text-[clamp(24px,4vw,36px)] font-bold text-white mb-2 tracking-tight leading-tight">
+              <h1 className="text-[clamp(24px,4vw,36px)] font-medium text-white mb-2 tracking-tight leading-tight config-header-h1">
                 Tu cuenta
               </h1>
-              <p className="text-base text-white/50 m-0">
+              <p className="text-base text-white m-0 config-header-p">
                 Gestiona tu perfil, privacidad y preferencias
               </p>
             </div>

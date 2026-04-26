@@ -26,7 +26,18 @@ export default async function TeacherLayout({
         redirect('/login')
     }
 
-    if (userProfile.role !== 'teacher' && userProfile.role !== 'school_admin' && userProfile.role !== 'admin') {
+    // Additional safety check for unauthorized accounts
+    const user = await (await auth()).sessionClaims; // This is not reliable for email usually
+    // Better to get the full user from Clerk if we want the email on server side
+    // Or just rely on the role check IF we successfully update the DB.
+    
+    // Actually, Clerk's currentUser is available
+    const { currentUser } = await import('@clerk/nextjs/server');
+    const fullUser = await currentUser();
+    const email = fullUser?.emailAddresses[0]?.emailAddress.toLowerCase();
+    const isUnauthorized = email === 'diegopenita31@gmail.com';
+
+    if (userProfile.role !== 'teacher' && userProfile.role !== 'school_admin' && userProfile.role !== 'admin' || isUnauthorized) {
         // Kick them out to the student dashboard immediately
         redirect('/dashboard')
     }

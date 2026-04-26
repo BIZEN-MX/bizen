@@ -10,7 +10,7 @@ import { useAuth } from "@/contexts/AuthContext"
 import PageLoader from "@/components/PageLoader"
 import DailyChallengeWidget from "@/components/DailyChallengeWidget"
 import { SUBTEMAS_BY_COURSE } from "@/data/lessons/courseLessonsOrder"
-import { Palette, ShoppingBag, Send, Search, Loader2, Check, X, History, ArrowUpRight, ArrowDownLeft, Flame, Shield, Target, Coins, BookOpen, TrendingUp, BrainCircuit, ChevronRight, RefreshCw, Newspaper, Trophy, Megaphone } from "lucide-react"
+import { Palette, ShoppingBag, Lock, Send, Search, Loader2, Check, X, History, ArrowUpRight, ArrowDownLeft, Flame, Shield, Target, Coins, BookOpen, TrendingUp, BrainCircuit, ChevronRight, RefreshCw, Newspaper, Trophy, Megaphone } from "lucide-react"
 import BizenVirtualCard from "@/components/BizenVirtualCard"
 import DNAEvolutionScreen from "@/components/bizen/DNAEvolutionScreen"
 import BillyLabWidget from "@/components/bizen/BillyLabWidget"
@@ -183,9 +183,14 @@ interface Topic {
 // ─────────────────────────────────────────────────────────────────
 function getGreeting() {
   const h = new Date().getHours()
-  if (h < 12) return "Buenos días"
-  if (h < 18) return "Buenas tardes"
-  return "Buenas noches"
+  if (h < 12) return "¡Excelente mañana"
+  if (h < 20) return "¡Qué gusto verte"
+  return "¡Linda noche"
+}
+
+function toLocalString(d: Date) {
+  // Use en-CA to safely get YYYY-MM-DD in the local timezone without UTC offset bugs
+  return d.toLocaleDateString('en-CA');
 }
 
 function weekDays() {
@@ -195,7 +200,7 @@ function weekDays() {
   mon.setDate(today.getDate() - ((dow + 6) % 7))
   return Array.from({ length: 7 }, (_, i) => {
     const d = new Date(mon); d.setDate(mon.getDate() + i)
-    return d.toISOString().split("T")[0]
+    return toLocalString(d)
   })
 }
 
@@ -254,7 +259,8 @@ export default function DashboardContent() {
   const router = useRouter()
   const userEmail = (user?.email || (user as any)?.emailAddresses?.[0]?.emailAddress || "").toLowerCase()
   const isSuperAdmin = userEmail === "diego@bizen.mx"
-  const isAdminOrTeacher = dbProfile?.role === "school_admin" || dbProfile?.role === "teacher" || dbProfile?.role === "admin" || isSuperAdmin
+  const isUnauthorized = userEmail === "diegopenita31@gmail.com"
+  const isAdminOrTeacher = (dbProfile?.role === "school_admin" || dbProfile?.role === "teacher" || dbProfile?.role === "admin" || isSuperAdmin) && !isUnauthorized
 
   const isAnahuac = useMemo(() => {
     return userEmail.endsWith('@anahuac.mx') || userEmail.includes('.anahuac.mx') || userEmail.endsWith('@bizen.mx');
@@ -280,6 +286,9 @@ export default function DashboardContent() {
   const [loadingNews, setLoadingNews] = useState(true)
   const [activeNewsIndex, setActiveNewsIndex] = useState(0)
   const [globalBanner, setGlobalBanner] = useState<any>(null)
+  const [inventory, setInventory] = useState<string[]>([])
+  const [loadingInventory, setLoadingInventory] = useState(true)
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
     if (news.length > 0) {
@@ -371,7 +380,7 @@ export default function DashboardContent() {
   const topicColor  = nextTopic?.level ? (TOPIC_COLORS[nextTopic.level] ?? "#3b82f6") : "#3b82f6"
   const days        = useMemo(() => weekDays(), [])
   const activeSet   = useMemo(() => new Set(stats?.weeklyActiveDays ?? []), [stats])
-  const todayStr    = new Date().toISOString().split("T")[0]
+  const todayStr    = toLocalString(new Date())
 
   const xpPct = useMemo(() => {
     if (!stats) return 0
@@ -420,6 +429,13 @@ export default function DashboardContent() {
       if (data.profile) setLiveProfile(data.profile)
       if (data.transactions) setTransactions(data.transactions)
 
+      // Fetch inventory
+      const invRes = await fetch("/api/tienda/inventory")
+      if (invRes.ok) {
+        const invData = await invRes.json()
+        setInventory(invData.inventory || [])
+      }
+
     } catch (err) {
       console.error("Dashboard Sync Error:", err)
     } finally {
@@ -456,8 +472,14 @@ export default function DashboardContent() {
     if (loading) return
     if (!user)   { router.replace("/login"); return }
 
-    // Redirigir administradores y profesores
-    if (dbProfile?.role === "school_admin" || dbProfile?.role === "teacher" || dbProfile?.role === "admin" || isSuperAdmin) {
+    // Redirigir Super Admins a su propio panel
+    if (isSuperAdmin) {
+      router.replace("/admin")
+      return
+    }
+
+    // Redirigir administradores y profesores al dashboard escolar
+    if (dbProfile?.role === "school_admin" || dbProfile?.role === "teacher" || dbProfile?.role === "admin") {
       router.replace("/teacher/dashboard")
       return
     }
@@ -603,8 +625,9 @@ export default function DashboardContent() {
                   >
                     <IcoWave size={22} color="#fff" />
                   </motion.div>
-                  <h1 className="text-xl md:text-3xl lg:text-[34px] font-black text-white leading-[1.1] tracking-[-0.03em]">
-                    {getGreeting()}, <span className="bg-gradient-to-r from-blue-300 via-emerald-300 to-indigo-300 bg-clip-text text-transparent">{firstName}</span>
+                  <h1 id="hero-greeting-text" className="text-2xl md:text-5xl lg:text-[48px] font-medium leading-[1.1] tracking-[-0.03em] text-white">
+                    <style>{`#hero-greeting-text { color: #ffffff !important; opacity: 1 !important; font-weight: 500 !important; }`}</style>
+                    {getGreeting()}, <span className="font-medium bg-gradient-to-r from-blue-400 via-emerald-400 to-indigo-400 bg-clip-text text-transparent drop-shadow-sm">{firstName}</span>!
                   </h1>
                 </div>
                 
@@ -619,13 +642,13 @@ export default function DashboardContent() {
                       <img src="/León Anáhuac.png" alt="León Anáhuac" className="w-full h-full object-contain" />
                     </div>
                     <div className="flex flex-col">
-                      <span className="text-[10px] font-black text-[#FF5900] uppercase tracking-widest leading-none mb-1">Comunidad Institucional</span>
-                      <span className="text-sm font-bold text-white text-opacity-80">Experiencia Anáhuac Activa</span>
+                      <span className="text-[10px] font-medium text-[#FF5900] uppercase tracking-widest leading-none mb-1">Comunidad Institucional</span>
+                      <span className="text-sm font-medium text-white text-opacity-80">Experiencia Anáhuac Activa</span>
                     </div>
                   </motion.div>
                 )}
 
-                <p className="text-[14px] md:text-[15px] text-white/80 mb-5 leading-snug max-w-2xl font-medium">
+                <p className="text-[14px] md:text-[15px] text-white mb-5 leading-snug max-w-2xl font-medium">
                   {isAdminOrTeacher 
                     ? "Gestiona tu institución, supervisa el progreso de tus alumnos y configura tus cursos desde aquí."
                     : (streak >= 7
@@ -656,7 +679,6 @@ export default function DashboardContent() {
                 {!isAdminOrTeacher && (
                   <div className="flex flex-wrap gap-2">
                     {[
-                      { icon: <Flame size={12} className="text-blue-400" />, value: streak, label: "días", sub: "RACHA", bg: "bg-blue-400/15", border: "border-blue-400/25" },
                       { icon: <IcoZap size={12} color="#a78bfa" />, value: stats?.xpInCurrentLevel ?? 0, label: "XP", sub: "NIVEL ACTUAL", bg: "bg-violet-400/12", border: "border-violet-400/25" },
                       { icon: <IcoCoin size={12} color="#34d399" />, value: bizcoins, label: "BZ", sub: "BIZCOINS", bg: "bg-emerald-400/12", border: "border-emerald-400/25" },
                     ].map(m => (
@@ -680,7 +702,7 @@ export default function DashboardContent() {
                           >
                             {m.value.toLocaleString()} {m.label}
                           </motion.div>
-                          <div className="text-[9px] font-bold text-white/50 uppercase tracking-[0.08em] mt-0.5">{m.sub}</div>
+                          <div className="text-[9px] font-bold text-white uppercase tracking-[0.08em] mt-0.5">{m.sub}</div>
                         </div>
                       </motion.div>
                     ))}
@@ -821,8 +843,11 @@ export default function DashboardContent() {
                     <BrainCircuit size={36} className="text-white" />
                   </div>
                   <div>
-                                        <h3 className="text-xl md:text-2xl font-black text-white tracking-tight leading-none mb-2">ADN Financiero</h3>
-                    <p className="text-sm text-white/50 font-bold uppercase tracking-wider">Descubre tu ruta</p>
+                    <h3 id="adn-title-text" className="text-3xl md:text-4xl font-medium text-white tracking-tight leading-none mb-2">
+                      <style>{`#adn-title-text { color: #ffffff !important; opacity: 1 !important; font-weight: 500 !important; }`}</style>
+                      ADN Financiero
+                    </h3>
+                    <p className="text-base text-white font-normal uppercase tracking-wider">Descubre tu ruta</p>
                   </div>
                 </div>
                 
@@ -878,7 +903,7 @@ export default function DashboardContent() {
                     <motion.div animate={streak > 0 ? { scale: [1, 1.25, 1], rotate: [0, 10, -10, 0] } : {}} transition={{ repeat: Infinity, duration: 2.5 }}>
                       <Flame size={32} className={streak > 0 ? "text-orange-500 drop-shadow-[0_0_8px_rgba(249,115,22,0.5)]" : "text-white"} />
                     </motion.div>
-                    <span className="text-5xl font-black tracking-tighter leading-none text-white">{streak}</span>
+                    <span className={`text-5xl font-black tracking-tighter leading-none ${streak > 0 ? "text-orange-500 drop-shadow-sm" : "text-white"}`}>{streak}</span>
                   </div>
                   <span className={`mt-5 text-xs font-bold uppercase tracking-wider ${
                     streak > 0 ? "text-orange-400/80" : "text-white"
@@ -1109,30 +1134,34 @@ export default function DashboardContent() {
           {/* Dashboard News response fixes moved to globals.css */}
         </motion.div>
 
-        {/* METAS DE AHORRO (Savings Goals) - Premium Standalone Widget */}
+        {/* METAS DE AHORRO (Savings Goals) - Premium Standalone Widget (FREE IN DASHBOARD) */}
         <motion.div
-           initial={{ opacity: 0, y: 20 }}
-           animate={{ opacity: 1, y: 0 }}
-           transition={{ delay: 0.1 }}
-           onClick={() => router.push("/metas")}
-           className="bg-white rounded-[2.5rem] px-8 py-7 mb-10 flex items-center justify-between cursor-pointer border border-emerald-100 shadow-sm relative overflow-hidden group transition-all duration-300 hover:border-emerald-300 hover:bg-emerald-50"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          onClick={() => router.push("/metas")}
+          className="rounded-[2.5rem] px-8 py-7 mb-10 flex items-center justify-between cursor-pointer border shadow-sm relative overflow-hidden group transition-all duration-300 bg-white border-emerald-100 hover:border-emerald-300 hover:bg-emerald-50"
         >
           {/* Decorative Glow */}
-          <div className="absolute -top-1/2 -right-[10%] w-64 h-64 bg-emerald-500/5 rounded-full blur-[70px] pointer-events-none" />
+          <div className="absolute -top-1/2 -right-[10%] w-64 h-64 rounded-full blur-[70px] pointer-events-none bg-emerald-500/5" />
           
           <div className="flex items-center gap-6 relative z-10">
-            <div className="w-16 h-16 rounded-2xl bg-emerald-50 border border-emerald-100 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <div className="w-16 h-16 rounded-2xl border flex items-center justify-center transition-transform bg-emerald-50 border-emerald-100 group-hover:scale-110">
               <Target size={32} className="text-emerald-500" />
             </div>
             <div>
-              <h3 className="text-xl font-black text-slate-900 tracking-tight mb-1 font-sans">Metas de Ahorro</h3>
-              <p className="text-xs text-slate-400 font-black uppercase tracking-[0.2em]">{bizcoins > 0 ? "Comienza tu próximo objetivo" : "Sin metas activas"}</p>
+              <h3 className="text-xl font-medium tracking-tight mb-1 font-sans text-slate-900">
+                Metas de Ahorro
+              </h3>
+              <p className="text-xs text-slate-400 font-medium uppercase tracking-[0.2em]">
+                {bizcoins > 0 ? "Comienza tu próximo objetivo" : "Sin metas activas"}
+              </p>
             </div>
           </div>
           
-          <div className="flex items-center gap-3 bg-slate-50 px-6 py-3 rounded-2xl border border-slate-200 group-hover:bg-emerald-500 group-hover:text-white transition-all">
-             <span className="text-sm font-black uppercase tracking-widest text-slate-600 group-hover:text-white">Explorar</span>
-             <ChevronRight size={18} className="text-emerald-500 group-hover:text-white" />
+          <div className="flex items-center gap-3 px-6 py-3 rounded-2xl border transition-all bg-slate-50 border-slate-200 group-hover:bg-emerald-500 group-hover:text-white">
+             <span className="text-sm font-medium uppercase tracking-widest">Explorar</span>
+             <ChevronRight size={18} />
           </div>
         </motion.div>
 
@@ -1257,8 +1286,8 @@ export default function DashboardContent() {
                     <History size={28} className="text-emerald-600" />
                  </div>
                  <div>
-                   <h3 className="m-0 text-xl font-black text-slate-900 tracking-tight">Estado de BIZEN</h3>
-                   <div className="text-xs text-slate-400 font-black uppercase tracking-[0.2em]">Últimos movimientos</div>
+                   <h3 className="m-0 text-xl font-medium text-slate-900 tracking-tight">Estado de BIZEN</h3>
+                   <div className="text-xs text-slate-400 font-normal uppercase tracking-[0.2em]">Últimos movimientos</div>
                  </div>
                </div>
                <motion.div 
@@ -1267,7 +1296,7 @@ export default function DashboardContent() {
                  className="flex items-center gap-3 bg-slate-50 px-6 py-3 rounded-2xl border border-slate-200 cursor-pointer shadow-sm"
                >
                   <Coins size={18} className="text-emerald-600" />
-                  <span className="text-lg font-black text-slate-900">{bizcoins.toLocaleString()} <span className="text-emerald-400/60 text-xs font-black">BC</span></span>
+                  <span className="text-lg font-black text-slate-900">{bizcoins.toLocaleString()} <span className="text-emerald-400/60 text-xs font-black">BZ</span></span>
                </motion.div>
             </div>
 
@@ -1297,16 +1326,16 @@ export default function DashboardContent() {
                          <Coins size={22} />}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <div className="text-base font-black text-slate-900 truncate group-hover:text-blue-600 transition-colors uppercase tracking-tight">{t.description}</div>
-                        <div className="text-[10px] text-slate-400 font-black uppercase tracking-widest mt-1">
+                        <div className="text-base font-medium text-slate-900 truncate group-hover:text-blue-600 transition-colors uppercase tracking-tight">{t.description}</div>
+                        <div className="text-[10px] text-slate-400 font-normal uppercase tracking-widest mt-1">
                           {new Date(t.createdAt).toLocaleDateString('es-MX', { day: '2-digit', month: 'short' })} • BIZCARD
                         </div>
                       </div>
                       <div className="text-right">
-                        <div className={`text-xl font-black tracking-[-0.05em] ${t.type === "income" ? "text-emerald-600" : "text-red-600"}`}>
+                        <div className={`text-xl font-medium tracking-[-0.05em] ${t.type === "income" ? "text-emerald-600" : "text-red-600"}`}>
                           {t.type === "income" ? "+" : "-"}{t.amount}
                         </div>
-                        <div className="text-[10px] font-bold text-slate-300 uppercase">BC</div>
+                        <div className="text-[10px] font-bold text-slate-300 uppercase">BZ</div>
                       </div>
                     </motion.div>
                   ))}
@@ -1317,7 +1346,7 @@ export default function DashboardContent() {
             <motion.button 
               whileHover={{ backgroundColor: "#f8fafc" }}
               onClick={() => router.push("/historial")} 
-              className="mt-8 w-full bg-slate-50 border border-slate-200 py-5 rounded-3xl text-sm font-black text-slate-500 uppercase tracking-[0.2em] transition-all hover:text-blue-600"
+              className="mt-8 w-full bg-slate-50 border border-slate-200 py-5 rounded-3xl text-sm font-medium text-slate-500 uppercase tracking-[0.2em] transition-all hover:text-blue-600"
             >
               Auditoría Completa
             </motion.button>
@@ -1357,7 +1386,7 @@ export default function DashboardContent() {
               { Icon: IcoBook,    label: "Aprende Finanzas",  sub: "30 temas · Interactivos",                     href: "/courses",    bg: "bg-[#1E1B4B]", iconColor: "#93c5fd" },
               { Icon: TrendingUp, label: "Inversión BIZEN",   sub: "Haz crecer tus Bizcoins",                     href: "/investments", bg: "bg-[#0B1E5E]", iconColor: "#6ee7b7" },
               { Icon: IcoGamepad, label: "Simuladores",       sub: "Practica con el mercado",                     href: "/cash-flow",  bg: "bg-[#1E1B4B]", iconColor: "#a5b4fc" },
-              { Icon: IcoStore,   label: "Tienda Bizen",      sub: `${bizcoins.toLocaleString()} BC en cartera`,  href: "/tienda",     bg: "bg-[#0B1E5E]", iconColor: "#fdba74" },
+              { Icon: IcoStore,   label: "Tienda Bizen",      sub: `${bizcoins.toLocaleString()} BZ en cartera`,  href: "/tienda",     bg: "bg-[#0B1E5E]", iconColor: "#fdba74" },
               { Icon: IcoUsers,   label: "Comunidad",         sub: "Foro de inversores",                          href: "/forum",      bg: "bg-[#1E1B4B]", iconColor: "#6ee7b7" },
               { Icon: IcoTrophy,  label: "Rankings",          sub: "Tu posición global",                          href: "/rankings",   bg: "bg-[#0B1E5E]", iconColor: "#fca5a5" },
               {
@@ -1393,8 +1422,8 @@ export default function DashboardContent() {
                   </div>
                 </div>
                 <div>
-                  <div className="text-lg font-black text-white uppercase tracking-tight group-hover:text-blue-300 transition-colors">{label}</div>
-                  <div className="text-xs font-bold uppercase tracking-widest mt-1.5" style={{ color: "rgba(255,255,255,0.5)" }}>{sub}</div>
+                  <div className="text-lg font-medium uppercase tracking-tight group-hover:text-blue-300 transition-colors text-white">{label}</div>
+                  <div className="text-[16px] font-normal uppercase tracking-widest mt-1.5 text-white" style={{ color: '#ffffff', opacity: 1 }}>{sub}</div>
                 </div>
               </motion.div>
             ))}

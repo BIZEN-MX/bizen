@@ -25,6 +25,7 @@ export default function AdminSystemPage() {
   
   // System State
   const [maintenanceMode, setMaintenanceMode] = useState(false)
+  const [maintenanceMessage, setMaintenanceMessage] = useState("")
 
   const isAllowed = isLoaded && user?.emailAddresses[0]?.emailAddress && SUPER_ADMINS.includes(user.emailAddresses[0].emailAddress.toLowerCase())
 
@@ -43,8 +44,9 @@ export default function AdminSystemPage() {
     try {
       const res = await fetch(`/api/admin/system`)
       const data = await res.json()
-      if (res.ok && data.maintenanceMode !== undefined) {
-        setMaintenanceMode(data.maintenanceMode)
+      if (res.ok) {
+        setMaintenanceMode(!!data.maintenanceMode)
+        setMaintenanceMessage(data.maintenanceMessage || "")
       }
     } catch (error) {
       console.error("Error fetching system state:", error)
@@ -62,7 +64,7 @@ export default function AdminSystemPage() {
       const res = await fetch("/api/admin/system", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ maintenanceMode })
+        body: JSON.stringify({ maintenanceMode, maintenanceMessage })
       })
       if (res.ok) {
         setMessage({ type: 'ok', text: "Estado del sistema BIZEN actualizado correctamente." })
@@ -101,7 +103,8 @@ export default function AdminSystemPage() {
             <h1 className="text-4xl font-black tracking-tight mb-2">Sistema Maestro</h1>
             <p className="text-slate-400 text-lg">Controles absolutos sobre el tráfico y el estado de la plataforma.</p>
           </div>
-          <ReturnButton href="/teacher/dashboard" label="Volver al Dashboard" />
+          
+          <ReturnButton href="/admin" label="Panel Admin" />
         </header>
 
         <AnimatePresence>
@@ -123,8 +126,8 @@ export default function AdminSystemPage() {
         <div className="grid grid-cols-1 gap-8">
           <form onSubmit={handleSubmit} className="bg-[#0b1120] border border-white/5 rounded-3xl p-6 md:p-8 shadow-2xl">
             
-            <div className="mb-8 pb-6 border-b border-white/5">
-              <div className="flex items-start sm:items-center justify-between flex-col sm:flex-row gap-6">
+            <div className="mb-8 pb-8 border-b border-white/5">
+              <div className="flex items-start sm:items-center justify-between flex-col sm:flex-row gap-6 mb-8">
                 <div>
                   <h2 className="text-xl font-bold flex items-center gap-2 mb-2">
                     <Power className={maintenanceMode ? "text-red-500" : "text-emerald-500"} /> Modo Mantenimiento
@@ -143,6 +146,17 @@ export default function AdminSystemPage() {
                     {maintenanceMode ? 'ON' : 'OFF'}
                   </span>
                 </button>
+              </div>
+
+              <div className="space-y-3">
+                <label className="text-sm font-bold text-slate-400 uppercase tracking-widest">Mensaje de Billy (Mantenimiento)</label>
+                <textarea
+                  value={maintenanceMessage}
+                  onChange={(e) => setMaintenanceMessage(e.target.value)}
+                  placeholder="Escribe aquí el mensaje que verán los alumnos..."
+                  className="w-full bg-[#050505] border border-white/10 rounded-2xl p-4 text-white font-medium focus:border-blue-500/50 outline-none transition-all min-h-[120px]"
+                />
+                <p className="text-[11px] text-slate-500">Este mensaje aparecerá en el centro de la pantalla de bloqueo para todos los usuarios.</p>
               </div>
             </div>
 

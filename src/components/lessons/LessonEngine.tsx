@@ -134,8 +134,20 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
     // 1(b). Gather ALL available local definitions
     lessonSteps.forEach(s => {
       const step = s as any
-      if (step.data && step.data.glossary && Array.isArray(step.data.glossary)) {
-        step.data.glossary.forEach((term: { word: string; definition: string }) => {
+      // In Interactive Page, extraData is already spread into step, so step.glossary might exist
+      // If not, we try to parse step.data if it's a string, or just use step.data directly
+      let stepGlossary = step.glossary;
+      if (!stepGlossary && step.data) {
+        try {
+          const parsedData = typeof step.data === 'string' ? JSON.parse(step.data) : step.data;
+          stepGlossary = parsedData.glossary;
+        } catch (e) {
+          console.error("Error parsing step.data for glossary", e);
+        }
+      }
+
+      if (Array.isArray(stepGlossary)) {
+        stepGlossary.forEach((term: { word: string; definition: string }) => {
           if (term.word && term.definition) allTermsMap[term.word] = term.definition
         })
       }
@@ -181,7 +193,10 @@ export function LessonEngine({ lessonSteps, onComplete, onExit, onProgressChange
       
       finalGlossary.forEach(term => {
         const escaped = term.word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-        const re = new RegExp(`\\b${escaped}\\b`, 'i')
+        // We use a custom boundary that supports Spanish accents and special characters
+        // (?<=\s|^|[.,;:"'¿?¡!()[\]{}<>]) to lookbehind for boundaries
+        // (?=\s|$|[.,;:"'¿?¡!()[\]{}<>]) to lookahead for boundaries
+        const re = new RegExp(`(^|\\s|[.,;:"'¿?¡!()[\]{}<>])(${escaped})(?=\\s|$|[.,;:"'¿?¡!()[\]{}<>])`, 'i')
         
         if (re.test(fullText) && !seenWords.has(term.word)) {
           stepWords.push(term)

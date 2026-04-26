@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
-import { createSupabaseServer } from "@/lib/supabase/server"
+import { prisma } from "@/lib/prisma"
+import { requireAuth } from "@/lib/auth/api-auth"
 
 const BOARD_SPACES = [
   'payday', 'opportunity', 'market', 'opportunity', 'doodad', 'opportunity',
@@ -14,33 +15,33 @@ export async function POST(
 ) {
   try {
     console.log("🎲 Roll dice API called")
-    const supabase = await createSupabaseServer()
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
-
-    if (authError || !user) {
-      console.error("❌ Auth error:", authError)
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    const authResult = await requireAuth(request)
+    if (!authResult.success) {
+      return authResult.response
     }
+    const { user } = authResult.data
 
-    const { diceRoll } = await request.json()
-    const gameId = parseInt(params.gameId)
+    const body = await request.json()
+    const { diceRoll } = body
+    const { gameId } = await params
+    const parsedGameId = parseInt(gameId)
     console.log("🎲 Dice roll:", diceRoll)
 
     // Get player
-    const { data: player, error: playerError } = await supabase
-      .from('players')
-      .select('*')
-      .eq('game_session_id', gameId)
-      .eq('user_id', user.id)
-      .single()
+    const player = await prisma.player.findFirst({
+      where: {
+        gameSessionId: parsedGameId,
+        userId: user.id
+      }
+    })
 
-    if (playerError || !player) {
-      console.error("❌ Player fetch error:", playerError)
+    if (!player) {
+      console.error("❌ Player not found")
       return NextResponse.json({ error: "Player not found" }, { status: 404 })
     }
 
     const boardSize = BOARD_SPACES.length
-    const currentPosition = player.current_position ?? 0
+    const currentPosition = player.currentPosition ?? 0
 
     console.log("✅ Player found:", { currentPosition })
 
@@ -58,14 +59,12 @@ export async function POST(
 
     // Handle Payday if passed
     if (passedPayday && landedSpace !== 'payday') {
-      const { data: profession } = await supabase
-        .from('professions')
-        .select('*')
-        .eq('id', player.profession_id)
-        .single()
+      const profession = await prisma.profession.findUnique({
+        where: { id: player.professionId }
+      })
 
       if (profession) {
-        const paydayAmount = profession.salary + player.passive_income
+        const paydayAmount = profession.salary + (player.passiveIncome || 0)
         cashChange += paydayAmount
         message += `¡Pasaste por Payday! +$${paydayAmount.toLocaleString()}\n`
         console.log("💵 Passed Payday:", paydayAmount)
@@ -74,52 +73,49 @@ export async function POST(
 
     // Handle landing on Payday
     if (landedSpace === 'payday') {
-      const { data: profession } = await supabase
-        .from('professions')
-        .select('*')
-        .eq('id', player.profession_id)
-        .single()
+      const profession = await prisma.profession.findUnique({
+        where: { id: player.professionId }
+      })
 
       if (profession) {
-        const paydayAmount = profession.salary + player.passive_income
+        const paydayAmount = profession.salary + (player.passiveIncome || 0)
         cashChange += paydayAmount
         message = `💵 ¡Payday! Recibiste $${paydayAmount.toLocaleString()}`
         console.log("💵 Landed on Payday:", paydayAmount)
       }
     }
 
-    // Update player position and cash
-    const { error: updateError } = await supabase
-      .from('players')
-      .update({ 
-        cash_on_hand: player.cash_on_hand + cashChange,
-        current_turn: player.current_turn + 1,
-        current_position: newPosition
+    // Update player position and cash using a transaction with the event
+    await prisma.$transaction(async (tx) => {
+      await tx.player.update({
+        where: { id: player.id },
+        data: {
+          cashOnHand: player.cashOnHand + cashChange,
+          currentTurn: (player.currentTurn || 1) + 1,
+          currentPosition: newPosition
+        }
       })
-      .eq('id', player.id)
 
-    if (updateError) {
-      console.error("❌ Error updating player:", updateError)
-      return NextResponse.json({ error: "Failed to update player" }, { status: 500 })
-    }
+      // Log the dice roll event
+      await tx.gameEvent.create({
+        data: {
+          gameSessionId: parsedGameId,
+          playerId: player.id,
+          eventType: "turn_started",
+          eventData: {
+            diceRoll,
+            oldPosition: currentPosition,
+            newPosition,
+            landedSpace,
+            passedPayday
+          },
+          cashChange: cashChange,
+          turnNumber: (player.currentTurn || 1) + 1
+        }
+      })
+    })
 
     console.log("✅ Player updated successfully")
-
-    // Log the dice roll event
-    await supabase.from('game_events').insert({
-      game_session_id: gameId,
-      player_id: player.id,
-      event_type: "turn_started",
-      event_data: {
-        diceRoll,
-        oldPosition: currentPosition,
-        newPosition,
-        landedSpace,
-        passedPayday
-      },
-      cash_change: cashChange,
-      turn_number: player.current_turn + 1
-    })
 
     return NextResponse.json({
       success: true,
@@ -129,7 +125,7 @@ export async function POST(
       passedPayday,
       cashChange,
       message,
-      newCash: player.cash_on_hand + cashChange
+      newCash: player.cashOnHand + cashChange
     })
 
   } catch (error) {

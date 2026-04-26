@@ -379,7 +379,8 @@ export default function ProfilePage() {
   const isSchoolAdmin = dbProfile?.role === 'school_admin'
   const isAdminOrTeacher = isSchoolAdmin || dbProfile?.role === 'teacher'
   const isParticular = dbProfile?.role === 'particular'
-  const isInstitutionalStudent = dbProfile?.role === 'student'
+  const isUnauthorized = userEmail === 'diegopenita31@gmail.com'
+  const isInstitutionalStudent = dbProfile?.role === 'student' && !isUnauthorized
   const isPremium = dbProfile?.subscriptionStatus === 'active' || (dbProfile?.school?.licenses?.length || 0) > 0
 
   const getPlanTitle = () => {
@@ -445,8 +446,18 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 pt-3 pb-28 px-3 md:py-10 md:px-6 lg:py-6 lg:px-16 w-full max-w-[1400px] mx-auto">
+    <div className="min-h-screen bg-slate-50 pt-3 pb-28 px-3 md:py-10 md:px-6 lg:py-6 lg:px-16 w-full max-w-[1400px] mx-auto profile-page-container">
       <style>{`
+        .profile-page-container h1, 
+        .profile-page-container h2, 
+        .profile-page-container h3,
+        .profile-page-container .text-white,
+        .profile-page-container .text-white\\/80,
+        .profile-page-container .text-blue-300 {
+          color: #ffffff !important;
+          opacity: 1 !important;
+          -webkit-text-fill-color: #ffffff !important;
+        }
         .prof-card { background: white; border: 1.5px solid #e2e8f0; border-radius: 24px; box-shadow: 0 4px 20px rgba(15,23,42,0.03); transition: transform 0.2s; }
         .prof-card:hover { transform: translateY(-2px); }
         .prof-tab-btn { flex: 1; padding: 14px; border: none; background: transparent; font-weight: 700; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; transition: all 0.2s; }
@@ -492,7 +503,7 @@ export default function ProfilePage() {
             <div className={`flex items-center gap-2.5 mb-1 flex-wrap ${screenSize < 768 ? 'justify-center' : 'justify-start'}`}>
               <div className="bg-white/25 px-2.5 py-1 rounded-full text-[9px] font-extrabold tracking-widest border border-white/10">NIVEL {level}</div>
             </div>
-            <h1 className={`font-extrabold m-0 tracking-tight leading-[1.1] drop-shadow-[0_2px_8px_rgba(0,0,0,0.2)] ${screenSize < 768 ? 'text-[22px]' : 'text-[32px]'}`}>
+            <h1 className={`font-medium m-0 tracking-tight leading-[1.1] drop-shadow-[0_2px_8px_rgba(0,0,0,0.2)] ${screenSize < 768 ? 'text-[22px]' : 'text-[32px]'}`}>
               {displayName}
             </h1>
             <div className={`flex items-center gap-2.5 mt-2 opacity-90 ${screenSize < 768 ? 'justify-center' : 'justify-start'} flex-wrap`}>
@@ -791,7 +802,7 @@ export default function ProfilePage() {
             >
               <div className="absolute -top-5 -right-5 w-[100px] h-[100px] bg-white/10 rounded-full" />
               <div className="flex items-center gap-2 bg-white/20 w-fit py-1 px-2.5 rounded-full text-[10px] font-bold mb-3 tracking-widest">BIZEN PRO</div>
-              <h3 className="m-0 mb-2 text-[18px] font-bold">Acceso Ilimitado</h3>
+              <h3 className="m-0 mb-2 text-[18px] font-medium">Acceso Ilimitado</h3>
               <p className="m-0 mb-5 text-[13px] text-white/80 leading-relaxed">Domina tus finanzas con todos los cursos y simuladores desbloqueados.</p>
               <div className="flex items-center gap-1 font-black text-[24px]">$179 <span className="text-[12px] font-medium opacity-80">/mes</span></div>
             </div>
@@ -869,7 +880,7 @@ export default function ProfilePage() {
                           <div className="text-right">
                             <div className={`text-[14px] font-extrabold flex items-center justify-end gap-0.5 ${t.type === "income" ? "text-emerald-500" : "text-rose-500"}`}>
                               {t.type === "income" ? "+" : "-"}{t.amount}
-                              <span className="text-[9px] font-bold opacity-80">BC</span>
+                              <span className="text-[9px] font-bold opacity-80">BZ</span>
                             </div>
                             {t.type === "income" ? <ArrowUpRight size={10} className="text-emerald-500 opacity-60 ml-auto" /> : <ArrowDownLeft size={10} className="text-rose-500 opacity-60 ml-auto" />}
                           </div>
@@ -928,7 +939,7 @@ export default function ProfilePage() {
                           </div>
                           <div className="text-right">
                              <div className="text-[13px] font-extrabold text-slate-900">{progress}%</div>
-                             <div className="text-[9px] font-semibold text-slate-400">{bizcoins} / {g.targetAmount} BC</div>
+                             <div className="text-[9px] font-semibold text-slate-400">{bizcoins} / {g.targetAmount} BZ</div>
                           </div>
                         </div>
                         <div className="h-2 bg-slate-100 rounded-md overflow-hidden">
@@ -988,7 +999,7 @@ export default function ProfilePage() {
                        {staking.filter(s => s.status === 'active').length > 1 && (
                          <div className="py-2.5 px-3.5 bg-violet-500/5 rounded-xl border border-violet-500/10 flex justify-between items-center mb-1">
                            <span className="text-[11px] font-bold text-violet-600">Total en crecimiento</span>
-                           <span className="text-[13px] font-extrabold text-violet-600">{staking.filter(s => s.status === 'active').reduce((acc, curr) => acc + (curr.amount * curr.yieldRate), 0).toFixed(0)} <span className="text-[9px]">BC</span></span>
+                           <span className="text-[13px] font-extrabold text-violet-600">{staking.filter(s => s.status === 'active').reduce((acc, curr) => acc + (curr.amount * curr.yieldRate), 0).toFixed(0)} <span className="text-[9px]">BZ</span></span>
                          </div>
                        )}
                       {staking.map(s => {
@@ -1008,10 +1019,10 @@ export default function ProfilePage() {
                                    </div>
                                    <span className={`text-[10px] font-bold ${s.status === 'active' ? 'text-violet-500' : 'text-slate-400'}`}>BIZEN LQD</span>
                                 </div>
-                                <div className="text-[15px] font-black text-slate-900">{s.amount.toLocaleString()} <span className="text-[10px] font-semibold text-slate-400">BC en fondo</span></div>
+                                <div className="text-[15px] font-black text-slate-900">{s.amount.toLocaleString()} <span className="text-[10px] font-semibold text-slate-400">BZ en fondo</span></div>
                               </div>
                               <div className="text-right">
-                                <div className="text-[15px] font-black text-emerald-500">+{returnAmt} BC</div>
+                                <div className="text-[15px] font-black text-emerald-500">+{returnAmt} BZ</div>
                                 <div className="text-[9px] text-slate-400 font-bold">RETORNO ({(s.yieldRate * 100).toFixed(0)}%)</div>
                               </div>
                             </div>

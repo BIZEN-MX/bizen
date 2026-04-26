@@ -129,12 +129,48 @@ export default function SavingsGoalsPage() {
   const bizcoins = (dbProfile as any)?.bizcoins || 0
 
   return (
-    <div className="min-h-screen bg-[#05081a] text-white selection:bg-blue-500/30 pt-6 pb-20 overflow-x-hidden">
-      {/* Background Decor */}
-      <div className="fixed inset-0 opacity-10 pointer-events-none" 
-           style={{ backgroundImage: "radial-gradient(#fff 1px, transparent 1px)", backgroundSize: "40px 40px" }} />
-      <div className="fixed top-[-10%] left-[-10%] w-[50%] h-[50%] bg-blue-600/10 blur-[120px] pointer-events-none rounded-full" />
-      <div className="fixed bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-violet-600/10 blur-[120px] pointer-events-none rounded-full" />
+    <div className="min-h-screen bg-[#05081a] text-white selection:bg-blue-500/30 pt-6 pb-20 overflow-x-hidden metas-page-container">
+      <style>{`
+        .metas-page-container div:not(.bg-white *),
+        .metas-page-container p:not(.bg-white *),
+        .metas-page-container span:not(.bg-white *):not(.bg-blue-600 *):not(.bg-emerald-500 *),
+        .metas-page-container h1,
+        .metas-page-container h2,
+        .metas-page-container h3,
+        .metas-page-container h4,
+        .metas-page-container h5,
+        .metas-page-container h6,
+        .metas-page-container label,
+        .metas-page-container input {
+          color: #ffffff !important;
+          opacity: 1 !important;
+          -webkit-text-fill-color: #ffffff !important;
+        }
+
+        /* Asegurar contraste en botones y cards con fondo claro */
+        .metas-page-container .bg-white,
+        .metas-page-container .bg-white *,
+        .metas-page-container .bg-emerald-500 *,
+        .metas-page-container .bg-blue-600 * {
+          -webkit-text-fill-color: initial !important;
+        }
+
+        .metas-page-container .bg-white,
+        .metas-page-container .bg-white * {
+          color: #020617 !important;
+          -webkit-text-fill-color: #020617 !important;
+        }
+        
+        /* Asegurar que los bordes sigan siendo sutiles */
+        .metas-page-container .border, 
+        .metas-page-container .border-slate-800 {
+          border-color: rgba(255,255,255,0.1) !important;
+        }
+
+        /* Los iconos (SVGs) ahora recuperan su color original de Lucide */
+      `}</style>
+      {/* Background Decor Removed for cleaner look */}
+
 
       <main className="max-w-5xl mx-auto px-6 relative z-10">
         
@@ -146,14 +182,14 @@ export default function SavingsGoalsPage() {
               className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors mb-4 group"
             >
               <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
-              <span className="text-sm font-semibold uppercase tracking-wider">Volver</span>
+              <span className="text-sm font-medium uppercase tracking-wider">Volver</span>
             </button>
             <div className="flex items-center gap-4">
               <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-500/20 to-blue-600/5 border border-blue-500/30 flex items-center justify-center shadow-lg shadow-blue-500/10">
                 <Target className="text-blue-400" size={28} />
               </div>
               <div>
-                <h1 className="text-4xl font-black tracking-tight leading-none mb-1">Mis Metas</h1>
+                <h1 className="text-4xl font-medium tracking-tight leading-none mb-1">Mis Metas</h1>
                 <p className="text-slate-400 text-sm font-medium">Define tus sueños y Billy te ayudará a lograrlos.</p>
               </div>
             </div>
@@ -163,7 +199,7 @@ export default function SavingsGoalsPage() {
             whileHover={{ scale: 1.05, y: -2 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => setIsModalOpen(true)}
-            className="group relative flex items-center gap-2 px-8 py-4 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl font-black shadow-xl shadow-blue-600/30 transition-all overflow-hidden"
+            className="group relative flex items-center gap-2 px-8 py-4 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl font-medium shadow-xl shadow-blue-600/30 transition-all overflow-hidden"
           >
             <div className="absolute inset-x-0 bottom-0 h-1 bg-white/20" />
             <Plus size={22} className="group-hover:rotate-90 transition-transform duration-300" />
@@ -177,22 +213,22 @@ export default function SavingsGoalsPage() {
             <div className="absolute top-[-20%] right-[-10%] w-64 h-64 bg-white/10 rounded-full blur-3xl group-hover:scale-125 transition-transform duration-1000" />
             <div className="relative z-10 flex flex-col h-full justify-between">
               <div>
-                <span className="text-[11px] font-bold text-blue-200/60 uppercase tracking-widest flex items-center gap-2 mb-2">
+                <span className="text-[11px] font-medium text-blue-200/60 uppercase tracking-widest flex items-center gap-2 mb-2">
                   <Sparkles size={14} className="text-amber-300" /> Capital para tus sueños
                 </span>
                 <div className="flex items-baseline gap-4">
-                  <h2 className="text-6xl font-black tracking-tighter drop-shadow-md">
+                  <h2 className="text-6xl font-medium tracking-tighter drop-shadow-md">
                     {bizcoins.toLocaleString()}
                   </h2>
-                  <span className="text-xl font-bold text-blue-200/80">Bizcoins</span>
+                  <span className="text-xl font-medium text-blue-200/80">Bizcoins</span>
                 </div>
               </div>
               <div className="mt-8 flex flex-wrap gap-3">
-                <div className="flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-2 rounded-xl border border-white/10 text-sm font-bold">
+                <div className="flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-2 rounded-xl border border-white/10 text-sm font-medium">
                   <Zap size={16} className="text-amber-400" />
                   <span>+120 bz hoy</span>
                 </div>
-                <div className="flex items-center gap-2 bg-emerald-500/20 backdrop-blur-md px-4 py-2 rounded-xl border border-emerald-500/30 text-emerald-300 text-sm font-bold">
+                <div className="flex items-center gap-2 bg-emerald-500/20 backdrop-blur-md px-4 py-2 rounded-xl border border-emerald-500/30 text-emerald-300 text-sm font-medium">
                   <TrendingUp size={16} />
                   <span>Creciendo</span>
                 </div>
@@ -204,7 +240,7 @@ export default function SavingsGoalsPage() {
             <div className="w-16 h-16 bg-blue-500/10 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
               <Trophy className="text-blue-400" size={32} />
             </div>
-            <h3 className="text-lg font-bold mb-2">Billy Tips</h3>
+            <h3 className="text-lg font-medium mb-2">Billy Tips</h3>
             <p className="text-slate-400 text-sm font-medium italic leading-relaxed">
               "Ahorrar no es dejar de gastar, es empezar a construir tu libertad financiera."
             </p>
@@ -214,10 +250,10 @@ export default function SavingsGoalsPage() {
         {/* Goals Grid */}
         <div className="space-y-6">
           <div className="flex items-center justify-between mb-2">
-            <h2 className="text-xl font-bold flex items-center gap-2">
-              Metas Activas <span className="text-sm bg-blue-500/20 text-blue-400 px-2 py-0.5 rounded-md font-black">{goals.length}</span>
+            <h2 className="text-xl font-medium flex items-center gap-2">
+              Metas Activas <span className="text-sm bg-blue-500/20 text-blue-400 px-2 py-0.5 rounded-md font-medium">{goals.length}</span>
             </h2>
-            <button className="text-blue-400 text-sm font-bold hover:underline">Ver todas</button>
+            <button className="text-blue-400 text-sm font-medium hover:underline">Ver todas</button>
           </div>
 
           {loadingGoals ? (
@@ -227,7 +263,7 @@ export default function SavingsGoalsPage() {
                 transition={{ repeat: Infinity, duration: 1.5, ease: "linear" }}
                 className="w-12 h-12 border-4 border-blue-500/20 border-t-blue-500 rounded-full"
               />
-              <span className="text-slate-500 font-bold animate-pulse">Consultando tus sueños...</span>
+              <span className="text-slate-500 font-medium animate-pulse">Consultando tus sueños...</span>
             </div>
           ) : goals.length === 0 ? (
             <motion.div 
@@ -238,13 +274,13 @@ export default function SavingsGoalsPage() {
               <div className="w-20 h-20 bg-slate-800/40 rounded-full flex items-center justify-center mx-auto mb-6">
                 <Target size={40} className="text-slate-600" />
               </div>
-              <h2 className="text-2xl font-black text-slate-300 mb-3">Tu lienzo está en blanco</h2>
+              <h2 className="text-2xl font-medium text-slate-300 mb-3">Tu lienzo está en blanco</h2>
               <p className="text-slate-500 text-lg max-w-sm mx-auto mb-10 font-medium">
                 Define qué quieres lograr con tus Bizcoins y trazamos el mapa del tesoro juntos.
               </p>
               <button 
                 onClick={() => setIsModalOpen(true)}
-                className="inline-flex items-center gap-3 px-8 py-4 bg-slate-800 hover:bg-slate-700 text-white rounded-2xl font-black transition-all group"
+                className="inline-flex items-center gap-3 px-8 py-4 bg-slate-800 hover:bg-slate-700 text-white rounded-2xl font-medium transition-all group"
               >
                 Crear primera Meta
                 <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
@@ -272,14 +308,14 @@ export default function SavingsGoalsPage() {
                       <div className="flex-1 min-w-0">
                         <div className="flex justify-between items-start mb-1">
                           <div>
-                            <span className={`text-[10px] font-black uppercase tracking-widest ${iconDef.color} mb-1 block`}>
+                            <span className={`text-[10px] font-medium uppercase tracking-widest ${iconDef.color} mb-1 block`}>
                               {goal.category || "Inversión"}
                             </span>
-                            <h3 className="text-xl font-black truncate group-hover:text-white transition-colors">
+                            <h3 className="text-xl font-medium truncate group-hover:text-white transition-colors">
                               {goal.title}
                             </h3>
                             {goal.deadline && (
-                              <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1 block">
+                              <span className="text-[10px] font-medium text-slate-500 uppercase tracking-widest mt-1 block">
                                 Plazo: {new Date(goal.deadline).toLocaleDateString('es-MX', { day: 'numeric', month: 'short', year: 'numeric' })}
                               </span>
                             )}
@@ -298,16 +334,16 @@ export default function SavingsGoalsPage() {
                         <div className="flex flex-col items-center justify-center p-6 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl relative overflow-hidden">
                           <div className="absolute -top-4 -right-4 w-16 h-16 bg-emerald-500/10 rounded-full blur-xl" />
                            <Trophy size={40} className="text-emerald-400 mb-3 drop-shadow-md" />
-                           <span className="text-lg font-black tracking-tighter text-emerald-400">¡Meta Alcanzada!</span>
-                           <span className="text-xs font-bold text-emerald-500/70 mt-1 uppercase tracking-widest">Lo lograste</span>
+                           <span className="text-lg font-medium tracking-tighter text-emerald-400">¡Meta Alcanzada!</span>
+                           <span className="text-xs font-medium text-emerald-500/70 mt-1 uppercase tracking-widest">Lo lograste</span>
                         </div>
                       </div>
                     ) : (
                       <>
                         <div className="space-y-4">
                           <div className="flex justify-between items-end">
-                            <span className="text-xs font-bold text-slate-500 uppercase tracking-widest">Progreso</span>
-                            <span className="text-2xl font-black tracking-tighter text-white">{progress}%</span>
+                            <span className="text-xs font-medium text-slate-500 uppercase tracking-widest">Progreso</span>
+                            <span className="text-2xl font-medium tracking-tighter text-white">{progress}%</span>
                           </div>
                           <div className="h-3 bg-slate-800 rounded-full overflow-hidden relative">
                             <motion.div 
@@ -321,7 +357,7 @@ export default function SavingsGoalsPage() {
                               }`}
                             />
                           </div>
-                          <div className="flex justify-between items-center text-xs font-bold font-mono tracking-tighter">
+                          <div className="flex justify-between items-center text-xs font-medium font-mono tracking-tighter">
                             <div className="flex items-center gap-1.5 text-slate-400">
                               <Coins size={14} className="text-amber-400" />
                               <span>{bizcoins.toLocaleString()} bz</span>
@@ -334,12 +370,12 @@ export default function SavingsGoalsPage() {
 
                         <div className="mt-8 pt-6 border-t border-slate-800/50">
                           {progress === 100 ? (
-                            <button onClick={() => handleRedeemGoal(goal.id, goal.title)} className="w-full py-4 bg-emerald-500 hover:bg-emerald-400 text-white rounded-2xl font-black shadow-lg shadow-emerald-500/20 transition-all active:scale-[0.98] flex items-center justify-center gap-2">
+                            <button onClick={() => handleRedeemGoal(goal.id, goal.title)} className="w-full py-4 bg-emerald-500 hover:bg-emerald-400 text-white rounded-2xl font-medium shadow-lg shadow-emerald-500/20 transition-all active:scale-[0.98] flex items-center justify-center gap-2">
                               <Sparkles size={20} />
                               Canjear Meta
                             </button>
                           ) : (
-                            <div className="flex items-center gap-3 bg-slate-800/50 py-3 px-4 rounded-2xl border border-slate-800 text-sm font-bold text-slate-400">
+                            <div className="flex items-center gap-3 bg-slate-800/50 py-3 px-4 rounded-2xl border border-slate-800 text-sm font-medium text-slate-400">
                               <Flame size={18} className="text-amber-400 animate-pulse" />
                               <span>Faltan {(goal.targetAmount - bizcoins).toLocaleString()} bz para tu meta</span>
                             </div>
@@ -365,10 +401,10 @@ export default function SavingsGoalsPage() {
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               className="bg-slate-900 border border-slate-800 w-full max-w-md rounded-[2rem] p-8 shadow-2xl"
             >
-              <h2 className="text-2xl font-black text-white mb-6">Crear Nueva Meta</h2>
+              <h2 className="text-2xl font-medium text-white mb-6">Crear Nueva Meta</h2>
               <form onSubmit={handleCreateGoal} className="space-y-5">
                 <div>
-                  <label className="block text-sm font-bold text-slate-400 mb-2">¿Qué quieres lograr?</label>
+                  <label className="block text-sm font-medium text-slate-400 mb-2">¿Qué quieres lograr?</label>
                   <input 
                     type="text" 
                     required 
@@ -379,9 +415,9 @@ export default function SavingsGoalsPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-bold text-slate-400 mb-2">Costo (Bizcoins)</label>
+                  <label className="block text-sm font-medium text-slate-400 mb-2">Costo (Bizcoins)</label>
                   <div className="relative">
-                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-bold">bz</span>
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-medium">bz</span>
                     <input 
                       type="number" 
                       required 
@@ -389,16 +425,16 @@ export default function SavingsGoalsPage() {
                       value={newAmount}
                       onChange={(e) => setNewAmount(e.target.value)}
                       placeholder="10000"
-                      className="w-full bg-slate-800 border-2 border-slate-700 focus:border-blue-500 rounded-xl pl-12 pr-4 py-3 text-white font-black text-lg outline-none transition-colors"
+                      className="w-full bg-slate-800 border-2 border-slate-700 focus:border-blue-500 rounded-xl pl-12 pr-4 py-3 text-white font-medium text-lg outline-none transition-colors"
                     />
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-bold text-slate-400 mb-2">Plazo de tiempo</label>
+                  <label className="block text-sm font-medium text-slate-400 mb-2">Plazo de tiempo</label>
                   <select
                     value={newDeadline}
                     onChange={(e) => setNewDeadline(e.target.value)}
-                    className="w-full bg-slate-800 border-2 border-slate-700 focus:border-blue-500 rounded-xl px-4 py-3 text-white font-bold outline-none transition-colors appearance-none"
+                    className="w-full bg-slate-800 border-2 border-slate-700 focus:border-blue-500 rounded-xl px-4 py-3 text-white font-medium outline-none transition-colors appearance-none"
                   >
                     <option value="7">1 semana (Reto Exprés)</option>
                     <option value="30">1 mes (Corto plazo)</option>
@@ -408,7 +444,7 @@ export default function SavingsGoalsPage() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-bold text-slate-400 mb-3">Categoría</label>
+                  <label className="block text-sm font-medium text-slate-400 mb-3">Categoría</label>
                   <div className="grid grid-cols-3 gap-3">
                     {GOAL_ICONS.map((cat) => {
                       const CIcon = cat.Icon;
@@ -421,17 +457,17 @@ export default function SavingsGoalsPage() {
                           className={`flex flex-col items-center gap-2 p-3 rounded-xl border-2 transition-all ${isSelected ? 'border-blue-500 bg-blue-500/10' : 'border-slate-800 bg-slate-800/50 hover:bg-slate-800'}`}
                         >
                           <CIcon size={24} className={isSelected ? cat.color : "text-slate-500"} />
-                          <span className={`text-[10px] font-bold uppercase tracking-wider ${isSelected ? 'text-white' : 'text-slate-500'}`}>{cat.id}</span>
+                          <span className={`text-[10px] font-medium uppercase tracking-wider ${isSelected ? 'text-white' : 'text-slate-500'}`}>{cat.id}</span>
                         </button>
                       )
                     })}
                   </div>
                 </div>
                 <div className="pt-4 flex gap-3">
-                  <button type="button" onClick={() => setIsModalOpen(false)} className="flex-1 py-3.5 bg-slate-800 hover:bg-slate-700 text-white rounded-xl font-bold transition-colors">
+                  <button type="button" onClick={() => setIsModalOpen(false)} className="flex-1 py-3.5 bg-slate-800 hover:bg-slate-700 text-white rounded-xl font-medium transition-colors">
                     Cancelar
                   </button>
-                  <button type="submit" disabled={isCreating} className="flex-[2] py-3.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-black shadow-lg shadow-blue-600/30 transition-all disabled:opacity-50">
+                  <button type="submit" disabled={isCreating} className="flex-[2] py-3.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-medium shadow-lg shadow-blue-600/30 transition-all disabled:opacity-50">
                     {isCreating ? "Guardando..." : "Establecer Meta"}
                   </button>
                 </div>

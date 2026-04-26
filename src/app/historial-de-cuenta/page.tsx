@@ -190,7 +190,7 @@ export default function HistorialDeCuentaPage() {
             <div style={{ fontSize: 11, fontWeight: 800, color: "rgba(15, 98, 254, 0.8)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 4 }}>Saldo Actual</div>
             <div style={{ fontSize: 26, fontWeight: 950, color: "white", display: "flex", alignItems: "center", gap: 8, justifyContent: "flex-end" }}>
               <Coins size={24} color="#f59e0b" />
-              {(dbProfile?.bizcoins || 0).toLocaleString()} <span style={{ fontSize: 14, color: "rgba(255,255,255,0.4)" }}>BC</span>
+              {(dbProfile?.bizcoins || 0).toLocaleString()} <span style={{ fontSize: 14, color: "rgba(255,255,255,0.4)" }}>BZ</span>
             </div>
           </div>
         </header>
@@ -301,7 +301,7 @@ export default function HistorialDeCuentaPage() {
                       letterSpacing: "-0.01em",
                       marginBottom: 2
                     }}>
-                      {formatAmount(t.amount, t.category)} <span style={{ fontSize: 12, fontWeight: 700, opacity: 0.5 }}>BC</span>
+                      {formatAmount(t.amount, t.category)} <span style={{ fontSize: 12, fontWeight: 700, opacity: 0.5 }}>BZ</span>
                     </div>
                     <div style={{ fontSize: 10, color: "rgba(255,255,255,0.25)", fontWeight: 800, textTransform: "uppercase", letterSpacing: "1px" }}>
                       Blockchain Bizen v2

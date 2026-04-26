@@ -1,152 +1,137 @@
 import { NextRequest, NextResponse } from "next/server"
-import { createSupabaseServer } from "@/lib/supabase/server"
+import { prisma } from "@/lib/prisma"
+import { requireAuth } from "@/lib/auth/api-auth"
 
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ gameId: string }> }
 ) {
   try {
-    const supabase = await createSupabaseServer()
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
-
-    if (authError || !user) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      )
+    const authResult = await requireAuth(request)
+    if (!authResult.success) {
+      return authResult.response
     }
+    const { user } = authResult.data
 
-    const gameId = parseInt(params.gameId)
+    const { gameId } = await params
+    const parsedGameId = parseInt(gameId)
 
     // Get game session
-    const { data: gameSession, error: gameError } = await supabase
-      .from('game_sessions')
-      .select('*')
-      .eq('id', gameId)
-      .eq('user_id', user.id)
-      .single()
+    const gameSession = await prisma.gameSession.findUnique({
+      where: { id: parsedGameId }
+    })
 
-    if (gameError || !gameSession) {
+    if (!gameSession || gameSession.userId !== user.id) {
       return NextResponse.json(
         { error: "Game not found" },
         { status: 404 }
       )
     }
 
-    // Get player with profession
-    const { data: players, error: playerError } = await supabase
-      .from('players')
-      .select('*, professions(*)')
-      .eq('game_session_id', gameId)
-      .eq('user_id', user.id)
+    // Get player with profession, investments, liabilities, and doodads
+    const player = await prisma.player.findFirst({
+      where: {
+        gameSessionId: parsedGameId,
+        userId: user.id
+      },
+      include: {
+        profession: true,
+        playerInvestments: {
+          where: { isSold: false },
+          include: { opportunityCard: true }
+        },
+        playerLiabilities: {
+          where: { isPaidOff: false }
+        },
+        playerDoodads: true
+      }
+    })
 
-    if (playerError || !players || players.length === 0) {
+    if (!player || !player.profession) {
       return NextResponse.json(
         { error: "Player not found" },
         { status: 404 }
       )
     }
 
-    const player = players[0]
-
-    // Get active investments
-    const { data: investmentsRaw } = await supabase
-      .from('player_investments')
-      .select('*, opportunity_cards(*)')
-      .eq('player_id', player.id)
-      .eq('is_sold', false)
-
-    // Get unpaid liabilities
-    const { data: liabilitiesRaw } = await supabase
-      .from('player_liabilities')
-      .select('*')
-      .eq('player_id', player.id)
-      .eq('is_paid_off', false)
-
-    // Get doodads
-    const { data: doodadsRaw } = await supabase
-      .from('player_doodads')
-      .select('*')
-      .eq('player_id', player.id)
-    
     // Transform investments to camelCase
-    const investments = investmentsRaw?.map(inv => ({
+    const investments = player.playerInvestments.map(inv => ({
       id: inv.id,
-      purchasePrice: inv.purchase_price,
-      downPaymentPaid: inv.down_payment_paid,
-      currentCashFlow: inv.current_cash_flow,
-      purchasedAt: inv.purchased_at,
-      totalIncomeEarned: inv.total_income_earned,
+      purchasePrice: inv.purchasePrice,
+      downPaymentPaid: inv.downPaymentPaid,
+      currentCashFlow: inv.currentCashFlow,
+      purchasedAt: inv.purchasedAt,
+      totalIncomeEarned: inv.totalIncomeEarned,
       opportunityCard: {
-        id: inv.opportunity_cards.id,
-        name: inv.opportunity_cards.name,
-        type: inv.opportunity_cards.type,
-        minSalePrice: inv.opportunity_cards.min_sale_price,
-        maxSalePrice: inv.opportunity_cards.max_sale_price
+        id: inv.opportunityCard.id,
+        name: inv.opportunityCard.name,
+        type: inv.opportunityCard.type,
+        minSalePrice: inv.opportunityCard.minSalePrice,
+        maxSalePrice: inv.opportunityCard.maxSalePrice
       }
-    })) || []
+    }))
 
     // Transform liabilities to camelCase
-    const liabilities = liabilitiesRaw?.map(lib => ({
+    const liabilities = player.playerLiabilities.map(lib => ({
       id: lib.id,
       type: lib.type,
       description: lib.description,
-      principalAmount: lib.principal_amount,
-      remainingBalance: lib.remaining_balance,
-      monthlyPayment: lib.monthly_payment,
-      interestRate: lib.interest_rate
-    })) || []
+      principalAmount: lib.principalAmount,
+      remainingBalance: lib.remainingBalance,
+      monthlyPayment: lib.monthlyPayment,
+      interestRate: lib.interestRate
+    }))
 
     // Transform doodads to camelCase
-    const doodads = doodadsRaw?.map(doodad => ({
+    const doodads = player.playerDoodads.map(doodad => ({
       id: doodad.id,
       name: doodad.name,
       description: doodad.description,
       cost: doodad.cost,
-      purchasedAt: doodad.purchased_at
-    })) || []
+      purchasedAt: doodad.purchasedAt
+    }))
 
     // Transform to camelCase for frontend
-    const profession = player.professions
+    const profession = player.profession
     
     return NextResponse.json({
       id: gameSession.id,
       status: gameSession.status,
-      currentPhase: gameSession.current_phase,
-      totalTurns: gameSession.total_turns,
+      currentPhase: gameSession.currentPhase,
+      totalTurns: gameSession.totalTurns,
       player: {
         id: player.id,
-        cashOnHand: player.cash_on_hand,
+        cashOnHand: player.cashOnHand,
         savings: player.savings,
-        numChildren: player.num_children,
-        currentTurn: player.current_turn,
-        currentPosition: player.current_position ?? 0,
-        passiveIncome: player.passive_income,
-        totalIncome: player.total_income,
-        totalExpenses: player.total_expenses,
-        cashFlow: player.cash_flow,
-        hasEscapedRatRace: player.has_escaped_rat_race,
-        isOnFastTrack: player.is_on_fast_track,
+        numChildren: player.numChildren,
+        currentTurn: player.currentTurn,
+        currentPosition: player.currentPosition ?? 0,
+        passiveIncome: player.passiveIncome,
+        totalIncome: player.totalIncome,
+        totalExpenses: player.totalExpenses,
+        cashFlow: player.cashFlow,
+        hasEscapedRatRace: player.hasEscapedRatRace,
+        isOnFastTrack: player.isOnFastTrack,
         profession: {
           id: profession.id,
           name: profession.name,
           description: profession.description,
           salary: profession.salary,
           taxes: profession.taxes,
-          homeMortgagePayment: profession.home_mortgage_payment,
-          schoolLoanPayment: profession.school_loan_payment,
-          carLoanPayment: profession.car_loan_payment,
-          creditCardPayment: profession.credit_card_payment,
-          retailPayment: profession.retail_payment,
-          otherExpenses: profession.other_expenses,
-          childExpense: profession.child_expense,
-          homeMortgage: profession.home_mortgage,
-          schoolLoans: profession.school_loans,
-          carLoans: profession.car_loans,
-          creditCards: profession.credit_cards,
-          retailDebt: profession.retail_debt,
-          startingCash: profession.starting_cash,
-          startingSavings: profession.starting_savings
+          homeMortgagePayment: profession.homeMortgagePayment,
+          schoolLoanPayment: profession.schoolLoanPayment,
+          carLoanPayment: profession.carLoanPayment,
+          creditCardPayment: profession.creditCardPayment,
+          retailPayment: profession.retailPayment,
+          otherExpenses: profession.otherExpenses,
+          childExpense: profession.childExpense,
+          homeMortgage: profession.homeMortgage,
+          schoolLoans: profession.schoolLoans,
+          carLoans: profession.carLoans,
+          creditCards: profession.creditCards,
+          retailDebt: profession.retailDebt,
+          startingCash: profession.startingCash,
+          startingSavings: profession.startingSavings
         },
         investments: investments,
         liabilities: liabilities,

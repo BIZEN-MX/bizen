@@ -92,9 +92,21 @@ export default function ComunidadHubPage() {
   const isAdminOrTeacher = dbProfile?.role === "school_admin" || dbProfile?.role === "teacher"
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans pb-24">
+    <div className="min-h-screen bg-slate-50 font-sans pb-24 community-hub-container">
+      <style>{`
+        .community-hub-container .hero-section-white-text div:not(.bg-white *),
+        .community-hub-container .hero-section-white-text p,
+        .community-hub-container .hero-section-white-text span,
+        .community-hub-container .hero-section-white-text h1,
+        .community-hub-container .hero-section-white-text h2,
+        .community-hub-container .hero-section-white-text h3 {
+          color: #ffffff !important;
+          opacity: 1 !important;
+          -webkit-text-fill-color: #ffffff !important;
+        }
+      `}</style>
       {/* ── HERO BANNER ─────────────────────────────────────────────────────── */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-[#0B1E5E] to-[#1e3a8a] rounded-b-[2rem] lg:rounded-[3rem] lg:m-6 lg:mt-4 shadow-2xl">
+      <div className="relative overflow-hidden bg-gradient-to-br from-[#0B1E5E] to-[#1e3a8a] rounded-b-[2rem] lg:rounded-[3rem] lg:m-6 lg:mt-4 shadow-2xl hero-section-white-text">
         {/* BG Orbs & Mesh */}
         <div className="absolute -top-1/2 -right-[10%] w-[500px] h-[500px] bg-indigo-500/25 rounded-full blur-[80px] pointer-events-none" />
         <div className="absolute -bottom-[30%] -left-[5%] w-[400px] h-[400px] bg-blue-500/20 rounded-full blur-[80px] pointer-events-none" />
@@ -117,11 +129,11 @@ export default function ComunidadHubPage() {
                   Comunidad en Vivo
                 </span>
               </div>
-              <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-white tracking-tighter leading-[1.05] mb-8">
+              <h1 className="text-5xl md:text-6xl lg:text-7xl font-normal text-white tracking-tighter leading-[1.05] mb-8">
                 Aprender es mejor <br className="hidden md:block" />
-                <span className="text-white/40">en compañía.</span>
+                <span className="text-white">en compañía.</span>
               </h1>
-              <p className="text-lg md:text-xl text-white/70 font-semibold leading-relaxed max-w-2xl">
+              <p className="text-lg md:text-xl text-white font-medium leading-relaxed max-w-2xl">
                 Únete a miles de estudiantes que están transformando su futuro financiero mientras generan un impacto positivo real.
               </p>
             </div>
@@ -313,7 +325,11 @@ export default function ComunidadHubPage() {
                 ) : topPlayers.map((p: any, idx: number) => {
                   const isMe = p.userId === user?.id
                   return (
-                    <div key={p.userId} className={`flex items-center gap-3 lg:gap-5 p-3 lg:p-4 rounded-[1.5rem] transition-all duration-300 hover:bg-slate-50 ${isMe ? "bg-blue-50/50 border-[1.5px] border-blue-200 shadow-sm" : "border-[1.5px] border-transparent"}`}>
+                    <div 
+                      key={p.userId} 
+                      onClick={() => router.push(`/forum/profile/${p.userId}`)}
+                      className={`flex items-center gap-3 lg:gap-5 p-3 lg:p-4 rounded-[1.5rem] transition-all duration-300 hover:bg-slate-50 cursor-pointer ${isMe ? "bg-blue-50/50 border-[1.5px] border-blue-200 shadow-sm" : "border-[1.5px] border-transparent"}`}
+                    >
                       <div className="w-8 flex justify-center shrink-0">
                         {idx < 3 ? <Medal size={24} className={idx === 0 ? "text-amber-400" : idx === 1 ? "text-slate-400" : "text-amber-700"} /> : <span className="text-sm font-black text-slate-400">#{idx + 1}</span>}
                       </div>
@@ -341,7 +357,7 @@ export default function ComunidadHubPage() {
             <div className="flex flex-col gap-6 lg:gap-8">
 
               {/* Join the forum CTA */}
-              <div className="relative overflow-hidden bg-gradient-to-br from-[#0B1E5E] to-blue-900 rounded-[2.5rem] p-10 lg:p-12 shadow-2xl flex flex-col group cursor-pointer hover:-translate-y-1 transition-transform duration-300">
+              <div className="relative overflow-hidden bg-gradient-to-br from-[#0B1E5E] to-blue-900 rounded-[2.5rem] p-10 lg:p-12 shadow-2xl flex flex-col group cursor-pointer hover:-translate-y-1 transition-transform duration-300 hero-section-white-text">
                 <div className="absolute -top-[20%] -right-[10%] w-60 h-60 bg-indigo-500/30 rounded-full blur-[60px] pointer-events-none group-hover:bg-indigo-400/40 transition-colors" />
                 <div className="absolute -bottom-[10%] left-[5%] w-48 h-48 bg-blue-400/20 rounded-full blur-[50px] pointer-events-none" />
 
@@ -349,10 +365,10 @@ export default function ComunidadHubPage() {
                   <div className="w-16 h-16 rounded-2xl bg-white/10 border border-white/20 flex items-center justify-center mb-8 shadow-inner backdrop-blur-md">
                     <Users size={28} className="text-blue-300" />
                   </div>
-                  <h3 className="text-3xl font-black text-white tracking-tight mb-4">
+                  <h3 className="text-3xl font-normal text-white tracking-tight mb-4">
                     Únete a la conversación
                   </h3>
-                  <p className="text-lg text-white/60 font-semibold leading-relaxed mb-10 max-w-sm">
+                  <p className="text-lg text-white font-medium leading-relaxed mb-10 max-w-sm">
                     Cientos de estudiantes comparten dudas, logros y consejos financieros cada día.
                   </p>
                   <button onClick={() => router.push("/forum")} className={`inline-flex items-center gap-3 px-8 py-4 text-white rounded-2xl font-black text-sm uppercase tracking-widest transition-all shadow-xl ${isAnahuac ? "bg-primary hover:bg-orange-600 shadow-primary/30" : "bg-blue-600 hover:bg-blue-500 shadow-blue-600/30"}`}>

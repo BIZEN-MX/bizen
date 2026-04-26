@@ -6,14 +6,14 @@ import { useRouter, useParams } from "next/navigation"
 import GameBoard from "@/components/cashflow/GameBoard"
 import { useCashflowSounds } from "@/hooks/useCashflowSounds"
 import { AvatarDisplay } from "@/components/AvatarDisplay"
+import { GameToast, useGameToast } from "@/components/cashflow/GameToast"
 import { motion, AnimatePresence } from "framer-motion"
 import { 
-  TrophyIcon, TargetIcon, MoneyIcon, BarChartIcon, BriefcaseIcon, ClockIcon, ZapIcon, CreditCardIcon, ShoppingCartIcon, CompassIcon, HeartIcon 
+  TrophyIcon, MoneyIcon, BarChartIcon, ZapIcon, CreditCardIcon, ShoppingCartIcon, CompassIcon, HeartIcon 
 } from "@/components/CustomIcons"
 import { 
   X, Home, TrendingUp, Briefcase, Users, BadgeDollarSign, Check, AlertTriangle, 
-  Gamepad2, Film, Shirt, Plane, Utensils, Gem, CheckCircle2, Coins, ArrowLeft, 
-  Lightbulb, Info, History, ShieldCheck, Target, Sparkles, Map, BookOpen, Star
+  Gamepad2, Film, Shirt, Plane, Utensils, Gem, CheckCircle2, Loader2
 } from "lucide-react"
 
 type Player = {
@@ -147,6 +147,7 @@ export default function CashFlowGamePage() {
   const [diceResult, setDiceResult] = useState<number | null>(null)
   const [isMobile, setIsMobile] = useState(false)
   const { playDiceRoll, playCardReveal, playReward, playDecision, playNegative, playSuccessChime } = useCashflowSounds()
+  const { toasts, removeToast, success: toastSuccess, error: toastError, warning: toastWarning, info: toastInfo, payday: toastPayday } = useGameToast()
 
 
   useEffect(() => {
@@ -244,39 +245,29 @@ export default function CashFlowGamePage() {
 
       if (response.ok) {
         const data = await response.json()
-        console.log("✅ Card drawn:", data)
 
         if (data.isDoodad) {
-          // Doodad drawn (luxury temptation)
-          console.log("🎰 Doodad drawn:", data.doodad?.name)
           setCurrentDoodad(data.doodad)
           setShowDoodadModal(true)
           playCardReveal()
         } else if (data.isMarketEvent) {
-          // Market event occurred
-          console.log("📉 Market event:", data.marketEvent?.name)
           setMarketEventData(data)
           setShowMarketEvent(true)
           playCardReveal()
-          console.log("🔄 Refreshing game state after market event...")
-          await fetchGameState() // Refresh to show updated state
+          await fetchGameState()
         } else {
-          // Regular opportunity card
-          console.log("🃏 Opportunity card:", data.card?.name)
           setCurrentCard(data.card)
           setShowCard(true)
           playCardReveal()
         }
       } else {
         const errorData = await response.json()
-        console.error("❌ Failed to draw card:", errorData)
         playNegative()
-        alert(`❌ Error al sacar carta:\n\n${errorData.error || 'Error desconocido'}\n\n${errorData.details ? `Detalles: ${errorData.details}` : 'Revisa la consola del navegador para más información.'}`)
+        toastError("Error al sacar carta", errorData.error || "Error desconocido")
       }
     } catch (error) {
-      console.error("❌ Error drawing card:", error)
       playNegative()
-      alert(`❌ Error de red al sacar carta.\n\n${error instanceof Error ? error.message : 'Error desconocido'}\n\nRevisa tu conexión y la consola del navegador.`)
+      toastError("Error de red", error instanceof Error ? error.message : "Error desconocido")
     } finally {
       setActionInProgress(false)
     }
@@ -373,22 +364,22 @@ export default function CashFlowGamePage() {
 
       if (response.ok) {
         const data = await response.json()
-        console.log("✅ Loan taken successfully:", data)
-        alert(`✅ ¡Préstamo aprobado!\n\n💰 Recibiste: $${data.amount?.toLocaleString() || loanAmount.toLocaleString()}\n💳 Pago mensual: $${data.monthlyPayment?.toLocaleString()}/mes\n💵 Nuevo efectivo: $${data.newCash?.toLocaleString()}`)
-        console.log("🔄 Refreshing game state...")
         await fetchGameState()
         setShowLoanModal(false)
         playReward()
+        toastSuccess(
+          "🏦 ¡Préstamo aprobado!",
+          `Pago mensual: $${data.monthlyPayment?.toLocaleString()}/mes`,
+          data.amount
+        )
       } else {
         const errorData = await response.json()
-        console.error("❌ Failed to take loan:", errorData)
         playNegative()
-        alert(`❌ Error al solicitar préstamo:\n\n${errorData.error || 'Error desconocido'}\n\n${errorData.details ? `Detalles: ${errorData.details}` : 'Revisa la consola del navegador para más información.'}`)
+        toastError("Error al solicitar préstamo", errorData.error || "Error desconocido")
       }
     } catch (error) {
-      console.error("❌ Error taking loan:", error)
       playNegative()
-      alert(`❌ Error de red al solicitar el préstamo.\n\n${error instanceof Error ? error.message : 'Error desconocido'}\n\nRevisa tu conexión y la consola del navegador.`)
+      toastError("Error de red", error instanceof Error ? error.message : "Error desconocido")
     } finally {
       setActionInProgress(false)
     }
@@ -420,10 +411,11 @@ export default function CashFlowGamePage() {
         await fetchGameState()
         closePayOffModal()
         playSuccessChime()
+        toastSuccess("✅ Préstamo liquidado", "Tu flujo mensual mejoró")
       } else {
         const data = await response.json()
         playNegative()
-        alert(data.error || "No puedes pagar este préstamo")
+        toastError("No puedes pagar", data.error || "Fondos insuficientes")
       }
     } catch (error) {
       console.error("Error paying off loan:", error)
@@ -449,10 +441,11 @@ export default function CashFlowGamePage() {
         setShowDoodadModal(false)
         setCurrentDoodad(null)
         playNegative()
+        toastWarning("💸 Lujo comprado", "Recuerda: los activos primero")
       } else {
         const data = await response.json()
         playNegative()
-        alert(data.error || "No puedes comprar este artículo")
+        toastError("Sin efectivo", data.error || "No puedes comprar este artículo")
       }
     } catch (error) {
       console.error("Error buying doodad:", error)
@@ -517,17 +510,17 @@ export default function CashFlowGamePage() {
         const data = await response.json()
         const finalRoll = typeof data.diceRoll === "number" ? data.diceRoll : roll
         setDiceResult(finalRoll)
-        console.log("🎲 Dice rolled:", data)
 
         // Move player and handle landing
         await fetchGameState()
-        if (data.cashChange > 0 || data.landedSpace === "payday") {
+        if (data.cashChange > 0) {
           playReward()
+          toastPayday(data.cashChange)
         }
 
         // Check what space they landed on and trigger action
         if (data.landedSpace) {
-          handleSpaceLanding(data.landedSpace)
+          handleSpaceLanding(data.landedSpace, data.cashChange)
         }
       }
     } catch (error) {
@@ -538,32 +531,30 @@ export default function CashFlowGamePage() {
     }
   }
 
-  const handleSpaceLanding = (spaceType: string) => {
+  const handleSpaceLanding = (spaceType: string, cashChange?: number) => {
     switch (spaceType) {
       case 'opportunity':
-        // Auto-draw card when landing on opportunity
-        setTimeout(() => drawCard(), 500)
+        setTimeout(() => drawCard(), 600)
         break
       case 'payday':
-        // Payday happens automatically on backend
-        alert('💵 ¡Día de pago! Recibiste tu salario e ingresos pasivos.')
+        // Toast shown already from cashChange
+        toastInfo("📅 Pasaste por Payday", "Recibiste tu salario e ingresos pasivos")
         break
       case 'market':
-        // Market event happens automatically
-        setTimeout(() => drawCard(), 500)
+        toastWarning("📊 Evento de Mercado", "Sacando carta de mercado...")
+        setTimeout(() => drawCard(), 600)
         break
       case 'doodad':
-        // Doodad temptation
-        setTimeout(() => drawCard(), 500)
+        toastWarning("⚠️ Tentación de Lujo", "¡Cuidado! Gasto sin retorno")
+        setTimeout(() => drawCard(), 600)
         break
       case 'charity':
-        // Optional donation
-        if (confirm('❤️ ¿Deseas donar 10% de tu salario a caridad? (beneficios fiscales)')) {
-          // Handle charity donation
-        }
+        toastInfo("❤️ Casilla de Caridad", "Sacando carta...")
+        setTimeout(() => drawCard(), 600)
         break
       case 'baby':
-        alert('👶 ¡Felicidades! Tuviste un bebé. Tus gastos mensuales aumentan.')
+        toastWarning("👶 ¡Un bebé!", "Tus gastos mensuales aumentarán")
+        setTimeout(() => drawCard(), 600)
         break
     }
   }
@@ -586,10 +577,25 @@ export default function CashFlowGamePage() {
 
   if (loading || loadingGame || !gameState) {
     return (
-      <div className="w-full min-h-screen overflow-x-hidden flex items-center justify-center bg-[#FBFAF5] box-border">
-        <div className="text-slate-800 text-2xl font-medium">
-          Cargando juego...
+      <div className="w-full min-h-screen overflow-x-hidden flex flex-col items-center justify-center bg-gradient-to-br from-slate-900 to-blue-950 box-border gap-6">
+        <motion.div
+          animate={{ rotate: 360 }}
+          transition={{ duration: 1.2, repeat: Infinity, ease: "linear" }}
+        >
+          <Loader2 size={48} className="text-blue-400" />
+        </motion.div>
+        <div className="text-white/60 text-lg font-medium tracking-wide">Cargando tu partida...</div>
+        <div className="flex gap-2">
+          {[0, 1, 2].map(i => (
+            <motion.div
+              key={i}
+              className="w-2 h-2 rounded-full bg-blue-400"
+              animate={{ opacity: [0.3, 1, 0.3] }}
+              transition={{ duration: 1.2, repeat: Infinity, delay: i * 0.2 }}
+            />
+          ))}
         </div>
+        <GameToast toasts={toasts} onRemove={removeToast} />
       </div>
     )
   }
@@ -722,6 +728,8 @@ export default function CashFlowGamePage() {
   )
   return (
     <>
+      {/* Toast Notifications */}
+      <GameToast toasts={toasts} onRemove={removeToast} />
 
       <div className="cashflow-game-page w-full min-h-screen bg-[#FBFAF5] overflow-x-hidden">
         <main className="cashflow-game-main w-full max-w-full flex justify-center items-start box-border overflow-x-hidden overflow-y-visible" style={{
@@ -1611,44 +1619,94 @@ export default function CashFlowGamePage() {
 
         {/* Win Screen Modal */}
         {showWinScreen && (
-          <div className="fixed inset-0 bg-slate-900/90 backdrop-blur-xl flex items-center justify-center z-[5000] p-5">
+          <div className="fixed inset-0 bg-slate-900/95 backdrop-blur-xl flex items-center justify-center z-[5000] p-5">
+            {/* Confetti particles */}
+            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+              {Array.from({ length: 20 }).map((_, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ y: -20, x: `${(i * 5) % 100}vw`, opacity: 1, rotate: 0 }}
+                  animate={{ y: "110vh", opacity: [1, 1, 0], rotate: 360 * (i % 2 === 0 ? 1 : -1) }}
+                  transition={{ duration: 3 + (i % 4), repeat: Infinity, delay: (i * 0.3) % 3, ease: "linear" }}
+                  className="absolute w-3 h-3 rounded-sm"
+                  style={{
+                    background: ["#10b981", "#3b82f6", "#f59e0b", "#8b5cf6", "#ef4444", "#06b6d4"][i % 6],
+                    left: `${(i * 5.2) % 100}%`,
+                    top: -12
+                  }}
+                />
+              ))}
+            </div>
+
             <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              className="bg-white rounded-[32px] py-[60px] px-10 w-full max-w-[600px] shadow-[0_40px_100px_rgba(0,0,0,0.5)] text-center relative overflow-hidden"
+              initial={{ scale: 0.7, opacity: 0, y: 40 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              transition={{ type: "spring", stiffness: 300, damping: 25 }}
+              className="bg-gradient-to-br from-slate-900 via-emerald-950 to-slate-900 rounded-[32px] py-14 px-10 w-full max-w-[600px] shadow-[0_40px_100px_rgba(0,0,0,0.7),0_0_100px_rgba(16,185,129,0.2)] text-center relative overflow-hidden border border-emerald-500/20"
             >
-              <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-emerald-500 to-blue-500" />
+              {/* Top gradient bar */}
+              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-500 via-blue-500 to-emerald-500" />
+              {/* Glow effect */}
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
 
-              <div className="text-[80px] mb-6">🏆</div>
+              {/* Trophy */}
+              <motion.div
+                animate={{ y: [0, -10, 0] }}
+                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                className="text-[80px] mb-4 select-none"
+              >
+                🏆
+              </motion.div>
 
-              <h2 className="text-[42px] font-medium text-slate-800 m-0 mb-4">
-                ¡LIBERTAD FINANCIERA!
-              </h2>
-
-              <p className="text-[18px] text-slate-500 leading-[1.8] mb-10">
-                Has logrado que tu <strong className="text-emerald-500">ingreso pasivo</strong> sea mayor que tus gastos.
-                ¡Oficialmente has salido de la carrera de ratas y eres financieramente libre!
-              </p>
-
-              <div className="bg-emerald-50 rounded-[24px] p-8 mb-10 border-2 border-emerald-200">
-                <div className="grid grid-cols-2 gap-6">
-                  <div>
-                    <div className="text-[13px] font-medium text-emerald-600 uppercase mb-1">Ingreso Pasivo</div>
-                    <div className="text-[24px] font-medium text-emerald-900">${player.passiveIncome.toLocaleString()}</div>
-                  </div>
-                  <div>
-                    <div className="text-[13px] font-medium text-red-500 uppercase mb-1">Gastos Totales</div>
-                    <div className="text-[24px] font-medium text-red-900">${totalExpenses.toLocaleString()}</div>
-                  </div>
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+              >
+                <div className="inline-block bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 text-[11px] font-bold tracking-widest uppercase px-4 py-1.5 rounded-full mb-4">
+                  ✨ Carrera de Ratas Superada
                 </div>
-              </div>
+                <h2 className="text-[40px] font-bold text-white m-0 mb-4 tracking-tight">
+                  ¡LIBERTAD FINANCIERA!
+                </h2>
+                <p className="text-[16px] text-white/50 leading-relaxed mb-8 max-w-[440px] mx-auto">
+                  Tu <strong className="text-emerald-400">ingreso pasivo</strong> ahora supera tus gastos.
+                  Has escapado oficialmente de la Carrera de Ratas 🐀➡️🌟
+                </p>
+              </motion.div>
 
-              <button
+              {/* Stats */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.5 }}
+                className="grid grid-cols-3 gap-4 mb-8"
+              >
+                <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-2xl p-4">
+                  <div className="text-[11px] text-emerald-400 font-semibold uppercase tracking-wider mb-1">Ingreso Pasivo</div>
+                  <div className="text-[22px] font-bold text-emerald-300">${player.passiveIncome.toLocaleString()}</div>
+                </div>
+                <div className="bg-red-500/10 border border-red-500/20 rounded-2xl p-4">
+                  <div className="text-[11px] text-red-400 font-semibold uppercase tracking-wider mb-1">Gastos</div>
+                  <div className="text-[22px] font-bold text-red-300">${totalExpenses.toLocaleString()}</div>
+                </div>
+                <div className="bg-blue-500/10 border border-blue-500/20 rounded-2xl p-4">
+                  <div className="text-[11px] text-blue-400 font-semibold uppercase tracking-wider mb-1">Excedente</div>
+                  <div className="text-[22px] font-bold text-blue-300">+${(player.passiveIncome - totalExpenses).toLocaleString()}</div>
+                </div>
+              </motion.div>
+
+              <motion.button
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.7 }}
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
                 onClick={() => setShowWinScreen(false)}
-                className="w-full p-[18px] bg-gradient-to-br from-emerald-500 to-emerald-600 text-white border-none rounded-[16px] text-[18px] font-medium cursor-pointer shadow-[0_10px_30px_rgba(16,185,129,0.4)] transition-transform duration-200 hover:scale-[1.02]"
+                className="w-full p-5 bg-gradient-to-r from-emerald-500 to-emerald-400 text-white border-none rounded-2xl text-[17px] font-bold cursor-pointer shadow-[0_10px_40px_rgba(16,185,129,0.5)]"
               >
                 🚀 Continuar a la Vía Rápida
-              </button>
+              </motion.button>
             </motion.div>
           </div>
         )}

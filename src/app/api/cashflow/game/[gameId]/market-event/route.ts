@@ -1,40 +1,41 @@
 import { NextRequest, NextResponse } from "next/server"
-import { createSupabaseServer } from "@/lib/supabase/server"
+import { prisma } from "@/lib/prisma"
+import { requireAuth } from "@/lib/auth/api-auth"
 
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ gameId: string }> }
 ) {
   try {
-    const supabase = await createSupabaseServer()
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
-
-    if (authError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    const authResult = await requireAuth(request)
+    if (!authResult.success) {
+      return authResult.response
     }
+    const { user } = authResult.data
 
-    const { eventType, eventData } = await request.json()
-    const gameId = parseInt(params.gameId)
+    const body = await request.json()
+    const { eventType, eventData } = body
+    const { gameId } = await params
+    const parsedGameId = parseInt(gameId)
 
     // Get player
-    const { data: player } = await supabase
-      .from('players')
-      .select('*')
-      .eq('game_session_id', gameId)
-      .eq('user_id', user.id)
-      .single()
+    const player = await prisma.player.findFirst({
+      where: { gameSessionId: parsedGameId, userId: user.id }
+    })
 
     if (!player) {
       return NextResponse.json({ error: "Player not found" }, { status: 404 })
     }
 
     // Log market event
-    await supabase.from('game_events').insert({
-      game_session_id: gameId,
-      player_id: player.id,
-      event_type: eventType || "market_event",
-      event_data: eventData || {},
-      turn_number: player.current_turn
+    await prisma.gameEvent.create({
+      data: {
+        gameSessionId: parsedGameId,
+        playerId: player.id,
+        eventType: eventType || "market_event",
+        eventData: eventData || {},
+        turnNumber: player.currentTurn || 1
+      }
     })
 
     return NextResponse.json({ message: "Market event processed successfully" })

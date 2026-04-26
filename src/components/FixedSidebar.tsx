@@ -372,13 +372,14 @@ export default function FixedSidebar() {
                     {(() => {
                       const role = dbProfile?.role;
                       const isPremium = dbProfile?.subscriptionStatus === 'active' || (dbProfile?.school?.licenses?.length || 0) > 0;
+                      const isUnauthorized = userEmail === 'diegopenita31@gmail.com';
                       
                       let label = 'Plan Básico';
                       if (role === 'teacher') label = 'Docente';
                       else if (role === 'school_admin' || role === 'admin') label = 'Administrador';
-                      else if (role === 'student') label = 'Plan Institucional';
+                      else if (role === 'student' && !isUnauthorized) label = 'Plan Institucional';
                       else if (role === 'particular') label = isPremium ? 'Plan Premium' : 'Plan Básico';
-                      else label = 'Plan Institucional';
+                      else if (role && !isUnauthorized) label = 'Plan Institucional';
                       
                       const isBasic = label === 'Plan Básico';
                       

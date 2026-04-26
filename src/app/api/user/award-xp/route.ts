@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { createSupabaseServer } from "@/lib/supabase/server"
 import { prisma } from "@/lib/prisma"
 import { calculateLevel } from "@/lib/xp"
+import { pusherServer } from "@/lib/pusher-server"
 
 export async function POST(request: NextRequest) {
   try {
@@ -81,6 +82,17 @@ export async function POST(request: NextRequest) {
     })
 
     console.log(`✅ Awarded ${xpAmount} XP to user ${user.id} for: ${reason || 'unknown'}`)
+
+    // Emit Real-time Update via Pusher
+    try {
+      await pusherServer.trigger('rankings-channel', 'xp-updated', {
+        userId: user.id,
+        newXp: newXp,
+        newLevel: newLevel
+      })
+    } catch (err) {
+      console.error("[pusher] Failed to trigger xp-updated event:", err)
+    }
 
     return NextResponse.json({
       success: true,

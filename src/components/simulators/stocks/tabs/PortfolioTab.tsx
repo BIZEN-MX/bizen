@@ -29,6 +29,7 @@ interface PortfolioTabProps {
   totalValue: number;
   selectStock: (symbol: string) => void;
   setActiveTab: (tab: string) => void;
+  highlightSymbol?: string | null;
 }
 
 export const PortfolioTab: React.FC<PortfolioTabProps> = ({
@@ -46,10 +47,22 @@ export const PortfolioTab: React.FC<PortfolioTabProps> = ({
   holdingsValue,
   totalValue,
   selectStock,
-  setActiveTab
+  setActiveTab,
+  highlightSymbol = null
 }) => {
   return (
     <div className="p-5 px-4 md:p-7 md:px-8">
+      <style jsx>{`
+        @keyframes flash-highlight {
+          0% { background-color: rgba(16, 185, 129, 0); border-color: rgba(0, 0, 0, 0.05); }
+          20% { background-color: rgba(16, 185, 129, 0.2); border-color: rgba(16, 185, 129, 0.4); }
+          100% { background-color: rgba(16, 185, 129, 0); border-color: rgba(0, 0, 0, 0.05); }
+        }
+        .highlight-flash {
+          animation: flash-highlight 2s ease-out forwards;
+          box-shadow: 0 0 30px rgba(16, 185, 129, 0.15) !important;
+        }
+      `}</style>
       {portfolio && portfolio.holdings?.length > 0 ? (
         <div className="flex flex-col gap-8">
           {/* Underperformance Intelligent Alert */}
@@ -357,14 +370,22 @@ export const PortfolioTab: React.FC<PortfolioTabProps> = ({
           {isMobile ? (
             /* Mobile: card layout */
             <div className="flex flex-col gap-3">
-              {portfolio.holdings.map((h: any) => {
+             {portfolio.holdings.map((h: any, idx: number) => {
                 const marketPriceUSD = processedMarketData.find(m => m.symbol === h.symbol)?.price ?? Number(h.avg_cost);
                 const marketPriceBizcoins = marketPriceUSD;
                 const ret = ((marketPriceBizcoins - Number(h.avg_cost)) / Number(h.avg_cost)) * 100;
                 const sector = SYMBOL_SECTORS[h.symbol] || "Otros";
                 const positionValue = Number(h.quantity) * marketPriceBizcoins;
+                const isHighlighted = highlightSymbol === h.symbol;
                 return (
-                  <motion.div key={h.symbol} whileHover={{ y: -2 }} onClick={() => selectStock(h.symbol)} className={`cursor-pointer bg-white rounded-[20px] border-[1.5px] p-4 md:p-[18px] shadow-[0_2px_8px_rgba(0,0,0,0.04)] ${ret >= 0 ? "border-emerald-500/20" : "border-red-500/20"}`}>
+                  <motion.div 
+                    key={h.symbol} 
+                    whileHover={{ y: -2 }} 
+                    onClick={() => selectStock(h.symbol)} 
+                    className={`cursor-pointer bg-white rounded-[20px] border-[1.5px] p-4 md:p-[18px] shadow-[0_2px_8px_rgba(0,0,0,0.04)] transition-all duration-500 ${
+                      ret >= 0 ? "border-emerald-500/20" : "border-red-500/20"
+                    } ${isHighlighted ? 'highlight-flash scale-[1.02]' : ''}`}
+                  >
                     <div className="flex justify-between items-center mb-3">
                       <div className="flex items-center gap-2.5">
                         <StockLogo symbol={h.symbol} size={38} />
@@ -409,13 +430,20 @@ export const PortfolioTab: React.FC<PortfolioTabProps> = ({
                   </tr>
                 </thead>
                 <tbody>
-                  {portfolio.holdings.map((h: any) => {
+                  {portfolio.holdings.map((h: any, idx: number) => {
                     const marketPriceUSD = processedMarketData.find((m) => m.symbol === h.symbol)?.price ?? Number(h.avg_cost) / 1;
                     const marketPriceBizcoins = marketPriceUSD * 1;
                     const ret = ((marketPriceBizcoins - Number(h.avg_cost)) / Number(h.avg_cost)) * 100;
                     const sector = SYMBOL_SECTORS[h.symbol] || "Otros";
+                    const isHighlighted = highlightSymbol === h.symbol;
                     return (
-                      <tr key={h.symbol} onClick={() => selectStock(h.symbol)} className="border-b border-slate-50 cursor-pointer hover:bg-slate-50 transition-colors">
+                      <tr 
+                        key={h.symbol} 
+                        onClick={() => selectStock(h.symbol)} 
+                        className={`border-b border-slate-50 cursor-pointer hover:bg-slate-50 transition-all duration-500 ${
+                          isHighlighted ? 'highlight-flash' : ''
+                        }`}
+                      >
                         <td className="p-4">
                           <div className="flex items-center gap-3">
                             <StockLogo symbol={h.symbol} size={36} />

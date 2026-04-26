@@ -100,6 +100,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
     !pathname?.startsWith('/history') &&
     !pathname?.includes('/auth/') && 
     !pathname?.startsWith('/impacto-social') && 
+    !pathname?.startsWith('/admin') &&
     pathname !== '/configuracion' &&
     pathname !== '/payment';
 

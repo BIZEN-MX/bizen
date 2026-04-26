@@ -1,7 +1,7 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import { useRouter } from "next/navigation"
+import { useEffect, useState, useRef, Suspense } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
 import {
     ShoppingBag,
@@ -38,7 +38,7 @@ import { useTranslation } from "@/lib/translations"
 // ─────────────────────────────────────────
 // Catalogue
 // ─────────────────────────────────────────
-const CATEGORIES = ["Ebooks", "Herramientas", "Insignias"] as const
+const CATEGORIES = ["Ebooks", "Herramientas"] as const
 type Category = (typeof CATEGORIES)[number]
 
 interface Product {
@@ -52,6 +52,7 @@ interface Product {
     accent: string
     bg: string
     downloadUrl?: string
+    image?: string
 }
 
 // ── Rarity visual system ─────────────────────────────────────────────────────
@@ -77,6 +78,7 @@ const IcoRisk     = () => <svg viewBox="0 0 48 48" width="44" height="44" fill="
 const IcoShield   = () => <svg viewBox="0 0 48 48" width="44" height="44" fill="none"><path d="M24 4L8 12v14c0 10 7 18 16 20 9-2 16-10 16-20V12L24 4z" fill="#0891b2" fillOpacity=".9"/><path d="M17 24l5 5 9-9" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
 const IcoDarkMode = () => <svg viewBox="0 0 48 48" width="44" height="44" fill="none"><circle cx="24" cy="24" r="18" fill="#1e1b4b"/><path d="M30 14a14 14 0 1 1-16 16 10 10 0 0 0 16-16z" fill="#a78bfa"/><circle cx="30" cy="12" r="2" fill="#e0e7ff"/></svg>
 const IcoBoost    = () => <svg viewBox="0 0 48 48" width="44" height="44" fill="none"><path d="M24 4l4 12h12l-10 8 4 12-10-8-10 8 4-12L8 16h12z" fill="#f59e0b"/><path d="M24 16l2 6h6l-5 4 2 6-5-4-5 4 2-6-5-4h6z" fill="#fde68a"/></svg>
+const IcoTarget   = () => <svg viewBox="0 0 48 48" width="44" height="44" fill="none"><circle cx="24" cy="24" r="18" stroke="#10b981" strokeWidth="3" fill="#10b981" fillOpacity=".15"/><circle cx="24" cy="24" r="12" stroke="#10b981" strokeWidth="2"/><circle cx="24" cy="24" r="6" fill="#10b981"/><path d="M42 24h6M0 24h6M24 0v6M24 42v6" stroke="#10b981" strokeWidth="2"/></svg>
 const IcoBadge1   = () => <svg viewBox="0 0 48 48" width="44" height="44" fill="none"><circle cx="24" cy="24" r="16" fill="#fb923c" fillOpacity=".85"/><circle cx="24" cy="24" r="10" fill="none" stroke="#fff" strokeWidth="2"/><path d="M19 24l4 4 6-7" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
 const IcoBadge2   = () => <svg viewBox="0 0 48 48" width="44" height="44" fill="none"><defs><linearGradient id="bg2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stopColor="#f59e0b"/><stop offset="100%" stopColor="#ef4444"/></linearGradient></defs><polygon points="24,6 29,18 42,18 32,27 36,40 24,32 12,40 16,27 6,18 19,18" fill="url(#bg2)"/><polygon points="24,14 27,22 35,22 29,27 31,35 24,30 17,35 19,27 13,22 21,22" fill="#fde68a" fillOpacity=".8"/></svg>
 const IcoBadge3   = () => <svg viewBox="0 0 48 48" width="44" height="44" fill="none"><defs><linearGradient id="bg3" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stopColor="#8b5cf6"/><stop offset="100%" stopColor="#0ea5e9"/></linearGradient></defs><polygon points="24,4 28,16 42,16 31,25 35,38 24,30 13,38 17,25 6,16 20,16" fill="url(#bg3)"/><circle cx="24" cy="22" r="6" fill="#fff" fillOpacity=".7"/></svg>
@@ -84,73 +86,73 @@ const IcoBadge3   = () => <svg viewBox="0 0 48 48" width="44" height="44" fill="
 const PRODUCTS: Product[] = [
     // ── EBOOKS ─────────────────────────────────────────────────────────────────
     {
-        id: 5, name: "Guía de Inversión 2025", category: "Ebooks", price: 350,
-        description: "Todo lo que necesitas para empezar a invertir de forma inteligente. Desde CETES hasta ETFs sin jerga.",
+        id: 5, name: "Bolsa de Valores desde Cero", category: "Ebooks", price: 500,
+        description: "Domina los conceptos básicos de la bolsa, aprende cómo funcionan las acciones y empieza a invertir con confianza.",
         badge: "Raro", icon: <IcoBook1 />, accent: "#10b981",
         bg: "linear-gradient(135deg, #064e3b 0%, #10b981 100%)",
+        downloadUrl: "/api/content/pdf/Bolsa_de_Valores_desde_Cero",
+        image: "/assets/covers/cover_bolsa_v2.png"
     },
     {
-        id: 6, name: "Secretos del Cash Flow", category: "Ebooks", price: 450,
-        description: "Aprende a leer estados de resultados y a manejar el flujo de efectivo como lo hace un CFO.",
+        id: 6, name: "Inflación vs Rendimiento", category: "Ebooks", price: 500,
+        description: "Entiende cómo proteger tu dinero de la inflación y cómo buscar rendimientos que realmente hagan crecer tu patrimonio.",
         badge: "Raro", icon: <IcoBook2 />, accent: "#ef4444",
         bg: "linear-gradient(135deg, #7f1d1d 0%, #ef4444 100%)",
+        downloadUrl: "/api/content/pdf/Bizen_Ebook_Inflacion_vs_Rendimiento_2",
+        image: "/assets/covers/cover_inflacion_v2.png"
     },
     {
-        id: 7, name: "Psicología del Dinero", category: "Ebooks", price: 300,
-        description: "¿Por qué tomamos malas decisiones financieras? Las herramientas mentales para dinero inteligente.",
+        id: 7, name: "Finanzas Personales desde Cero", category: "Ebooks", price: 500,
+        description: "La guía definitiva para organizar tus gastos, ahorrar con propósito y construir una base financiera sólida.",
         badge: "Común", icon: <IcoBook3 />, accent: "#0ea5e9",
         bg: "linear-gradient(135deg, #0c4a6e 0%, #0ea5e9 100%)",
+        downloadUrl: "/api/content/pdf/Finanzas_Personales_desde_Cero",
+        image: "/assets/covers/cover_finanzas_v2.png"
     },
     {
-        id: 8, name: "El Inversor Inteligente", category: "Ebooks", price: 700,
-        description: "El clásico de Benjamin Graham adaptado al contexto mexicano. Análisis de empresas de la BMV incluido.",
+        id: 8, name: "El Costo de Esperar", category: "Ebooks", price: 500,
+        description: "Descubre el poder del interés compuesto y por qué el tiempo es tu activo más valioso en el mundo de las finanzas.",
         badge: "Épico", icon: <IcoBook4 />, accent: "#8b5cf6",
         bg: "linear-gradient(135deg, #2e1065 0%, #8b5cf6 100%)",
+        downloadUrl: "/api/content/pdf/Bizen_ElCostoDeEsperar_3",
+        image: "/assets/covers/cover_esperar_v2.png"
     },
     {
-        id: 20, name: "Historia del Dinero", category: "Ebooks", price: 400,
+        id: 20, name: "Historia del Dinero", category: "Ebooks", price: 500,
         description: "Descubre los orígenes del sistema financiero y cómo ha evolucionado el concepto de valor hasta la era digital.",
         badge: "Común", icon: <IcoBook2 />, accent: "#ef4444",
         bg: "linear-gradient(135deg, #450a0a 0%, #dc2626 100%)",
         downloadUrl: "/api/content/pdf/BIZEN_Historia_del_Dinero",
+        image: "/assets/covers/cover_historia_v2.png"
     },
     // ── HERRAMIENTAS ───────────────────────────────────────────────────────────
     {
-        id: 9, name: "Calculadora de ROI", category: "Herramientas", price: 500,
-        description: "Herramienta interactiva para calcular el retorno sobre inversión de cualquier proyecto. Exporta en PDF.",
-        badge: "Raro", icon: <IcoROI />, accent: "#6366f1",
-        bg: "linear-gradient(135deg, #1e1b4b 0%, #6366f1 100%)",
+        id: 9, name: "Planificador de Presupuesto", category: "Herramientas", price: 800,
+        description: "Herramienta avanzada para controlar tus ingresos y gastos con la regla 50/30/20. Exporta reportes profesionales.",
+        badge: "Raro", icon: <IcoROI />, accent: "#38bdf8",
+        bg: "linear-gradient(135deg, #082f49 0%, #38bdf8 100%)",
+        image: "/assets/billy/billy_budget_planner_1777056157270.png"
     },
     {
-        id: 10, name: "Planeador Financiero", category: "Herramientas", price: 800,
-        description: "Planea tu presupuesto, rastrea gastos y visualiza tu progreso hacia tus metas. Diseñado para estudiantes.",
-        badge: "Épico", icon: <IcoPlan />, accent: "#38bdf8",
-        bg: "linear-gradient(135deg, #082f49 0%, #0369a1 100%)",
+        id: 10, name: "Board de Visión Financiera", category: "Herramientas", price: 1200,
+        description: "Crea tu Vision Canvas interactivo con IA para visualizar tus metas a corto, mediano y largo plazo.",
+        badge: "Épico", icon: <IcoPlan />, accent: "#8b5cf6",
+        bg: "linear-gradient(135deg, #2e1065 0%, #8b5cf6 100%)",
+        image: "/assets/billy/billy_vision_board_1777056175192.png"
     },
     {
-        id: 11, name: "Analizador de Riesgo", category: "Herramientas", price: 650,
-        description: "Evalúa el riesgo de cualquier inversión con métricas profesionales: VaR, Sharpe Ratio, Drawdown máximo.",
-        badge: "Raro", icon: <IcoRisk />, accent: "#f97316",
-        bg: "linear-gradient(135deg, #431407 0%, #c2410c 100%)",
-    },
-    // ── INSIGNIAS ──────────────────────────────────────────────────────────────
-    {
-        id: 15, name: "Insignia Pionero", category: "Insignias", price: 250,
-        description: "Demuestra que fuiste de los primeros en llegar a Bizen. Esta placa hace destacar tu perfil en el foro.",
-        badge: "Común", icon: <IcoBadge1 />, accent: "#fb923c",
-        bg: "linear-gradient(135deg, #431407 0%, #ea580c 100%)",
+        id: 11, name: "Planificador de Metas", category: "Herramientas", price: 600,
+        description: "Simulador avanzado para proyectar tus metas de ahorro y visualizar el camino al éxito financiero.",
+        badge: "Raro", icon: <IcoTarget />, accent: "#10b981",
+        bg: "linear-gradient(135deg, #064e3b 0%, #10b981 100%)",
+        image: "/assets/billy/billy_savings_goals_1777056195152.png"
     },
     {
-        id: 16, name: "Maestro Finance", category: "Insignias", price: 800,
-        description: "Para los que dominaron todos los módulos del curso. Una insignia que inspira respeto en la comunidad.",
-        badge: "Épico", icon: <IcoBadge2 />, accent: "#f59e0b",
-        bg: "linear-gradient(135deg, #292524 0%, #78350f 50%, #b45309 100%)",
-    },
-    {
-        id: 17, name: "Millennial Rico", category: "Insignias", price: 1200,
-        description: "La insignia más rara. Este título legendario solo lo han alcanzado menos del 1% de usuarios de Bizen.",
-        badge: "Legendario", icon: <IcoBadge3 />, accent: "#8b5cf6",
-        bg: "linear-gradient(135deg, #0f172a 0%, #4c1d95 40%, #1d4ed8 100%)",
+        id: 12, name: "Calculadora de Inflación", category: "Herramientas", price: 400,
+        description: "Entiende el impacto real de la inflación en tu dinero y protege tu poder adquisitivo a futuro.",
+        badge: "Común", icon: <IcoROI />, accent: "#ef4444",
+        bg: "linear-gradient(135deg, #450a0a 0%, #ef4444 100%)",
+        image: "/assets/billy/billy_inflation_calculator_1777056215773.png"
     },
 ]
 
@@ -176,7 +178,7 @@ const BADGE_COLORS: Record<string, { bg: string; text: string }> = {
 }
 
 // ─────────────────────────────────────────
-export default function TiendaPage() {
+function TiendaPageContent() {
     const { user, loading, refreshUser, dbProfile } = useAuth()
     const router = useRouter()
 
@@ -200,6 +202,9 @@ export default function TiendaPage() {
     const [error, setError] = useState<string | null>(null)
     const [loadingRedeem, setLoadingRedeem] = useState(false)
     const [redeemSuccess, setRedeemSuccess] = useState(false)
+    const [highlightedId, setHighlightedId] = useState<number | null>(null)
+    const searchParams = useSearchParams()
+    const productRefs = useRef<Record<number, HTMLDivElement | null>>({})
 
     useEffect(() => {
         if (loading) return
@@ -208,7 +213,6 @@ export default function TiendaPage() {
         // Auto-switch to bizcoins tab if URL hash is #bizcoins
         if (typeof window !== "undefined" && window.location.hash === "#bizcoins") {
             setActiveTab("bizcoins")
-            // Smooth scroll after a tick so the section renders first
             setTimeout(() => {
                 document.getElementById("tienda-tabs")?.scrollIntoView({ behavior: "smooth", block: "start" })
             }, 300)
@@ -217,11 +221,9 @@ export default function TiendaPage() {
         const fetchAll = async () => {
             setLoadingStats(true)
             try {
-                // Fetch stats (bizcoins, etc.)
                 const statsRes = await fetch("/api/user/stats")
                 if (statsRes.ok) setStats(await statsRes.json())
 
-                // Fetch inventory separately to ensure 'inventory' state is populated
                 const invRes = await fetch("/api/tienda/inventory")
                 if (invRes.ok) {
                     const data = await invRes.json()
@@ -233,6 +235,35 @@ export default function TiendaPage() {
 
         fetchAll()
     }, [user, loading, router])
+
+    // ── Highlight product from URL param (?highlight=ID) ──────────────────────
+    useEffect(() => {
+        const hid = searchParams.get("highlight")
+        if (!hid) return
+        const pid = parseInt(hid)
+        const product = PRODUCTS.find(p => p.id === pid)
+        if (!product) return
+
+        // Switch to the right category
+        setActiveTab("catalogo")
+        setActiveCategory(product.category)
+        setHighlightedId(pid)
+
+        // Scroll after render
+        const tryScroll = (attempts = 0) => {
+            const el = productRefs.current[pid]
+            if (el) {
+                el.scrollIntoView({ behavior: "smooth", block: "center" })
+            } else if (attempts < 15) {
+                setTimeout(() => tryScroll(attempts + 1), 150)
+            }
+        }
+        setTimeout(() => tryScroll(), 400)
+
+        // Remove highlight after 3.5s
+        const timer = setTimeout(() => setHighlightedId(null), 3500)
+        return () => clearTimeout(timer)
+    }, [searchParams])
 
     const handleConfirmPurchase = async () => {
         if (!selectedProduct) return
@@ -308,7 +339,7 @@ export default function TiendaPage() {
                     setSelectedGCId(null)
                 }, 2500)
             } else {
-                setError(data.error || "Error al completar el canje")
+                setError(data.error || "Error al completar la compra")
             }
         } catch {
             setError("Error de conexión")
@@ -347,7 +378,7 @@ export default function TiendaPage() {
                                 <div className="w-20 h-20 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-5 text-emerald-600 animate-[bounce_1s_ease_infinite]">
                                     <PartyPopper size={48} />
                                 </div>
-                                <h2 className="text-2xl font-bold text-slate-900 mb-2 tracking-tight">¡Canje exitoso!</h2>
+                                <h2 className="text-2xl font-bold text-slate-900 mb-2 tracking-tight">¡Compra exitosa!</h2>
                                 <p className="text-[15px] text-slate-500 mb-8 leading-relaxed">
                                     <strong className="text-slate-700 font-bold">{selectedProduct.name}</strong> ya está en tu perfil.
                                 </p>
@@ -372,10 +403,14 @@ export default function TiendaPage() {
                                 {/* Product preview inside modal */}
                                 <div className="flex gap-4 items-center mb-6">
                                     <div
-                                        className="w-[72px] h-[72px] rounded-[1.25rem] flex items-center justify-center shrink-0 border border-white/20 shadow-lg"
+                                        className="w-[72px] h-[72px] rounded-[1.25rem] flex items-center justify-center shrink-0 border border-white/20 shadow-lg overflow-hidden"
                                         style={{ background: selectedProduct.bg, color: selectedProduct.accent, boxShadow: `0 8px 24px ${selectedProduct.accent}30` }}
                                     >
-                                        {selectedProduct.icon}
+                                        {selectedProduct.image ? (
+                                            <img src={selectedProduct.image} alt={selectedProduct.name} className="w-full h-full object-cover" />
+                                        ) : (
+                                            selectedProduct.icon
+                                        )}
                                     </div>
                                     <div>
                                         <div className="text-lg font-bold text-slate-900 mb-1 leading-tight">{selectedProduct.name}</div>
@@ -395,7 +430,7 @@ export default function TiendaPage() {
                                 {bizcoins < selectedProduct.price ? (
                                     <div className="bg-red-50 border border-red-200 rounded-xl p-3.5 mb-6 flex gap-2.5 items-center text-red-600 text-[13px] font-bold">
                                         <Lock size={16} />
-                                        Te faltan {(selectedProduct.price - bizcoins).toLocaleString()} BIZCOINS para este canje.
+                                        Te faltan {(selectedProduct.price - bizcoins).toLocaleString()} BIZCOINS para esta compra.
                                     </div>
                                 ) : (
                                     <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-3.5 mb-6 flex gap-2.5 items-center text-emerald-600 text-[13px] font-bold">
@@ -434,7 +469,7 @@ export default function TiendaPage() {
                                             </>
                                         ) : (
                                             <>
-                                                Confirmar canje <ChevronRight size={16} />
+                                                Confirmar compra <ChevronRight size={16} />
                                             </>
                                         )}
                                     </button>
@@ -457,7 +492,7 @@ export default function TiendaPage() {
                             <div className="w-20 h-20 rounded-[1.5rem] bg-blue-50 flex items-center justify-center mx-auto mb-5 text-blue-600 animate-[bounce_2s_infinite]">
                                 <Gift size={40} />
                             </div>
-                            <h2 className="text-2xl font-black text-slate-900 mb-2 tracking-tight">¿Canjear tarjeta?</h2>
+                            <h2 className="text-2xl font-black text-slate-900 mb-2 tracking-tight">¿Comprar tarjeta?</h2>
                             <p className="text-[15px] font-medium text-slate-500 m-0">Descontaremos <strong className="text-slate-700">{selectedGC.points.toLocaleString()} BIZCOINS</strong> de tu saldo actual.</p>
                         </div>
 
@@ -476,7 +511,7 @@ export default function TiendaPage() {
                         {userPoints < selectedGC.points && (
                             <div className="bg-red-50 border border-red-200 rounded-xl p-4 mb-6 flex gap-3 items-center text-red-600">
                                 <Lock size={20} className="shrink-0" />
-                                <span className="text-[14px] font-bold">No tienes suficientes BIZCOINS para este canje.</span>
+                                <span className="text-[14px] font-bold">No tienes suficientes BIZCOINS para esta compra.</span>
                             </div>
                         )}
 
@@ -496,9 +531,9 @@ export default function TiendaPage() {
                                 {loadingRedeem ? (
                                     <><div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin" /> Procesando...</>
                                 ) : redeemSuccess ? (
-                                    <><CheckCircle2 size={20} /> ¡Canje Exitoso!</>
+                                    <><CheckCircle2 size={20} /> ¡Compra Exitosa!</>
                                 ) : (
-                                    "Confirmar Canje"
+                                    "Confirmar Compra"
                                 )}
                             </button>
                         </div>
@@ -508,6 +543,17 @@ export default function TiendaPage() {
 
             {/* ── PAGE CONTENT ── */}
             <div className="relative w-full z-10 tienda-inner-wrap">
+                <style>{`
+                    .tienda-inner-wrap h1 {
+                        color: #ffffff !important;
+                        opacity: 1 !important;
+                        -webkit-text-fill-color: #ffffff !important;
+                    }
+                    .tienda-inner-wrap h1 span {
+                        color: #ffffff !important;
+                        -webkit-text-fill-color: #ffffff !important;
+                    }
+                `}</style>
                 {/* ── HERO HEADER ── */}
                 <div className="relative overflow-hidden mb-8 md:mb-10 rounded-[1.75rem] md:rounded-[2.5rem] p-6 md:p-12 lg:p-16 bg-gradient-to-br from-[#0b1e5e] via-[#1e3a8a] to-[#0F62FE] shadow-[0_24px_70px_rgba(15,98,254,0.3)] animate-[slideUp_0.7s_cubic-bezier(0.2,0.8,0.2,1)_both]">
                     {/* Artistic backgrounds */}
@@ -521,7 +567,7 @@ export default function TiendaPage() {
                                 <ShoppingBag size={14} className="text-blue-400" />
                                 <span className="text-[11px] md:text-xs font-bold text-blue-300 uppercase tracking-wider">Marketplace Premium</span>
                             </div>
-                            <h1 className="text-3xl md:text-5xl lg:text-6xl font-black text-white mb-4 tracking-tight leading-tight">
+                            <h1 className="text-3xl md:text-5xl lg:text-6xl font-medium text-white mb-4 tracking-tight leading-tight">
                                 Personaliza tu <span className="text-blue-400">Experiencia</span>
                             </h1>
                             <p className="text-sm md:text-lg text-blue-200 font-medium max-w-xl mx-auto xl:mx-0 leading-relaxed">
@@ -667,39 +713,50 @@ export default function TiendaPage() {
                             {filtered.map((product, idx) => {
                                 const canAfford = bizcoins >= product.price
                                 const isOwned = inventory.includes(String(product.id))
+                                const isHighlighted = highlightedId === product.id
                                 return (
                                     <div
                                         key={product.id}
-                                        className="bg-white rounded-[2rem] border border-slate-100 shadow-[0_4px_20px_rgba(0,0,0,0.03)] overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_30px_60px_-12px_rgba(15,98,254,0.15)] hover:border-blue-200 animate-[fadeIn_0.6s_ease_both] flex flex-col relative group"
+                                        ref={el => { productRefs.current[product.id] = el }}
+                                        className={`bg-white rounded-[2rem] border overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:border-blue-200 animate-[fadeIn_0.6s_ease_both] flex flex-col relative group ${
+                                            isHighlighted
+                                                ? "border-yellow-400 shadow-[0_0_0_4px_rgba(250,204,21,0.3),0_30px_60px_-8px_rgba(250,204,21,0.4)] -translate-y-3 scale-[1.02]"
+                                                : "border-slate-100 shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_30px_60px_-12px_rgba(15,98,254,0.15)]"
+                                        }`}
                                         style={{
                                             animationDelay: `${Math.min(idx * 0.06, 0.4)}s`,
-                                            boxShadow: product.badge && RARITY_STYLES[product.badge]
-                                                ? `0 4px 20px ${RARITY_STYLES[product.badge].glow}, 0 1px 3px rgba(0,0,0,0.05)`
-                                                : undefined,
+                                            boxShadow: isHighlighted
+                                                ? undefined
+                                                : product.badge && RARITY_STYLES[product.badge]
+                                                    ? `0 4px 20px ${RARITY_STYLES[product.badge].glow}, 0 1px 3px rgba(0,0,0,0.05)`
+                                                    : undefined,
+                                            transition: "all 0.5s cubic-bezier(0.16,1,0.3,1)"
                                         }}
                                     >
+                                        {/* Spotlight pulse ring for highlighted product */}
+                                        {isHighlighted && (
+                                            <div className="absolute inset-0 rounded-[2rem] pointer-events-none z-30 overflow-hidden">
+                                                <div className="absolute inset-0 rounded-[2rem] animate-[ping_1s_ease-in-out_3] border-4 border-yellow-400/60" />
+                                                <div className="absolute top-2 left-1/2 -translate-x-1/2 bg-gradient-to-r from-yellow-400 to-amber-500 text-black text-[11px] font-black px-4 py-1.5 rounded-full shadow-lg flex items-center gap-1.5 z-40 whitespace-nowrap">
+                                                    <ShoppingBag size={11} /> ¡Este es el que buscas!
+                                                </div>
+                                            </div>
+                                        )}
                                         {/* ── Card hero ── */}
                                         <div className="relative h-[210px] flex items-center justify-center overflow-hidden" style={{ background: product.bg }}>
-                                            {/* Dot-grid pattern overlay */}
-                                            <div className="absolute inset-0 pointer-events-none opacity-20" style={{ backgroundImage: 'radial-gradient(rgba(255,255,255,0.7) 1px, transparent 1px)', backgroundSize: '18px 18px' }} />
-                                            {/* Top-left diagonal lines */}
-                                            <div className="absolute inset-0 pointer-events-none opacity-10" style={{ backgroundImage: `repeating-linear-gradient(45deg, rgba(255,255,255,0.5) 0px, rgba(255,255,255,0.5) 1px, transparent 1px, transparent 18px)` }} />
-                                            {/* Bottom ambient glow */}
-                                            <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-[160px] h-[80px] rounded-full blur-[20px] pointer-events-none" style={{ background: `radial-gradient(circle, ${product.accent}80 0%, transparent 70%)` }} />
-                                            {/* Top right soft light */}
-                                            <div className="absolute -top-10 -right-10 w-[120px] h-[120px] rounded-full blur-[30px] pointer-events-none opacity-40" style={{ background: `radial-gradient(circle, ${product.accent}90 0%, transparent 80%)` }} />
-                                            {/* Shine sweep for Legendario */}
-                                            {product.badge === "Legendario" && (
-                                                <div className="absolute top-0 -left-full w-[60%] h-full bg-gradient-to-r from-transparent via-white/10 to-transparent animate-[scanline_3s_ease-in-out_infinite] pointer-events-none" />
+                                            {product.image ? (
+                                                <img src={product.image} alt={product.name} className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                                            ) : (
+                                                <>
+                                                    <div className="absolute inset-0 pointer-events-none opacity-20" style={{ backgroundImage: 'radial-gradient(rgba(255,255,255,0.7) 1px, transparent 1px)', backgroundSize: '18px 18px' }} />
+                                                    <div className="absolute inset-0 pointer-events-none opacity-10" style={{ backgroundImage: `repeating-linear-gradient(45deg, rgba(255,255,255,0.5) 0px, rgba(255,255,255,0.5) 1px, transparent 1px, transparent 18px)` }} />
+                                                    <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-[160px] h-[80px] rounded-full blur-[20px] pointer-events-none" style={{ background: `radial-gradient(circle, ${product.accent}80 0%, transparent 70%)` }} />
+                                                    <div className="absolute -top-10 -right-10 w-[120px] h-[120px] rounded-full blur-[30px] pointer-events-none opacity-40" style={{ background: `radial-gradient(circle, ${product.accent}90 0%, transparent 80%)` }} />
+                                                    <div className="relative z-10 drop-shadow-[0_8px_24px_rgba(0,0,0,0.4)] scale-110 animate-[float_3.5s_ease-in-out_infinite]" style={{ animationDelay: `${idx * 0.3}s` }}>
+                                                        {product.icon}
+                                                    </div>
+                                                </>
                                             )}
-                                            {/* Category label top-left */}
-                                            <div className="absolute bottom-3 left-3 px-2.5 py-1 rounded-lg bg-black/30 backdrop-blur-sm border border-white/10 text-white text-[10px] font-bold tracking-widest uppercase">
-                                                {product.category}
-                                            </div>
-                                            {/* Icon */}
-                                            <div className="relative z-10 drop-shadow-[0_8px_24px_rgba(0,0,0,0.4)] scale-110 animate-[float_3.5s_ease-in-out_infinite]" style={{ animationDelay: `${idx * 0.3}s` }}>
-                                                {product.icon}
-                                            </div>
 
                                             {/* Rarity / Owned badge */}
                                             {isOwned ? (
@@ -747,7 +804,7 @@ export default function TiendaPage() {
                                                 </span>
                                                 <div className={`flex items-center gap-1 font-black text-[15px] ${isOwned ? "text-emerald-500" : (canAfford ? "" : "text-slate-400")}`} style={!isOwned && canAfford ? { color: product.accent } : {}}>
                                                     {isOwned ? <CheckCircle2 size={14} className="text-emerald-500" /> : <Zap size={14} className={canAfford ? "fill-current" : "fill-slate-300 text-slate-400"} />}
-                                                    {isOwned ? "Canjeado" : product.price.toLocaleString()}
+                                                    {isOwned ? "Adquirido" : product.price.toLocaleString()}
                                                     {!isOwned && <span className="text-[10px] font-bold tracking-wider">BZ</span>}
                                                 </div>
                                             </div>
@@ -773,9 +830,9 @@ export default function TiendaPage() {
                                                 style={isOwned && product.category === "Ebooks" && product.downloadUrl ? { marginBottom: 12 } : {}}
                                             >
                                                 {isOwned ? (
-                                                    <><CheckCircle2 size={18} /> Ya canjeado</>
+                                                    <><CheckCircle2 size={18} /> Ya adquirido</>
                                                 ) : canAfford ? (
-                                                    <><Gift size={18} /> Canjear ahora <ChevronRight size={16} /></>
+                                                    <><Gift size={18} /> Comprar ahora <ChevronRight size={16} /></>
                                                 ) : (
                                                     <><Lock size={16} /> Faltan {(product.price - bizcoins).toLocaleString()} BZ</>
                                                 )}
@@ -803,7 +860,7 @@ export default function TiendaPage() {
                             <div className="mb-6 text-slate-300"><ShoppingBag size={72} strokeWidth={1} className="mx-auto" /></div>
                             <h3 className="text-2xl font-bold text-slate-900 mb-3 tracking-tight">Aún no tienes compras</h3>
                             <p className="text-[15px] text-slate-500 max-w-[340px] mx-auto mb-8 leading-relaxed">
-                                Recorre el catálogo y canjea tus BIZCOINS por marcos exclusivos y herramientas para tu estudio.
+                                Recorre el catálogo y adquiere con tus BIZCOINS marcos exclusivos y herramientas para tu estudio.
                             </p>
                             <button
                                 onClick={() => setActiveTab("catalogo")}
@@ -853,7 +910,7 @@ export default function TiendaPage() {
                             <div className="flex items-center justify-between mb-8 flex-wrap gap-5">
                                 <div>
                                     <h2 className="text-[clamp(24px,4vw,32px)] font-black text-slate-900 mb-2 tracking-tight leading-none">Tarjetas de Regalo</h2>
-                                    <p className="text-[16px] text-slate-500 m-0 leading-relaxed font-medium">Canjea tus BIZCOINS acumulados por beneficios reales en tiendas populares.</p>
+                                    <p className="text-[16px] text-slate-500 m-0 leading-relaxed font-medium">Usa tus BIZCOINS acumulados para obtener beneficios reales en tiendas populares.</p>
                                 </div>
                                 <div className="inline-flex items-center gap-2.5 bg-blue-50/50 border-[1.5px] border-blue-200/50 rounded-2xl px-5 py-3 shadow-sm backdrop-blur-sm">
                                     <Star size={22} className="fill-blue-600 text-blue-600" />
@@ -885,7 +942,7 @@ export default function TiendaPage() {
                                             <div className="p-6 flex items-center justify-between bg-white relative">
                                                 <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent" />
                                                 <div>
-                                                    <div className="text-[11px] font-black text-slate-400 uppercase tracking-widest mb-1.5">Costo del canje</div>
+                                                    <div className="text-[11px] font-black text-slate-400 uppercase tracking-widest mb-1.5">Costo de la compra</div>
                                                     <div className={`text-[20px] font-black flex items-center gap-1.5 ${canAfford ? "text-blue-600" : "text-slate-400"}`}>
                                                         <Star size={18} className={canAfford ? "fill-blue-600" : "fill-slate-300"} />
                                                         {card.points.toLocaleString()}
@@ -918,7 +975,7 @@ export default function TiendaPage() {
                                     }`}
                                 >
                                     <Gift size={24} className={selectedGCId ? "animate-[bounce_2s_ease_infinite]" : ""} />
-                                    {selectedGCId ? `Canjear Beneficio ${selectedGC?.store}` : "Elige una Recompensa"}
+                                    {selectedGCId ? `Comprar Beneficio ${selectedGC?.store}` : "Elige una Recompensa"}
                                 </button>
                             </div>
                         </div>
@@ -927,5 +984,13 @@ export default function TiendaPage() {
 
             </div>
         </div>
+    )
+}
+
+export default function TiendaPage() {
+    return (
+        <Suspense fallback={null}>
+            <TiendaPageContent />
+        </Suspense>
     )
 }

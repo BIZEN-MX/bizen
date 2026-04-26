@@ -21,6 +21,7 @@ const SUPER_ADMINS = ["diego@bizen.mx"]
 interface Term {
   word: string;
   definition: string;
+  scope?: string; // 'global' or lessonId
 }
 
 export default function AdminGlossaryPage() {
@@ -33,6 +34,7 @@ export default function AdminGlossaryPage() {
   
   // Glossary State
   const [terms, setTerms] = useState<Term[]>([])
+  const [topics, setTopics] = useState<any[]>([])
 
   const isAllowed = isLoaded && user?.emailAddresses[0]?.emailAddress && SUPER_ADMINS.includes(user.emailAddresses[0].emailAddress.toLowerCase())
 
@@ -43,8 +45,21 @@ export default function AdminGlossaryPage() {
   }, [isLoaded, isAllowed, router])
 
   useEffect(() => {
-    if (isAllowed) fetchGlossary()
+    if (isAllowed) {
+      fetchGlossary()
+      fetchTopics()
+    }
   }, [isAllowed])
+
+  const fetchTopics = async () => {
+    try {
+      const res = await fetch("/api/admin/curriculum?type=topics")
+      const data = await res.json()
+      if (res.ok) setTopics(data.topics || [])
+    } catch (e) {
+      console.error(e)
+    }
+  }
 
   const fetchGlossary = async () => {
     setLoading(true)
@@ -62,7 +77,7 @@ export default function AdminGlossaryPage() {
   }
 
   const handleAddTerm = () => {
-    setTerms([{ word: "", definition: "" }, ...terms])
+    setTerms([{ word: "", definition: "", scope: "global" }, ...terms])
   }
 
   const handleUpdateTerm = (index: number, key: keyof Term, value: string) => {
@@ -131,7 +146,7 @@ export default function AdminGlossaryPage() {
             <h1 className="text-4xl font-black tracking-tight mb-2">Glosario Dinámico</h1>
             <p className="text-slate-400 text-lg">Define términos financieros y reglas que sobrescribirán los conceptos en todas las lecciones automáticamente.</p>
           </div>
-          <ReturnButton href="/teacher/dashboard" label="Volver al Dashboard" />
+          
         </header>
 
         <AnimatePresence>
@@ -241,6 +256,25 @@ export default function AdminGlossaryPage() {
                               className="bg-black/20 border border-white/5 rounded-xl p-3 text-slate-300 focus:outline-none focus:ring-1 focus:ring-pink-500/50 resize-none h-28 text-sm"
                             />
                           </label>
+                          <div className="flex flex-col gap-1.5 mt-2">
+                            <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Alcance (Scope)</span>
+                            <select
+                              value={term.scope || "global"}
+                              onChange={(e) => handleUpdateTerm(origIndex, "scope", e.target.value)}
+                              className="bg-[#161d2f] border border-white/10 rounded-xl px-3 py-2 text-xs font-bold text-slate-300 focus:outline-none focus:ring-1 focus:ring-pink-500 max-w-[250px]"
+                            >
+                              <option value="global">🌐 Global (Toda la plataforma)</option>
+                              {topics.map(topic => (
+                                <optgroup key={topic.id} label={topic.title}>
+                                  {topic.lessons?.map((lesson: any) => (
+                                    <option key={lesson.id} value={lesson.id}>
+                                      ↳ {lesson.title}
+                                    </option>
+                                  ))}
+                                </optgroup>
+                              ))}
+                            </select>
+                          </div>
                         </div>
                       </motion.div>
                     )

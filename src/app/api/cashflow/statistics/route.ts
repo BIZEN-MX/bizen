@@ -1,18 +1,14 @@
-import { NextResponse } from "next/server"
-import { createSupabaseServer } from "@/lib/supabase/server"
+import { NextRequest, NextResponse } from "next/server"
+import { requireAuth } from "@/lib/auth/api-auth"
 import { prisma } from "@/lib/prisma"
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    const supabase = await createSupabaseServer()
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
-
-    if (authError || !user) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      )
+    const authResult = await requireAuth(request)
+    if (!authResult.success) {
+      return authResult.response
     }
+    const { user } = authResult.data
 
     // Get all games for this user
     const games = await prisma.gameSession.findMany({

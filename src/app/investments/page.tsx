@@ -23,6 +23,7 @@ import {
 import { useAuth } from "@/contexts/AuthContext"
 import PageLoader from "@/components/PageLoader"
 import BizcoinIcon from "@/components/BizcoinIcon"
+import { useSearchParams } from "next/navigation"
 
 /**
  * BIZEN Investments Page
@@ -196,12 +197,23 @@ export default function InvestmentsPage() {
   const [inputFocused, setInputFocused] = useState(false)
   const [positions, setPositions] = useState<any[]>([])
   const [loadingPositions, setLoadingPositions] = useState(true)
+  const [shouldHighlight, setShouldHighlight] = useState(false)
+  const searchParams = useSearchParams()
 
   useEffect(() => {
     if (!loading && user) {
       fetchPositions()
+      
+      // Check for highlight parameter
+      if (searchParams.get("highlight") === "latest") {
+        setTimeout(() => {
+          setShouldHighlight(true)
+          // Remove highlight after animation
+          setTimeout(() => setShouldHighlight(false), 3000)
+        }, 500)
+      }
     }
-  }, [user, loading])
+  }, [user, loading, searchParams])
 
   const fetchPositions = async () => {
     try {
@@ -248,7 +260,40 @@ export default function InvestmentsPage() {
   if (!user) return null
 
   return (
-    <div className="min-h-screen bg-[#05081a] text-white selection:bg-blue-500/30 pt-6 pb-20 relative overflow-x-hidden">
+    <div className="min-h-screen bg-[#05081a] text-white selection:bg-blue-500/30 pt-6 pb-20 relative overflow-x-hidden investments-page-container">
+      <style>{`
+        .investments-page-container div:not(.bg-white *),
+        .investments-page-container p:not(.bg-white *),
+        .investments-page-container span:not(.bg-white *),
+        .investments-page-container h1,
+        .investments-page-container h2,
+        .investments-page-container h3,
+        .investments-page-container h4,
+        .investments-page-container h5,
+        .investments-page-container h6,
+        .investments-page-container label,
+        .investments-page-container input,
+        .investments-page-container button:not(.bg-white) {
+          color: #ffffff !important;
+          opacity: 1 !important;
+          -webkit-text-fill-color: #ffffff !important;
+        }
+        
+        /* Asegurar que los botones blancos y sus textos internos sean oscuros */
+        .investments-page-container .bg-white,
+        .investments-page-container .bg-white *,
+        .investments-page-container button.bg-white {
+          color: #020617 !important;
+          -webkit-text-fill-color: #020617 !important;
+          opacity: 1 !important;
+        }
+        
+        .investments-page-container .font-black,
+        .investments-page-container .font-bold,
+        .investments-page-container .font-semibold {
+          font-weight: 500 !important;
+        }
+      `}</style>
       {/* Decorative Orbs */}
       <div className={`fixed top-[-10%] right-[-5%] w-[45%] h-[45%] rounded-full blur-[120px] transition-all duration-1000 opacity-20 pointer-events-none ${selectedPlan.glowColor}`} />
       <div className="fixed bottom-[-5%] left-[-5%] w-[30%] h-[30%] bg-blue-600/10 rounded-full blur-[100px] pointer-events-none" />
@@ -305,7 +350,7 @@ export default function InvestmentsPage() {
 
               <h2 className="text-4xl font-black tracking-tight mb-4 relative z-10">¡Inversión Iniciada!</h2>
               <p className="text-slate-400 text-lg leading-relaxed mb-10 relative z-10 max-w-md mx-auto">
-                Felicidades. Has puesto <strong className="text-emerald-400"> {amount.toLocaleString()} BC </strong> a rendir al <strong className="text-white">{(selectedPlan.yieldRate * 100).toFixed(0)}%</strong>.
+                Felicidades. Has puesto <strong className="text-emerald-400"> {amount.toLocaleString()} BZ </strong> a rendir al <strong className="text-white">{(selectedPlan.yieldRate * 100).toFixed(0)}%</strong>.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 relative z-10">
@@ -347,7 +392,7 @@ export default function InvestmentsPage() {
                           onBlur={() => setInputFocused(false)}
                           className="flex-1 bg-transparent border-none outline-none text-5xl md:text-7xl font-black text-white tracking-tighter placeholder:text-slate-800"
                         />
-                        <span className="text-3xl font-black text-slate-700 ml-4">BC</span>
+                        <span className="text-3xl font-black text-slate-700 ml-4">BZ</span>
                     </div>
 
                     <div className="grid grid-cols-4 gap-3">
@@ -446,7 +491,7 @@ export default function InvestmentsPage() {
                            <span className="text-[11px] font-black text-white/50 uppercase tracking-widest block mb-2 relative z-10">Total de Liquidación</span>
                            <div className="flex items-baseline gap-3 relative z-10">
                               <span className="text-5xl font-black tracking-tighter drop-shadow-xl">{animatedTotal.toLocaleString()}</span>
-                              <span className="text-xl font-bold text-white/40 bg-white/10 px-3 py-1 rounded-xl uppercase">BC</span>
+                              <span className="text-xl font-bold text-white/40 bg-white/10 px-3 py-1 rounded-xl uppercase">BZ</span>
                            </div>
                         </div>
                      </div>
@@ -498,6 +543,18 @@ export default function InvestmentsPage() {
                     <h2 className="text-2xl font-black tracking-tight">Tus Posiciones</h2>
                  </div>
 
+                 <style jsx>{`
+                    @keyframes flash-highlight {
+                      0% { background-color: rgba(59, 130, 246, 0); border-color: rgba(255, 255, 255, 0.05); }
+                      20% { background-color: rgba(59, 130, 246, 0.3); border-color: rgba(59, 130, 246, 0.5); }
+                      100% { background-color: rgba(59, 130, 246, 0); border-color: rgba(255, 255, 255, 0.05); }
+                    }
+                    .highlight-flash {
+                      animation: flash-highlight 2s ease-out forwards;
+                      box-shadow: 0 0 40px rgba(59, 130, 246, 0.2);
+                    }
+                  `}</style>
+
                  {loadingPositions ? (
                     <div className="py-12 flex justify-center">
                        <Loader2 className="animate-spin text-slate-500" size={32} />
@@ -509,8 +566,13 @@ export default function InvestmentsPage() {
                     </div>
                  ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                       {positions.map((pos) => (
-                          <div key={pos.id} className="bg-slate-900/30 backdrop-blur-md border border-white/5 p-6 rounded-3xl relative overflow-hidden group">
+                       {positions.map((pos, idx) => (
+                          <div 
+                             key={pos.id} 
+                             className={`bg-slate-900/30 backdrop-blur-md border border-white/5 p-6 rounded-3xl relative overflow-hidden group transition-all duration-500 ${
+                              shouldHighlight && idx === 0 ? 'highlight-flash scale-[1.02]' : ''
+                            }`}
+                          >
                              <div className={`absolute top-0 right-0 px-4 py-1 text-[10px] font-black uppercase tracking-widest ${
                                pos.status === 'active' ? 'bg-blue-600 text-white' : 'bg-emerald-600 text-white'
                              }`}>
@@ -522,7 +584,7 @@ export default function InvestmentsPage() {
                                    <Coins size={24} className={pos.status === 'active' ? 'text-amber-400' : 'text-emerald-400'} />
                                 </div>
                                 <div>
-                                   <div className="text-2xl font-black tracking-tighter">{pos.amount.toLocaleString()} BC</div>
+                                   <div className="text-2xl font-black tracking-tighter">{pos.amount.toLocaleString()} BZ</div>
                                    <div className="text-xs font-bold text-slate-500 uppercase tracking-widest">Inversión Inicial</div>
                                 </div>
                              </div>
@@ -541,7 +603,7 @@ export default function InvestmentsPage() {
                              <div className={`pt-4 border-t border-white/5 flex items-center justify-between`}>
                                 <span className="text-xs font-bold text-slate-500 uppercase">Rendimiento</span>
                                 <span className={`text-lg font-black ${pos.status === 'active' ? 'text-blue-400' : 'text-emerald-400'}`}>
-                                   +{(pos.earnedAmount || Math.floor(pos.amount * pos.yieldRate)).toLocaleString()} BC
+                                   +{(pos.earnedAmount || Math.floor(pos.amount * pos.yieldRate)).toLocaleString()} BZ
                                 </span>
                              </div>
                           </div>

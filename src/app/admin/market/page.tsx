@@ -112,7 +112,7 @@ export default function AdminMarketPage() {
             <h1 className="text-4xl font-black tracking-tight mb-2">BIZEN Market Config</h1>
             <p className="text-slate-400 text-lg">Ajusta los parámetros globales del Simulador Financiero en tiempo real.</p>
           </div>
-          <ReturnButton href="/teacher/dashboard" label="Volver al Dashboard" />
+          
         </header>
 
         <AnimatePresence>

@@ -49,7 +49,7 @@ export async function GET(request: NextRequest) {
               amount: total,
               type: "income",
               category: "investment_return",
-              description: `Liquidación: ${pos.amount} BC (capital) + ${earned} BC (rendimiento)`
+              description: `Liquidación: ${pos.amount} BZ (capital) + ${earned} BZ (rendimiento)`
             }
           })
         })

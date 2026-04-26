@@ -108,7 +108,11 @@ export async function GET(request: NextRequest) {
 
     const activeDatesSet = new Set<string>()
     weeklyActivity.forEach((p: any) => {
-      if (p.completedAt) activeDatesSet.add(new Date(p.completedAt).toISOString().split("T")[0])
+      if (p.completedAt) {
+        const d = new Date(p.completedAt);
+        const mxDate = d.toLocaleDateString("en-CA", { timeZone: "America/Mexico_City" });
+        activeDatesSet.add(mxDate);
+      }
     })
 
     console.log("[dashboard-init] Success. Returning payload.")

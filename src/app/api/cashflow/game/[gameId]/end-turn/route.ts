@@ -1,108 +1,107 @@
 import { NextRequest, NextResponse } from "next/server"
-import { createSupabaseServer } from "@/lib/supabase/server"
+import { prisma } from "@/lib/prisma"
+import { requireAuth } from "@/lib/auth/api-auth"
 
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ gameId: string }> }
 ) {
   try {
-    const supabase = await createSupabaseServer()
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
-
-    if (authError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    const authResult = await requireAuth(request)
+    if (!authResult.success) {
+      return authResult.response
     }
+    const { user } = authResult.data
 
-    const gameId = parseInt(params.gameId)
+    const { gameId } = await params
+    const parsedGameId = parseInt(gameId)
 
-    // Get player with all related data
-    const { data: player } = await supabase
-      .from('players')
-      .select('*, professions(*)')
-      .eq('game_session_id', gameId)
-      .eq('user_id', user.id)
-      .single()
+    // Get player with profession and active investments/liabilities
+    const player = await prisma.player.findFirst({
+      where: { gameSessionId: parsedGameId, userId: user.id },
+      include: {
+        profession: true,
+        playerInvestments: { where: { isSold: false } },
+        playerLiabilities: { where: { isPaidOff: false } }
+      }
+    })
 
-    if (!player) {
+    if (!player || !player.profession) {
       return NextResponse.json({ error: "Player not found" }, { status: 404 })
     }
 
-    // Get active investments
-    const { data: investments } = await supabase
-      .from('player_investments')
-      .select('*')
-      .eq('player_id', player.id)
-      .eq('is_sold', false)
-
-    // Get unpaid liabilities
-    const { data: liabilities } = await supabase
-      .from('player_liabilities')
-      .select('*')
-      .eq('player_id', player.id)
-      .eq('is_paid_off', false)
-
     // Calculate investment income
-    const investmentIncome = investments?.reduce((sum, inv) => sum + (inv.current_cash_flow || 0), 0) || 0
+    const investmentIncome = player.playerInvestments.reduce(
+      (sum, inv) => sum + (inv.currentCashFlow || 0), 0
+    )
 
-    // Calculate loan payments
-    const loanPayments = liabilities?.reduce((sum, l) => sum + l.monthly_payment, 0) || 0
+    // Calculate additional loan payments
+    const loanPayments = player.playerLiabilities.reduce(
+      (sum, l) => sum + l.monthlyPayment, 0
+    )
 
-    const profession = player.professions
-    const totalExpenses = 
+    const profession = player.profession
+    const totalExpenses =
       profession.taxes +
-      profession.home_mortgage_payment +
-      profession.school_loan_payment +
-      profession.car_loan_payment +
-      profession.credit_card_payment +
-      profession.retail_payment +
-      profession.other_expenses +
-      (profession.child_expense * player.num_children) +
+      profession.homeMortgagePayment +
+      profession.schoolLoanPayment +
+      profession.carLoanPayment +
+      profession.creditCardPayment +
+      profession.retailPayment +
+      profession.otherExpenses +
+      (profession.childExpense * (player.numChildren || 0)) +
       loanPayments
 
-    const monthlyCashFlow = profession.salary + investmentIncome - totalExpenses
+    const totalIncome = profession.salary + investmentIncome
+    const monthlyCashFlow = totalIncome - totalExpenses
+    const newTurn = (player.currentTurn || 1) + 1
 
-    // Update player
-    await supabase
-      .from('players')
-      .update({
-        cash_on_hand: player.cash_on_hand + monthlyCashFlow,
-        current_turn: player.current_turn + 1,
-        passive_income: investmentIncome,
-        total_income: profession.salary + investmentIncome,
-        total_expenses: totalExpenses,
-        cash_flow: monthlyCashFlow
+    await prisma.$transaction(async (tx) => {
+      // Update player financials
+      await tx.player.update({
+        where: { id: player.id },
+        data: {
+          cashOnHand: player.cashOnHand + monthlyCashFlow,
+          currentTurn: newTurn,
+          passiveIncome: investmentIncome,
+          totalIncome: totalIncome,
+          totalExpenses: totalExpenses,
+          cashFlow: monthlyCashFlow
+        }
       })
-      .eq('id', player.id)
 
-    // Update game session
-    await supabase
-      .from('game_sessions')
-      .update({
-        total_turns: player.current_turn + 1,
-        last_activity_at: new Date().toISOString()
+      // Update game session activity
+      await tx.gameSession.update({
+        where: { id: parsedGameId },
+        data: {
+          totalTurns: newTurn,
+          lastActivityAt: new Date()
+        }
       })
-      .eq('id', gameId)
 
-    // Log turn end event
-    await supabase.from('game_events').insert({
-      game_session_id: gameId,
-      player_id: player.id,
-      event_type: "turn_ended",
-      event_data: {
-        salary: profession.salary,
-        investmentIncome,
-        totalExpenses,
-        cashFlow: monthlyCashFlow
-      },
-      cash_change: monthlyCashFlow,
-      turn_number: player.current_turn + 1
+      // Log turn end event
+      await tx.gameEvent.create({
+        data: {
+          gameSessionId: parsedGameId,
+          playerId: player.id,
+          eventType: "turn_ended",
+          eventData: {
+            salary: profession.salary,
+            investmentIncome,
+            totalExpenses,
+            cashFlow: monthlyCashFlow
+          },
+          cashChange: monthlyCashFlow,
+          turnNumber: newTurn
+        }
+      })
     })
 
     return NextResponse.json({
       message: "Turn ended successfully",
-      newCash: player.cash_on_hand + monthlyCashFlow,
+      newCash: player.cashOnHand + monthlyCashFlow,
       cashFlow: monthlyCashFlow,
-      newTurn: player.current_turn + 1
+      newTurn
     })
 
   } catch (error) {

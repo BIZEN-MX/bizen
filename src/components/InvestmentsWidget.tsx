@@ -24,13 +24,15 @@ export default function InvestmentsWidget() {
           <div className="w-11 h-11 rounded-2xl bg-white/15 backdrop-blur-md border border-white/20 flex items-center justify-center shadow-inner">
             <TrendingUp size={24} className="text-white" />
           </div>
-          <span className="text-xs font-black text-white/60 uppercase tracking-[0.15em]">Centro de Inversión</span>
+          <span className="text-xs font-black text-white uppercase tracking-[0.15em]">Centro de Inversión</span>
         </div>
 
-        <h3 className="text-3xl md:text-4xl font-black text-white tracking-tighter leading-[1.05] mb-4">
-          Haz crecer tus <span className="text-blue-300">Bizcoins</span>
+        <h3 id="inv-widget-title" className="text-3xl md:text-5xl font-medium text-white tracking-tighter leading-[1.05] mb-4">
+          <style>{`#inv-widget-title { color: #ffffff !important; opacity: 1 !important; font-weight: 500 !important; }`}</style>
+          Haz crecer tus Bizcoins
         </h3>
-        <p className="text-base text-white/80 font-semibold leading-relaxed max-w-[90%]">
+        <p id="inv-widget-desc" className="text-lg text-white font-normal leading-relaxed max-w-[90%]">
+          <style>{`#inv-widget-desc { color: #ffffff !important; opacity: 1 !important; font-weight: 400 !important; }`}</style>
           Pon tus ahorros a trabajar con rendimientos de hasta el <strong className="text-white underline decoration-blue-400 decoration-2">15%</strong>.
         </p>
       </div>

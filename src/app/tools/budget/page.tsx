@@ -16,6 +16,7 @@ import { cn } from "@/lib/utils"
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card"
 import { PremiumButton } from "@/components/ui/PremiumButton"
 import { Badge } from "@/components/ui/badge"
+import LockedToolGuard from "@/components/LockedToolGuard"
 
 // --- Types ---
 type LineItem = { id: string; label: string; amount: number; category?: string }
@@ -278,277 +279,279 @@ export default function AdvancedBudgetPage() {
 
   const balancePositive = balance >= 0
 
-  return (
-    <div className="min-h-screen bg-[#FBFAF5] flex flex-col font-sans">
-      <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-slate-200">
-        <div className="max-w-[1440px] mx-auto px-6 py-4 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-5">
-            <button 
-              onClick={() => router.back()}
-              className="p-2.5 rounded-xl border border-transparent hover:border-slate-200 hover:bg-slate-50 text-slate-400 hover:text-blue-600 transition-all duration-200"
-            >
-              <ArrowLeft size={20} />
-            </button>
+    return (
+        <LockedToolGuard productId="9" toolName="Planificador de Presupuesto">
+            <div className="min-h-screen bg-[#FBFAF5] flex flex-col font-sans">
+                <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-slate-200">
+                    <div className="max-w-[1440px] mx-auto px-6 py-4 flex items-center justify-between gap-4">
+                        <div className="flex items-center gap-5">
+                            <button 
+                                onClick={() => router.back()}
+                                className="p-2.5 rounded-xl border border-transparent hover:border-slate-200 hover:bg-slate-50 text-slate-400 hover:text-blue-600 transition-all duration-200"
+                            >
+                                <ArrowLeft size={20} />
+                            </button>
 
-            <div className="flex items-center gap-4">
-              <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-blue-600 to-blue-500 flex items-center justify-center shadow-lg shadow-blue-500/20">
-                <FileSpreadsheet size={22} className="text-white" />
-              </div>
-              <div>
-                <h1 className="text-[22px] font-bold text-slate-900 tracking-tight leading-none mb-1">
-                  Smart Budget Pro
-                </h1>
-                <p className="text-[13px] text-slate-500 font-medium tracking-tight">Toma el control de tu futuro financiero</p>
-              </div>
+                            <div className="flex items-center gap-4">
+                                <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-blue-600 to-blue-500 flex items-center justify-center shadow-lg shadow-blue-500/20">
+                                    <FileSpreadsheet size={22} className="text-white" />
+                                </div>
+                                <div>
+                                    <h1 className="text-[22px] font-bold text-slate-900 tracking-tight leading-none mb-1">
+                                        Smart Budget Pro
+                                    </h1>
+                                    <p className="text-[13px] text-slate-500 font-medium tracking-tight">Toma el control de tu futuro financiero</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="flex items-center gap-3">
+                            <PremiumButton variant="minimal" onClick={exportToExcel} className="hidden sm:flex" size="md">
+                                <Download size={16} /> <span>Exportar</span>
+                            </PremiumButton>
+                            
+                            <PremiumButton 
+                                variant="outline" 
+                                onClick={saveBudget}
+                                disabled={saveLoading}
+                                className={cn(saveSuccess && "border-emerald-200 bg-emerald-50 text-emerald-600")}
+                                size="md"
+                            >
+                                {saveLoading ? <Loader2 size={16} className="animate-spin" /> : (saveSuccess ? <Check size={16} /> : <Save size={16} />)}
+                                <span>{saveSuccess ? "¡Guardado!" : "Guardar"}</span>
+                            </PremiumButton>
+
+                            <PremiumButton 
+                                variant="secondary"
+                                onClick={() => runAi("analyze")}
+                                disabled={aiLoading}
+                                className="bg-blue-50 border-blue-100 text-blue-600 hover:bg-blue-100"
+                                size="md"
+                            >
+                                <Sparkles size={16} /> 
+                                <span>{aiLoading && aiAction === "analyze" ? "Billy pensando..." : "Analizar con IA"}</span>
+                            </PremiumButton>
+
+
+                        </div>
+                    </div>
+                </header>
+
+                <main className="max-w-[1440px] mx-auto w-full px-6 py-8 grid grid-cols-1 xl:grid-cols-[1fr_380px] gap-8">
+                    <div className="flex flex-col gap-8">
+                        {/* Income table */}
+                        <Card className="shadow-2xl">
+                            <CardHeader className="flex flex-row items-center justify-between border-b border-slate-100 pb-5">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-9 h-9 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600">
+                                        <TrendingUp size={18} />
+                                    </div>
+                                    <CardTitle className="text-blue-600 font-bold">Ingresos Mensuales</CardTitle>
+                                </div>
+                                <div className="text-[19px] font-extrabold text-emerald-600 tracking-tight">
+                                    ${totalIncome.toLocaleString()}
+                                </div>
+                            </CardHeader>
+                            <CardContent className="p-0">
+                                <div className="grid grid-cols-[48px_1fr_140px_48px] border-b border-slate-100 bg-slate-50">
+                                    <div className="py-2 text-center text-[11px] font-bold text-slate-400 uppercase tracking-wider">#</div>
+                                    <div className="py-2 px-4 text-[11px] font-bold text-slate-400 uppercase tracking-wider text-left">Concepto</div>
+                                    <div className="py-2 px-4 text-[11px] font-bold text-slate-400 uppercase tracking-wider text-right">Monto ($)</div>
+                                    <div className="py-2" />
+                                </div>
+
+                                <AnimatePresence initial={false}>
+                                    {income.map((item, idx) => (
+                                        <SpreadsheetRow 
+                                            key={item.id} item={item} type="income" 
+                                            onUpdate={handleUpdate("income")} onDelete={handleDelete("income")} 
+                                            index={idx}
+                                        />
+                                    ))}
+                                </AnimatePresence>
+
+                                <button 
+                                    className="w-full py-4 flex items-center justify-center gap-2 text-[13px] font-bold text-slate-400 hover:text-blue-600 hover:bg-slate-50 transition-all border-t border-slate-100"
+                                    onClick={() => setIncome([...income, { id: uid(), label: "", amount: 0 }])}
+                                >
+                                    <Plus size={16} /> Añadir Ingreso
+                                </button>
+                            </CardContent>
+                        </Card>
+
+                        {/* Expenses table */}
+                        <Card className="shadow-2xl">
+                            <CardHeader className="flex flex-row items-center justify-between border-b border-slate-100 pb-5">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-9 h-9 rounded-xl bg-rose-50 flex items-center justify-center text-rose-600">
+                                        <TrendingDown size={18} />
+                                    </div>
+                                    <CardTitle className="text-blue-600 font-bold">Gastos Mensuales</CardTitle>
+                                </div>
+                                <div className="text-[19px] font-extrabold text-rose-600 tracking-tight">
+                                    ${totalExpenses.toLocaleString()}
+                                </div>
+                            </CardHeader>
+                            <CardContent className="p-0">
+                                <div className="grid grid-cols-[48px_1fr_140px_48px] border-b border-slate-100 bg-slate-50">
+                                    <div className="py-2 text-center text-[11px] font-bold text-slate-400 uppercase tracking-wider">#</div>
+                                    <div className="py-2 px-4 text-[11px] font-bold text-slate-400 uppercase tracking-wider text-left">Detalle</div>
+                                    <div className="py-2 px-4 text-[11px] font-bold text-slate-400 uppercase tracking-wider text-right">Monto ($)</div>
+                                    <div className="py-2" />
+                                </div>
+
+                                <AnimatePresence initial={false}>
+                                    {expenses.map((item, idx) => (
+                                        <SpreadsheetRow 
+                                            key={item.id} item={item} type="expense" 
+                                            onUpdate={handleUpdate("expense")} onDelete={handleDelete("expense")} 
+                                            index={idx}
+                                        />
+                                    ))}
+                                </AnimatePresence>
+
+                                <button 
+                                    className="w-full py-4 flex items-center justify-center gap-2 text-[13px] font-bold text-slate-400 hover:text-blue-600 hover:bg-slate-50 transition-all border-t border-slate-100"
+                                    onClick={() => setExpenses([...expenses, { id: uid(), label: "", amount: 0 }])}
+                                >
+                                    <Plus size={16} /> Añadir Gasto
+                                </button>
+                            </CardContent>
+                        </Card>
+
+                        {/* AI Panel */}
+                        <AnimatePresence>
+                            {(aiAnalysis || aiLoading) && (
+                                <motion.div 
+                                    ref={analysisRef}
+                                    initial={{ opacity: 0, y: 20 }} 
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, scale: 0.98 }}
+                                    className="relative overflow-hidden p-8 rounded-3xl bg-slate-900 border border-slate-800 shadow-2xl"
+                                >
+                                    <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/2" />
+                                    <div className="relative z-10 flex items-center gap-4 mb-6">
+                                        <div className="w-12 h-12 rounded-2xl bg-blue-500/20 border border-blue-500/30 flex items-center justify-center">
+                                            <Sparkles size={22} className="text-blue-400" />
+                                        </div>
+                                        <div>
+                                            <h3 className="text-[17px] font-bold text-white mb-0.5">
+                                                Análisis de Billy IA
+                                            </h3>
+                                            <div className="flex items-center gap-2">
+                                                <Badge variant="outline" className="bg-blue-500/10 border-blue-500/20 text-blue-400 py-0 h-5 px-1.5 text-[10px]">GEMINI PRO</Badge>
+                                                <span className="text-[11px] text-slate-400 font-medium tracking-wide uppercase">BIZEN Intelligence</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="relative z-10">
+                                        {aiLoading ? (
+                                            <div className="flex flex-col gap-3.5 animate-pulse">
+                                                <div className="h-4 bg-white/10 rounded-full w-full" />
+                                                <div className="h-4 bg-white/10 rounded-full w-[92%]" />
+                                                <div className="h-4 bg-white/10 rounded-full w-[96%]" />
+                                                <div className="h-4 bg-white/10 rounded-full w-[60%]" />
+                                            </div>
+                                        ) : (
+                                            <p className="text-[15px] leading-relaxed text-slate-300 font-medium">
+                                                {aiAnalysis}
+                                            </p>
+                                        )}
+                                    </div>
+                                    {!aiLoading && aiAnalysis && (
+                                        <div className="mt-8 pt-6 border-t border-white/5">
+                                            <button 
+                                                onClick={() => setAiAnalysis("")}
+                                                className="px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/5 text-[13px] font-bold transition-all"
+                                            >
+                                                Entendido ✓
+                                            </button>
+                                        </div>
+                                    )}
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+                    </div>
+
+                    <aside className="flex flex-col gap-8">
+                        <Card className="shadow-2xl">
+                            <CardHeader className="pb-3">
+                                <CardTitle className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">Resumen Mensual</CardTitle>
+                            </CardHeader>
+                            <CardContent className="flex flex-col gap-6">
+                                <div>
+                                    <div className="flex justify-between items-end mb-2.5">
+                                        <span className="text-[13px] text-slate-500 font-semibold">Ingresos</span>
+                                        <span className="text-[15px] font-bold text-emerald-600">${totalIncome.toLocaleString()}</span>
+                                    </div>
+                                    <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
+                                        <div className="h-full bg-emerald-500 rounded-full" style={{ width: "100%" }} />
+                                    </div>
+                                </div>
+                                <div>
+                                    <div className="flex justify-between items-end mb-2.5">
+                                        <span className="text-[13px] text-slate-500 font-semibold">Gastos</span>
+                                        <span className="text-[15px] font-bold text-rose-600">${totalExpenses.toLocaleString()}</span>
+                                    </div>
+                                    <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
+                                        <div className="h-full bg-rose-500 rounded-full" style={{ width: `${Math.min(100, totalIncome > 0 ? (totalExpenses / totalIncome) * 100 : 0)}%` }} />
+                                    </div>
+                                </div>
+                                <div className={cn(
+                                    "mt-2 p-5 rounded-2xl border transition-all duration-300",
+                                    balancePositive ? "bg-emerald-50/50 border-emerald-100" : "bg-rose-50/50 border-rose-100"
+                                )}>
+                                    <div className={cn("text-[10px] font-bold uppercase tracking-wider mb-1", balancePositive ? "text-emerald-600" : "text-rose-600")}>Balance Neto</div>
+                                    <div className={cn("text-[26px] font-black tracking-tighter", balancePositive ? "text-emerald-700" : "text-rose-700")}>
+                                        {balancePositive ? "+" : ""}{balance.toLocaleString()} <span className="text-[14px] font-bold opacity-50">MXN</span>
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </Card>
+
+                        <Card className="shadow-2xl">
+                            <CardHeader className="pb-0">
+                                <CardTitle className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">Distribución</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="h-[200px] relative">
+                                    <ResponsiveContainer width="100%" height="100%">
+                                        <RechartsPie>
+                                            <Pie data={pieData} cx="50%" cy="50%" innerRadius={60} outerRadius={80} paddingAngle={5} dataKey="value" strokeWidth={0}>
+                                                {pieData.map((entry, index) => <Cell key={index} fill={entry.color} />)}
+                                            </Pie>
+                                            <Tooltip contentStyle={{ borderRadius: "12px", border: "none", boxShadow: "var(--shadow-lg)" }} />
+                                        </RechartsPie>
+                                    </ResponsiveContainer>
+                                    <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                                        <span className="text-[18px] font-black text-slate-800">${totalExpenses.toLocaleString()}</span>
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </Card>
+
+                        <Card className="bg-blue-600 text-white border-none shadow-xl">
+                            <CardContent className="pt-8">
+                                <div className="flex items-center gap-3 mb-4">
+                                    <div className="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center border border-white/20">
+                                        <Calculator size={18} className="text-white" />
+                                    </div>
+                                    <span className="text-[15px] font-bold">Tasa de Ahorro</span>
+                                </div>
+                                <div className="flex items-center gap-5">
+                                    <div className="text-[32px] font-black">{savingsRate.toFixed(0)}%</div>
+                                    <p className="text-[12px] leading-relaxed font-medium opacity-90">
+                                        {savingsRate >= 20 
+                                            ? "Excelente gestión. Estás cumpliendo la regla del 20%."
+                                            : "Intenta reducir gastos hormiga para alcanzar el 20%."
+                                        }
+                                    </p>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </aside>
+                </main>
             </div>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <PremiumButton variant="minimal" onClick={exportToExcel} className="hidden sm:flex" size="md">
-              <Download size={16} /> <span>Exportar</span>
-            </PremiumButton>
-            
-            <PremiumButton 
-              variant="outline" 
-              onClick={saveBudget}
-              disabled={saveLoading}
-              className={cn(saveSuccess && "border-emerald-200 bg-emerald-50 text-emerald-600")}
-              size="md"
-            >
-              {saveLoading ? <Loader2 size={16} className="animate-spin" /> : (saveSuccess ? <Check size={16} /> : <Save size={16} />)}
-              <span>{saveSuccess ? "¡Guardado!" : "Guardar"}</span>
-            </PremiumButton>
-
-            <PremiumButton 
-              variant="secondary"
-              onClick={() => runAi("analyze")}
-              disabled={aiLoading}
-              className="bg-blue-50 border-blue-100 text-blue-600 hover:bg-blue-100"
-              size="md"
-            >
-              <Sparkles size={16} /> 
-              <span>{aiLoading && aiAction === "analyze" ? "Billy pensando..." : "Analizar con IA"}</span>
-            </PremiumButton>
-
-
-          </div>
-        </div>
-      </header>
-
-      <main className="max-w-[1440px] mx-auto w-full px-6 py-8 grid grid-cols-1 xl:grid-cols-[1fr_380px] gap-8">
-        <div className="flex flex-col gap-8">
-          {/* Income table */}
-          <Card className="shadow-2xl">
-            <CardHeader className="flex flex-row items-center justify-between border-b border-slate-100 pb-5">
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600">
-                  <TrendingUp size={18} />
-                </div>
-                <CardTitle className="text-blue-600 font-bold">Ingresos Mensuales</CardTitle>
-              </div>
-              <div className="text-[19px] font-extrabold text-emerald-600 tracking-tight">
-                ${totalIncome.toLocaleString()}
-              </div>
-            </CardHeader>
-            <CardContent className="p-0">
-              <div className="grid grid-cols-[48px_1fr_140px_48px] border-b border-slate-100 bg-slate-50">
-                <div className="py-2 text-center text-[11px] font-bold text-slate-400 uppercase tracking-wider">#</div>
-                <div className="py-2 px-4 text-[11px] font-bold text-slate-400 uppercase tracking-wider text-left">Concepto</div>
-                <div className="py-2 px-4 text-[11px] font-bold text-slate-400 uppercase tracking-wider text-right">Monto ($)</div>
-                <div className="py-2" />
-              </div>
-
-              <AnimatePresence initial={false}>
-                {income.map((item, idx) => (
-                  <SpreadsheetRow 
-                    key={item.id} item={item} type="income" 
-                    onUpdate={handleUpdate("income")} onDelete={handleDelete("income")} 
-                    index={idx}
-                  />
-                ))}
-              </AnimatePresence>
-
-              <button 
-                className="w-full py-4 flex items-center justify-center gap-2 text-[13px] font-bold text-slate-400 hover:text-blue-600 hover:bg-slate-50 transition-all border-t border-slate-100"
-                onClick={() => setIncome([...income, { id: uid(), label: "", amount: 0 }])}
-              >
-                <Plus size={16} /> Añadir Ingreso
-              </button>
-            </CardContent>
-          </Card>
-
-          {/* Expenses table */}
-          <Card className="shadow-2xl">
-            <CardHeader className="flex flex-row items-center justify-between border-b border-slate-100 pb-5">
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-rose-50 flex items-center justify-center text-rose-600">
-                  <TrendingDown size={18} />
-                </div>
-                <CardTitle className="text-blue-600 font-bold">Gastos Mensuales</CardTitle>
-              </div>
-              <div className="text-[19px] font-extrabold text-rose-600 tracking-tight">
-                ${totalExpenses.toLocaleString()}
-              </div>
-            </CardHeader>
-            <CardContent className="p-0">
-              <div className="grid grid-cols-[48px_1fr_140px_48px] border-b border-slate-100 bg-slate-50">
-                <div className="py-2 text-center text-[11px] font-bold text-slate-400 uppercase tracking-wider">#</div>
-                <div className="py-2 px-4 text-[11px] font-bold text-slate-400 uppercase tracking-wider text-left">Detalle</div>
-                <div className="py-2 px-4 text-[11px] font-bold text-slate-400 uppercase tracking-wider text-right">Monto ($)</div>
-                <div className="py-2" />
-              </div>
-
-              <AnimatePresence initial={false}>
-                {expenses.map((item, idx) => (
-                  <SpreadsheetRow 
-                    key={item.id} item={item} type="expense" 
-                    onUpdate={handleUpdate("expense")} onDelete={handleDelete("expense")} 
-                    index={idx}
-                  />
-                ))}
-              </AnimatePresence>
-
-              <button 
-                className="w-full py-4 flex items-center justify-center gap-2 text-[13px] font-bold text-slate-400 hover:text-blue-600 hover:bg-slate-50 transition-all border-t border-slate-100"
-                onClick={() => setExpenses([...expenses, { id: uid(), label: "", amount: 0 }])}
-              >
-                <Plus size={16} /> Añadir Gasto
-              </button>
-            </CardContent>
-          </Card>
-
-          {/* AI Panel */}
-          <AnimatePresence>
-            {(aiAnalysis || aiLoading) && (
-              <motion.div 
-                ref={analysisRef}
-                initial={{ opacity: 0, y: 20 }} 
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.98 }}
-                className="relative overflow-hidden p-8 rounded-3xl bg-slate-900 border border-slate-800 shadow-2xl"
-              >
-                <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/2" />
-                <div className="relative z-10 flex items-center gap-4 mb-6">
-                  <div className="w-12 h-12 rounded-2xl bg-blue-500/20 border border-blue-500/30 flex items-center justify-center">
-                    <Sparkles size={22} className="text-blue-400" />
-                  </div>
-                  <div>
-                    <h3 className="text-[17px] font-bold text-white mb-0.5">
-                      Análisis de Billy IA
-                    </h3>
-                    <div className="flex items-center gap-2">
-                      <Badge variant="outline" className="bg-blue-500/10 border-blue-500/20 text-blue-400 py-0 h-5 px-1.5 text-[10px]">GEMINI PRO</Badge>
-                      <span className="text-[11px] text-slate-400 font-medium tracking-wide uppercase">BIZEN Intelligence</span>
-                    </div>
-                  </div>
-                </div>
-                <div className="relative z-10">
-                  {aiLoading ? (
-                    <div className="flex flex-col gap-3.5 animate-pulse">
-                      <div className="h-4 bg-white/10 rounded-full w-full" />
-                      <div className="h-4 bg-white/10 rounded-full w-[92%]" />
-                      <div className="h-4 bg-white/10 rounded-full w-[96%]" />
-                      <div className="h-4 bg-white/10 rounded-full w-[60%]" />
-                    </div>
-                  ) : (
-                    <p className="text-[15px] leading-relaxed text-slate-300 font-medium">
-                      {aiAnalysis}
-                    </p>
-                  )}
-                </div>
-                {!aiLoading && aiAnalysis && (
-                  <div className="mt-8 pt-6 border-t border-white/5">
-                    <button 
-                      onClick={() => setAiAnalysis("")}
-                      className="px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/5 text-[13px] font-bold transition-all"
-                    >
-                      Entendido ✓
-                    </button>
-                  </div>
-                )}
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-
-        <aside className="flex flex-col gap-8">
-          <Card className="shadow-2xl">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">Resumen Mensual</CardTitle>
-            </CardHeader>
-            <CardContent className="flex flex-col gap-6">
-              <div>
-                <div className="flex justify-between items-end mb-2.5">
-                  <span className="text-[13px] text-slate-500 font-semibold">Ingresos</span>
-                  <span className="text-[15px] font-bold text-emerald-600">${totalIncome.toLocaleString()}</span>
-                </div>
-                <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
-                  <div className="h-full bg-emerald-500 rounded-full" style={{ width: "100%" }} />
-                </div>
-              </div>
-              <div>
-                <div className="flex justify-between items-end mb-2.5">
-                  <span className="text-[13px] text-slate-500 font-semibold">Gastos</span>
-                  <span className="text-[15px] font-bold text-rose-600">${totalExpenses.toLocaleString()}</span>
-                </div>
-                <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
-                  <div className="h-full bg-rose-500 rounded-full" style={{ width: `${Math.min(100, totalIncome > 0 ? (totalExpenses / totalIncome) * 100 : 0)}%` }} />
-                </div>
-              </div>
-              <div className={cn(
-                "mt-2 p-5 rounded-2xl border transition-all duration-300",
-                balancePositive ? "bg-emerald-50/50 border-emerald-100" : "bg-rose-50/50 border-rose-100"
-              )}>
-                <div className={cn("text-[10px] font-bold uppercase tracking-wider mb-1", balancePositive ? "text-emerald-600" : "text-rose-600")}>Balance Neto</div>
-                <div className={cn("text-[26px] font-black tracking-tighter", balancePositive ? "text-emerald-700" : "text-rose-700")}>
-                  {balancePositive ? "+" : ""}{balance.toLocaleString()} <span className="text-[14px] font-bold opacity-50">MXN</span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="shadow-2xl">
-            <CardHeader className="pb-0">
-              <CardTitle className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">Distribución</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="h-[200px] relative">
-                <ResponsiveContainer width="100%" height="100%">
-                  <RechartsPie>
-                    <Pie data={pieData} cx="50%" cy="50%" innerRadius={60} outerRadius={80} paddingAngle={5} dataKey="value" strokeWidth={0}>
-                      {pieData.map((entry, index) => <Cell key={index} fill={entry.color} />)}
-                    </Pie>
-                    <Tooltip contentStyle={{ borderRadius: "12px", border: "none", boxShadow: "var(--shadow-lg)" }} />
-                  </RechartsPie>
-                </ResponsiveContainer>
-                <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                  <span className="text-[18px] font-black text-slate-800">${totalExpenses.toLocaleString()}</span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-blue-600 text-white border-none shadow-xl">
-            <CardContent className="pt-8">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center border border-white/20">
-                  <Calculator size={18} className="text-white" />
-                </div>
-                <span className="text-[15px] font-bold">Tasa de Ahorro</span>
-              </div>
-              <div className="flex items-center gap-5">
-                <div className="text-[32px] font-black">{savingsRate.toFixed(0)}%</div>
-                <p className="text-[12px] leading-relaxed font-medium opacity-90">
-                  {savingsRate >= 20 
-                    ? "Excelente gestión. Estás cumpliendo la regla del 20%."
-                    : "Intenta reducir gastos hormiga para alcanzar el 20%."
-                  }
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-        </aside>
-      </main>
-    </div>
-  )
+        </LockedToolGuard>
+    )
 }

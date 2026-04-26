@@ -1,5 +1,6 @@
 import { prisma } from "./prisma"
 import { calculateLevel, getMexicoMidnight } from "./xp"
+import { pusherServer } from "./pusher-server"
 
 export interface RewardsResult {
     xpAwarded: number
@@ -228,6 +229,17 @@ export async function awardXp(
             }
         }
     })
+
+    // Emit Real-time Update via Pusher
+    try {
+        await pusherServer.trigger('rankings-channel', 'xp-updated', {
+            userId,
+            newXp: newTotalXp,
+            newLevel: newLevel
+        })
+    } catch (err) {
+        console.error("[pusher] Failed to trigger xp-updated event:", err)
+    }
 
     return {
         xpAwarded: finalAmount,

@@ -9,6 +9,7 @@ import GlobalLogo from './GlobalLogo';
 import { useKeyboardHandler } from '@/hooks/useKeyboardHandler';
 import { useViewportHeight } from '@/hooks/useViewportHeight';
 import { useAuth } from '@/contexts/AuthContext';
+import MaintenanceGuard from './MaintenanceGuard';
 
 const PUBLIC_PATHS = [
   "/", "/login", "/signup", "/forgot-password", "/reset-password",
@@ -257,8 +258,18 @@ function InnerClientWrapper({ children }: { children: React.ReactNode }) {
     }
   }, [isTopNavVisible]);
 
+  // Manage data-admin-page for absolute full-screen fit
+  useEffect(() => {
+    if (typeof document === 'undefined') return;
+    if (isAdminPage) {
+      document.body.setAttribute('data-admin-page', 'true');
+    } else {
+      document.body.removeAttribute('data-admin-page');
+    }
+  }, [isAdminPage]);
+
   return (
-    <>
+    <MaintenanceGuard>
       <HydrationGuard>
         {/* Show TopNav on desktop (>767px), hidden during interactive lesson, hidden when unauth */}
         {isTopNavVisible && <TopNav />}
@@ -280,7 +291,7 @@ function InnerClientWrapper({ children }: { children: React.ReactNode }) {
       <main className="app-main">
         {children}
       </main>
-    </>
+    </MaintenanceGuard>
   );
 }
 

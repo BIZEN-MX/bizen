@@ -136,16 +136,10 @@ export default function TopNav() {
     return pathname === path || pathname?.startsWith(path + '/')
   }
 
-  // Plan info
-  const role = dbProfile?.role
-  const isPremium = dbProfile?.subscriptionStatus === 'active' || (dbProfile?.school?.licenses?.length || 0) > 0
-  let planLabel = 'Plan Básico'
-  if (role === 'teacher') planLabel = 'Docente'
-  else if (role === 'school_admin' || role === 'admin') planLabel = 'Admin'
-  else if (role === 'student') planLabel = 'Institucional'
-  else if (role === 'particular') planLabel = isPremium ? 'Premium' : 'Plan Básico'
-  else if (role) planLabel = 'Institucional'
-  const isBasicPlan = planLabel === 'Plan Básico'
+  // Lógica de Badges: Pro vs Free
+  const isPremium = dbProfile?.subscriptionStatus === 'active' || (dbProfile?.school?.licenses?.length || 0) > 0;
+  const planLabel = isPremium ? 'Pro' : 'Free';
+  const isBasicPlan = !isPremium;
 
   // Nav items for students
   const studentNavItems = [
@@ -240,7 +234,7 @@ export default function TopNav() {
               </>
             ) : (
               <span className="topnav-logo">
-                BIZEN<span className="topnav-logo-dot" />
+                BIZEN
               </span>
             )}
           </div>
@@ -278,14 +272,23 @@ export default function TopNav() {
         <div className="topnav-right">
           {mounted && !loading && user ? (
             <>
-              {isStudentOrGuest && streak > 0 && (
-                <div className="topnav-stat-pill" style={{ color: '#d97706', background: 'rgba(251,191,36,0.1)', borderColor: 'rgba(251,191,36,0.2)' }}>
-                  <Flame size={13} />
-                  {streak}
-                </div>
-              )}
               {isStudentOrGuest && (
                 <div className="flex items-center gap-2">
+                  {/* Hearts / Vidas (Hardcoded UI para empezar) */}
+                  <div className="topnav-stat-pill" style={{ color: '#ef4444', background: 'rgba(239, 68, 68, 0.1)', borderColor: 'rgba(239, 68, 68, 0.2)' }}>
+                    <Heart size={13} fill="#ef4444" />
+                    5
+                  </div>
+
+                  {/* Streak / Racha (Siempre visible) */}
+                  <div className="topnav-stat-pill" style={streak > 0 
+                    ? { color: '#d97706', background: 'rgba(251,191,36,0.1)', borderColor: 'rgba(251,191,36,0.2)' }
+                    : { color: '#64748b', background: 'rgba(100, 116, 139, 0.1)', borderColor: 'rgba(100, 116, 139, 0.2)' }}>
+                    <Flame size={13} fill={streak > 0 ? "#d97706" : "none"} />
+                    {streak}
+                  </div>
+
+                  {/* Bizcoins / XP */}
                   <div className="topnav-stat-pill">
                     <BizcoinIcon size={13} />
                     {bizcoins.toLocaleString()}

@@ -13,7 +13,9 @@ import {
   ShieldAlert,
   Loader2,
   CheckCircle2,
-  AlertCircle
+  AlertCircle,
+  RefreshCcw,
+  Trash2
 } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import ReturnButton from "@/components/ReturnButton"
@@ -30,6 +32,7 @@ export default function AdminManagementPage() {
   const [debugInfo, setDebugInfo] = useState<any>(null)
   const [updatingId, setUpdatingId] = useState<string | null>(null)
   const [message, setMessage] = useState<{ type: 'ok' | 'err', text: string } | null>(null)
+  const [isSyncing, setIsSyncing] = useState(false)
  
   const isAllowed = isLoaded && user?.emailAddresses[0]?.emailAddress && SUPER_ADMINS.includes(user.emailAddresses[0].emailAddress.toLowerCase())
  
@@ -85,6 +88,48 @@ export default function AdminManagementPage() {
     }
   }
 
+  const handleSync = async () => {
+    setIsSyncing(true)
+    setMessage(null)
+    try {
+      const res = await fetch("/api/admin/users/sync", { method: "POST" })
+      const data = await res.json()
+      if (res.ok) {
+        setMessage({ type: 'ok', text: `Sincronización completada. ${data.syncedCount} usuarios nuevos agregados a la DB.` })
+        fetchUsers(emailSearch)
+      } else {
+        setMessage({ type: 'err', text: data.error || "Error al sincronizar" })
+      }
+    } catch (error) {
+      setMessage({ type: 'err', text: "Error de conexión" })
+    } finally {
+      setIsSyncing(false)
+    }
+  }
+
+  const handleDeleteUser = async (userId: string) => {
+    if (!confirm("¿Estás seguro de que deseas eliminar este usuario? Esta acción es irreversible y borrará el perfil de BIZEN y la cuenta de Clerk.")) return
+    
+    setUpdatingId(userId)
+    setMessage(null)
+    try {
+      const res = await fetch(`/api/admin/users?userId=${userId}`, {
+        method: "DELETE"
+      })
+      if (res.ok) {
+        setMessage({ type: 'ok', text: "Usuario eliminado correctamente" })
+        fetchUsers(emailSearch)
+      } else {
+        const data = await res.json()
+        setMessage({ type: 'err', text: data.error || "Error al eliminar" })
+      }
+    } catch (error) {
+      setMessage({ type: 'err', text: "Error de conexión" })
+    } finally {
+      setUpdatingId(null)
+    }
+  }
+
   if (!isLoaded || !isAllowed) {
     return (
       <div className="min-h-screen bg-[#050505] flex items-center justify-center">
@@ -108,28 +153,38 @@ export default function AdminManagementPage() {
             <h1 className="text-4xl font-black tracking-tight mb-2">Gestión de Acceso</h1>
             <p className="text-slate-400 text-lg">Asigna roles de Administrador o Profesor a cualquier usuario de la plataforma.</p>
           </div>
-          <ReturnButton href="/teacher/dashboard" label="Volver al Dashboard" />
+          
         </header>
 
         <div className="grid grid-cols-1 gap-8">
           
           {/* Search & Actions */}
           <div className="bg-[#0b1120] border border-white/5 rounded-3xl p-6 shadow-2xl shadow-blue-500/5">
-            <div className="relative">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 w-5 h-5" />
-              <input 
-                type="text" 
-                placeholder="Buscar por correo electrónico..."
-                className="w-full bg-[#050914] border border-white/10 rounded-2xl py-4 pl-12 pr-4 text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all"
-                value={emailSearch}
-                onChange={(e) => setEmailSearch(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && fetchUsers(emailSearch)}
-              />
+            <div className="flex flex-col md:flex-row gap-4">
+              <div className="relative flex-1">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 w-5 h-5" />
+                <input 
+                  type="text" 
+                  placeholder="Buscar por correo electrónico..."
+                  className="w-full bg-[#050914] border border-white/10 rounded-2xl py-4 pl-12 pr-4 text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all"
+                  value={emailSearch}
+                  onChange={(e) => setEmailSearch(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && fetchUsers(emailSearch)}
+                />
+                <button 
+                  onClick={() => fetchUsers(emailSearch)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 bg-blue-600 hover:bg-blue-500 px-6 py-2 rounded-xl text-sm font-bold transition-all"
+                >
+                  Buscar
+                </button>
+              </div>
               <button 
-                onClick={() => fetchUsers(emailSearch)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 bg-blue-600 hover:bg-blue-500 px-6 py-2 rounded-xl text-sm font-bold transition-all"
+                onClick={handleSync}
+                disabled={isSyncing}
+                className="bg-slate-800 hover:bg-slate-700 text-white px-6 py-4 rounded-2xl text-sm font-bold transition-all flex items-center justify-center gap-2 border border-slate-700 disabled:opacity-50 whitespace-nowrap"
               >
-                Buscar
+                {isSyncing ? <Loader2 className="w-5 h-5 animate-spin" /> : <RefreshCcw className="w-5 h-5" />}
+                Sincronizar DB
               </button>
             </div>
           </div>
@@ -158,6 +213,7 @@ export default function AdminManagementPage() {
                   <tr className="bg-white/5">
                     <th className="px-6 py-4 text-xs font-black text-slate-400 uppercase tracking-widest">Usuario / Email</th>
                     <th className="px-6 py-4 text-xs font-black text-slate-400 uppercase tracking-widest">Rol Actual</th>
+                    <th className="px-6 py-4 text-xs font-black text-slate-400 uppercase tracking-widest">Progreso</th>
                     <th className="px-6 py-4 text-xs font-black text-slate-400 uppercase tracking-widest">Institución</th>
                     <th className="px-6 py-4 text-xs font-black text-slate-400 uppercase tracking-widest text-right">Acciones</th>
                   </tr>
@@ -183,6 +239,7 @@ export default function AdminManagementPage() {
                       user={u} 
                       schools={schools} 
                       onUpdate={handleUpdateRole} 
+                      onDelete={handleDeleteUser}
                       isUpdating={updatingId === u.userId}
                     />
                   ))}
@@ -208,7 +265,7 @@ export default function AdminManagementPage() {
   )
 }
 
-function UserRow({ user, schools, onUpdate, isUpdating }: { user: any, schools: any[], onUpdate: any, isUpdating: boolean }) {
+function UserRow({ user, schools, onUpdate, onDelete, isUpdating }: { user: any, schools: any[], onUpdate: any, onDelete: any, isUpdating: boolean }) {
   const [selectedRole, setSelectedRole] = useState(user.role)
   const [selectedSchool, setSelectedSchool] = useState(user.schoolId || "")
 
@@ -242,6 +299,12 @@ function UserRow({ user, schools, onUpdate, isUpdating }: { user: any, schools: 
         </select>
       </td>
       <td className="px-6 py-5">
+        <div className="flex flex-col gap-1">
+          <div className="text-xs font-black text-blue-400 uppercase tracking-tighter">LVL {user.level || 1}</div>
+          <div className="text-sm font-bold text-slate-300">{user.xp || 0} XP</div>
+        </div>
+      </td>
+      <td className="px-6 py-5">
         <div className="flex items-center gap-2">
           <School className={`w-4 h-4 ${user.schoolId ? 'text-emerald-400' : 'text-slate-600'}`} />
           <select 
@@ -257,18 +320,29 @@ function UserRow({ user, schools, onUpdate, isUpdating }: { user: any, schools: 
         </div>
       </td>
       <td className="px-6 py-5 text-right">
-        <button
-          onClick={() => onUpdate(user.userId, selectedRole, selectedSchool)}
-          disabled={!hasChanges || isUpdating}
-          className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-black transition-all ${
-            hasChanges 
-              ? 'bg-emerald-600 text-white hover:bg-emerald-500 shadow-lg shadow-emerald-500/10' 
-              : 'bg-white/5 text-slate-500 cursor-not-allowed'
-          }`}
-        >
-          {isUpdating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-          {isUpdating ? 'Guardando...' : 'Guardar'}
-        </button>
+        <div className="flex items-center justify-end gap-2">
+          <button
+            onClick={() => onUpdate(user.userId, selectedRole, selectedSchool)}
+            disabled={!hasChanges || isUpdating}
+            className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-black transition-all ${
+              hasChanges 
+                ? 'bg-emerald-600 text-white hover:bg-emerald-500 shadow-lg shadow-emerald-500/10' 
+                : 'bg-white/5 text-slate-500 cursor-not-allowed'
+            }`}
+          >
+            {isUpdating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+            {isUpdating ? 'Guardando' : 'Guardar'}
+          </button>
+          
+          <button
+            onClick={() => onDelete(user.userId)}
+            disabled={isUpdating}
+            className="p-2.5 bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white rounded-xl transition-all border border-red-500/20 disabled:opacity-50"
+            title="Eliminar Usuario"
+          >
+            <Trash2 className="w-4 h-4" />
+          </button>
+        </div>
       </td>
     </tr>
   )

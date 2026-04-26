@@ -14,6 +14,7 @@ import {
 import { useAuth } from "@/contexts/AuthContext"
 import { createClientMicrocred } from "@/lib/supabase/client-microcred"
 import { touchStreak } from "@/lib/streakClient"
+import LockedToolGuard from "@/components/LockedToolGuard"
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -649,11 +650,12 @@ export default function VisionCanvasPage() {
   })
 
   return (
-    <>
-      <style>{`
-        .vision-shell {
-          width: 100%; height: 100%;
-          display: flex; flex-direction: column;
+    <LockedToolGuard productId="10" toolName="Board de Visión Financiera">
+      <>
+        <style>{`
+          .vision-shell {
+            width: 100%; height: 100%;
+            display: flex; flex-direction: column;
           background: #FBFAF5;
           font-family: var(--font-family, 'Inter', ui-sans-serif, system-ui, sans-serif);
           overflow: hidden;
@@ -1325,6 +1327,7 @@ export default function VisionCanvasPage() {
           )}
         </AnimatePresence>
       </div>
-    </>
+      </>
+    </LockedToolGuard>
   )
 }

@@ -13,7 +13,7 @@ export async function GET(req: Request) {
       title: "Democratizando el Liderazgo: Estudiantes ahora pueden hostear BIZEN Live",
       category: "Plataforma",
       time: "Hace 10 min",
-      image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1200&q=80",
+      image: "/news/live_host.png",
       url: "/live/host",
       desc: "La nueva actualización permite que cualquier estudiante cree su propia sesión y compita con sus compañeros.",
       fullDesc: "En BIZEN creemos que enseñar es la mejor forma de aprender. Por eso, hemos liberado las herramientas de gestión de Live Quiz para todos los usuarios con rol de estudiante. Ahora puedes organizar tus propios torneos, elegir temas del catálogo o crear tus propias preguntas para desafiar a tu clase o amigos."
@@ -26,7 +26,7 @@ export async function GET(req: Request) {
       title: "Bizcoin Staking: Pon tus ahorros virtuales a trabajar con el nuevo interés compuesto",
       category: "Inversión",
       time: "Hace 45 min",
-      image: "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&w=1200&q=80",
+      image: "/news/staking.png",
       url: "/dashboard",
       desc: "Gana hasta un 12% anual de rendimiento en tus Bizcoins mediante el nuevo módulo de inversión.",
       fullDesc: "La economía de BIZEN evoluciona. Con el lanzamiento del módulo de Staking, los usuarios pueden 'bloquear' sus Bizcoins para generar rendimientos pasivos. Esta función simula instrumentos de renta fija como los CETES o Bonos del Tesoro, permitiendo a los estudiantes entender el poder del tiempo en las inversiones."
@@ -39,7 +39,7 @@ export async function GET(req: Request) {
       title: "El futuro del asesoramiento financiero: Billy AI integra análisis de sentimiento global",
       category: "Tecnología",
       time: "Hace 2 horas",
-      image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=1200&q=80",
+      image: "/news/billy_ai.png",
       url: "#",
       desc: "Billy ahora puede procesar noticias en tiempo real para darte mejores consejos sobre tus simuladores.",
       fullDesc: "Nuestra IA residente, Billy, ha sido actualizada con un nuevo motor de procesamiento de lenguaje natural. Ahora es capaz de analizar miles de titulares financieros por segundo para proporcionarte contexto real mientras usas los simuladores de BIZEN, ayudándote a tomar decisiones informadas basadas en el clima económico actual."
@@ -52,7 +52,7 @@ export async function GET(req: Request) {
       title: "Impacto del Halving: ¿Por qué el mercado cripto está más maduro en 2026?",
       category: "Cripto",
       time: "Hace 5 horas",
-      image: "https://images.unsplash.com/photo-1518546305927-5a555bb7020d?auto=format&fit=crop&w=1200&q=80",
+      image: "/news/crypto_halving.png",
       url: "https://www.coindesk.com",
       desc: "La reducción de la oferta y la entrada institucional cambian las reglas del juego.",
       fullDesc: "A diferencia de ciclos anteriores, el comportamiento actual del mercado cripto muestra una correlación más estrecha con los activos tradicionales de refugio. La maduración de la infraestructura de custodia y la claridad regulatoria en las principales economías han transformado a las criptomonedas de activos puramente especulativos a componentes legítimos de carteras diversificadas."
@@ -65,7 +65,7 @@ export async function GET(req: Request) {
       title: "Mercados globales en alerta tras discurso de Trump sobre conflicto en Irán",
       category: "Macroeconomía",
       time: "Hace 1 hora",
-      image: "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?auto=format&fit=crop&w=800&q=80",
+      image: "/news/global_markets.png",
       url: "https://www.bloomberg.com/markets",
       desc: "La volatilidad se dispara en Wall Street tras advertencias de nuevas represalias en Medio Oriente.",
       fullDesc: "Los principales índices de Estados Unidos experimentaron una sesión de alta volatilidad después de que el presidente Trump sugiriera un endurecimiento de las acciones militares en Irán. Aunque los mercados recuperaron parte de sus pérdidas iniciales, el sentimiento de precaución prevalece entre los inversores internacionales, quienes ahora monitorean de cerca los próximos pasos diplomáticos."
@@ -78,7 +78,7 @@ export async function GET(req: Request) {
       title: "Petróleo WTI supera los  dólares ante temor por suministro global",
       category: "Energía",
       time: "Hace 3 horas",
-      image: "https://images.unsplash.com/photo-1518175006663-1e90b410cda6?auto=format&fit=crop&w=800&q=80",
+      image: "/news/oil_wti.png",
       url: "https://www.reuters.com/business/energy/",
       desc: "El crudo alcanza máximos locales mientras las tensiones geopolíticas amenazan las rutas de exportación.",
       fullDesc: "Los precios del petróleo West Texas Intermediate (WTI) y Brent han registrado un repunte significativo, rompiendo barreras psicológicas clave. La incertidumbre sobre la estabilidad en el Golfo Pérsico ha llevado a los analistas a revisar al alza sus proyecciones de precios para el trimestre, lo que añade presión a las expectativas de inflación global."
@@ -91,7 +91,7 @@ export async function GET(req: Request) {
       title: "Solicitudes de desempleo caen a 202,000 en EE.UU., superando expectativas",
       category: "Economía",
       time: "Hace 5 horas",
-      image: "https://images.unsplash.com/photo-1543286386-2e659306cd6c?auto=format&fit=crop&w=800&q=80",
+      image: "/news/us_jobs.png",
       url: "https://www.cnbc.com/economy/",
       desc: "El mercado laboral estadounidense muestra una resiliencia inesperada a pesar de las altas tasas de interés.",
       fullDesc: "Los nuevos datos de solicitudes semanales por desempleo revelan que el mercado laboral sigue siendo robusto. Con una cifra menor a la proyectada por los economistas (215,000), la Reserva Federal se enfrenta a un desafío complejo: una economía que no parece enfriarse lo suficiente como para justificar recortes inmediatos en las tasas de interés."
@@ -104,7 +104,7 @@ export async function GET(req: Request) {
       title: "Dudas sobre el 'aterrizaje suave' tras datos manufactureros de ISM",
       category: "Bancos",
       time: "Hace 8 horas",
-      image: "https://images.unsplash.com/photo-1501167786227-4cba60f6d58f?auto=format&fit=crop&w=800&q=80",
+      image: "/news/fed_banking.png",
       url: "https://finance.yahoo.com/news/",
       desc: "El aumento en los precios pagados por los fabricantes sugiere una inflación más persistente de lo esperado.",
       fullDesc: "El índice PMI manufacturero del ISM mostró recientemente que los precios pagados por las empresas están volviendo a subir. Esta señal indica que la inflación subyacente puede tardar más en bajar del 3%, complicando el objetivo del 2% de la Fed y forzando a los inversores a revaluar su exposición a activos de riesgo."
@@ -117,7 +117,7 @@ export async function GET(req: Request) {
       title: "Aerolíneas bajo presión: United y Carnival lideran caídas por combustible",
       category: "Transporte",
       time: "Hace 10 horas",
-      image: "https://images.unsplash.com/photo-1436491865332-7a61a109c0f3?auto=format&fit=crop&w=800&q=80",
+      image: "/news/airlines_travel.png",
       url: "https://www.ft.com/markets",
       desc: "El encarecimiento del combustible de aviación afecta los márgenes proyectados para la temporada de verano.",
       fullDesc: "El sector transporte y viajes se ha visto afectado por el reciente aumento en los precios de la energía. United Airlines y Carnival han visto retrocesos significativos en sus cotizaciones ante el temor de que los altos costos operativos y la inflación al consumidor reduzcan la demanda de viajes en los próximos meses."
@@ -130,7 +130,7 @@ export async function GET(req: Request) {
       title: "Exxon y Chevron ganan terreno ante alza en márgenes de refinamiento",
       category: "Inversión",
       time: "Hace 12 horas",
-      image: "https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=800&q=80",
+      image: "/news/oil_wti.png",
       url: "https://oilprice.com/",
       desc: "Las grandes petroleras se benefician del entorno de precios altos y demanda sostenida.",
       fullDesc: "Mientras otros sectores sufren, las empresas energéticas tradicionales como Exxon Mobil y Chevron están capturando flujos de capital. La combinación de precios de crudo elevados y una mejora en los márgenes de refinamiento ha posicionado a estos activos como un refugio de valor en una cartera diversificada durante tiempos de inestabilidad geopolítica."
@@ -140,10 +140,10 @@ export async function GET(req: Request) {
       symbol: "GOLD",
       author: "Metals Specialist",
       source: "Kitco News",
-      title: "El Oro se mantiene firme arriba de los ,250 como refugio",
+      title: "El Oro se mantiene firme arriba de los $2,250 como refugio",
       category: "Metales Preciosos",
       time: "Hace 15 horas",
-      image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&q=80",
+      image: "/news/bitcoin_ath.png", // Reuse gold/bitcoin style
       url: "https://www.kitco.com/news/",
       desc: "La demanda física y central de oro sigue rompiendo récords históricos este mes.",
       fullDesc: "El oro continúa su racha alcista, sirviendo como el guardián de valor por excelencia ante la volatilidad de las divisas y la incertidumbre en Medio Oriente. Los bancos centrales de los mercados emergentes siguen acumulando reservas físicas, lo que proporciona un piso sólido al precio del metal precioso a pesar de un dólar relativamente fuerte."
@@ -156,7 +156,7 @@ export async function GET(req: Request) {
       title: "Apple explora robótica tras fin de proyecto de auto eléctrico",
       category: "Tecnología",
       time: "Hace 18 horas",
-      image: "https://images.unsplash.com/photo-1485738422979-f5c462d49f74?auto=format&fit=crop&w=800&q=80",
+      image: "/news/tech_apple.png",
       url: "https://www.theverge.com/apple",
       desc: "La compañía busca su próximo gran éxito en la robótica doméstica y la IA integrada.",
       fullDesc: "Tras cancelar su ambicioso proyecto de vehículo autónomo, Apple está redirigiendo sus recursos de ingeniería hacia la robótica personal. Los informes sugieren que están trabajando en dispositivos capaces de moverse en el hogar y mejorar la interacción de los usuarios con el ecosistema de Apple mediante IA avanzada."
@@ -169,7 +169,7 @@ export async function GET(req: Request) {
       title: "Súper Peso resiste: MXN se mantiene sólido a pesar del ruido global",
       category: "Divisas",
       time: "Hace 20 horas",
-      image: "https://images.unsplash.com/photo-1518458022751-0a53d3f96603?auto=format&fit=crop&w=800&q=80",
+      image: "/news/mxn_peso.png",
       url: "https://www.elfinanciero.com.mx/markets/",
       desc: "El atractivo diferencial de tasas sigue atrayendo flujos hacia la moneda mexicana.",
       fullDesc: "El peso mexicano sigue demostrando por qué ha sido una de las monedas más fuertes frente al dólar. Aunque la volatilidad externa ha aumentado, el carry trade y la llegada de inversión por nearshoring mantienen la paridad cambiaria en niveles históricamente bajos para el último periodo."
@@ -182,7 +182,7 @@ export async function GET(req: Request) {
       title: "Nvidia amplía su ventaja en chips de IA con nueva arquitectura",
       category: "Hardware",
       time: "Hace 22 horas",
-      image: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=800&q=80",
+      image: "/news/nvidia_chips.png",
       url: "https://techcrunch.com/tag/nvidia/",
       desc: "La demanda institucional de infraestructura para modelos de lenguaje masivos no muestra signos de pausa.",
       fullDesc: "Nvidia continúa su ascenso meteórico al presentar mejoras en su arquitectura de centro de datos. Con el ecosistema de IA generativa expandiéndose hacia sectores industriales y de salud, los pedidos de sus aceleradores de hardware se han extendido hasta finales del próximo año fiscal, consolidando su posición como el motor de la revolución tecnológica actual."
@@ -195,7 +195,7 @@ export async function GET(req: Request) {
       title: "Bitcoin rompe récord histórico superando los ,000",
       category: "Cripto",
       time: "Hace 1 hora",
-      image: "https://images.unsplash.com/photo-1621416894569-0f39ed31d247?auto=format&fit=crop&w=800&q=80",
+      image: "/news/bitcoin_ath.png",
       url: "https://www.coindesk.com",
       desc: "La adopción masiva por parte de instituciones financieras impulsa el precio a niveles nunca antes vistos.",
       fullDesc: "Bitcoin ha cruzado la barrera psicológica de los seis dígitos, marcando un hito en la historia de las finanzas digitales. Analistas sugieren que la entrada de fondos soberanos al mercado ha sido el catalizador definitivo para este rally sin precedentes."
@@ -205,10 +205,10 @@ export async function GET(req: Request) {
       symbol: "TSLA",
       author: "Auto Industry Analyst",
       source: "Forbes",
-      title: "Tesla presenta su modelo compacto de ,000 para mercados globales",
+      title: "Tesla presenta su modelo compacto de $25,000 para mercados globales",
       category: "Automotriz",
       time: "Hace 4 horas",
-      image: "https://images.unsplash.com/photo-1560958089-b8a1929cea89?auto=format&fit=crop&w=800&q=80",
+      image: "/news/tesla_ev.png",
       url: "https://www.forbes.com/business/",
       desc: "El vehículo busca democratizar la movilidad eléctrica y competir en el mercado masivo.",
       fullDesc: "Con un enfoque en la eficiencia de manufactura y nuevas celdas de batería, Tesla promete revolucionar el segmento de entrada. El anuncio ha disparado las acciones de la compañía un 8% en las operaciones después del cierre."
@@ -221,7 +221,7 @@ export async function GET(req: Request) {
       title: "SpaceX completa con éxito la primera misión comercial a Marte",
       category: "Espacio",
       time: "Hace 6 horas",
-      image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=800&q=80",
+      image: "/news/spacex_mars.png",
       url: "https://spacenews.com",
       desc: "La Starship logra aterrizar suministros críticos para la futura base habitada.",
       fullDesc: "Este logro marca el inicio de la era multiplanetaria. La misión no solo probó la tecnología de reentrada atmosférica marciana, sino que también estableció los protocolos de comunicación de banda ancha entre planetas."
@@ -231,10 +231,10 @@ export async function GET(req: Request) {
       symbol: "VC",
       author: "Silicon Insider",
       source: "TechCrunch",
-      title: "Inversión en Startups de IA supera los B en el primer trimestre",
+      title: "Inversión en Startups de IA supera los $10B en el primer trimestre",
       category: "Capital",
       time: "Hace 9 horas",
-      image: "https://images.unsplash.com/photo-1559136555-9303baea8ebd?auto=format&fit=crop&w=800&q=80",
+      image: "/news/startups_vc.png",
       url: "https://techcrunch.com/category/startups/",
       desc: "El capital de riesgo se concentra en modelos de lenguaje masivos y robótica aplicada.",
       fullDesc: "A pesar del enfriamiento en otros sectores tecnológicos, la IA generativa sigue atrayendo flujos récord. Los grandes fondos están duplicando sus apuestas en infraestructura crítica y aplicaciones B2B especializadas."
@@ -247,7 +247,7 @@ export async function GET(req: Request) {
       title: "Mercado inmobiliario en Miami reporta auge por relocalización tecnológica",
       category: "Bienes Raíces",
       time: "Hace 12 horas",
-      image: "https://images.unsplash.com/photo-1460317442991-0ec239397118?auto=format&fit=crop&w=800&q=80",
+      image: "/news/real_estate.png",
       url: "https://www.wsj.com/real-estate",
       desc: "Las oficinas de lujo alcanzan niveles de ocupación récord en el centro de la ciudad.",
       fullDesc: "La tendencia de migración corporativa hacia estados con menores impuestos sigue impulsando la demanda. Los precios por metro cuadrado han subido un 15% anual, sin señales de desaceleración en el corto plazo."
@@ -260,7 +260,7 @@ export async function GET(req: Request) {
       title: "TSMC acelera producción de chips de 2nm ante demanda de IA",
       category: "Tecnología",
       time: "Hace 14 horas",
-      image: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=80",
+      image: "/news/nvidia_chips.png",
       url: "https://asia.nikkei.com/Business/Tech/Semiconductors",
       desc: "La nueva arquitectura promete una eficiencia energética 30% superior a la generación actual.",
       fullDesc: "El fabricante de chips más grande del mundo está invirtiendo miles de millones en nuevas plantas para asegurar la cadena de suministro global. Los analistas prevén que esta tecnología sea la base de los smartphones y servidores del 2026."
@@ -273,7 +273,7 @@ export async function GET(req: Request) {
       title: "Inversión en energías renovables supera a los fósiles por primera vez",
       category: "Energía",
       time: "Hace 18 horas",
-      image: "https://images.unsplash.com/photo-1466611653911-954815391f27?auto=format&fit=crop&w=800&q=80",
+      image: "/news/renewable_energy.png",
       url: "https://www.theguardian.com/business/renewable-energy",
       desc: "El costo nivelado de la energía solar y eólica sigue cayendo globalmente.",
       fullDesc: "Un reporte global confirma que el capital institucional ahora prefiere proyectos verdes debido a su mayor previsibilidad y cumplimiento de criterios ESG. Este cambio tectónico redefine el futuro del sector energético europeo y americano."
@@ -286,7 +286,7 @@ export async function GET(req: Request) {
       title: "El Euro se fortalece ante señales de baja inflación en Alemania",
       category: "Divisas",
       time: "Hace 20 horas",
-      image: "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?auto=format&fit=crop&w=800&q=80",
+      image: "/news/global_markets.png",
       url: "https://www.reuters.com/markets/currencies/",
       desc: "Los mercados descuentan un posible recorte de tasas por el BCE en junio.",
       fullDesc: "La divisa común europea ha mostrado una resiliencia notable. A pesar de los desafíos industriales, los datos macroeconómicos sugieren que la zona euro podría evitar una recesión técnica este año."
@@ -299,7 +299,7 @@ export async function GET(req: Request) {
       title: "Amazon integra drones para entregas en menos de 15 minutos en Texas",
       category: "Logística",
       time: "Hace 22 horas",
-      image: "https://images.unsplash.com/photo-1521898284481-a5ec3ad18c72?auto=format&fit=crop&w=800&q=80",
+      image: "/news/amazon_logistics.png",
       url: "https://www.businessinsider.com/amazon-prime-air",
       desc: "El servicio Prime Air comienza su fase de expansión comercial masiva.",
       fullDesc: "Mediante el uso de algoritmos de navegación avanzada, Amazon logra sortear obstáculos urbanos y entregar paquetes ligeros casi instantáneamente. Este avance promete cambiar las expectativas de consumo en las zonas suburbanas."
@@ -312,7 +312,7 @@ export async function GET(req: Request) {
       title: "Nueva terapia génica muestra remisión del 100% en pruebas iniciales",
       category: "Salud",
       time: "Hace 23 horas",
-      image: "https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=800&q=80",
+      image: "/news/health_biotech.png",
       url: "https://www.statnews.com",
       desc: "El tratamiento enfocado en enfermedades raras podría recibir aprobación acelerada.",
       fullDesc: "Los resultados clínicos han superado todas las expectativas de la FDA. El precio de las acciones de la biotecnológica responsable se ha duplicado en una sola jornada, impulsando el sector salud en el Nasdaq."
@@ -325,7 +325,7 @@ export async function GET(req: Request) {
       title: "Inflación en México liga su cuarta quincena a la baja: 4.42%",
       category: "Macroeconomía",
       time: "Hace 2 horas",
-      image: "https://images.unsplash.com/photo-1585468202523-289ba100c619?auto=format&fit=crop&w=800&q=80",
+      image: "/news/mxn_peso.png",
       url: "https://www.eleconomista.com.mx/",
       desc: "Los datos del INEGI sugieren una posible pausa en el endurecimiento del Banco de México.",
       fullDesc: "La inflación general en México continúa su tendencia descendente, superando levemente las expectativas de los analistas. Este enfriamiento de los precios abre la puerta a que Banxico considere un recorte en la tasa de referencia en las próximas reuniones de política monetaria."
@@ -338,7 +338,7 @@ export async function GET(req: Request) {
       title: "OpenAI presenta 'Sora' en versión beta para creadores seleccionados",
       category: "Inteligencia Artificial",
       time: "Hace 5 horas",
-      image: "https://images.unsplash.com/photo-1620712943543-bcc4628c940c?auto=format&fit=crop&w=800&q=80",
+      image: "/news/openai_sora.png",
       url: "https://arstechnica.com/",
       desc: "El modelo de generación de video a partir de texto sorprende por su realismo cinematográfico.",
       fullDesc: "Sora permite crear escenas complejas con múltiples personajes y movimientos de cámara precisos. Aunque aún no está disponible para el público general, los primeros resultados han generado un intenso debate sobre el futuro de la producción audiovisual y la propiedad intelectual."
@@ -351,7 +351,7 @@ export async function GET(req: Request) {
       title: "S&P 500 alcanza nuevo máximo gracias al rally de semiconductores",
       category: "Acciones",
       time: "Hace 7 horas",
-      image: "https://images.unsplash.com/photo-1611974717482-48a5c18dc907?auto=format&fit=crop&w=800&q=80",
+      image: "/news/global_markets.png",
       url: "https://www.investing.com/indices/us-spx-500",
       desc: "El optimismo corporativo ignora las señales de cautela de la Reserva Federal.",
       fullDesc: "A pesar de las tasas de interés históricamente altas, el sector tecnológico sigue impulsando al mercado. Las empresas ligadas a la infraestructura de red y el hardware de IA están captando la mayor parte de las entradas de capital este trimestre."
@@ -364,7 +364,7 @@ export async function GET(req: Request) {
       title: "Ethereum completa con éxito la actualización 'Dencun'",
       category: "Cripto",
       time: "Hace 10 horas",
-      image: "https://images.unsplash.com/photo-1633156106027-d200fb489433?auto=format&fit=crop&w=800&q=80",
+      image: "/news/crypto_halving.png",
       url: "https://www.theblock.co/",
       desc: "Las tarifas en las soluciones de Capa 2 (L2) caen drásticamente tras la implementación de blobs.",
       fullDesc: "La esperada actualización Dencun introduce el proto-danksharding, reduciendo las barreras de costo para los usuarios finales. Los analistas prevén un aumento masivo en la actividad de dApps y juegos Web3 en los próximos meses."
@@ -377,7 +377,7 @@ export async function GET(req: Request) {
       title: "Bancos centrales exploran el uso de CBDC para pagos transfronterizos",
       category: "Banca Central",
       time: "Hace 12 horas",
-      image: "https://images.unsplash.com/photo-1550565118-3a14e8d0386f?auto=format&fit=crop&w=800&q=80",
+      image: "/news/fed_banking.png",
       url: "https://www.ft.com/",
       desc: "El proyecto busca reducir los tiempos de liquidación de días a segundos.",
       fullDesc: "Las Monedas Digitales de Banco Central (CBDC) están pasando de la teoría a la práctica. Con el fin de modernizar el sistema SWIFT, varias instituciones globales están colaborando en una infraestructura blockchain compartida."
@@ -390,7 +390,7 @@ export async function GET(req: Request) {
       title: "Amazon reporta ahorros masivos tras integrar IA en su logística de última milla",
       category: "Logística",
       time: "Hace 14 horas",
-      image: "https://images.unsplash.com/photo-1521191761617-695617cb9932?auto=format&fit=crop&w=800&q=80",
+      image: "/news/amazon_logistics.png",
       url: "https://www.businessinsider.com/",
       desc: "La optimización de rutas mediante algoritmos predictivos reduce costos operativos en un 15%.",
       fullDesc: "Amazon ha logrado mejorar la puntualidad de sus entregas reduciendo al mismo tiempo las emisiones de carbono. La empresa planea expandir esta tecnología a sus mercados internacionales antes de finalizar el año."
@@ -403,7 +403,7 @@ export async function GET(req: Request) {
       title: "EdTech: El micro-aprendizaje conquista el mercado corporativo",
       category: "Educación",
       time: "Hace 3 días",
-      image: "https://images.unsplash.com/photo-1501504905953-f83136739947?auto=format&fit=crop&w=800&q=80",
+      image: "/news/live_host.png",
       url: "https://www.forbes.com/",
       desc: "Cápsulas de conocimiento de 5 minutos reemplazan a los cursos extensos por su alta retención.",
       fullDesc: "Las empresas están adoptando plataformas de aprendizaje ágil similares a TikTok pero enfocadas en habilidades profesionales. BIZEN es citada como uno de los ejemplos de éxito en este nuevo paradigma educativo."
@@ -416,7 +416,7 @@ export async function GET(req: Request) {
       title: "Crisis de fertilizantes: Agricultores buscan alternativas orgánicas para bajar costos",
       category: "Agricultura",
       time: "Hace 2 días",
-      image: "https://images.unsplash.com/photo-1464226184884-fa280b87c399?auto=format&fit=crop&w=800&q=80",
+      image: "/news/agriculture_food.png",
       url: "https://www.economist.com/",
       desc: "El aumento en el precio del gas natural impacta directamente en la producción de alimentos.",
       fullDesc: "La dependencia de importaciones de potasio y nitrógeno está forzando a una revolución verde accidental. Los fertilizantes biotecnológicos están ganando terreno como una solución sostenible y económica de largo plazo."
@@ -429,7 +429,7 @@ export async function GET(req: Request) {
       title: "Digitalización: 7 de cada 10 PYMES mexicanas ya usan WhatsApp para vender",
       category: "Empresas",
       time: "Hace 1 semana",
-      image: "https://images.unsplash.com/photo-1556742502-ec7c0e9f34b1?auto=format&fit=crop&w=800&q=80",
+      image: "/news/retail_shopping.png",
       url: "https://www.entrepreneur.com/mx/",
       desc: "El e-commerce conversacional se consolida como el motor de los pequeños negocios locales.",
       fullDesc: "WhatsApp Business ha transformado la manera en que los mexicanos compran su despensa y servicios. La facilidad de uso y la cercanía con el cliente son las razones principales de esta adopción masiva en todo el país."
@@ -442,7 +442,7 @@ export async function GET(req: Request) {
       title: "NFTs 2.0: De la especulación a la utilidad en el mundo del arte físico",
       category: "Estilo de Vida",
       time: "Hace 2 semanas",
-      image: "https://images.unsplash.com/photo-1643101809754-43a91784ebec?auto=format&fit=crop&w=800&q=80",
+      image: "/news/billy_ai.png",
       url: "https://www.voguebusiness.com/",
       desc: "Grandes museos integran certificación por blockchain para garantizar autenticidad.",
       fullDesc: "Tras el estallido de la burbuja especulativa, el mercado ha madurado. Ahora, la tecnología se usa como un pasaporte digital inseparable de las obras físicas, permitiendo un seguimiento real de la procedencia y la propiedad."
@@ -455,7 +455,7 @@ export async function GET(req: Request) {
       title: "Ventas omnicanal: El 80% de los compradores investiga online antes de ir a tienda",
       category: "Negocios",
       time: "Hace 1 día",
-      image: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=800&q=80",
+      image: "/news/retail_shopping.png",
       url: "#",
       desc: "La experiencia híbrida redefine el éxito de las marcas minoristas en 2026.",
       fullDesc: "La integración de inventario en tiempo real y la posibilidad de recoger en tienda son ahora requisitos mínimos para sobrevivir. Las marcas que ofrecen una transición sin fricciones entre lo digital y lo físico están ganando cuota de mercado."
@@ -468,7 +468,7 @@ export async function GET(req: Request) {
       title: "Bonos Verdes: Empresa mexicana recauda M para proyectos solares",
       category: "Inversión",
       time: "Hace 1 día",
-      image: "https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=800&q=80",
+      image: "/news/live_host.png",
       url: "#",
       desc: "La emisión de deuda con fines sostenibles sigue creciendo en los mercados emergentes.",
       fullDesc: "Este hito marca la creciente demanda de activos alineados con criterios ambientales en la bolsa mexicana. Los fondos se utilizarán para la construcción de tres nuevos parques solares en Sonora."
@@ -481,7 +481,7 @@ export async function GET(req: Request) {
       title: "IA en el Banco: JPMorgan lanza su propio modelo de chat para analistas",
       category: "Bancos",
       time: "Hace 2 días",
-      image: "https://images.unsplash.com/photo-1591115711431-29932087961b?auto=format&fit=crop&w=800&q=80",
+      image: "/news/fed_banking.png",
       url: "#",
       desc: "La herramienta automatiza el resumen de reportes de 3,000 páginas en segundos.",
       fullDesc: "La adopción de IA generativa está redefiniendo el trabajo en el sector financiero. Este nuevo asistente permite a los analistas de riesgo enfocarse en la toma de decisiones complejas en lugar de la recopilación de datos manual."
@@ -494,7 +494,7 @@ export async function GET(req: Request) {
       title: "Cobre alcanza máximos históricos por demanda de vehículos eléctricos",
       category: "Metales Preciosos",
       time: "Hace 2 días",
-      image: "https://images.unsplash.com/photo-1536619209560-19f99c317fea?auto=format&fit=crop&w=800&q=80",
+      image: "/news/oil_wti.png",
       url: "#",
       desc: "La escasez estructural de oferta presiona al alza los precios globales.",
       fullDesc: "Sin cobre no hay transición energética. Con la aceleración de la electrificación del transporte y la red, los inventarios globales están en niveles críticos, lo que beneficia a las grandes mineras."
@@ -507,7 +507,7 @@ export async function GET(req: Request) {
       title: "Puerto de Veracruz reporta récord de carga por nearshoring",
       category: "Logística",
       time: "Hace 3 días",
-      image: "https://images.unsplash.com/photo-1544654803-b69110bb81e4?auto=format&fit=crop&w=800&q=80",
+      image: "/news/amazon_logistics.png",
       url: "#",
       desc: "La infraestructura marítima se vuelve el cuello de botella del crecimiento industrial.",
       fullDesc: "El incremento en las exportaciones hacia Europa y la costa este de EE.UU. ha saturado las terminales actuales. Se anuncian planes de expansión para ampliar la capacidad de manejo de contenedores en un 20%."
@@ -517,10 +517,10 @@ export async function GET(req: Request) {
       symbol: "STARTUP",
       author: "Venture Daily",
       source: "TechCrunch",
-      title: "Fintech Mexicana levanta serie B de M para expansión en LatAm",
+      title: "Fintech Mexicana levanta serie B de $50M para expansión en LatAm",
       category: "Capital",
       time: "Hace 3 días",
-      image: "https://images.unsplash.com/photo-1553484771-047a44eee27f?auto=format&fit=crop&w=800&q=80",
+      image: "/news/startups_vc.png",
       url: "#",
       desc: "La startup enfocada en pagos transfronterizos busca competir con los bancos tradicionales.",
       fullDesc: "A pesar del entorno de inversión más cauteloso, las startups con modelos de negocio sólidos siguen atrayendo capital. Sus herramientas de liquidación instantánea para PYMES son la clave de su éxito."
@@ -533,7 +533,7 @@ export async function GET(req: Request) {
       title: "Telemedicina: Consultas por video crecen un 40% en México rural",
       category: "Salud",
       time: "Hace 4 días",
-      image: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=800&q=80",
+      image: "/news/health_biotech.png",
       url: "#",
       desc: "La conectividad satelital y la IA están cerrando la brecha de salud geográfica.",
       fullDesc: "El programa gubernamental busca democratizar el acceso a especialistas. Billy Salud es citado como un ejemplo de acompañamiento digital preventivo que está mejorando la calidad de vida de las comunidades."
@@ -546,7 +546,7 @@ export async function GET(req: Request) {
       title: "Dominancia de Bitcoin se acerca al 60% por flujos institucionales",
       category: "Cripto",
       time: "Hace 4 días",
-      image: "https://images.unsplash.com/photo-1642104704074-907c0698cbd9?auto=format&fit=crop&w=800&q=80",
+      image: "/news/bitcoin_ath.png",
       url: "#",
       desc: "El rally de BTC drena liquidez de las altcoins en un mercado más concentrado.",
       fullDesc: "Los inversores están volviendo a lo que consideran el 'activo de mayor calidad'. La demanda por spot ETFs sigue siendo el motor principal de esta tendencia de largo plazo."
@@ -559,7 +559,7 @@ export async function GET(req: Request) {
       title: "Hipotecas a tasa fija inician ligera tendencia bajista en EE.UU.",
       category: "Bienes Raíces",
       time: "Hace 5 días",
-      image: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=800&q=80",
+      image: "/news/real_estate.png",
       url: "#",
       desc: "El mercado inmobiliario respira ante señales de moderación de la Fed.",
       fullDesc: "Los compradores que estaban esperando fuera del mercado están volviendo a solicitar créditos. Sin embargo, la falta de inventario acumulada por años sigue limitando el crecimiento de las ventas totales."
@@ -572,7 +572,7 @@ export async function GET(req: Request) {
       title: "Captura de Carbono: Nueva planta en Islandia escala operaciones",
       category: "Energía",
       time: "Hace 5 días",
-      image: "https://images.unsplash.com/photo-1532601224476-15c79f2f7a51?auto=format&fit=crop&w=800&q=80",
+      image: "/news/renewable_energy.png",
       url: "#",
       desc: "La tecnología Orca logra filtrar 36,000 toneladas de CO2 de la atmósfera anualmente.",
       fullDesc: "Aunque el costo por tonelada sigue siendo alto, la curva de aprendizaje está bajando. Los créditos de carbono de alta integridad se están convirtiendo en un activo de inversión corporativo atractivo."
@@ -585,9 +585,9 @@ export async function GET(req: Request) {
       title: "Baterías LFP: Tesla reemplazará toda su flota económica con esta química",
       category: "Automotriz",
       time: "Hace 6 días",
-      image: "https://images.unsplash.com/photo-1593941707882-a5bba14938c7?auto=format&fit=crop&w=800&q=80",
+      image: "/news/tesla_ev.png",
       url: "#",
-      desc: "La drástica reducción de costos permitiría autos eléctricos de menos de ,000.",
+      desc: "La drástica reducción de costos permitiría autos eléctricos de menos de $25,000.",
       fullDesc: "Las baterías de fosfato de hierro y litio (LFP) no usan cobalto ni níquel, lo que las hace más sostenibles y baratas de producir. Este cambio estratégico busca capturar mercados masivos en Asia y Latinoamérica."
     },
     {
@@ -598,7 +598,7 @@ export async function GET(req: Request) {
       title: "Rust supera al C++ en adopción para infraestructura crítica",
       category: "Software",
       time: "Hace 6 días",
-      image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=800&q=80",
+      image: "/news/nvidia_chips.png",
       url: "#",
       desc: "La seguridad de memoria por diseño convence a gigantes como Microsoft y Google.",
       fullDesc: "Los ciberataques basados en desbordamiento de búfer han costado billones de dólares. Rust, con su sistema de tipos estricto, está eliminando estas vulnerabilidades, convirtiéndose en el lenguaje estándar de la industria."
@@ -611,7 +611,7 @@ export async function GET(req: Request) {
       title: "Minería de Asteroides: Startup enviará su primer explorador en 2026",
       category: "Espacio",
       time: "Hace 1 semana",
-      image: "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=800&q=80",
+      image: "/news/spacex_mars.png",
       url: "#",
       desc: "El objetivo es identificar depósitos de platino y tierras raras en el cinturón cercano.",
       fullDesc: "AstroForge busca traer recursos de vuelta a la Tierra de forma rentable. Este proyecto es visto como la solución de largo plazo a la escasez de materiales para hardware avanzado e hidrógeno verde."
@@ -621,10 +621,10 @@ export async function GET(req: Request) {
       symbol: "ECON",
       author: "Macro Review",
       source: "The Wall St. Journal",
-      title: "Deuda Global supera los  billones por primera vez",
+      title: "Deuda Global supera los $315 billones por primera vez",
       category: "Economía",
       time: "Hace 1 semana",
-      image: "https://images.unsplash.com/photo-1518186239745-6cb35ca98ff0?auto=format&fit=crop&w=800&q=80",
+      image: "/news/fed_banking.png",
       url: "#",
       desc: "El aumento del costo de financiamiento pone a prueba a los mercados emergentes.",
       fullDesc: "La OCDE advierte sobre la necesidad de consolidación fiscal. La refinanciación de deudas soberanas en un entorno de tasas altas es el principal riesgo para la estabilidad financiera global este año."
@@ -637,7 +637,7 @@ export async function GET(req: Request) {
       title: "Chips Fotónicos: Intel integra luz en silicio para redes 1.6T",
       category: "Tecnología",
       time: "Hace 1 semana",
-      image: "https://images.unsplash.com/photo-1591405351990-4726e33df58d?auto=format&fit=crop&w=800&q=80",
+      image: "/news/nvidia_chips.png",
       url: "#",
       desc: "La velocidad de transferencia de datos en centros de IA se duplicará sin calor extra.",
       fullDesc: "La fotónica de silicio es la pieza faltante para escalar la computación exascale de forma eficiente. Esta tecnología permite que la comunicación entre servidores se realice mediante luz en lugar de electricidad."
@@ -650,7 +650,7 @@ export async function GET(req: Request) {
       title: "Misiones del Día: Gana Bizcoins con el nuevo desafío de ahorro mensual",
       category: "Plataforma",
       time: "Hace 1 semana",
-      image: "https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?auto=format&fit=crop&w=800&q=80",
+      image: "/news/live_host.png",
       url: "/mision-del-dia",
       desc: "Billy te guía para crear tu primer fondo de emergencia paso a paso.",
       fullDesc: "La educación financiera teórica no es suficiente. Con el nuevo módulo de Misiones, BIZEN incentiva el comportamiento de ahorro real premiando a los usuarios con insignias exclusivas y recompensas en Bizcoins."
@@ -663,7 +663,7 @@ export async function GET(req: Request) {
       title: "Inyectable GLP-1: Farmacéutica Lilly reduce costos de producción",
       category: "Salud",
       time: "Hace 2 semanas",
-      image: "https://images.unsplash.com/photo-1579165466541-71ae096f905c?auto=format&fit=crop&w=800&q=80",
+      image: "/news/health_biotech.png",
       url: "#",
       desc: "La simplificación de la síntesis química promete precios accesibles el próximo año.",
       fullDesc: "Los medicamentos para la pérdida de peso están cambiando la salud pública global. Al bajar los costos, se espera un impacto positivo en la reducción de enfermedades crónicas ligadas a la obesidad."
@@ -676,7 +676,7 @@ export async function GET(req: Request) {
       title: "Perovskita: La nueva capa que duplica la eficiencia de paneles solares",
       category: "Energía",
       time: "Hace 2 semanas",
-      image: "https://images.unsplash.com/photo-1548518014-97c41478993c?auto=format&fit=crop&w=800&q=80",
+      image: "/news/renewable_energy.png",
       url: "#",
       desc: "La tecnología Tándem de silicio y perovskita supera el límite teórico de Shockley.",
       fullDesc: "Este avance permitiría producir la misma energía ocupando la mitad del espacio físico. La viabilidad comercial se estima para 2027, revolucionando el mercado residencial e industrial."
@@ -689,7 +689,7 @@ export async function GET(req: Request) {
       title: "Habilidades de IA superan a los títulos universitarios en demanda",
       category: "Educación",
       time: "Hace 2 semanas",
-      image: "https://images.unsplash.com/photo-1510070112810-d4e9a46d9e91?auto=format&fit=crop&w=800&q=80",
+      image: "/news/tech_apple.png",
       url: "#",
       desc: "El 70% de los reclutadores en Tech prefieren portafolios verificados de micro-cursos.",
       fullDesc: "El aprendizaje continuo y modular es la clave de la carrera profesional moderna. BIZEN se posiciona como el puente entre la teoría financiera y la aplicación práctica con IA."
@@ -702,7 +702,7 @@ export async function GET(req: Request) {
       title: "Granjas Verticales: Singapur logra autosuficiencia en hortalizas",
       category: "Agricultura",
       time: "Hace 2 semanas",
-      image: "https://images.unsplash.com/photo-1516253593875-bd7ba052fbc5?auto=format&fit=crop&w=800&q=80",
+      image: "/news/agriculture_food.png",
       url: "#",
       desc: "La producción hidropónica automatizada reduce el consumo de agua en un 95%.",
       fullDesc: "Mediante el uso de luces LED de espectro optimizado y sensores de IA, se logran hasta 15 cosechas anuales por metro cuadrado. Esta solución es vital para la seguridad alimentaria en densas áreas urbanas."
@@ -715,7 +715,7 @@ export async function GET(req: Request) {
       title: "Burnout Digital: Por qué desconectarse es la mejor inversión del 2026",
       category: "Salud Mental",
       time: "Hace 3 semanas",
-      image: "https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?auto=format&fit=crop&w=800&q=80",
+      image: "/news/mental_health.png",
       url: "#",
       desc: "Empresas en Europa inician programas de 'desconexión obligatoria' post-6PM.",
       fullDesc: "La productividad ya no se mide por horas frente a la pantalla, sino por la calidad de las decisiones. La salud mental se ha vuelto un factor determinante en el rendimiento de los equipos de alto desempeño."
@@ -728,7 +728,7 @@ export async function GET(req: Request) {
       title: "Criptografía Cuántica: Bancos en Londres inician pruebas de seguridad",
       category: "Bancos",
       time: "Hace 3 semanas",
-      image: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&w=800&q=80",
+      image: "/news/fed_banking.png",
       url: "#",
       desc: "La red de fibra protegida por QKD es virtualmente imposible de hackear.",
       fullDesc: "Quantum Key Distribution (QKD) utiliza las leyes de la física para asegurar la transmisión de datos. Esta es la respuesta definitiva a la futura amenaza de la computación cuántica sobre la encriptación tradicional."
@@ -741,7 +741,7 @@ export async function GET(req: Request) {
       title: "Carne Cultivada: El primer restaurante en Singapur expande su menú",
       category: "Sociedad",
       time: "Hace 3 semanas",
-      image: "https://images.unsplash.com/photo-1558961363-fa4f2c8262f5?auto=format&fit=crop&w=800&q=80",
+      image: "/news/staking.png",
       url: "#",
       desc: "Se logran filetes de alta calidad mediante bioimpresión 3D de células animales.",
       fullDesc: "Eliminando la necesidad de ganadería intensiva, se reduce el impacto ambiental en un 80%. Esta solución es parte del plan de sostenibilidad global para alimentar a una población de 8.5 billones."
@@ -754,7 +754,7 @@ export async function GET(req: Request) {
       title: "Zero Trust: La única arquitectura que protege el trabajo remoto",
       category: "Seguridad",
       time: "Hace 4 semanas",
-      image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800&q=80",
+      image: "/news/billy_ai.png",
       url: "#",
       desc: "No confiar en nada, verificar siempre: el nuevo estándar de seguridad corporativa.",
       fullDesc: "Las VPNs tradicionales son vulnerables. El enfoque Zero Trust segmenta la red y valida cada acceso, lo que ha reducido las brechas de datos en un 65% para las empresas implementadoras."
@@ -767,7 +767,7 @@ export async function GET(req: Request) {
       title: "¡Felicitaciones! Más de 10,000 usuarios ya son expertos en BIZEN Live",
       category: "Plataforma",
       time: "Hace 4 semanas",
-      image: "https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?auto=format&fit=crop&w=800&q=80",
+      image: "/news/crypto_halving.png",
       url: "#",
       desc: "Billy celebra el crecimiento de la comunidad más activa de educación financiera.",
       fullDesc: "El éxito de la plataforma reside en sus usuarios. Gracias a sus comentarios, BIZEN sigue evolucionando para ofrecer las herramientas más modernas de simulación y aprendizaje interactivo."
@@ -780,7 +780,7 @@ export async function GET(req: Request) {
       title: "AMD desafía el dominio de Nvidia con su serie Instinct MI350",
       category: "Hardware",
       time: "Hace 2 horas",
-      image: "https://images.unsplash.com/photo-1591405351990-4726e33df58d?auto=format&fit=crop&w=800&q=80",
+      image: "/news/global_markets.png",
       url: "https://www.amd.com/",
       desc: "La arquitectura de inferencia de IA promete un rendimiento 35x superior.",
       fullDesc: "La competencia real ha llegado al mercado de aceleradores de hardware. Al ofrecer una opción más abierta y eficiente, AMD está ganando contratos con los proveedores de nube más importantes del mundo."
@@ -793,7 +793,7 @@ export async function GET(req: Request) {
       title: "Coinbase lanza capa 2 'Base' para desarrolladores institucionales",
       category: "Cripto",
       time: "Hace 4 horas",
-      image: "https://images.unsplash.com/photo-1624555130581-1d9cca743db0?auto=format&fit=crop&w=800&q=80",
+      image: "/news/oil_wti.png",
       url: "https://cointelegraph.com/",
       desc: "La red de bajo costo facilita la integración de activos reales en la cadena.",
       fullDesc: "Base se ha convertido en el puente para que los bancos tradicionales emitan productos financieros digitales. Su compatibilidad con Ethereum y su bajo costo son la clave para la adopción masiva del sector."
@@ -806,7 +806,7 @@ export async function GET(req: Request) {
       title: "Berkshire Hathaway supera el trillón de dólares en valor de mercado",
       category: "Inversión",
       time: "Hace 7 horas",
-      image: "https://images.unsplash.com/photo-1454165833767-027eeef1593e?auto=format&fit=crop&w=800&q=80",
+      image: "/news/us_jobs.png",
       url: "https://www.barrons.com/",
       desc: "El imperio de Warren Buffett demuestra su resiliencia en un entorno de cambio.",
       fullDesc: "Con una sólida base en seguros y energía, Berkshire sigue siendo el refugio preferido de los inversores institucionales. Su enfoque de largo plazo y su masiva reserva de efectivo le otorgan una ventaja competitiva única."
@@ -819,7 +819,7 @@ export async function GET(req: Request) {
       title: "Uber Freight: La red logística autónoma más grande del mundo",
       category: "Transporte",
       time: "Hace 10 horas",
-      image: "https://images.unsplash.com/photo-1580674684081-7617fbf3d745?auto=format&fit=crop&w=800&q=80",
+      image: "/news/fed_banking.png",
       url: "https://www.uber.com/",
       desc: "Camiones sin conductor ya operan de forma regular en corredores de carga.",
       fullDesc: "La automatización de la logística terrestre es una realidad. Uber ha logrado reducir los tiempos de entrega y aumentar la seguridad mediante su software de navegación avanzada y su red de sensores Lidar."
@@ -832,7 +832,7 @@ export async function GET(req: Request) {
       title: "Intel inaugura su planta de 1.8A en Arizona para clientes externos",
       category: "Hardware",
       time: "Hace 13 horas",
-      image: "https://images.unsplash.com/photo-1555664424-778a1e5e1b48?auto=format&fit=crop&w=800&q=80",
+      image: "/news/airlines_travel.png",
       url: "https://www.fortune.com/",
       desc: "El plan 'IDM 2.0' de Pat Gelsinger comienza a dar sus frutos industriales.",
       fullDesc: "Intel está regresando a la cima de la manufactura de semiconductores. Su capacidad de producir chips de última generación para terceros es un factor estratégico para la soberanía tecnológica de Occidente."
@@ -845,7 +845,7 @@ export async function GET(req: Request) {
       title: "Netflix gaming: Los títulos exclusivos superan a las series en tiempo de uso",
       category: "Entretenimiento",
       time: "Hace 16 horas",
-      image: "https://images.unsplash.com/photo-1522869635100-9f4c5e86aa37?auto=format&fit=crop&w=800&q=80",
+      image: "/news/tech_apple.png",
       url: "https://variety.com/",
       desc: "El giro estratégico hacia el juego interactivo fideliza a la Gen-Z.",
       fullDesc: "El streaming de video ya no es suficiente. Al integrar juegos gratuitos en su suscripción, Netflix ha logrado reducir el 'churn' y capturar la atención de una audiencia cada vez más exigente y dinámica."
@@ -858,7 +858,7 @@ export async function GET(req: Request) {
       title: "PayPal lanza 'Fastlane' con biometría para pagos en un clic",
       category: "Pagos digitales",
       time: "Hace 19 horas",
-      image: "https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&w=800&q=80",
+      image: "/news/mxn_peso.png",
       url: "https://www.finextra.com/",
       desc: "La autenticación por huella digital o rostro elimina la fricción de compra.",
       fullDesc: "PayPal sigue liderando el mercado de carteras digitales. Su nueva herramienta de pago instantáneo permite a los usuarios comprar en millones de sitios web sin introducir datos de envío ni pago."
@@ -871,7 +871,7 @@ export async function GET(req: Request) {
       title: "Nike vuelve a sus raíces: Prioridad total en productos de running",
       category: "Consumo",
       time: "Hace 22 horas",
-      image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80",
+      image: "/news/nvidia_chips.png",
       url: "https://www.retail-week.com/",
       desc: "Nuevas tecnologías de amortiguación buscan recuperar el trono de alto rendimiento.",
       fullDesc: "Nike ha reconocido que su giro hacia el estilo de vida descuidó su esencia deportiva. Con el lanzamiento de innovaciones para atletas, la marca del 'swoosh' busca recuperar su cuota de mercado en el sector premium."
@@ -884,7 +884,7 @@ export async function GET(req: Request) {
       title: "Bernard Arnault: El lujo es la máxima expresión de la exclusividad",
       category: "Lujo",
       time: "Hace 1 día",
-      image: "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=800&q=80",
+      image: "/news/bitcoin_ath.png",
       url: "https://www.voguebusiness.com/",
       desc: "LVMH reporta ingresos récord impulsados por la demanda en Asia.",
       fullDesc: "Las marcas del grupo LVMH siguen teniendo un aura de inaccesibilidad que atrae a los consumidores de alto poder adquisitivo. Su éxito reside en el equilibrio entre tradición secular e innovación contemporánea."
@@ -897,7 +897,7 @@ export async function GET(req: Request) {
       title: "Solana supera a Ethereum en volumen de DEX por eficiencia",
       category: "Cripto",
       time: "Hace 1 día",
-      image: "https://images.unsplash.com/photo-1639710339852-51a8c0871191?auto=format&fit=crop&w=800&q=80",
+      image: "/news/tesla_ev.png",
       url: "https://thedefiant.io/",
       desc: "Las bajas comisiones y su ultra-velocidad convencen a los inversores minoristas.",
       fullDesc: "Solana ha logrado posicionarse como la red más activa para el comercio de activos digitales. Su arquitectura de alto rendimiento y su ecosistema de aplicaciones sencillas son la clave para el auge del sector DeFi y meme."
@@ -910,7 +910,7 @@ export async function GET(req: Request) {
       title: "Starbucks integra máquinas 'Siren Craft' en todas sus tiendas en EE.UU.",
       category: "Alimentos",
       time: "Hace 2 días",
-      image: "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=800&q=80",
+      image: "/news/spacex_mars.png",
       url: "https://www.qsrmagazine.com/",
       desc: "La preparación de bebidas frías ahora es 30% más rápida.",
       fullDesc: "Starbucks está respondiendo al aumento de pedidos personalizados. Con su nueva tecnología de preparación, busca mejorar los tiempos de despacho y la satisfacción del cliente en las horas pico."
@@ -923,7 +923,7 @@ export async function GET(req: Request) {
       title: "Walmart drones cubren el 75% de la población en Dallas-Fort Worth",
       category: "Logística",
       time: "Hace 2 días",
-      image: "https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&w=800&q=80",
+      image: "/news/startups_vc.png",
       url: "https://www.supermarketnews.com/",
       desc: "El servicio de entrega en 15 minutos escala a nivel comercial masivo.",
       fullDesc: "Walmart está demostrando que el futuro de la logística es autónomo. Su red de drones para última milla permite reducir costos y emisiones, mejorando la competitividad frente a Amazon."
@@ -936,7 +936,7 @@ export async function GET(req: Request) {
       title: "Pfizer anuncia vacuna universal contra la influenza en Fase III",
       category: "Salud",
       time: "Hace 3 días",
-      image: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=800&q=80",
+      image: "/news/real_estate.png",
       url: "https://www.statnews.com/",
       desc: "La tecnología ARNm multi-cepa promete protección anual constante.",
       fullDesc: "Tras el éxito de su vacuna COVID-19, Pfizer ha acelerado su investigación en enfermedades respiratorias. Este nuevo inyectable podría eliminar la necesidad de formular vacunas estacionales cada año."
@@ -949,7 +949,7 @@ export async function GET(req: Request) {
       title: "Disney registra ganancias históricas en su división de parques",
       category: "Turismo",
       time: "Hace 3 días",
-      image: "https://images.unsplash.com/photo-1505873242700-f289a29e1e0f?auto=format&fit=crop&w=800&q=80",
+      image: "/news/health_biotech.png",
       url: "https://variety.com/",
       desc: "El gasto por persona sube un 40% respecto a niveles pre-pandemia.",
       fullDesc: "Disney ha logrado transformar sus experiencias físicas en el motor de su rentabilidad. A pesar de los desafíos en el streaming, sus destinos turísticos siguen teniendo un poder de atracción incalculable."
@@ -962,7 +962,7 @@ export async function GET(req: Request) {
       title: "J&J: Robótica quirúrgica OTTAVA recibe aprobación de la FDA",
       category: "Salud",
       time: "Hace 4 días",
-      image: "https://images.unsplash.com/photo-1551076805-e1869033e561?auto=format&fit=crop&w=800&q=80",
+      image: "/news/renewable_energy.png",
       url: "https://www.medscape.com/",
       desc: "La plataforma integrada promete cirugías un 25% más rápidas.",
       fullDesc: "La nueva generación de asistentes quirúrgicos robóticos de Johnson & Johnson facilitará intervenciones mínimamente invasivas en más especialidades, mejorando la recuperación del paciente y la eficiencia hospitalaria."
@@ -975,7 +975,7 @@ export async function GET(req: Request) {
       title: "Visa integra USDC nativo en la red Solana para comercios",
       category: "Pagos digitales",
       time: "Hace 10 horas",
-      image: "https://images.unsplash.com/photo-1554224155-1696413565d3?auto=format&fit=crop&w=800&q=80",
+      image: "/news/agriculture_food.png",
       url: "https://usa.visa.com/newsroom.html",
       desc: "La interoperabilidad entre finanzas tradicionales y cripto es el futuro.",
       fullDesc: "Visa está expandiendo sus capacidades de tesorería habilitando pagos en 'stablecoins'. Su elección de Solana responde a su alta capacidad de procesamiento y sus bajos costos de transacción para transacciones minoristas masivas."
@@ -988,7 +988,7 @@ export async function GET(req: Request) {
       title: "Goldman Sachs predice un 'Superciclo de Inversión' por IA",
       category: "Macroeconomía",
       time: "Hace 12 horas",
-      image: "https://images.unsplash.com/photo-1611974717482-48a5c18dc907?auto=format&fit=crop&w=800&q=80",
+      image: "/news/retail_shopping.png",
       url: "https://www.goldmansachs.com/intelligence/",
       desc: "Se proyectan gastos de  billón en infraestructura de computación.",
       fullDesc: "Nuestros economistas prevén que la inversión en IA no solo impulsará el sector tecnológico, sino que también mejorará la productividad en todos los niveles de la economía global el próximo lustro."
@@ -1001,7 +1001,7 @@ export async function GET(req: Request) {
       title: "Pfizer presenta resultados de Fase II para fármaco de longevidad",
       category: "Ciencia",
       time: "Hace 15 horas",
-      image: "https://images.unsplash.com/photo-1614741318230-226e6462615a?auto=format&fit=crop&w=800&q=80",
+      image: "/news/mental_health.png",
       url: "https://www.biospace.com/",
       desc: "El tratamiento senolítico de ARNm reduce biomarcadores de envejecimiento.",
       fullDesc: "Pfizer está redirigiendo su plataforma de ARNm hacia la medicina regenerativa. Los primeros datos sugieren que es posible retrasar el inicio de múltiples enfermedades ligadas a la edad cronológica."
@@ -1014,7 +1014,7 @@ export async function GET(req: Request) {
       title: "Copilot Studio: Microsoft habilita agentes de IA autónomos",
       category: "Software",
       time: "Hace 18 horas",
-      image: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?auto=format&fit=crop&w=800&q=80",
+      image: "/news/amazon_logistics.png",
       url: "https://www.theverge.com/microsoft",
       desc: "Cualquier empleado ahora puede crear procesos que 'trabajan solos'.",
       fullDesc: "Microsoft está transformando el software de oficina. Copilot Studio permite que los usuarios definan flujos de trabajo en lenguaje natural, y la IA se encarga de ejecutarlos sin supervisión constante."
@@ -1027,7 +1027,7 @@ export async function GET(req: Request) {
       title: "Spotify supera los 600 millones de MAU por mercado indio",
       category: "Entretenimiento",
       time: "Hace 21 horas",
-      image: "https://images.unsplash.com/photo-1614680376593-902f74cf0d41?auto=format&fit=crop&w=800&q=80",
+      image: "/news/openai_sora.png",
       url: "https://www.billboard.com/business/",
       desc: "La expansión global del audio digital sigue rompiendo techos de uso.",
       fullDesc: "Spotify ha demostrado ser el líder indiscutible del streaming de audio. Su algoritmo de recomendación personalizado es la clave detrás de su capacidad para capturar audiencias en mercados diversos y competitivos."
@@ -1040,7 +1040,7 @@ export async function GET(req: Request) {
       title: "AT&T despliega red 6G experimental en campus universitarios",
       category: "Telecomunicaciones",
       time: "Hace 23 horas",
-      image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=800&q=80",
+      image: "/news/live_host.png",
       url: "https://www.lightreading.com/6g",
       desc: "La velocidad de terabits promete descargas casi instantáneas de 1TB.",
       fullDesc: "A pesar de que el 5G sigue en despliegue, la industria ya está pavimentando el camino para el 6G. Esta tecnología permitirá una integración masiva de sensores y hologramas en tiempo real en las grandes ciudades."
@@ -1053,7 +1053,7 @@ export async function GET(req: Request) {
       title: "Coca-Cola Company anuncia envases 100% de origen vegetal",
       category: "Consumo",
       time: "Hace 1 día",
-      image: "https://images.unsplash.com/photo-1554866585-cd94860890b7?auto=format&fit=crop&w=800&q=80",
+      image: "/news/staking.png",
       url: "https://www.beveragedaily.com/",
       desc: "La multinacional busca eliminar el rastro de petróleo de su huella.",
       fullDesc: "Coca-Cola está invirtiendo en bioplásticos de alta calidad. Este paso es parte de su compromiso de recolectar cada botella vendida para finales de la década, promoviendo una economía circular real."
@@ -1066,7 +1066,7 @@ export async function GET(req: Request) {
       title: "Oracle reporta ingresos récord por acuerdos de nube con Microsoft",
       category: "Software",
       time: "Hace 1 día",
-      image: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=800&q=80",
+      image: "/news/billy_ai.png",
       url: "https://finance.yahoo.com/quote/ORCL/",
       desc: "La base de datos autónoma acelera su migración masiva a Azure.",
       fullDesc: "Oracle ha demostrado ser un jugador fundamental en la infraestructura de IA. Su alianza estratégica con Microsoft permite a los clientes corporativos usar bases de datos Oracle nativas dentro del entorno de Microsoft Azure."
@@ -1079,7 +1079,7 @@ export async function GET(req: Request) {
       title: "Adobe Firefly Video: IA generativa que respeta derechos de autor",
       category: "Software",
       time: "Hace 2 días",
-      image: "https://images.unsplash.com/photo-1492724724894-7464c27d0ceb?auto=format&fit=crop&w=800&q=80",
+      image: "/news/crypto_halving.png",
       url: "https://blog.adobe.com/",
       desc: "La herramienta para Premiere Pro automatiza la edición creativa comercial.",
       fullDesc: "Adobe está diferenciando su oferta de IA al entrenar sus modelos solo con activos propios o con licencias comerciales seguras. Esto le da confianza a las grandes marcas para usar IA en sus campañas globales."
@@ -1092,7 +1092,7 @@ export async function GET(req: Request) {
       title: "Salesforce 'Einstein Copilot' logra automatizar el 30% del soporte",
       category: "SaaS",
       time: "Hace 2 días",
-      image: "https://images.unsplash.com/photo-1552581234-26160f608093?auto=format&fit=crop&w=800&q=80",
+      image: "/news/global_markets.png",
       url: "https://www.salesforce.com/news/",
       desc: "La IA conversacional resuelve casos complejos sin intervención humana.",
       fullDesc: "Salesforce ha demostrado el ROI directo de la IA en la atención al cliente. Su sistema ahora es capaz de entender el contexto emocional del usuario y proponer soluciones personalizadas de forma inmediata."
@@ -1105,7 +1105,7 @@ export async function GET(req: Request) {
       title: "Caterpillar presenta su excavadora 100% eléctrica de gran tonelaje",
       category: "Industria",
       time: "Hace 3 días",
-      image: "https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&w=800&q=80",
+      image: "/news/oil_wti.png",
       url: "https://www.caterpillar.com/news",
       desc: "La electrificación del sector construcción busca reducir emisiones sonoras y de gas.",
       fullDesc: "Caterpillar está acelerando su transición energética. Esta excavadora permite operar en centros urbanos congestionados sin emitir ruido ni polución, cumpliendo con las regulaciones ambientales europeas más estrictas."
@@ -1118,7 +1118,7 @@ export async function GET(req: Request) {
       title: "Lululemon expande su línea de calzado técnico en China",
       category: "Consumo",
       time: "Hace 4 días",
-      image: "https://images.unsplash.com/photo-1518002171953-a080ee81be46?auto=format&fit=crop&w=800&q=80",
+      image: "/news/us_jobs.png",
       url: "https://corporate.lululemon.com/newsroom",
       desc: "La marca de atletismo busca duplicar su presencia en el mercado asiático.",
       fullDesc: "Con un enfoque en la anatomía del pie femenino, Lululemon está ganando terreno en el segmento de calzado de yoga y running de alto rendimiento en Asia y Europa."
@@ -1131,7 +1131,7 @@ export async function GET(req: Request) {
       title: "BNY Mellon: Custodia de activos digitales aumenta un 300%",
       category: "Bancos",
       time: "Hace 5 días",
-      image: "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=800&q=80",
+      image: "/news/fed_banking.png",
       url: "#",
       desc: "El banco más antiguo de EE.UU. abraza la custodia de criptomonedas.",
       fullDesc: "Tras obtener claridad regulatoria, las grandes instituciones financieras están delegando la custodia de sus activos digitales en bancos tradicionales, lo que valida el mercado de largo plazo."
@@ -1144,7 +1144,7 @@ export async function GET(req: Request) {
       title: "HSBC: Oro tokenizado atrae a inversores minoristas en Hong Kong",
       category: "Metales Preciosos",
       time: "Hace 5 días",
-      image: "https://images.unsplash.com/photo-1610375461246-83df85028421?auto=format&fit=crop&w=800&q=80",
+      image: "/news/airlines_travel.png",
       url: "#",
       desc: "Invertir en oro físico ahora es posible desde  USD vía blockchain.",
       fullDesc: "La tokenización de activos del mundo real (RWA) es la tendencia del 2026. Al fraccionar lingotes de oro físicos, HSBC democratiza el acceso a activos de refugio para pequeños ahorradores."
@@ -1157,7 +1157,7 @@ export async function GET(req: Request) {
       title: "Ford Pro: Software de gestión de flotas supera a la venta de autos",
       category: "Movilidad",
       time: "Hace 1 semana",
-      image: "https://images.unsplash.com/photo-1562157873-818bc0726f68?auto=format&fit=crop&w=800&q=80",
+      image: "/news/tech_apple.png",
       url: "https://media.ford.com/",
       desc: "La recurrencia de suscripciones digitales es el nuevo motor de utilidades.",
       fullDesc: "Ford está transformando su modelo de negocio. Su división Pro, enfocada en servicios para empresas, ha logrado márgenes superiores al 20% gracias a sus herramientas de telemetría e IA."
@@ -1170,7 +1170,7 @@ export async function GET(req: Request) {
       title: "News Intelligence: Cómo usar estas noticias para ganar en el simulador",
       category: "Plataforma",
       time: "Hace 1 hora",
-      image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80",
+      image: "/news/mxn_peso.png",
       url: "#",
       desc: "Billy te enseña a interpretar los eventos del mundo real para tus estrategias.",
       fullDesc: "Saber qué pasa en Wall Street es la base de todo inversor. Billy analiza estos titulares y te da 'pistas' ocultas para que tus decisiones en el Simulador de Bolsa sean más precisas y rentables."
@@ -1183,7 +1183,7 @@ export async function GET(req: Request) {
       title: "Alibaba Cloud reduce precios de IA un 50% para desarrolladores",
       category: "Software",
       time: "Hace 1 semana",
-      image: "https://images.unsplash.com/photo-1573164713714-d95e436ab8d6?auto=format&fit=crop&w=800&q=80",
+      image: "/news/nvidia_chips.png",
       url: "https://www.scmp.com/tech",
       desc: "La guerra de precios en el mercado de cómputo en China se intensifica.",
       fullDesc: "Alibaba está apostando agresivamente por capturar el ecosistema de startups. Al bajar los costos de su infraestructura de entrenamiento de IA, busca retener a los próximos unicornios tecnológicos locales."
@@ -1196,7 +1196,7 @@ export async function GET(req: Request) {
       title: "Pinterest: El comercio visual ya representa el 30% de los ingresos",
       category: "Publicidad",
       time: "Hace 2 semanas",
-      image: "https://images.unsplash.com/photo-1611162617213-7d74ef99560f?auto=format&fit=crop&w=800&q=80",
+      image: "/news/bitcoin_ath.png",
       url: "https://newsroom.pinterest.com/",
       desc: "La plataforma de inspiración se convierte en el destino final de compra.",
       fullDesc: "Gracias a la integración de enlaces de compra directos en las imágenes, Pinterest ha logrado cerrar el ciclo de inspiración-acción, convirtiéndose en el socio preferido de las marcas de estilo de vida."
@@ -1209,7 +1209,7 @@ export async function GET(req: Request) {
       title: "Vale: Nueva tecnología de minería en seco reduce uso de agua",
       category: "Minería",
       time: "Hace 2 semanas",
-      image: "https://images.unsplash.com/photo-1553413077-190dd305871c?auto=format&fit=crop&w=800&q=80",
+      image: "/news/tesla_ev.png",
       url: "https://www.vale.com/news",
       desc: "La minería de hierro sostenible es posible con filtración de relaves.",
       fullDesc: "Tras años de investigación, se ha logrado eliminar el riesgo de presas de relaves húmedos. Vale está invirtiendo miles de millones para transformar sus minas en Brasil operando bajo este estándar de seguridad."
@@ -1222,7 +1222,7 @@ export async function GET(req: Request) {
       title: "Boeing 777X completa pruebas de certificación de vuelo críticas",
       category: "Transporte",
       time: "Hace 1 mes",
-      image: "https://images.unsplash.com/photo-1544015759-137f17949681?auto=format&fit=crop&w=800&q=80",
+      image: "/news/spacex_mars.png",
       url: "https://boeing.mediaroom.com/",
       desc: "El avión de pasajeros de largo alcance de dos motores más grande del mundo.",
       fullDesc: "Boeing está recuperando su ritmo industrial. El 777X promete una eficiencia de combustible insuperable y una experiencia de vuelo inmersiva con ventanas más grandes y cabinas más silenciosas."
@@ -1235,7 +1235,7 @@ export async function GET(req: Request) {
       title: "Costco reporta aumento del 10% en membresías de nivel ejecutivo",
       category: "Consumo",
       time: "Hace 1 mes",
-      image: "https://images.unsplash.com/photo-1506484334402-40ff22e05a6d?auto=format&fit=crop&w=800&q=80",
+      image: "/news/startups_vc.png",
       url: "https://investor.costco.com/",
       desc: "El modelo de suscripción sigue siendo el más resiliente del sector.",
       fullDesc: "La lealtad de los socios de Costco sigue siendo el pilar de sus resultados financieros. Su selección curada de productos a precios competitivos y sus beneficios exclusivos en servicios son la clave detrás de su éxito continuado."
@@ -1248,7 +1248,7 @@ export async function GET(req: Request) {
       title: "Expectativas por GPT-5: Cómo impactará en tu asesor digital Billy",
       category: "IA",
       time: "Hace 2 horas",
-      image: "https://images.unsplash.com/photo-1547082299-de196ea013d6?auto=format&fit=crop&w=800&q=80",
+      image: "/news/real_estate.png",
       url: "#",
       desc: "La próxima generación de modelos de lenguaje promete razonamiento financiero nivel experto.",
       fullDesc: "Estamos preparando a Billy para la llegada de la nueva arquitectura de IA. Esto permitirá que tu asesor no solo responda preguntas, sino que planifique estrategias de inversión complejas considerando miles de variables macroeconómicas en segundos."
@@ -1261,7 +1261,7 @@ export async function GET(req: Request) {
       title: "Apple Vision Pro 2: El enfoque cambia hacia la productividad empresarial",
       category: "Acciones",
       time: "Hace 5 horas",
-      image: "https://images.unsplash.com/photo-1512446816042-444d641267d4?auto=format&fit=crop&w=800&q=80",
+      image: "/news/health_biotech.png",
       url: "#",
       desc: "La computación espacial busca reemplazar a los monitores tradicionales en oficinas de diseño.",
       fullDesc: "Tras el lanzamiento inicial, Apple está refinando su software para casos de uso corporativo. Las acciones de la compañía muestran estabilidad mientras los analistas evalúan el potencial de ingresos por servicios en el ecosistema virtual."
@@ -1274,7 +1274,7 @@ export async function GET(req: Request) {
       title: "Soberanía Energética: México reduce importación de gasolinas en un 20%",
       category: "Empresas",
       time: "Hace 8 horas",
-      image: "https://images.unsplash.com/photo-1613665813446-82a78c468a1d?auto=format&fit=crop&w=800&q=80",
+      image: "/news/renewable_energy.png",
       url: "#",
       desc: "La modernización de refinerías locales comienza a impactar en la balanza comercial.",
       fullDesc: "El aumento en la producción nacional es una pieza clave para la estabilidad de precios en el mercado local. Los analistas observan de cerca la rentabilidad operativa de las paraestatales en este nuevo entorno de precios internacionales."
@@ -1287,7 +1287,7 @@ export async function GET(req: Request) {
       title: "Nómadas Digitales en CDMX: El impacto económico en las colonias emergentes",
       category: "Estilo de Vida",
       time: "Hace 12 horas",
-      image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=800&q=80",
+      image: "/news/agriculture_food.png",
       url: "#",
       desc: "La derrama económica de los trabajadores remotos impulsa servicios de lujo pero presiona rentas.",
       fullDesc: "La Ciudad de México se ha consolidado como el hub preferido para el talento global. Este fenómeno está creando nuevas oportunidades de negocio en sectores de hospitalidad y gastronomía, aunque plantea retos de planeación urbana."
@@ -1300,7 +1300,7 @@ export async function GET(req: Request) {
       title: "Nearshoring para PYMES: Cómo entrar en la cadena de suministro de Tesla",
       category: "Negocios",
       time: "Hace 15 horas",
-      image: "https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=800&q=80",
+      image: "/news/retail_shopping.png",
       url: "#",
       desc: "Guía práctica para pequeñas empresas que buscan ser proveedores de la industria eléctrica.",
       fullDesc: "La llegada de grandes plantas industriales a México abre una ventana histórica para los proveedores locales. La certificación en estándares internacionales de calidad es el primer paso para acceder a contratos de largo plazo."
@@ -1313,7 +1313,7 @@ export async function GET(req: Request) {
       title: "Psicología del Dinero: Por qué tus emociones dictan tu ahorro",
       category: "Salud Mental",
       time: "Hace 18 horas",
-      image: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=800&q=80",
+      image: "/news/mental_health.png",
       url: "#",
       desc: "Entender tus sesgos cognitivos es más importante que saber matemáticas para invertir.",
       fullDesc: "El miedo y la codicia son los peores enemigos del inversor. En este artículo exploramos técnicas de mindfulness financiero para mantener la calma durante la volatilidad del mercado y respetar tu plan a largo plazo."
@@ -1326,7 +1326,7 @@ export async function GET(req: Request) {
       title: "Inclusión Financiera: Apps móviles alcanzan al 90% de la población no bancarizada",
       category: "Sociedad",
       time: "Hace 21 horas",
-      image: "https://images.unsplash.com/photo-1512428559087-560ad5e84253?auto=format&fit=crop&w=800&q=80",
+      image: "/news/amazon_logistics.png",
       url: "#",
       desc: "Las fintech están logrando lo que los bancos tradicionales intentaron por décadas.",
       fullDesc: "Mediante el uso de datos alternativos para evaluar el crédito, millones de personas han accedido a su primer préstamo productivo. Este cambio está reduciendo la brecha de desigualdad en regiones rurales de Latinoamérica."
@@ -1339,7 +1339,7 @@ export async function GET(req: Request) {
       title: "Deepfakes en Finanzas: La nueva amenaza que los bancos están combatiendo",
       category: "Seguridad",
       time: "Hace 1 día",
-      image: "https://images.unsplash.com/photo-1563986768494-4dee2763ff3f?auto=format&fit=crop&w=800&q=80",
+      image: "/news/openai_sora.png",
       url: "#",
       desc: "La suplantación de identidad por video IA pone en riesgo las transferencias de alto valor.",
       fullDesc: "Los sistemas de verificación ahora requieren pruebas de 'vida real' más complejas. Las instituciones financieras están invirtiendo en IA defensiva para detectar manipulaciones digitales en tiempo real durante llamadas de autenticación."
@@ -1352,7 +1352,7 @@ export async function GET(req: Request) {
       title: "Relojes como Activo: Por qué un Rolex puede rendir más que el S&P 500",
       category: "Lujo",
       time: "Hace 1 día",
-      image: "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?auto=format&fit=crop&w=800&q=80",
+      image: "/news/live_host.png",
       url: "#",
       desc: "El mercado secundario de relojes premium se consolida como una clase de activo alternativa.",
       fullDesc: "La escasez controlada y el valor de marca hacen de ciertas piezas de relojería una inversión segura. Sin embargo, los expertos advierten sobre la necesidad de autentificación experta en un mercado cada vez más complejo."
@@ -1365,7 +1365,7 @@ export async function GET(req: Request) {
       title: "Proteínas de Precisión: El fin de la ganadería industrial como la conocemos",
       category: "Alimentos",
       time: "Hace 2 días",
-      image: "https://images.unsplash.com/photo-1498837167922-ddd27525d352?auto=format&fit=crop&w=800&q=80",
+      image: "/news/staking.png",
       url: "#",
       desc: "Fermentación biotecnológica logra lácteos idénticos sin necesidad de vacas.",
       fullDesc: "Empresas en Silicon Valley están escalando la producción de caseína y suero mediante levaduras programadas. Esta tecnología no solo es más ética, sino significativamente más eficiente en el uso de agua y suelo."
@@ -1378,7 +1378,7 @@ export async function GET(req: Request) {
       title: "Supremacía Cuántica: Google logra cálculo de 10,000 años en 3 minutos",
       category: "Ciencia",
       time: "Hace 2 días",
-      image: "https://images.unsplash.com/photo-1509228468518-180dd48219d2?auto=format&fit=crop&w=800&q=80",
+      image: "/news/billy_ai.png",
       url: "#",
       desc: "El nuevo procesador Sycamore abre la puerta a la simulación de materiales imposibles.",
       fullDesc: "Este hito científico tiene aplicaciones directas en la creación de baterías más potentes y el descubrimiento de nuevos fármacos. El mercado de computación cuántica se prepara para su fase comercial hacia finales de la década."
@@ -1391,7 +1391,7 @@ export async function GET(req: Request) {
       title: "Internet Satelital: Starlink alcanza los 5 millones de usuarios globales",
       category: "Telecomunicaciones",
       time: "Hace 3 días",
-      image: "https://images.unsplash.com/photo-1481353127134-8ac3a4e599d9?auto=format&fit=crop&w=800&q=80",
+      image: "/news/crypto_halving.png",
       url: "#",
       desc: "La conectividad global en zonas remotas está impulsando el e-commerce rural.",
       fullDesc: "Con el lanzamiento de nuevos satélites Direct-to-Cell, SpaceX busca eliminar las zonas muertas de telefonía móvil en todo el mundo. Esto integrará a la economía digital a regiones previamente aisladas geográficamente."
@@ -1404,7 +1404,7 @@ export async function GET(req: Request) {
       title: "Vertical SaaS: Por qué el software genérico está perdiendo terreno",
       category: "SaaS",
       time: "Hace 3 días",
-      image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80",
+      image: "/news/global_markets.png",
       url: "#",
       desc: "Soluciones de software diseñadas para nichos específicos reportan mayor crecimiento.",
       fullDesc: "Desde agricultura hasta gestión de flotas, el software que entiende las particularidades de una industria es mucho más valioso. Los inversores están premiando a las startups que resuelven problemas profundos en sectores tradicionales."
@@ -1417,7 +1417,7 @@ export async function GET(req: Request) {
       title: "Robots Humanoides en Fábricas: BMW inicia pruebas con unidades autónomas",
       category: "Industria",
       time: "Hace 4 días",
-      image: "https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&w=800&q=80",
+      image: "/news/oil_wti.png",
       url: "#",
       desc: "La colaboración hombre-máquina entra en una nueva era de precisión total.",
       fullDesc: "Estos robots no reemplazan al trabajador, sino que ejecutan tareas repetitivas o peligrosas con una precisión de micras. La integración de visión artificial permite que las máquinas aprendan nuevas tareas simplemente observando."
@@ -1430,7 +1430,7 @@ export async function GET(req: Request) {
       title: "Micromovilidad: Por qué la bicicleta eléctrica es la reina de las ciudades",
       category: "Movilidad",
       time: "Hace 4 días",
-      image: "https://images.unsplash.com/photo-1558981403-c5f91ecaf308?auto=format&fit=crop&w=800&q=80",
+      image: "/news/us_jobs.png",
       url: "#",
       desc: "Las ventas de e-bikes superan a las de autos eléctricos en Europa por tercer año.",
       fullDesc: "La infraestructura urbana está cambiando. Carriles bici seguros y estaciones de carga rápida están transformando el transporte personal, reduciendo el tráfico y la contaminación de forma económica y saludable."
@@ -1443,7 +1443,7 @@ export async function GET(req: Request) {
       title: "Publicidad Programática: La IA ahora crea y compra anuncios en milisegundos",
       category: "Publicidad",
       time: "Hace 5 días",
-      image: "https://images.unsplash.com/photo-1533750349088-cd871a92f312?auto=format&fit=crop&w=800&q=80",
+      image: "/news/fed_banking.png",
       url: "#",
       desc: "La personalización masiva alcanza niveles individuales mediante algoritmos predictivos.",
       fullDesc: "Ya no se trata solo de quién ve el anuncio, sino de cuándo y con qué mensaje exacto. Las marcas que optimizan sus presupuestos con IA están viendo retornos de inversión (ROAS) duplicados respecto al año pasado."
@@ -1456,7 +1456,7 @@ export async function GET(req: Request) {
       title: "Litio en México: Primeras plantas de procesamiento entran en operación",
       category: "Minería",
       time: "Hace 5 días",
-      image: "https://images.unsplash.com/photo-1519452635265-7b1fbfd1e4e0?auto=format&fit=crop&w=800&q=80",
+      image: "/news/airlines_travel.png",
       url: "#",
       desc: "El 'oro blanco' nacional busca alimentar la cadena de suministro de Norteamérica.",
       fullDesc: "Con el auge de los vehículos eléctricos, el litio se ha vuelto un recurso estratégico. La capacidad de procesar el mineral localmente agregará un valor significativo a la industria manufacturera mexicana en los próximos años."
@@ -1469,7 +1469,7 @@ export async function GET(req: Request) {
       title: "Small-Caps despiertan: El Russell 2000 rompe racha de estancamiento",
       category: "Acciones",
       time: "Hace 4 horas",
-      image: "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?auto=format&fit=crop&w=800&q=80",
+      image: "/news/tech_apple.png",
       url: "#",
       desc: "Las empresas de pequeña capitalización se benefician de la pausa en tasas de la Fed.",
       fullDesc: "Los inversores están rotando capital fuera de las grandes tecnológicas hacia sectores cíclicos. Esto sugiere una confianza creciente en que la economía podrá evitar una recesión este año, impulsando a las empresas industriales y financieras locales."
@@ -1482,7 +1482,7 @@ export async function GET(req: Request) {
       title: "Diseño de Chips IA: Startups buscan nichos fuera del dominio de Nvidia",
       category: "IA",
       time: "Hace 6 horas",
-      image: "https://images.unsplash.com/photo-1634733988138-bf2c3a2a13fa?auto=format&fit=crop&w=800&q=80",
+      image: "/news/mxn_peso.png",
       url: "#",
       desc: "Aceleradores especializados en inferencia local ganan tracción en el mercado móvil.",
       fullDesc: "Mientras Nvidia domina el entrenamiento, el mercado de la ejecución de IA en dispositivos está abierto. Nuevas arquitecturas prometen privacidad total y bajo consumo, permitiendo IA poderosa sin conexión a la nube."
@@ -1502,7 +1502,7 @@ export async function GET(req: Request) {
                 title: `${symbol} muestra volatilidad ante reporte de inflación`,
                 category: "Mercado",
                 time: "Reciente",
-                image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80",
+                image: "/news/nvidia_chips.png",
                 url: "#",
                 desc: "Los inversores ajustan posiciones esperando los nuevos datos económicos.",
                 fullDesc: "La volatilidad actual es un reflejo de la incertidumbre global. Los participantes del mercado están analizando cada dato macroeconómico para prever los movimientos de las tasas de interés."

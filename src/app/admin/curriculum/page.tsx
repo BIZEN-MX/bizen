@@ -201,9 +201,6 @@ export default function CurriculumBuilderPage() {
                 </div>
                 <h1 className="text-lg font-black text-white">Constructor</h1>
               </div>
-              <button onClick={() => router.push("/teacher/dashboard")} className="text-slate-500 hover:text-white transition-colors p-1.5 rounded-lg hover:bg-white/5">
-                <ArrowLeft className="w-4 h-4" />
-              </button>
             </div>
 
             <div className="flex bg-[#0d1628] rounded-xl p-1">
@@ -577,24 +574,336 @@ function StepEditorModal({ step, lessonId, onClose, onSaved, showToast }: any) {
   )
 }
 
+function Field({ label, value, onChange, multiline }: { label: string, value: string, onChange: (v: string) => void, multiline?: boolean }) {
+  return (
+    <div>
+      <label className="text-xs font-black text-slate-500 uppercase tracking-widest block mb-1">{label}</label>
+      {multiline ? (
+        <textarea value={value || ""} onChange={e => onChange(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white outline-none focus:border-blue-500" rows={3} />
+      ) : (
+        <input type="text" value={value || ""} onChange={e => onChange(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white outline-none focus:border-blue-500" />
+      )}
+    </div>
+  )
+}
+
+function ImageUploadField({ label, value, onChange, showToast }: any) {
+  const [uploading, setUploading] = useState(false)
+  const handleUpload = async (e: any) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setUploading(true)
+    const formData = new FormData()
+    formData.append("file", file)
+    try {
+      const res = await fetch("/api/upload", { method: "POST", body: formData })
+      const data = await res.json()
+      if (res.ok && data.url) { onChange(data.url); showToast("ok", "Imagen subida exitosamente") }
+      else { showToast("err", data.error || "Error al subir imagen") }
+    } catch (err) { showToast("err", "Error de red al subir") }
+    finally { setUploading(false) }
+  }
+  return (
+    <div>
+      <label className="text-xs font-black text-slate-500 uppercase tracking-widest block mb-1">{label}</label>
+      <div className="flex items-center gap-2">
+        <input type="text" value={value || ""} onChange={e => onChange(e.target.value)} className="flex-1 bg-white/5 border border-white/10 rounded-xl p-3 text-white outline-none focus:border-blue-500" placeholder="https://..." />
+        <label className={`cursor-pointer px-4 py-3 rounded-xl font-bold text-sm border border-white/10 ${uploading ? 'bg-white/5 text-slate-400' : 'bg-blue-600/20 text-blue-400 hover:bg-blue-600/30'} transition-colors`}>
+          {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <><Image className="w-4 h-4 inline-block mr-1" /> Subir</>}
+          <input type="file" accept="image/*" className="hidden" onChange={handleUpload} disabled={uploading} />
+        </label>
+      </div>
+      {value && <img src={value} alt="Preview" className="mt-3 rounded-xl border border-white/10 max-h-40 object-contain bg-black/50 p-2" />}
+    </div>
+  )
+}
+
 function StepFormInline({ type, lessonId, onCreated, showToast, initialData, stepId }: any) {
   const [saving, setSaving] = useState(false)
   const isEdit = !!stepId
-  const [formData, setFormData] = useState<any>(initialData || { title: "", body: "", options: [{id: '1', label: '', isCorrect: true}] })
+  
+  // Initialize formData based on type
+  const defaultData = () => {
+    if (type === "mcq" || type === "multi_select" || type === "image_choice") {
+      return { question: "", options: [{ id: "o1", label: "", isCorrect: true }] }
+    }
+    if (type === "true_false") {
+      return { question: "", isTrue: true }
+    }
+    if (type === "order") {
+      return { question: "", items: ["Paso 1", "Paso 2"] }
+    }
+    if (type === "billy_talks") {
+      return { message: "", mood: "thinking" }
+    }
+    if (type === "match") {
+      return { question: "Une los conceptos con sus definiciones", pairs: [{ left: "Concepto 1", right: "Definición 1" }] }
+    }
+    if (type === "fill_blanks") {
+      return { question: "Completa la frase", text: "El interés [compuesto] es la octava maravilla del mundo." }
+    }
+    if (type === "swipe_sorter") {
+      return { question: "Clasifica estos gastos", leftLabel: "Deseo", rightLabel: "Necesidad", cards: [{ text: "Cine", category: "left" }, { text: "Renta", category: "right" }] }
+    }
+    if (type === "mindset_translator") {
+      return { belief: "El dinero es malo", options: [{ id: "o1", label: "El dinero es una herramienta neutra", isCorrect: true }] }
+    }
+    if (type === "impulse_meter") {
+      return { question: "Ves unos tenis de edición limitada en rebaja", cost: 2500 }
+    }
+    if (type === "blitz_challenge") {
+      return { question: "Pregunta rápida", timeLimit: 10, options: [{ id: "o1", label: "Correcta", isCorrect: true }] }
+    }
+    return { title: "", content: "" }
+  }
+  
+  const [formData, setFormData] = useState<any>(() => {
+    if (initialData && Object.keys(initialData).length > 0) return initialData
+    return defaultData()
+  })
+
   const handleSave = async () => {
     setSaving(true)
-    const payload = { entity: "step", lessonId, type, title: formData.title, body: formData.body, data: formData, id: stepId }
+    const payload = { 
+      entity: "step", 
+      lessonId, 
+      type, 
+      title: formData.title || formData.question || formData.belief || type, 
+      body: formData.content || formData.message || formData.text || "", 
+      data: formData, 
+      id: stepId 
+    }
     const res = await fetch("/api/admin/curriculum", { method: isEdit ? "PATCH" : "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) })
     setSaving(false)
     if (res.ok) { showToast("ok", "Paso guardado"); onCreated() }
+    else { showToast("err", "Error al guardar paso") }
   }
+
+  // Helper renderers
+  const renderOptions = (isMindset = false) => (
+    <div className="space-y-2 mt-4">
+      <label className="text-xs font-black text-slate-500 uppercase tracking-widest block mb-1">{isMindset ? "Opciones de Traducción Positiva" : "Opciones de Respuesta"}</label>
+      {formData.options?.map((opt: any, i: number) => (
+        <div key={opt.id || i} className="flex items-center gap-2">
+          <input type={type === "multi_select" ? "checkbox" : "radio"} name="correctOpt" checked={opt.isCorrect} onChange={() => {
+            const newOpts = formData.options.map((o: any, idx: number) => ({ ...o, isCorrect: type === "multi_select" ? (idx === i ? !o.isCorrect : o.isCorrect) : idx === i }))
+            setFormData({ ...formData, options: newOpts })
+          }} className="w-4 h-4" />
+          <input type="text" value={opt.label} onChange={(e) => {
+            const newOpts = [...formData.options]; newOpts[i].label = e.target.value; setFormData({ ...formData, options: newOpts })
+          }} className="flex-1 bg-white/5 border border-white/10 rounded-lg p-2 text-white outline-none focus:border-blue-500" placeholder={isMindset ? "Traducción positiva..." : "Texto de la opción..."} />
+          <button onClick={() => setFormData({ ...formData, options: formData.options.filter((_: any, idx: number) => idx !== i) })} className="p-2 text-red-500 hover:bg-red-500/10 rounded-lg transition-colors"><Trash2 className="w-4 h-4" /></button>
+        </div>
+      ))}
+      <button onClick={() => setFormData({ ...formData, options: [...(formData.options || []), { id: `o${Date.now()}`, label: "", isCorrect: false }] })} className="text-xs text-blue-400 font-bold hover:text-blue-300 flex items-center gap-1 mt-3 transition-colors"><Plus className="w-3 h-3" /> Añadir Opción</button>
+    </div>
+  )
+
+  const renderOrderItems = () => (
+    <div className="space-y-2 mt-4">
+      <label className="text-xs font-black text-slate-500 uppercase tracking-widest block mb-1">Elementos (en el ORDEN CORRECTO)</label>
+      <p className="text-[10px] text-slate-500 mb-2">Ingrésalos en orden. El sistema los revolverá automáticamente para el alumno.</p>
+      {formData.items?.map((item: string, i: number) => (
+        <div key={i} className="flex items-center gap-2">
+          <span className="text-slate-500 text-xs font-bold w-4">{i + 1}.</span>
+          <input type="text" value={item} onChange={(e) => {
+            const newItems = [...formData.items]; newItems[i] = e.target.value; setFormData({ ...formData, items: newItems })
+          }} className="flex-1 bg-white/5 border border-white/10 rounded-lg p-2 text-white outline-none focus:border-blue-500" placeholder="Paso a ordenar..." />
+          <button onClick={() => setFormData({ ...formData, items: formData.items.filter((_: any, idx: number) => idx !== i) })} className="p-2 text-red-500 hover:bg-red-500/10 rounded-lg transition-colors"><Trash2 className="w-4 h-4" /></button>
+        </div>
+      ))}
+      <button onClick={() => setFormData({ ...formData, items: [...(formData.items || []), "Nuevo paso"] })} className="text-xs text-blue-400 font-bold hover:text-blue-300 flex items-center gap-1 mt-3 transition-colors"><Plus className="w-3 h-3" /> Añadir Elemento</button>
+    </div>
+  )
+
+  const renderMatchPairs = () => (
+    <div className="space-y-2 mt-4">
+      <label className="text-xs font-black text-slate-500 uppercase tracking-widest block mb-1">Pares a Emparejar</label>
+      {formData.pairs?.map((pair: any, i: number) => (
+        <div key={i} className="flex flex-col gap-1 mb-4 bg-white/5 p-3 rounded-xl border border-white/10 relative">
+          <button onClick={() => setFormData({ ...formData, pairs: formData.pairs.filter((_: any, idx: number) => idx !== i) })} className="absolute top-2 right-2 p-1 text-red-500 hover:bg-red-500/10 rounded-md"><Trash2 className="w-3 h-3" /></button>
+          <div className="text-[10px] font-bold text-slate-400 uppercase">Par {i + 1}</div>
+          <input type="text" value={pair.left} onChange={(e) => {
+            const newPairs = [...formData.pairs]; newPairs[i].left = e.target.value; setFormData({ ...formData, pairs: newPairs })
+          }} className="w-full bg-black/30 border border-white/5 rounded-lg p-2 text-white outline-none focus:border-blue-500 text-sm" placeholder="Concepto..." />
+          <input type="text" value={pair.right} onChange={(e) => {
+            const newPairs = [...formData.pairs]; newPairs[i].right = e.target.value; setFormData({ ...formData, pairs: newPairs })
+          }} className="w-full bg-black/30 border border-white/5 rounded-lg p-2 text-white outline-none focus:border-blue-500 text-sm" placeholder="Definición o par..." />
+        </div>
+      ))}
+      <button onClick={() => setFormData({ ...formData, pairs: [...(formData.pairs || []), { left: "", right: "" }] })} className="text-xs text-blue-400 font-bold hover:text-blue-300 flex items-center gap-1 transition-colors"><Plus className="w-3 h-3" /> Añadir Par</button>
+    </div>
+  )
+
+  const renderSwipeCards = () => (
+    <div className="space-y-4 mt-4">
+      <div className="grid grid-cols-2 gap-4">
+        <Field label="Etiqueta Izquierda (Ej. Deseo)" value={formData.leftLabel} onChange={v => setFormData({...formData, leftLabel: v})} />
+        <Field label="Etiqueta Derecha (Ej. Necesidad)" value={formData.rightLabel} onChange={v => setFormData({...formData, rightLabel: v})} />
+      </div>
+      <label className="text-xs font-black text-slate-500 uppercase tracking-widest block mb-1">Tarjetas para Deslizar</label>
+      {formData.cards?.map((card: any, i: number) => (
+        <div key={i} className="flex items-center gap-2">
+          <select value={card.category} onChange={e => {
+            const newCards = [...formData.cards]; newCards[i].category = e.target.value; setFormData({...formData, cards: newCards})
+          }} className="bg-[#0b1120] border border-white/10 rounded-lg p-2 text-white outline-none w-28 text-sm">
+            <option value="left">Izquierda</option>
+            <option value="right">Derecha</option>
+          </select>
+          <input type="text" value={card.text} onChange={(e) => {
+            const newCards = [...formData.cards]; newCards[i].text = e.target.value; setFormData({ ...formData, cards: newCards })
+          }} className="flex-1 bg-white/5 border border-white/10 rounded-lg p-2 text-white outline-none focus:border-blue-500" placeholder="Texto de la tarjeta..." />
+          <button onClick={() => setFormData({ ...formData, cards: formData.cards.filter((_: any, idx: number) => idx !== i) })} className="p-2 text-red-500 hover:bg-red-500/10 rounded-lg transition-colors"><Trash2 className="w-4 h-4" /></button>
+        </div>
+      ))}
+      <button onClick={() => setFormData({ ...formData, cards: [...(formData.cards || []), { text: "", category: "left" }] })} className="text-xs text-blue-400 font-bold hover:text-blue-300 flex items-center gap-1 mt-2 transition-colors"><Plus className="w-3 h-3" /> Añadir Tarjeta</button>
+    </div>
+  )
+
   return (
     <div className="space-y-4">
-      <h3 className="text-xl font-black text-white">Configurar {type}</h3>
-      <Field label="Título" value={formData.title} onChange={v => setFormData({...formData, title: v})} />
-      <Field label="Contenido Principal" value={formData.body} onChange={v => setFormData({...formData, body: v})} multiline />
-      {/* Extension for MCQ etc could go here for complexity - simplifying for now */}
-      <button onClick={handleSave} disabled={saving} className="w-full bg-blue-600 py-4 rounded-2xl font-black text-white">{saving ? "Guardando..." : "Finalizar"}</button>
+      <div className="flex items-center justify-between mb-2">
+        <h3 className="text-xl font-black text-white">Configuración del Paso</h3>
+        <span className="bg-white/10 text-slate-300 text-[10px] font-black px-2 py-1 rounded uppercase tracking-widest">{type}</span>
+      </div>
+      
+      {["info", "summary"].includes(type) && (
+        <>
+          <Field label="Título Principal" value={formData.title} onChange={v => setFormData({...formData, title: v})} />
+          <Field label="Contenido" value={formData.content} onChange={v => setFormData({...formData, content: v})} multiline />
+          <ImageUploadField label="Imagen (Opcional)" value={formData.imageUrl} onChange={(v: string) => setFormData({...formData, imageUrl: v})} showToast={showToast} />
+        </>
+      )}
+
+      {["mcq", "multi_select", "image_choice"].includes(type) && (
+        <>
+          <Field label="Pregunta" value={formData.question} onChange={v => setFormData({...formData, question: v})} />
+          {renderOptions()}
+        </>
+      )}
+
+      {type === "true_false" && (
+        <>
+          <Field label="Afirmación (El alumno dirá si es verdadera o falsa)" value={formData.question} onChange={v => setFormData({...formData, question: v})} />
+          <div className="mt-4 bg-white/5 rounded-xl p-4 border border-white/10">
+            <label className="text-xs font-black text-slate-500 uppercase tracking-widest block mb-3">¿Esta afirmación es...?</label>
+            <div className="flex gap-6">
+              <label className="flex items-center gap-2 cursor-pointer text-sm font-bold text-emerald-400">
+                <input type="radio" checked={formData.isTrue} onChange={() => setFormData({...formData, isTrue: true})} className="w-4 h-4 accent-emerald-500" /> Verdadera
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer text-sm font-bold text-red-400">
+                <input type="radio" checked={!formData.isTrue} onChange={() => setFormData({...formData, isTrue: false})} className="w-4 h-4 accent-red-500" /> Falsa
+              </label>
+            </div>
+          </div>
+        </>
+      )}
+
+      {type === "order" && (
+        <>
+          <Field label="Instrucción Principal" value={formData.question} onChange={v => setFormData({...formData, question: v})} />
+          {renderOrderItems()}
+        </>
+      )}
+
+      {type === "match" && (
+        <>
+          <Field label="Instrucción Principal" value={formData.question} onChange={v => setFormData({...formData, question: v})} />
+          {renderMatchPairs()}
+        </>
+      )}
+
+      {type === "fill_blanks" && (
+        <>
+          <Field label="Instrucción Principal" value={formData.question} onChange={v => setFormData({...formData, question: v})} />
+          <Field label="Texto con Espacios (Usa corchetes [asi] para los huecos)" value={formData.text} onChange={v => setFormData({...formData, text: v})} multiline />
+        </>
+      )}
+
+      {type === "swipe_sorter" && (
+        <>
+          <Field label="Instrucción Principal" value={formData.question} onChange={v => setFormData({...formData, question: v})} />
+          {renderSwipeCards()}
+        </>
+      )}
+
+      {type === "mindset_translator" && (
+        <>
+          <Field label="Creencia Limitante (Negativa)" value={formData.belief} onChange={v => setFormData({...formData, belief: v})} />
+          {renderOptions(true)}
+        </>
+      )}
+
+      {type === "impulse_meter" && (
+        <>
+          <Field label="Escenario (La Tentación)" value={formData.question} onChange={v => setFormData({...formData, question: v})} />
+          <div className="flex gap-4 mt-4">
+            <div className="flex-1">
+              <Field label="Costo Monetario ($)" value={formData.cost?.toString() || "0"} onChange={v => setFormData({...formData, cost: parseInt(v) || 0})} />
+            </div>
+            <div className="flex-1">
+              <label className="text-xs font-black text-slate-500 uppercase tracking-widest block mb-1">Categoría</label>
+              <select value={formData.category || "Gasto Hormiga"} onChange={e => setFormData({...formData, category: e.target.value})} className="w-full bg-[#0b1120] border border-white/10 rounded-xl p-3 text-white outline-none focus:border-blue-500 font-bold">
+                <option value="Gasto Hormiga">Gasto Hormiga</option>
+                <option value="Suscripción">Suscripción</option>
+                <option value="Compra Emocional">Compra Emocional</option>
+                <option value="Deuda">Deuda</option>
+              </select>
+            </div>
+          </div>
+        </>
+      )}
+
+      {type === "blitz_challenge" && (
+        <>
+          <div className="flex gap-4">
+            <div className="flex-[3]">
+              <Field label="Pregunta Rápida" value={formData.question} onChange={v => setFormData({...formData, question: v})} />
+            </div>
+            <div className="flex-1">
+              <Field label="Tiempo Límite (segs)" value={formData.timeLimit?.toString() || "10"} onChange={v => setFormData({...formData, timeLimit: parseInt(v) || 10})} />
+            </div>
+          </div>
+          {renderOptions()}
+        </>
+      )}
+
+      {type === "billy_talks" && (
+        <>
+          <Field label="Mensaje de Billy" value={formData.message} onChange={v => setFormData({...formData, message: v})} multiline />
+          <div className="mt-4">
+            <label className="text-xs font-black text-slate-500 uppercase tracking-widest block mb-1">Estado de Ánimo de Billy</label>
+            <select value={formData.mood || "thinking"} onChange={e => setFormData({...formData, mood: e.target.value})} className="w-full bg-[#0b1120] border border-white/10 rounded-xl p-3 text-white outline-none focus:border-blue-500 font-bold">
+              <option value="thinking">🤔 Pensativo (Thinking)</option>
+              <option value="happy">😄 Feliz (Happy)</option>
+              <option value="excited">🤩 Emocionado (Excited)</option>
+              <option value="serious">😐 Serio (Serious)</option>
+            </select>
+          </div>
+        </>
+      )}
+
+      {/* Fallback for complex/unknown types using a JSON raw editor */}
+      {!["info", "summary", "mcq", "multi_select", "image_choice", "true_false", "order", "match", "fill_blanks", "swipe_sorter", "mindset_translator", "impulse_meter", "blitz_challenge", "billy_talks"].includes(type) && (
+         <div className="p-4 bg-orange-500/10 border border-orange-500/20 rounded-xl mt-4">
+           <p className="text-orange-400 text-sm font-bold mb-2 flex items-center gap-2"><AlertCircle className="w-4 h-4" /> Modo de Desarrollador (JSON RAW)</p>
+           <p className="text-slate-400 text-xs mb-4">Este es un paso especial o de mini-juego. Puedes editar su código directamente:</p>
+           <textarea 
+             value={typeof formData === 'string' ? formData : JSON.stringify(formData, null, 2)} 
+             onChange={e => {
+               try { 
+                 const parsed = JSON.parse(e.target.value)
+                 setFormData(parsed)
+               } catch {
+                 // Allow typing invalid json temporarily
+               }
+             }}
+             className="w-full bg-black/50 border border-white/10 rounded-xl p-4 text-emerald-400 font-mono text-xs outline-none focus:border-orange-500 h-64" 
+           />
+         </div>
+      )}
+
+      <button onClick={handleSave} disabled={saving} className="w-full bg-blue-600 hover:bg-blue-500 transition-all py-4 rounded-2xl font-black text-white mt-8 shadow-xl shadow-blue-500/20">{saving ? <Loader2 className="w-5 h-5 animate-spin mx-auto" /> : "Guardar Configuración del Paso"}</button>
     </div>
   )
 }

@@ -131,7 +131,8 @@ export default function MobileBottomNav() {
   } : null
 
   // More menu items (for authenticated users)
-  const isInstitutional = dbProfile?.role === 'student' || dbProfile?.role === 'teacher' || dbProfile?.role === 'school_admin' || dbProfile?.role === 'admin';
+  const isUnauthorized = userEmail === 'diegopenita31@gmail.com'
+  const isInstitutional = (dbProfile?.role === 'student' || dbProfile?.role === 'teacher' || dbProfile?.role === 'school_admin' || dbProfile?.role === 'admin') && !isUnauthorized;
 
   const moreMenuItems = user ? [
     ...(isStudentOrGuest ? [

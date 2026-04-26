@@ -210,6 +210,19 @@ export default function CoursePageTemplate({
 
     return (
         <div className="relative w-full bg-[#FBFAF5] min-h-screen course-topic-page-layout courses-page-active font-educational">
+            <style>{`
+                .course-topic-page-layout h1, 
+                .course-topic-page-layout h2, 
+                .course-topic-page-layout h3,
+                .course-topic-page-layout h4,
+                .course-topic-page-layout .text-white,
+                .course-topic-page-layout .text-white\\/80,
+                .course-topic-page-layout .text-blue-300 {
+                    color: #ffffff !important;
+                    opacity: 1 !important;
+                    -webkit-text-fill-color: #ffffff !important;
+                }
+            `}</style>
             {/* Decorative orbs */}
             <div 
                 className="fixed top-[10%] right-[6%] w-[350px] h-[350px] rounded-full blur-[60px] pointer-events-none z-0" 
@@ -251,7 +264,7 @@ export default function CoursePageTemplate({
                                     </div>
                                 </div>
 
-                                <h1 className="text-[clamp(24px,4vw,44px)] font-bold text-white mb-3 leading-[1.1] tracking-tight">
+                                <h1 className="text-[clamp(24px,4vw,44px)] font-medium text-white mb-3 leading-[1.1] tracking-tight">
                                     {topic.title}
                                 </h1>
                                 <p className={`text-[clamp(14px,1.8vw,17px)] mb-8 leading-relaxed max-w-[500px] opacity-90 ${isAnahuac ? 'text-white/80' : 'text-blue-300'}`}>
@@ -397,7 +410,7 @@ export default function CoursePageTemplate({
                                                 </div>
                                             )}
 
-                                            <div className={`text-[15px] font-bold leading-[1.2] mb-3 px-2 ${isExam ? "text-white" : "text-slate-900"}`}>
+                                            <div className={`text-[15px] font-medium leading-[1.2] mb-3 px-2 ${isExam ? "text-white" : "text-slate-900"}`}>
                                                 {lesson.title}
                                             </div>
 

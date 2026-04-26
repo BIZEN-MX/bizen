@@ -47,7 +47,7 @@ export async function GET(request: NextRequest) {
           cashOnHand: player.cashOnHand,
           passiveIncome: player.passiveIncome,
           hasEscapedRatRace: player.hasEscapedRatRace,
-          numInvestments: player.investments.length
+          numInvestments: player.playerInvestments.length
         } : null
       };
     });

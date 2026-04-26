@@ -34,12 +34,12 @@ export default function MobileFooterNav() {
   const [pendingNavigation, setPendingNavigation] = useState<string | null>(null)
   const [showProfilePanel, setShowProfilePanel] = useState(false)
 
-  const userEmail = (user?.email || user?.emailAddresses?.[0]?.emailAddress || "").toLowerCase();
+  const userEmail = (user?.email || (user as any)?.emailAddresses?.[0]?.emailAddress || "").toLowerCase()
   const isSuperAdmin = userEmail === "diego@bizen.mx"
   const isAdminOrTeacher = dbProfile?.role === "school_admin" || dbProfile?.role === "teacher" || dbProfile?.role === "admin" || isSuperAdmin
   const canHostLive = isAdminOrTeacher || dbProfile?.role === "institutional" || dbProfile?.role === "student"
-  const isStudentOrGuest = !isAdminOrTeacher
-  const isInstitutional = dbProfile?.role === 'student' || dbProfile?.role === 'teacher' || dbProfile?.role === 'school_admin' || dbProfile?.role === 'admin' || isSuperAdmin
+  const isUnauthorized = userEmail === 'diegopenita31@gmail.com'
+  const isInstitutional = (dbProfile?.role === 'student' || dbProfile?.role === 'teacher' || dbProfile?.role === 'school_admin' || dbProfile?.role === 'admin' || isSuperAdmin) && !isUnauthorized
 
   const isOnLessonPage = pathname?.includes('/learn/')
   const protectedRoutes = ['/forum', '/profile', '/cuenta', '/configuracion', '/tienda', '/impacto-social', '/teacher/dashboard', '/teacher/courses']

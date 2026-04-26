@@ -1,19 +1,20 @@
 import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
-import { createSupabaseServer } from "@/lib/supabase/server"
+import { requireAuth } from "@/lib/auth/api-auth"
 import { logToFile } from "@/lib/debugLogger"
 import { checkAndAwardAchievements } from "@/lib/achievements"
 import { OFFICIAL_PRODUCTS } from "@/lib/constants/products"
 
 export async function POST(request: NextRequest) {
     try {
-        const supabase = await createSupabaseServer()
-        const { data: { user } } = await supabase.auth.getUser()
-
-        if (!user) {
-            logToFile("Unauthorized access attempt")
-            return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+        const authResult = await requireAuth(request)
+        
+        if (!authResult.success) {
+            logToFile("Unauthorized access attempt to Tienda Purchase")
+            return authResult.response
         }
+
+        const { user } = authResult.data
 
         const body = await request.json()
         const { productId } = body

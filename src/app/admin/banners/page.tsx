@@ -122,7 +122,7 @@ export default function AdminBannerPage() {
             <h1 className="text-4xl font-black tracking-tight mb-2">Anuncios y Banners</h1>
             <p className="text-slate-400 text-lg">Configura un anuncio global que aparecerá en el dashboard de todos los alumnos.</p>
           </div>
-          <ReturnButton href="/teacher/dashboard" label="Volver al Dashboard" />
+          
         </header>
 
         <AnimatePresence>

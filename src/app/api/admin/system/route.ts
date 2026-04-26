@@ -19,9 +19,11 @@ export async function GET(request: NextRequest) {
       select: { settings: true }
     })
     
-    // config.settings will contain boolean maintenanceMode
-    const maintenanceMode = (configProfile?.settings as any)?.maintenanceMode === true
-    return NextResponse.json({ maintenanceMode })
+    const settings = (configProfile?.settings as any) || {}
+    return NextResponse.json({ 
+      maintenanceMode: settings.maintenanceMode === true,
+      maintenanceMessage: settings.maintenanceMessage || "Billy está realizando algunos ajustes técnicos para mejorar tu experiencia de aprendizaje. Volveremos muy pronto."
+    })
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
@@ -34,20 +36,33 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json()
-    const { maintenanceMode } = body
+    const { maintenanceMode, maintenanceMessage } = body
 
     const configProfile = await prisma.profile.upsert({
       where: { userId: SYSTEM_CONFIG_ID },
-      update: { settings: { maintenanceMode } },
+      update: { 
+        settings: { 
+          maintenanceMode,
+          maintenanceMessage 
+        } 
+      },
       create: {
         userId: SYSTEM_CONFIG_ID,
         fullName: "System General Config",
         role: "system",
-        settings: { maintenanceMode }
+        settings: { 
+          maintenanceMode,
+          maintenanceMessage
+        }
       }
     })
 
-    return NextResponse.json({ success: true, maintenanceMode: (configProfile.settings as any).maintenanceMode })
+    const settings = configProfile.settings as any
+    return NextResponse.json({ 
+      success: true, 
+      maintenanceMode: settings.maintenanceMode,
+      maintenanceMessage: settings.maintenanceMessage
+    })
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 })
   }

@@ -161,6 +161,7 @@ export function StockSimulatorContent({ tradeSymbol }: { tradeSymbol?: string })
   const [underperformanceAlert, setUnderperformanceAlert] = useState<any>(null);
   const [stockNews, setStockNews] = useState<any[]>([]);
   const [fetchingStockNews, setFetchingStockNews] = useState(false);
+  const [highlightSymbol, setHighlightSymbol] = useState<string | null>(null);
 
   const [lastTick, setLastTick] = useState(Date.now());
   const orderFormRef = React.useRef<HTMLDivElement>(null);
@@ -348,7 +349,15 @@ export function StockSimulatorContent({ tradeSymbol }: { tradeSymbol?: string })
     if (activeTab === "portfolio" && portfolio) {
       fetchPerformance(performanceRange);
     }
-  }, [activeTab, portfolio, performanceRange]);
+    
+    // Detect highlight parameter in URL
+    const highlight = searchParams.get("highlight");
+    if (highlight) {
+      setHighlightSymbol(highlight);
+      const timer = setTimeout(() => setHighlightSymbol(null), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [activeTab, portfolio, performanceRange, searchParams]);
 
   const fetchPerformance = async (range: string) => {
     setFetchingPerformance(true);
@@ -533,8 +542,18 @@ export function StockSimulatorContent({ tradeSymbol }: { tradeSymbol?: string })
           side: orderForm.side,
         });
         setShowCardAnim(true);
-        // Do not redirect to 'market' or clear the symbol so the terminal stays open.
+        
+        // Refresh local data
         await Promise.all([fetchPortfolio(), refreshUser?.()]);
+
+        // Smooth redirect to the Simulator's own Portfolio tab with highlight trigger
+        setTimeout(() => {
+          const boughtSymbol = orderForm.symbol;
+          // If we are in the terminal overlay, we close it and switch tab
+          setOrderForm(f => ({ ...f, symbol: "" })); 
+          setActiveTab("portfolio");
+          router.push(`/simulators/stocks?tab=portfolio&highlight=${boughtSymbol}`);
+        }, 1500);
       } else {
         setOrderMsg({
           type: "err",
@@ -1833,6 +1852,7 @@ export function StockSimulatorContent({ tradeSymbol }: { tradeSymbol?: string })
                 totalValue={totalValue}
                 selectStock={selectStock}
                 setActiveTab={setActiveTab}
+                highlightSymbol={highlightSymbol}
               />
             )}
 

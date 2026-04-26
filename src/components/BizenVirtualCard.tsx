@@ -290,7 +290,7 @@ export default function BizenVirtualCard({
             <div style={{ fontSize: "clamp(8px, 2.5cqw, 10px)", fontWeight: 400, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 2 }}>Saldo Disponible</div>
             <div style={{ display: "flex", alignItems: "baseline", gap: 6 }}>
               <span style={{ fontSize: "clamp(24px, 10cqw, 44px)", fontWeight: 400, lineHeight: 1 }}>{displayBizcoins.toLocaleString()}</span>
-              <span style={{ fontSize: "clamp(12px, 4cqw, 18px)", fontWeight: 400, opacity: 0.8 }}>BC</span>
+              <span style={{ fontSize: "clamp(12px, 4cqw, 18px)", fontWeight: 400, opacity: 0.8 }}>BZ</span>
             </div>
           </div>
 

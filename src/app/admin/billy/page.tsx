@@ -111,7 +111,7 @@ export default function AdminBillyPage() {
             <h1 className="text-4xl font-black tracking-tight mb-2">Personalidad IA (Billy)</h1>
             <p className="text-slate-400 text-lg">Define el System Prompt global ("Instrucciones Base") bajo el cual opera el LLM del motor de BIZEN.</p>
           </div>
-          <ReturnButton href="/teacher/dashboard" label="Volver al Dashboard" />
+          
         </header>
 
         <AnimatePresence>

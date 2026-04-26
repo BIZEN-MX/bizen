@@ -80,7 +80,9 @@ export async function GET(request: NextRequest) {
         email: cu.emailAddresses?.[0]?.emailAddress || "Sin email",
         fullName: p?.fullName || `${cu.firstName || ''} ${cu.lastName || ''}`.trim() || 'Sin nombre',
         role: p?.role || 'student',
-        schoolId: p?.schoolId || null
+        schoolId: p?.schoolId || null,
+        xp: p?.xp || 0,
+        level: p?.level || 1
       }
     })
 
@@ -133,3 +135,38 @@ export async function PATCH(request: NextRequest) {
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
 }
+
+export async function DELETE(request: NextRequest) {
+  if (!await isSuperAdmin()) {
+    return NextResponse.json({ error: "No tienes permisos de Super Admin" }, { status: 403 })
+  }
+
+  try {
+    const { searchParams } = new URL(request.url)
+    const userId = searchParams.get("userId")
+
+    if (!userId) {
+      return NextResponse.json({ error: "ID de usuario es requerido" }, { status: 400 })
+    }
+
+    // 1. Borrar de la base de datos local (Prisma)
+    await prisma.profile.delete({
+      where: { userId }
+    })
+
+    // 2. Opcionalmente borrar de Clerk
+    if (userId.startsWith('user_')) {
+      try {
+        const client = await clerkClient()
+        await client.users.deleteUser(userId)
+      } catch (clerkError: any) {
+        console.error("Error al borrar en Clerk:", clerkError.message)
+      }
+    }
+
+    return NextResponse.json({ success: true, message: "Usuario eliminado correctamente" })
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 500 })
+  }
+}
+

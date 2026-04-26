@@ -4,8 +4,7 @@ import { useState, useEffect } from "react"
 import Link from 'next/link'
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
-import { createClientMicrocred } from '@/lib/supabase/client-microcred'
-import { BarChart2, Briefcase, PiggyBank, CreditCard, TrendingUp, Percent, ChevronRight, Trash2, Play, Plus, MonitorSmartphone, Laptop, Sparkles, Brain, Rocket, Target } from "lucide-react"
+import { BarChart2, Briefcase, PiggyBank, CreditCard, TrendingUp, Percent, ChevronRight, Trash2, Play, Plus, MonitorSmartphone, Laptop, Sparkles, Brain, Rocket, Target, ShoppingBag, Lock, AlertCircle, CheckCircle2 } from "lucide-react"
 import PageLoader from "@/components/PageLoader"
 
 interface Simulator {
@@ -83,6 +82,19 @@ const CATEGORY_ACCENT: Record<string, string> = {
   inflation: '#ef4444',
 }
 
+const PROFESSION_EMOJIS: Record<string, string> = {
+  "Médico": "🩺",
+  "Piloto": "✈️",
+  "Conserje": "🧹",
+  "Maestro": "📚",
+  "Ingeniero": "⚙️",
+  "Abogado": "⚖️",
+  "Secretaria": "💼",
+  "Contador": "📊",
+  "Director": "🏢",
+  "Gerente": "📋",
+}
+
 export default function CombinedSimulatorsPage() {
   const { user, loading: authLoading, dbProfile } = useAuth()
   const userEmail = user?.email?.toLowerCase() || ""
@@ -105,6 +117,10 @@ export default function CombinedSimulatorsPage() {
   const [showNewGame, setShowNewGame] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
   const [weeklyActiveDays, setWeeklyActiveDays] = useState<string[]>([])
+  const [inventory, setInventory] = useState<string[]>([])
+  const [loadingInventory, setLoadingInventory] = useState(true)
+  const [pendingDeleteId, setPendingDeleteId] = useState<number | null>(null)
+  const [deletingId, setDeletingId] = useState<number | null>(null)
 
   useEffect(() => {
     const update = () => setIsMobile(window.innerWidth <= 767)
@@ -151,11 +167,19 @@ export default function CombinedSimulatorsPage() {
       
       fetchProfessions()
       fetchGames()
-      // Fetch weekly active days for calendar
       fetch("/api/user/stats")
         .then(r => r.ok ? r.json() : null)
         .then(data => { if (data?.weeklyActiveDays) setWeeklyActiveDays(data.weeklyActiveDays) })
         .catch(() => { })
+
+      // Fetch inventory
+      fetch("/api/tienda/inventory")
+        .then(r => r.ok ? r.json() : null)
+        .then(data => { 
+          if (data?.inventory) setInventory(data.inventory)
+          setLoadingInventory(false)
+        })
+        .catch(() => setLoadingInventory(false))
     }
   }, [user])
 
@@ -188,12 +212,19 @@ export default function CombinedSimulatorsPage() {
   }
 
   const deleteGame = async (gameId: number) => {
-    if (!confirm("¿Estás seguro de que quieres eliminar este juego?")) return
+    if (pendingDeleteId !== gameId) {
+      setPendingDeleteId(gameId)
+      return
+    }
+    setDeletingId(gameId)
+    setPendingDeleteId(null)
     try {
       const response = await fetch(`/api/cashflow/game/${gameId}/delete`, { method: "DELETE" })
       if (response.ok) fetchGames()
     } catch (error) {
       console.error("Error deleting game:", error)
+    } finally {
+      setDeletingId(null)
     }
   }
 
@@ -210,8 +241,8 @@ export default function CombinedSimulatorsPage() {
         const data = await response.json()
         router.push(`/cash-flow/game/${data.gameId}`)
       } else {
-        const error = await response.json()
-        alert(`Error: ${error.error || 'No se pudo iniciar el juego'}`)
+        const errorData = await response.json()
+        console.error("Error starting game:", errorData)
       }
     } catch (error) {
       console.error("Error starting game:", error)
@@ -301,13 +332,13 @@ export default function CombinedSimulatorsPage() {
                     Error al cargar los simuladores.
                   </div>
                 ) : loadingSims ? (
-                  <div className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-6">
+                  <div className="grid grid-cols-[repeat(auto-fill,minmax(340px,1fr))] gap-6">
                     {Array(6).fill(0).map((_, i) => (
-                      <div key={i} className="bg-slate-100 rounded-[20px] h-[280px] animate-[pulse_1.5s_linear_infinite]" />
+                      <div key={i} className="bg-slate-100 rounded-[24px] h-[320px] animate-[pulse_1.5s_linear_infinite]" />
                     ))}
                   </div>
                 ) : (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8">
                     {/* ── AI TOOLS SECTION ── */}
                     {/* Section label */}
                     <div className="col-span-full pb-1">
@@ -320,50 +351,134 @@ export default function CombinedSimulatorsPage() {
                     </div>
 
                     {/* AI Budget Planner Card */}
-                    <Link href="/tools/budget" className="no-underline">
-                      <div className={`bg-white rounded-[20px] p-6 border border-slate-100 flex flex-col shadow-[0_4px_12px_rgba(0,0,0,0.03)] h-full relative overflow-hidden transition-all duration-300 hover:-translate-y-1 group ${isAnahuac ? "hover:shadow-[0_12px_40px_rgba(255,89,0,0.15)]" : "hover:shadow-[0_12px_40px_rgba(11,113,254,0.15)]"}`}>
-                        <div className="flex items-start justify-between mb-5">
-                          <div className="w-13 h-13 rounded-2xl bg-indigo-500/15 border border-indigo-500/25 flex items-center justify-center shadow-[0_0_20px_rgba(99,102,241,0.2)]">
-                            <BarChart2 size={24} className="text-indigo-500" />
+                    {(() => {
+                      const isLocked = !inventory.includes("9")
+                      return (
+                        <Link href={isLocked ? "/tienda?highlight=9" : "/tools/budget"} className="no-underline">
+                          <div className={`bg-white rounded-[24px] border border-slate-100 flex flex-col shadow-[0_4px_12px_rgba(0,0,0,0.03)] h-full relative overflow-hidden transition-all duration-300 group ${
+                            isLocked
+                            ? "grayscale opacity-80 cursor-not-allowed"
+                            : (isAnahuac ? "hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(255,89,0,0.15)]" : "hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(11,113,254,0.15)]")
+                          }`}>
+                            {/* Hero Image */}
+                            <div className="relative h-[180px] overflow-hidden bg-slate-100 flex-shrink-0">
+                              <img
+                                src="/assets/billy/billy_budget_planner_1777056157270.png"
+                                alt="Budget Planner"
+                                className="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
+                              />
+                              {/* Lock overlay on image */}
+                              {isLocked && (
+                                <div className="absolute inset-0 bg-slate-900/30 flex items-center justify-center">
+                                  <div className="bg-slate-900/70 backdrop-blur-sm px-3 py-1.5 rounded-full flex items-center gap-1.5 text-white text-[11px] font-semibold">
+                                    <Lock size={12} /> BLOQUEADO
+                                  </div>
+                                </div>
+                              )}
+                              {/* Gradient fade into card body */}
+                              <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-white to-transparent" />
+                            </div>
+
+                            <div className="p-6 flex flex-col flex-1">
+                              {isLocked && (
+                                <div className="mb-4 bg-amber-50 border border-amber-200 rounded-xl px-3 py-2 flex items-center gap-2">
+                                  <ShoppingBag size={13} className="text-amber-500 flex-shrink-0" />
+                                  <span className="text-[12px] font-semibold text-amber-700">Disponible en la Tienda BIZEN</span>
+                                </div>
+                              )}
+                              <div className="flex items-start justify-between mb-4">
+                                <div className="w-14 h-14 rounded-2xl bg-indigo-500/15 border border-indigo-500/25 flex items-center justify-center shadow-[0_0_20px_rgba(99,102,241,0.2)]">
+                                  <BarChart2 size={26} className={isLocked ? "text-slate-400" : "text-indigo-500"} />
+                                </div>
+                                <span className="text-[10px] font-bold px-3 py-1 bg-purple-500/10 text-purple-500 rounded-full uppercase tracking-widest border border-purple-500/20 flex items-center gap-1">
+                                  <Sparkles size={9} /> IA
+                                </span>
+                              </div>
+                              <h3 className="text-[20px] font-semibold text-slate-800 mb-2 leading-snug tracking-tight">
+                                Planificador de Presupuesto
+                              </h3>
+                              <p className="text-[14px] text-slate-500 leading-relaxed flex-1 mb-5">
+                                Organiza tus ingresos y gastos en tiempo real. Billy analiza tu presupuesto con IA y te dice exactamente qué mejorar.
+                              </p>
+                              <button
+                                disabled={isLocked}
+                                className={`w-full py-3.5 text-white border rounded-xl text-[14px] font-semibold flex items-center justify-center gap-2 tracking-wide transition-all ${
+                                  isLocked
+                                  ? "bg-slate-200 border-slate-300 text-slate-500 cursor-not-allowed"
+                                  : (isAnahuac ? "bg-primary border-primary/40 shadow-[0_4px_20px_rgba(255,89,0,0.25)] group-hover:shadow-[0_6px_25px_rgba(255,89,0,0.35)] cursor-pointer" : "bg-gradient-to-br from-indigo-500 to-indigo-600 border-indigo-500/40 shadow-[0_4px_20px_rgba(99,102,241,0.25)] group-hover:shadow-[0_6px_25px_rgba(99,102,241,0.35)] cursor-pointer")
+                                }`}
+                              >
+                                {isLocked ? "Comprar en la Tienda" : "Abrir Herramienta"} {isLocked ? <ShoppingBag size={15} /> : <ChevronRight size={15} />}
+                              </button>
+                            </div>
                           </div>
-                          <span className="text-[10px] font-bold px-3 py-1 bg-purple-500/10 text-purple-500 rounded-full uppercase tracking-widest border border-purple-500/20 flex items-center gap-1">
-                            <Sparkles size={9} /> IA
-                          </span>
-                        </div>
-                        <h3 className="text-[19px] font-semibold text-slate-800 mb-2.5 leading-snug tracking-tight">
-                          Planificador de Presupuesto
-                        </h3>
-                        <p className="text-[14px] text-slate-500 leading-relaxed flex-1 mb-6">
-                          Organiza tus ingresos y gastos en tiempo real. Billy analiza tu presupuesto con IA y te dice exactamente qué mejorar.
-                        </p>
-                        <button className={`w-full py-3.5 text-white border rounded-xl text-[14px] font-semibold cursor-pointer flex items-center justify-center gap-2 tracking-wide transition-shadow ${isAnahuac ? "bg-primary border-primary/40 shadow-[0_4px_20px_rgba(255,89,0,0.25)] group-hover:shadow-[0_6px_25px_rgba(255,89,0,0.35)]" : "bg-gradient-to-br from-indigo-500 to-indigo-600 border-indigo-500/40 shadow-[0_4px_20px_rgba(99,102,241,0.25)] group-hover:shadow-[0_6px_25px_rgba(99,102,241,0.35)]"}`}>
-                          Abrir Herramienta <ChevronRight size={16} />
-                        </button>
-                      </div>
-                    </Link>
+                        </Link>
+                      )
+                    })()}
 
                     {/* AI Vision Board Card */}
-                    <Link href="/tools/vision" className="no-underline">
-                      <div className={`bg-white rounded-[20px] p-6 border border-slate-100 flex flex-col shadow-[0_4px_12px_rgba(0,0,0,0.03)] h-full relative overflow-hidden transition-all duration-300 hover:-translate-y-1 group ${isAnahuac ? "hover:shadow-[0_12px_40px_rgba(255,89,0,0.15)]" : "hover:shadow-[0_12px_40px_rgba(11,113,254,0.15)]"}`}>
-                        <div className="flex items-start justify-between mb-5">
-                          <div className="w-13 h-13 rounded-2xl bg-purple-500/15 border border-purple-500/25 flex items-center justify-center shadow-[0_0_20px_rgba(139,92,246,0.2)]">
-                            <Brain size={24} className="text-purple-500" />
+                    {(() => {
+                      const isLocked = !inventory.includes("10")
+                      return (
+                        <Link href={isLocked ? "/tienda?highlight=10" : "/tools/vision"} className="no-underline">
+                          <div className={`bg-white rounded-[24px] border border-slate-100 flex flex-col shadow-[0_4px_12px_rgba(0,0,0,0.03)] h-full relative overflow-hidden transition-all duration-300 group ${
+                            isLocked
+                            ? "grayscale opacity-80 cursor-not-allowed"
+                            : (isAnahuac ? "hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(255,89,0,0.15)]" : "hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(11,113,254,0.15)]")
+                          }`}>
+                            {/* Hero Image */}
+                            <div className="relative h-[180px] overflow-hidden bg-slate-100 flex-shrink-0">
+                              <img
+                                src="/assets/billy/billy_vision_board_1777056175192.png"
+                                alt="Vision Board"
+                                className="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
+                              />
+                              {isLocked && (
+                                <div className="absolute inset-0 bg-slate-900/30 flex items-center justify-center">
+                                  <div className="bg-slate-900/70 backdrop-blur-sm px-3 py-1.5 rounded-full flex items-center gap-1.5 text-white text-[11px] font-semibold">
+                                    <Lock size={12} /> BLOQUEADO
+                                  </div>
+                                </div>
+                              )}
+                              <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-white to-transparent" />
+                            </div>
+
+                            <div className="p-6 flex flex-col flex-1">
+                              {isLocked && (
+                                <div className="mb-4 bg-amber-50 border border-amber-200 rounded-xl px-3 py-2 flex items-center gap-2">
+                                  <ShoppingBag size={13} className="text-amber-500 flex-shrink-0" />
+                                  <span className="text-[12px] font-semibold text-amber-700">Disponible en la Tienda BIZEN</span>
+                                </div>
+                              )}
+                              <div className="flex items-start justify-between mb-4">
+                                <div className="w-14 h-14 rounded-2xl bg-purple-500/15 border border-purple-500/25 flex items-center justify-center shadow-[0_0_20px_rgba(139,92,246,0.2)]">
+                                  <Brain size={26} className={isLocked ? "text-slate-400" : "text-purple-500"} />
+                                </div>
+                                <span className="text-[10px] font-bold px-3 py-1 bg-purple-500/10 text-purple-500 rounded-full uppercase tracking-widest border border-purple-500/20 flex items-center gap-1">
+                                  <Sparkles size={9} /> IA
+                                </span>
+                              </div>
+                              <h3 className="text-[20px] font-semibold text-slate-800 mb-2 leading-snug tracking-tight">
+                                Board de Visión Financiera
+                              </h3>
+                              <p className="text-[14px] text-slate-500 leading-relaxed flex-1 mb-5">
+                                Escribe tus metas financieras y la IA las transforma en un plan estructurado con roadmap de 30-60-90 días.
+                              </p>
+                              <button
+                                disabled={isLocked}
+                                className={`w-full py-3.5 text-white border rounded-xl text-[14px] font-semibold flex items-center justify-center gap-2 tracking-wide transition-all ${
+                                  isLocked
+                                  ? "bg-slate-200 border-slate-300 text-slate-500 cursor-not-allowed"
+                                  : (isAnahuac ? "bg-primary border-primary/40 shadow-[0_4px_20px_rgba(255,89,0,0.25)] group-hover:shadow-[0_6px_25px_rgba(255,89,0,0.35)] cursor-pointer" : "bg-gradient-to-br from-purple-500 to-purple-600 border-purple-500/40 shadow-[0_4px_20px_rgba(139,92,246,0.25)] group-hover:shadow-[0_6px_25px_rgba(139,92,246,0.35)] cursor-pointer")
+                                }`}
+                              >
+                                {isLocked ? "Comprar en la Tienda" : "Abrir Herramienta"} {isLocked ? <ShoppingBag size={15} /> : <ChevronRight size={15} />}
+                              </button>
+                            </div>
                           </div>
-                          <span className="text-[10px] font-bold px-3 py-1 bg-purple-500/10 text-purple-500 rounded-full uppercase tracking-widest border border-purple-500/20 flex items-center gap-1">
-                            <Sparkles size={9} /> IA
-                          </span>
-                        </div>
-                        <h3 className="text-[19px] font-semibold text-slate-800 mb-2.5 leading-snug tracking-tight">
-                          Board de Visión Financiera
-                        </h3>
-                        <p className="text-[14px] text-slate-500 leading-relaxed flex-1 mb-6">
-                          Escribe tus metas financieras y la IA las transforma en un plan estructurado con roadmap de 30-60-90 días.
-                        </p>
-                        <button className={`w-full py-3.5 text-white border rounded-xl text-[14px] font-semibold cursor-pointer flex items-center justify-center gap-2 tracking-wide transition-shadow ${isAnahuac ? "bg-primary border-primary/40 shadow-[0_4px_20px_rgba(255,89,0,0.25)] group-hover:shadow-[0_6px_25px_rgba(255,89,0,0.35)]" : "bg-gradient-to-br from-purple-500 to-purple-600 border-purple-500/40 shadow-[0_4px_20px_rgba(139,92,246,0.25)] group-hover:shadow-[0_6px_25px_rgba(139,92,246,0.35)]"}`}>
-                          Abrir Herramienta <ChevronRight size={16} />
-                        </button>
-                      </div>
-                    </Link>
+                        </Link>
+                      )
+                    })()}
 
                     {/* Separator before classic simulators */}
                     <div className="col-span-full pb-1 pt-2">
@@ -377,22 +492,33 @@ export default function CombinedSimulatorsPage() {
 
                     {/* Simulador Crédito (Beta) */}
                     <Link href="/simulators/credit" className="no-underline">
-                      <div className={`bg-gradient-to-br from-[#020b18] to-[#061440] border border-white/10 rounded-[20px] p-6 flex flex-col shadow-[0_4px_12px_rgba(0,0,0,0.03)] h-full relative overflow-hidden transition-all duration-400 hover:-translate-y-2.5 hover:scale-[1.02] group ${isAnahuac ? "hover:shadow-[0_30px_60px_rgba(255,89,0,0.2)] hover:border-primary/50 hover:from-[#331100] hover:to-[#0f0500]" : "hover:shadow-[0_30px_60px_rgba(11,113,254,0.3)] hover:border-blue-500/50 hover:from-[#040f24] hover:to-[#0b2160]"}`}>
-                        <div className="flex items-start justify-between mb-5">
-                          <div className="w-13 h-13 rounded-2xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center shadow-[0_0_20px_rgba(245,158,11,0.2)]">
-                            <CreditCard size={24} className="text-amber-500" />
-                          </div>
-                          <span className="text-[10px] font-medium px-3 py-1 bg-white/5 text-white rounded-full uppercase tracking-widest border border-white/10">
-                            NUEVO
-                          </span>
+                      <div className={`bg-gradient-to-br from-[#020b18] to-[#061440] border border-white/10 rounded-[24px] flex flex-col shadow-[0_4px_12px_rgba(0,0,0,0.03)] h-full relative overflow-hidden transition-all duration-400 hover:-translate-y-2.5 hover:scale-[1.02] group ${isAnahuac ? "hover:shadow-[0_30px_60px_rgba(255,89,0,0.2)] hover:border-primary/50 hover:from-[#331100] hover:to-[#0f0500]" : "hover:shadow-[0_30px_60px_rgba(11,113,254,0.3)] hover:border-blue-500/50 hover:from-[#040f24] hover:to-[#0b2160]"}`}>
+                        {/* Hero Image */}
+                        <div className="relative h-[180px] overflow-hidden bg-slate-800 flex-shrink-0">
+                          <img
+                            src="/assets/billy/billy_credit_score.png"
+                            alt="BIZEN Score"
+                            className="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
+                          />
+                          <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-[#020b18] to-transparent" />
                         </div>
-                        <h3 className="text-[19px] font-semibold text-white mb-2.5 leading-snug tracking-tight">
+
+                        <div className="p-6 flex flex-col flex-1">
+                          <div className="flex items-start justify-between mb-5">
+                            <div className="w-14 h-14 rounded-2xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center shadow-[0_0_20px_rgba(245,158,11,0.2)]">
+                              <CreditCard size={26} className="text-amber-500" />
+                            </div>
+                            <span className="text-[10px] font-medium px-3 py-1 bg-white/5 text-white rounded-full uppercase tracking-widest border border-white/10">
+                              NUEVO
+                            </span>
+                          </div>
+                        <h3 className="text-[22px] font-semibold text-white mb-3 leading-snug tracking-tight">
                           BIZEN Score
                         </h3>
-                        <p className="text-[14px] text-white/60 leading-relaxed flex-1 mb-6">
+                        <p className="text-[15px] text-white/60 leading-relaxed flex-1 mb-7">
                           Descubre cómo funcionan las tarjetas de crédito, los préstamos y compras a Meses Sin Intereses.
                         </p>
-                        <button className={`w-full py-3.5 text-white border rounded-xl text-[14px] font-semibold cursor-pointer flex items-center justify-center gap-2 tracking-wide transition-shadow ${isAnahuac ? "bg-primary border-primary/40 shadow-[0_4px_20px_rgba(255,89,0,0.3)] group-hover:shadow-[0_6px_25px_rgba(255,89,0,0.4)]" : "bg-gradient-to-br from-amber-500 to-amber-600 border-amber-500/40 shadow-[0_4px_20px_rgba(245,158,11,0.3)] group-hover:shadow-[0_6px_25px_rgba(245,158,11,0.4)]"}`}>
+                        <button className={`w-full py-4 text-white border rounded-xl text-[15px] font-semibold cursor-pointer flex items-center justify-center gap-2 tracking-wide transition-shadow ${isAnahuac ? "bg-primary border-primary/40 shadow-[0_4px_20px_rgba(255,89,0,0.3)] group-hover:shadow-[0_6px_25px_rgba(255,89,0,0.4)]" : "bg-gradient-to-br from-amber-500 to-amber-600 border-amber-500/40 shadow-[0_4px_20px_rgba(245,158,11,0.3)] group-hover:shadow-[0_6px_25px_rgba(245,158,11,0.4)]"}`}>
                           Abrir Simulador
                           <ChevronRight size={16} />
                         </button>
@@ -402,31 +528,82 @@ export default function CombinedSimulatorsPage() {
                     {simulatorsList.filter(s => s.slug !== 'stocks' && s.slug !== 'credit').map((simulator) => {
                       const IconComponent = CATEGORY_ICONS[simulator.category] || BarChart2
                       const accent = CATEGORY_ACCENT[simulator.category] || '#0B71FE'
+                      
+                      // Check if locked — map slug to product ID in the store
+                      const lockConfig: Record<string, string> = {
+                        'inflation-calculator': "12"
+                      }
+                      const productId = lockConfig[simulator.slug]
+                      const isLocked = productId && !inventory.includes(productId)
+
                       return (
-                        <Link key={simulator.id} href={`/cash-flow/${simulator.slug}`} className="no-underline">
-                          <div className={`bg-gradient-to-br from-[#020b18] to-[#061440] border border-white/10 rounded-[20px] p-6 flex flex-col shadow-[0_4px_12px_rgba(0,0,0,0.03)] h-full relative overflow-hidden transition-all duration-400 hover:-translate-y-2.5 hover:scale-[1.02] group ${isAnahuac ? "hover:shadow-[0_30px_60px_rgba(255,89,0,0.2)] hover:border-primary/50 hover:from-[#331100] hover:to-[#0f0500]" : "hover:shadow-[0_30px_60px_rgba(11,113,254,0.3)] hover:border-blue-500/50 hover:from-[#040f24] hover:to-[#0b2160]"}`}>
-                            {/* Icon + category */}
-                            <div className="flex items-start justify-between mb-5">
-                              <div className="w-13 h-13 rounded-2xl flex items-center justify-center" style={{ background: `${accent}20`, border: `1px solid ${accent}30`, boxShadow: `0 0 20px ${accent}20` }}>
-                                <IconComponent size={24} color={accent} />
+                        <Link key={simulator.id} href={isLocked ? `/tienda?highlight=${productId}` : `/cash-flow/${simulator.slug}`} className="no-underline">
+                          <div className={`bg-gradient-to-br from-[#020b18] to-[#061440] border border-white/10 rounded-[24px] flex flex-col shadow-[0_4px_12px_rgba(0,0,0,0.03)] h-full relative overflow-hidden transition-all duration-300 group ${isLocked ? "opacity-75 cursor-not-allowed" : (isAnahuac ? "hover:-translate-y-1 hover:shadow-[0_30px_60px_rgba(255,89,0,0.2)] hover:border-primary/50" : "hover:-translate-y-1 hover:shadow-[0_30px_60px_rgba(11,113,254,0.3)] hover:border-blue-500/50")}`}>
+                            {/* Hero Image */}
+                            {(() => {
+                              const imgMap: Record<string, string> = {
+                                'savings-goal': '/assets/billy/billy_savings_goals_1777056195152.png',
+                                'inflation-calculator': '/assets/billy/billy_inflation_calculator_1777056215773.png',
+                                'investment-comparison': '/assets/billy/billy_investment.png',
+                                'credit-card-payoff': '/assets/billy/billy_debt_payoff.png',
+                                'simple-loan': '/assets/billy/billy_simple_loan.png'
+                              }
+                              const imgSrc = imgMap[simulator.slug]
+                              if (!imgSrc) return (
+                                <div className="h-[180px] bg-slate-800/50 flex-shrink-0 flex items-center justify-center">
+                                  <IconComponent size={48} color={`${accent}80`} />
+                                </div>
+                              )
+                              return (
+                                <div className="relative h-[180px] overflow-hidden bg-slate-800 flex-shrink-0">
+                                  <img
+                                    src={imgSrc}
+                                    alt={simulator.name}
+                                    className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                                  />
+                                  {isLocked && (
+                                    <div className="absolute inset-0 bg-slate-900/40 flex items-center justify-center">
+                                      <div className="bg-slate-900/80 backdrop-blur-sm px-3 py-1.5 rounded-full flex items-center gap-1.5 text-white text-[11px] font-semibold border border-white/10">
+                                        <Lock size={12} /> BLOQUEADO
+                                      </div>
+                                    </div>
+                                  )}
+                                  <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-[#020b18] to-transparent" />
+                                </div>
+                              )
+                            })()}
+
+                            <div className="p-6 flex flex-col flex-1">
+                              {isLocked && (
+                                <div className="mb-4 bg-amber-500/10 border border-amber-500/20 rounded-xl px-3 py-2 flex items-center gap-2">
+                                  <ShoppingBag size={13} className="text-amber-400 flex-shrink-0" />
+                                  <span className="text-[12px] font-semibold text-amber-400">Disponible en la Tienda BIZEN</span>
+                                </div>
+                              )}
+                              {/* Icon + category */}
+                              <div className="flex items-start justify-between mb-5">
+                                <div className="w-14 h-14 rounded-2xl flex items-center justify-center" style={{ background: isLocked ? 'rgba(255,255,255,0.05)' : `${accent}20`, border: `1px solid ${isLocked ? 'rgba(255,255,255,0.08)' : `${accent}30`}`, boxShadow: isLocked ? 'none' : `0 0 20px ${accent}20` }}>
+                                  <IconComponent size={26} color={isLocked ? '#64748b' : accent} />
+                                </div>
+                                <span className="text-[10px] font-medium px-3 py-1 rounded-full uppercase tracking-widest" style={{ background: isLocked ? 'rgba(255,255,255,0.05)' : `${accent}15`, color: isLocked ? '#64748b' : accent, border: `1px solid ${isLocked ? 'rgba(255,255,255,0.08)' : `${accent}25`}` }}>
+                                  {isLocked ? "BLOQUEADO" : (CATEGORY_LABELS[simulator.category] || simulator.category)}
+                                </span>
                               </div>
-                              <span className="text-[10px] font-medium px-3 py-1 rounded-full uppercase tracking-widest text-white bg-white/5 border border-white/10 border-white/10" style={{ background: `${accent}15`, color: accent, border: `1px solid ${accent}25`, color:"white", background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.1)" }}>
-                                {CATEGORY_LABELS[simulator.category] || simulator.category}
-                              </span>
+                              <h3 className="text-[20px] font-semibold text-white mb-2 leading-snug tracking-tight">
+                                {simulator.name}
+                              </h3>
+                              <p className="text-[14px] text-white/60 leading-relaxed flex-1 mb-5">
+                                {simulator.description}
+                              </p>
+                              <button
+                                disabled={!!isLocked}
+                                className={`w-full py-3.5 text-white rounded-xl text-[14px] font-semibold flex items-center justify-center gap-2 transition-all tracking-wide ${isLocked ? "bg-slate-800/80 border border-slate-700/50 cursor-not-allowed opacity-60" : "group-hover:brightness-110 cursor-pointer"}`}
+                                style={!isLocked ? (isAnahuac ? { background: '#FF5900', border: '1px solid rgba(255,89,0,0.4)', boxShadow: '0 4px 20px rgba(255,89,0,0.3)' } : { background: `linear-gradient(135deg, ${accent}ee, ${accent}99)`, border: `1px solid ${accent}40`, boxShadow: `0 4px 20px ${accent}30` }) : {}}
+                              >
+                                {isLocked ? "Comprar en la Tienda" : "Abrir Simulador"}
+                                {isLocked ? <ShoppingBag size={15} /> : <ChevronRight size={15} />}
+                              </button>
                             </div>
-                            <h3 className="text-[19px] font-semibold text-white mb-2.5 leading-snug tracking-tight">
-                              {simulator.name}
-                            </h3>
-                            <p className="text-[14px] text-white/60 leading-relaxed flex-1 mb-6">
-                              {simulator.description}
-                            </p>
-                            <button 
-                              className="w-full py-3.5 text-white rounded-xl text-[14px] font-semibold cursor-pointer flex items-center justify-center gap-2 transition-shadow group-hover:brightness-110 tracking-wide" 
-                              style={isAnahuac ? { background: '#FF5900', border: '1px solid rgba(255,89,0,0.4)', boxShadow: '0 4px 20px rgba(255,89,0,0.3)' } : { background: `linear-gradient(135deg, ${accent}ee, ${accent}99)`, border: `1px solid ${accent}40`, boxShadow: `0 4px 20px ${accent}30` }}
-                            >
-                              Abrir Simulador
-                              <ChevronRight size={16} />
-                            </button>
                           </div>
                         </Link>
                       )
@@ -499,36 +676,53 @@ export default function CombinedSimulatorsPage() {
 
                         <div className="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-5">
                           {games.map((game) => game.player && (
-                            <div key={game.id} className={`bg-white rounded-3xl p-[clamp(16px,3vw,32px)] border border-slate-100 shadow-[0_8px_30px_rgba(0,0,0,0.04)] flex flex-col h-full relative overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_16px_40px_rgba(0,0,0,0.08)] group ${isAnahuac ? "hover:border-primary/30" : "hover:border-blue-500/20"}`}>
+                            <div key={game.id} className={`bg-white rounded-3xl p-[clamp(16px,3vw,28px)] border shadow-[0_8px_30px_rgba(0,0,0,0.04)] flex flex-col h-full relative overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_16px_40px_rgba(0,0,0,0.08)] group ${isAnahuac ? "hover:border-primary/30 border-slate-100" : "hover:border-blue-500/20 border-slate-100"}`}>
+                              {/* Escape badge */}
+                              {game.player.hasEscapedRatRace && (
+                                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-500 to-blue-500" />
+                              )}
+
                               <div className="flex justify-between items-start mb-4">
                                 <div>
                                   <div className="flex items-center gap-2 mb-1">
-                                    <div className={`w-8 h-8 rounded-full flex items-center justify-center ${isAnahuac ? "bg-primary shadow-[0_0_10px_rgba(255,89,0,0.3)]" : "bg-gradient-to-br from-blue-700 to-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.3)]"}`}>
-                                      <Briefcase size={15} className="text-white" />
-                                    </div>
-                                    <div className="text-[17px] font-medium text-slate-800">{game.player.profession}</div>
+                                    <span className="text-2xl">{PROFESSION_EMOJIS[game.player.profession] || "💼"}</span>
+                                    <div className="text-[17px] font-semibold text-slate-800">{game.player.profession}</div>
                                   </div>
-                                  <div className="text-[12px] text-slate-500 ml-10">{getTimeSince(game.lastActivityAt)}</div>
+                                  <div className="text-[12px] text-slate-400 ml-9">{getTimeSince(game.lastActivityAt)} · Turno {game.player.currentTurn}</div>
                                 </div>
                                 {game.player.hasEscapedRatRace && (
                                   <span className="bg-gradient-to-br from-emerald-600 to-emerald-500 text-white px-2.5 py-1 rounded-lg text-[11px] font-medium shadow-[0_2px_8px_rgba(16,185,129,0.3)]">
-                                    Libre
+                                    🏆 Libre
                                   </span>
                                 )}
                               </div>
 
-                              <div className="grid grid-cols-2 gap-3 mb-4.5">
-                                <div className="bg-emerald-500/10 p-2.5 rounded-xl border border-emerald-500/15">
-                                  <div className="text-[11px] text-slate-500 font-medium mb-0.5">Efectivo</div>
-                                  <div className="font-medium text-emerald-600 text-[16px]">${game.player.cashOnHand.toLocaleString()}</div>
+                              {/* Progress bar */}
+                              <div className="mb-4">
+                                <div className="flex justify-between text-[11px] text-slate-400 mb-1.5">
+                                  <span>Progreso a la Libertad</span>
+                                  <span>{Math.min(100, Math.round((game.player.passiveIncome / (game.player.cashOnHand * 0.05 + 1000)) * 100))}%</span>
                                 </div>
-                                <div className={isAnahuac ? "bg-primary/10 p-2.5 rounded-xl border border-primary/20" : "bg-blue-500/10 p-2.5 rounded-xl border border-blue-500/15"}>
-                                  <div className="text-[11px] text-slate-500 font-medium mb-0.5">Ingreso Pasivo</div>
-                                  <div className={`font-medium text-[16px] ${isAnahuac ? "text-primary/90" : "text-blue-600"}`}>${game.player.passiveIncome.toLocaleString()}</div>
+                                <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                                  <div
+                                    className="h-full bg-gradient-to-r from-emerald-500 to-blue-500 rounded-full transition-all duration-700"
+                                    style={{ width: `${Math.min(100, (game.player.passiveIncome / (game.player.cashOnHand * 0.05 + 1000)) * 100)}%` }}
+                                  />
                                 </div>
                               </div>
 
-                              <div className="flex gap-2.5 mt-auto">
+                              <div className="grid grid-cols-2 gap-3 mb-4">
+                                <div className="bg-emerald-50 p-3 rounded-xl border border-emerald-100">
+                                  <div className="text-[11px] text-slate-500 font-medium mb-0.5">Efectivo</div>
+                                  <div className="font-semibold text-emerald-600 text-[16px]">${game.player.cashOnHand.toLocaleString()}</div>
+                                </div>
+                                <div className={isAnahuac ? "bg-orange-50 p-3 rounded-xl border border-orange-100" : "bg-blue-50 p-3 rounded-xl border border-blue-100"}>
+                                  <div className="text-[11px] text-slate-500 font-medium mb-0.5">Ingreso Pasivo</div>
+                                  <div className={`font-semibold text-[16px] ${isAnahuac ? "text-primary/90" : "text-blue-600"}`}>${game.player.passiveIncome.toLocaleString()}</div>
+                                </div>
+                              </div>
+
+                              <div className="flex gap-2 mt-auto">
                                 <button
                                   onClick={() => router.push(`/cash-flow/game/${game.id}`)}
                                   className={`flex-1 py-2.5 text-white border-none rounded-xl font-medium cursor-pointer text-[14px] flex items-center justify-center gap-1.5 transition-all hover:-translate-y-0.5 ${isAnahuac ? "bg-primary shadow-[0_4px_12px_rgba(255,89,0,0.25)]" : "bg-gradient-to-br from-indigo-600 to-indigo-500 shadow-[0_4px_12px_rgba(99,102,241,0.25)]"}`}
@@ -538,9 +732,18 @@ export default function CombinedSimulatorsPage() {
                                 </button>
                                 <button
                                   onClick={() => deleteGame(game.id)}
-                                  className="px-3.5 py-2.5 bg-white text-red-500 border border-red-200 rounded-xl cursor-pointer flex items-center justify-center transition-colors hover:bg-red-50 hover:border-red-300"
+                                  disabled={deletingId === game.id}
+                                  className={`px-3.5 py-2.5 rounded-xl cursor-pointer flex items-center justify-center gap-1.5 transition-all text-[12px] font-medium border ${
+                                    pendingDeleteId === game.id
+                                      ? "bg-red-500 text-white border-red-500 hover:bg-red-600"
+                                      : "bg-white text-red-400 border-red-200 hover:bg-red-50 hover:border-red-300"
+                                  }`}
                                 >
-                                  <Trash2 size={16} />
+                                  {pendingDeleteId === game.id ? (
+                                    <><AlertCircle size={13} /> Confirmar</>
+                                  ) : (
+                                    <Trash2 size={16} />
+                                  )}
                                 </button>
                               </div>
                             </div>
@@ -569,29 +772,66 @@ export default function CombinedSimulatorsPage() {
                               const cashFlow = calculateCashFlow(prof)
                               const isSel = selectedProfession === prof.id
                               const cfPositive = cashFlow >= 0
+                              const emoji = PROFESSION_EMOJIS[prof.name] || "💼"
+                              // Difficulty: based on starting cash flow ratio
+                              const difficulty = cashFlow > 3000 ? "Fácil" : cashFlow > 1000 ? "Media" : "Difícil"
+                              const diffColor = cashFlow > 3000 ? "text-emerald-500" : cashFlow > 1000 ? "text-amber-500" : "text-red-500"
+                              const diffBg = cashFlow > 3000 ? "bg-emerald-500/10" : cashFlow > 1000 ? "bg-amber-500/10" : "bg-red-500/10"
                               return (
                                 <div
                                   key={prof.id}
-                                  className={`prof-card p-[22px] rounded-[20px] cursor-pointer transition-all duration-300 ${isSel ? (isAnahuac ? "border-[1.5px] border-primary/30 bg-primary/10 shadow-[0_12px_24px_rgba(255,89,0,0.08)]" : "border-[1.5px] border-blue-500/30 bg-blue-500/10 shadow-[0_12px_24px_rgba(11,113,254,0.08)]") : (isAnahuac ? "border border-slate-100 bg-slate-50 hover:-translate-y-1 hover:border-primary/60 hover:shadow-[0_12px_40px_rgba(255,89,0,0.2)]" : "border border-slate-100 bg-slate-50 hover:-translate-y-1 hover:border-blue-500/60 hover:shadow-[0_12px_40px_rgba(11,113,254,0.2)]")}`}
                                   onClick={() => setSelectedProfession(prof.id)}
+                                  className={`relative p-6 rounded-[20px] cursor-pointer transition-all duration-300 border-2 ${
+                                    isSel
+                                      ? (isAnahuac
+                                        ? "border-primary bg-primary/8 shadow-[0_12px_32px_rgba(255,89,0,0.15)]"
+                                        : "border-blue-500 bg-blue-500/8 shadow-[0_12px_32px_rgba(59,130,246,0.15)]")
+                                      : "border-transparent bg-slate-50 hover:-translate-y-1 hover:shadow-[0_12px_32px_rgba(0,0,0,0.08)] hover:border-slate-200"
+                                  }`}
                                 >
-                                  <div className="flex items-center gap-2.5 mb-2.5">
-                                    <div className={`w-[38px] h-[38px] rounded-xl flex items-center justify-center border ${isSel ? (isAnahuac ? "bg-primary/10 border-primary/20" : "bg-blue-500/10 border-blue-500/20") : "bg-slate-100 border-slate-200"}`}>
-                                      <Briefcase size={18} className={isSel ? (isAnahuac ? "text-primary" : "text-blue-500") : "text-slate-500"} />
+                                  {/* Selected check */}
+                                  {isSel && (
+                                    <div className={`absolute top-4 right-4 w-6 h-6 rounded-full flex items-center justify-center ${isAnahuac ? "bg-primary" : "bg-blue-500"}`}>
+                                      <CheckCircle2 size={14} className="text-white" />
                                     </div>
-                                    <h3 className={`text-[17px] font-bold m-0 ${isSel ? (isAnahuac ? "text-primary" : "text-blue-600") : "text-slate-800"}`}>{prof.name}</h3>
-                                  </div>
-                                  {prof.description && (
-                                    <div className="text-[13px] text-slate-500 mb-3.5 leading-relaxed">{prof.description}</div>
                                   )}
-                                  <div className="bg-slate-100 p-3 rounded-xl text-[13px] border border-slate-200">
-                                    <div className="flex justify-between mb-1.5">
-                                      <span className="text-slate-500">Salario</span>
-                                      <span className="font-bold text-emerald-600">${prof.salary.toLocaleString()}</span>
+
+                                  {/* Emoji + Name */}
+                                  <div className="flex items-center gap-3 mb-3">
+                                    <span className="text-3xl">{emoji}</span>
+                                    <div>
+                                      <h3 className={`text-[17px] font-bold m-0 leading-tight ${
+                                        isSel ? (isAnahuac ? "text-primary" : "text-blue-600") : "text-slate-800"
+                                      }`}>{prof.name}</h3>
+                                      <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${diffBg} ${diffColor}`}>
+                                        {difficulty}
+                                      </span>
                                     </div>
-                                    <div className="flex justify-between">
-                                      <span className="text-slate-500">Cash Flow</span>
-                                      <span className={`font-bold ${cfPositive ? "text-emerald-600" : "text-red-600"}`}>${cashFlow.toLocaleString()}</span>
+                                  </div>
+
+                                  {prof.description && (
+                                    <p className="text-[13px] text-slate-500 mb-3 leading-relaxed">{prof.description}</p>
+                                  )}
+
+                                  {/* Stats */}
+                                  <div className="bg-white rounded-xl p-3 border border-slate-200 space-y-2">
+                                    <div className="flex justify-between text-[13px]">
+                                      <span className="text-slate-400">Salario mensual</span>
+                                      <span className="font-semibold text-emerald-600">${prof.salary.toLocaleString()}</span>
+                                    </div>
+                                    <div className="flex justify-between text-[13px]">
+                                      <span className="text-slate-400">Gastos totales</span>
+                                      <span className="font-semibold text-red-500">-${totalExp.toLocaleString()}</span>
+                                    </div>
+                                    <div className="flex justify-between text-[13px] pt-1.5 border-t border-slate-100">
+                                      <span className="text-slate-600 font-medium">Cash Flow inicial</span>
+                                      <span className={`font-bold ${cfPositive ? "text-emerald-600" : "text-red-600"}`}>
+                                        {cfPositive ? "+" : ""}{cashFlow.toLocaleString()}
+                                      </span>
+                                    </div>
+                                    <div className="flex justify-between text-[13px]">
+                                      <span className="text-slate-400">Efectivo inicial</span>
+                                      <span className="font-semibold text-blue-500">${prof.startingCash.toLocaleString()}</span>
                                     </div>
                                   </div>
                                 </div>

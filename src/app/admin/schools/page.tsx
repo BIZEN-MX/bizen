@@ -157,7 +157,6 @@ export default function AdminSchoolsPage() {
             <h1 className="text-4xl font-black tracking-tight mb-2">Gestión de Instituciones</h1>
             <p className="text-slate-400 text-lg">Crea y administra las escuelas asociadas a la plataforma.</p>
           </div>
-          <ReturnButton href="/teacher/dashboard" label="Volver al Dashboard" />
         </header>
 
         <div className="grid grid-cols-1 gap-8">

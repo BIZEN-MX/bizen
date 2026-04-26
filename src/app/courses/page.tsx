@@ -179,9 +179,6 @@ export default function CoursesPage() {
 
         setDbTopics(data)
         setCourses([])
-
-        setDbTopics(data)
-        setCourses([])
       } catch (error: any) {
         console.error("Error fetching courses:", error)
         setLoadingData(false)
@@ -251,6 +248,17 @@ export default function CoursesPage() {
     }
   }, [])
 
+  // Subtle Scroll Peek effect on land
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      window.scrollTo({ top: 300, behavior: 'smooth' });
+      setTimeout(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }, 800);
+    }, 1200);
+    return () => clearTimeout(timer);
+  }, []);
+
 
   // Show loading placeholder if data is missing OR if we are about to redirect
   // This prevents the "Overview" page from blinking for one frame before jumping to the topic.
@@ -267,6 +275,19 @@ export default function CoursesPage() {
 
   return (
     <div className="courses-page-active relative w-full max-w-full flex-1 bg-[#FBFAF5] overflow-visible m-0 p-0 box-border">
+      <style>{`
+        .courses-page-active h1, 
+        .courses-page-active h2, 
+        .courses-page-active h3,
+        .courses-page-active h4,
+        .courses-page-active .text-white,
+        .courses-page-active .text-white\\/80,
+        .courses-page-active .text-white\\/90 {
+          color: #ffffff !important;
+          opacity: 1 !important;
+          -webkit-text-fill-color: #ffffff !important;
+        }
+      `}</style>
       {/* Decorative Orbs for Glassmorphism */}
       <div className="fixed top-[5%] -right-[5%] w-[500px] h-[500px] rounded-full pointer-events-none z-0 blur-[80px]" style={{ background: "radial-gradient(circle, rgba(59,130,246,0.15) 0%, transparent 70%)" }} />
       <div className="fixed bottom-[5%] -left-[5%] w-[600px] h-[600px] rounded-full pointer-events-none z-0 blur-[90px]" style={{ background: "radial-gradient(circle, rgba(34,197,94,0.12) 0%, transparent 70%)" }} />
@@ -301,7 +322,8 @@ export default function CoursesPage() {
               <h1 className="text-[clamp(32px,6vw,52px)] font-black text-white m-0 mb-3 leading-none tracking-tight">
                 Tu Camino Financiero
               </h1>
-              <p className="text-[clamp(15px,2vw,18px)] text-white/80 m-0 mb-8 leading-relaxed max-w-[550px] font-medium">
+              <p className="text-[clamp(15px,2vw,18px)] text-white m-0 mb-8 leading-relaxed max-w-[550px] font-medium">
+                <style>{`.courses-hero p { color: #ffffff !important; opacity: 1 !important; }`}</style>
                 Domina el dinero paso a paso. Desde las bases hasta invertir y emprender con la guía experta de Billy.
               </p>
 
@@ -359,24 +381,24 @@ export default function CoursesPage() {
             <motion.div
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="w-[calc(100%-48px)] max-w-[1440px] mx-auto mt-6 mb-2"
+              className="w-[calc(100%-48px)] max-w-[1440px] mx-auto mt-6 mb-12"
             >
-              <div className="relative overflow-hidden bg-white/40 backdrop-blur-xl border border-white/80 rounded-[32px] p-6 pr-8 shadow-[0_20px_50px_rgba(37,99,235,0.06)] flex items-center justify-between gap-6 group">
+              <div className={`relative overflow-hidden backdrop-blur-xl border border-white/10 rounded-[32px] p-6 pr-8 shadow-2xl flex items-center justify-between gap-6 group ${isAnahuac ? 'bg-[#FF5900]' : 'bg-[#0B1E5E]'}`}>
                 {/* Decorative Pattern */}
-                <div className="absolute right-0 top-0 h-full w-48 opacity-[0.03] pointer-events-none group-hover:opacity-[0.05] transition-opacity">
-                   <Dna className="w-full h-full text-blue-600" />
+                <div className="absolute right-0 top-0 h-full w-48 opacity-[0.05] pointer-events-none group-hover:opacity-[0.1] transition-opacity">
+                   <Dna className="w-full h-full text-white" />
                 </div>
 
                 <div className="flex items-center gap-6">
                   <div className="shrink-0 relative">
-                     <div className="absolute inset-0 bg-blue-500/20 blur-xl rounded-full scale-125 animate-pulse" />
+                     <div className="absolute inset-0 bg-white/20 blur-xl rounded-full scale-125 animate-pulse" />
                      <Billy mood="chatbot" size={64} className="relative z-10" />
                   </div>
-                  <div>
-                    <h4 className="text-lg font-bold text-slate-900 mb-1">
+                  <div className="relative z-10">
+                    <h4 className="text-xl font-medium text-white mb-1 tracking-tight">
                       ¡Tu ADN Financiero está incompleto! 🧬
                     </h4>
-                    <p className="text-sm text-slate-500 font-medium max-w-[500px]">
+                    <p className="text-sm text-white/90 font-medium max-w-[500px]">
                       Desbloquea lecciones prioritarias y tips personalizados de Billy haciendo tu test diagnóstico ahora mismo.
                     </p>
                   </div>
@@ -384,7 +406,7 @@ export default function CoursesPage() {
 
                 <button
                   onClick={() => router.push('/dashboard?startTest=true')}
-                  className={`relative z-10 px-6 py-3.5 rounded-2xl font-bold text-sm transition-all duration-300 hover:scale-105 active:scale-95 shadow-lg shadow-blue-500/20 cursor-pointer ${isAnahuac ? 'bg-primary text-white' : 'bg-blue-600 text-white'}`}
+                  className={`relative z-10 px-8 py-3.5 bg-white rounded-2xl font-black text-sm transition-all duration-300 hover:scale-105 active:scale-95 shadow-xl cursor-pointer ${isAnahuac ? 'text-[#FF5900]' : 'text-[#0B1E5E]'}`}
                 >
                   ¡Comenzar Test ahora!
                 </button>
@@ -392,40 +414,6 @@ export default function CoursesPage() {
             </motion.div>
           )}
 
-          {/* ── BILLY INSIGHT SECTION ────────────────────────────────────────── */}
-          {(insight || loadingInsight) && (
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              className="w-full max-w-none mx-auto mb-8 box-border px-6"
-            >
-              <div className="bg-white/70 backdrop-blur-xl rounded-3xl py-4 px-5 border border-white/80 shadow-[0_10px_30px_rgba(0,0,0,0.03)] flex items-center gap-4">
-                <div className={`w-[52px] h-[52px] flex items-center justify-center shrink-0 relative rounded-full ${isAnahuac ? "bg-primary/10 text-primary" : "bg-blue-600/10 text-blue-600"}`}>
-                  <Brain size={26} className={loadingInsight ? "opacity-60" : "opacity-100"} />
-                  {loadingInsight && (
-                    <motion.div 
-                      animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.6, 0.3] }}
-                      transition={{ duration: 1.5, repeat: Infinity }}
-                      className={`absolute inset-0 rounded-full ${isAnahuac ? "bg-primary/20" : "bg-blue-500/20"}`}
-                    />
-                  )}
-                </div>
-                <div className="flex-1">
-                  {loadingInsight && !insight ? (
-                    <div className="flex flex-col gap-1.5">
-                      <div className="skeleton-pulse h-3.5 w-4/5 bg-black/5 rounded" />
-                      <div className="skeleton-pulse h-3.5 w-[60%] bg-black/5 rounded" />
-                    </div>
-                  ) : (
-                    <div className="text-[clamp(13px,1.6vw,15px)] text-slate-800 leading-relaxed font-medium">
-                      &quot;{insight?.replace(/\*/g, '')}&quot;
-                    </div>
-                  )}
-                </div>
-              </div>
-            </motion.div>
-          )}
 
           {/* Topics Path — 2-per-row snake/zigzag layout */}
           <section
@@ -477,8 +465,8 @@ export default function CoursesPage() {
               }
 
               return (
-                <div className="grid grid-cols-[repeat(auto-fill,minmax(320px,1fr))] gap-6 w-full max-w-none px-6">
-                  {allTopics.map((topic) => {
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-10 w-full max-w-none px-6">
+                  {allTopics.map((topic, idx) => {
                     const isDnaRecommended = adnKeywords.some(kw => topic.title.toLowerCase().includes(kw))
                     const isDnaSkipped = false
 
@@ -489,10 +477,13 @@ export default function CoursesPage() {
                     const isSequenceLocked = false; 
                     const isLocked = false; // Paywall is now handled inside each topic/lesson level
 
+                    // Logic to center the 4th item if there are exactly 4
+                    const isFourthItem = allTopics.length === 4 && idx === 3;
+
                     return (
                       <motion.div
                         key={topic.id}
-                        whileHover={{ y: -5, scale: 1.02 }}
+                        whileHover={{ y: -10, scale: 1.02 }}
                         transition={{ type: "spring", stiffness: 400, damping: 17 }}
                         onClick={() => {
                           if (!dbProfile && user) return;
@@ -524,50 +515,48 @@ export default function CoursesPage() {
                         }}
                         style={{
                           background: isLocked 
-                            ? `linear-gradient(135deg, rgba(241, 245, 249, 0.8), rgba(241, 245, 249, 0.4))`
+                            ? "linear-gradient(135deg, #0f172a 0%, #1e293b 100%)" 
                             : (isDnaRecommended 
                                 ? "linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 100%)" 
-                                : `rgba(255, 255, 255, 0.8)`),
+                                : "linear-gradient(135deg, #0B1E5E 0%, #12297a 100%)"),
                           borderColor: isLocked 
-                            ? "rgba(255, 255, 255, 0.6)" 
+                            ? "rgba(255, 255, 255, 0.1)" 
                             : (isDnaRecommended 
                                 ? "#60a5fa" 
-                                : `rgba(255, 255, 255, 0.8)`),
-                          boxShadow: isDnaRecommended 
-                            ? "0 20px 40px rgba(37, 99, 235, 0.2)" 
-                            : "0 10px 30px rgba(0, 0, 0, 0.03)",
+                                : "rgba(255, 255, 255, 0.2)"),
+                          boxShadow: "0 30px 60px rgba(0, 0, 0, 0.4)",
                         }}
-                        className={`cursor-pointer rounded-3xl border-[1.5px] transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] overflow-hidden p-6 flex flex-col justify-between min-h-[220px] relative ${isDnaSkipped ? "opacity-60" : (isLocked ? "opacity-80" : "opacity-100")} ${topic.id === nextTopicId && !isDnaRecommended ? "next-topic-glow" : (isDnaRecommended ? "adn-glow-pulse border-[2px]" : "")}`}
+                        className={`cursor-pointer rounded-[40px] border-[1.5px] transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] overflow-hidden p-10 flex flex-col justify-between min-h-[340px] relative ${isDnaSkipped ? "opacity-60" : "opacity-100"} ${topic.id === nextTopicId && !isDnaRecommended ? "next-topic-glow" : (isDnaRecommended ? "adn-glow-pulse border-[2px]" : "")} ${isFourthItem ? "md:col-start-2" : ""}`}
                       >
                         {/* Mascot Banner */}
                         {topic.bannerUrl && (
-                          <div className={`absolute -bottom-1 -right-1 w-[120px] h-[120px] z-0 pointer-events-none -rotate-[5deg] ${isLocked ? "opacity-20" : "opacity-90"}`}>
+                          <div className={`absolute -bottom-2 -right-2 w-[180px] h-[180px] z-0 pointer-events-none -rotate-[5deg] ${isLocked ? "opacity-20" : "opacity-90"}`}>
                             <Image 
                               src={topic.bannerUrl} 
                               alt={topic.title} 
-                              width={120} 
-                              height={120} 
+                              width={180} 
+                              height={180} 
                               style={{ objectFit: "contain" }}
                             />
                           </div>
                         )}
 
                         <div className="relative z-10">
-                           <div className="flex justify-between items-start mb-3">
+                           <div className="flex justify-between items-start mb-6">
                              <div 
-                               className="w-12 h-12 rounded-[14px] flex items-center justify-center"
+                               className="w-16 h-16 rounded-2xl flex items-center justify-center"
                                style={{ background: isDnaRecommended ? "rgba(255,255,255,0.15)" : `${topic.catColor}15` }}
                              >
-                               <topic.icon size={24} color={isDnaRecommended ? "#fff" : topic.catColor} />
+                               <topic.icon size={32} color={isDnaRecommended ? "#fff" : topic.catColor} />
                              </div>
-                             <div className={`text-[11px] font-bold tracking-widest ${isDnaRecommended ? (isAnahuac ? "text-primary/90" : "text-blue-300") : "text-slate-400"}`}>
+                             <div className={`text-xs font-black tracking-[0.2em] ${isDnaRecommended ? (isAnahuac ? "text-primary/90" : "text-blue-300") : "text-white/40"}`}>
                                 #{topic.displayOrder.toString().padStart(2, "0")}
                              </div>
                            </div>
 
                            <h3 
-                             className={`text-[20px] font-bold m-0 mb-2 leading-tight ${isDnaRecommended ? "text-white" : "text-slate-800"}`}
-                             style={{ maxWidth: topic.bannerUrl ? "75%" : "100%" }}
+                             className="text-3xl font-medium m-0 mb-3 leading-tight text-white tracking-tight"
+                             style={{ maxWidth: topic.bannerUrl ? "75%" : "100%", color: '#ffffff', opacity: 1 }}
                            >
                              {topic.title}
                            </h3>
@@ -581,14 +570,13 @@ export default function CoursesPage() {
 
                         <div className="flex items-center gap-3 mt-auto relative z-10">
                           <div 
-                            className={`text-[10px] font-bold py-1 px-2.5 rounded-lg uppercase ${isDnaRecommended ? "text-white bg-white/20" : ""}`}
-                            style={!isDnaRecommended ? { color: topic.catColor, background: `${topic.catColor}15` } : undefined}
+                            className="text-[10px] font-medium py-1 px-2.5 rounded-lg uppercase text-white bg-white/20"
                           >
                             {isPaywalled ? "Premium" : topic.category}
                           </div>
-                          <div className={`flex items-center gap-1.5 text-[12px] ${isDnaRecommended ? "text-white/80" : "text-slate-500"}`}>
-                            <BookOpen size={16} color={isDnaRecommended ? "#fff" : topic.catColor} />
-                            <span>{topic.lessons} cursos</span>
+                          <div className="flex items-center gap-1.5 text-[12px] text-white/90">
+                            <BookOpen size={16} color="#fff" />
+                            <span className="text-white">{topic.lessons} cursos</span>
                           </div>
                         </div>
 
@@ -649,9 +637,8 @@ export default function CoursesPage() {
                   onClick={() => {
                     setShowRecommendation(false)
                     setHasDismissedRecommendation(true)
-                    if (pendingTopicId) {
-                      router.push(`/courses/${pendingTopicId}`)
-                    }
+                    const id = pendingTopicId || ""
+                    router.push(`/courses/${id}`)
                   }}
                   className={`p-4 border-[2px] rounded-2xl text-[15px] font-bold cursor-pointer transition-colors ${isAnahuac ? 'border-primary text-primary hover:bg-primary/10' : 'border-transparent bg-blue-600/5 text-slate-500 hover:bg-blue-600/10'}`}
                 >
@@ -788,100 +775,8 @@ export default function CoursesPage() {
             font-size: 14px !important;
             margin-bottom: 20px !important;
           }
-          .courses-hero > div:first-of-type {
-            flex-direction: column !important;
-            gap: 24px !important;
-          }
-          .courses-hero > div:first-of-type > div:first-child {
-            flex: initial !important;
-            width: 100% !important;
-          }
-          .courses-hero > div:first-of-type > div:last-child {
-            display: grid !important;
-            grid-template-columns: 1fr 1fr !important;
-            width: 100% !important;
-            min-width: unset !important;
-          }
-          .courses-hero > div:first-of-type > div:last-child > div {
-            padding: 14px !important;
-            border-radius: 16px !important;
-          }
-          .courses-hero > div:first-of-type > div:last-child > div div[style*="fontSize: 28"] {
-            font-size: 22px !important;
-          }
-          
-          .topic-row-container {
-            gap: 16px !important;
-          }
-          .course-card-wrapper {
-            border-radius: 24px !important;
-          }
-          .course-card-content {
-            padding: 24px 20px !important;
-          }
         }
-        
-        /* Ensure app-shell and containers allow full width */
-        .app-shell, .app-scroll, .app-main {
-          width: 100% !important;
-          max-width: 100% !important;
-        }
-        
-          /* Content area is already offset by app-main padding in globals.css */
-        `}</style>
-
-      {/* Topic Sequence Warning Overlay */}
-      {topicWarning && (
-        <div
-          onClick={() => setTopicWarning(false)}
-          className="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-900/40 backdrop-blur-md animate-[seqOverlayIn_0.25s_ease]"
-        >
-          <div
-            onClick={(e) => e.stopPropagation()}
-            className="bg-white rounded-[28px] py-10 px-8 max-w-[380px] w-[90%] flex flex-col items-center gap-5 shadow-[0_32px_80px_rgba(0,0,0,0.22)] animate-[seqCardIn_0.35s_cubic-bezier(0.34,1.56,0.64,1)] relative overflow-hidden text-center"
-          >
-            <div className={`absolute top-0 left-0 right-0 h-1 ${isAnahuac ? 'bg-primary' : 'bg-gradient-to-r from-blue-900 via-blue-500 to-blue-400'}`} />
-
-            {/* Mascot Image */}
-            <div className="w-[120px] h-[120px] relative -mb-2.5">
-              <Image 
-                src="/image copy 3.png" 
-                alt="Billy" 
-                fill 
-                className="object-contain"
-              />
-            </div>
-
-
-
-            {/* Title */}
-            <div className="text-[20px] font-medium text-slate-900 leading-tight">
-              ¡Calma!
-            </div>
-
-            {/* Body */}
-            <div className="text-[15px] font-medium text-slate-500 leading-relaxed max-w-[280px]">
-              Para desbloquear este tema, primero debes completar todos los cursos del tema anterior.
-            </div>
-
-            <button
-              onClick={() => setTopicWarning(false)}
-              className={`mt-1 px-8 py-3 text-white border-none rounded-xl text-[14px] font-medium cursor-pointer shadow-[0_6px_20px_rgba(0,0,0,0.15)] transition-all duration-200 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:-translate-y-[3px] hover:shadow-[0_12px_28px_rgba(0,0,0,0.25)] active:translate-y-0 active:opacity-85 ${isAnahuac ? 'bg-primary' : 'bg-gradient-to-br from-blue-900 to-blue-500'}`}
-            >
-              Entendido
-            </button>
-          </div>
-        </div>
-      )}
-
-      <style>{`
-        @keyframes seqOverlayIn { 0% { opacity: 0; } 100% { opacity: 1; } }
-        @keyframes seqCardIn { 0% { opacity: 0; transform: scale(0.88) translateY(20px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
-        .topic-dismiss-btn:hover { transform: translateY(-3px) !important; box-shadow: 0 12px 28px rgba(37,99,235,0.45) !important; }
-        .topic-dismiss-btn:active { transform: translateY(0) !important; opacity: 0.85; }
       `}</style>
-    </div >
+    </div>
   )
 }
-
-

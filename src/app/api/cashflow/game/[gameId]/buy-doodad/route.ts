@@ -1,83 +1,96 @@
 import { NextRequest, NextResponse } from "next/server"
-import { createSupabaseServer } from "@/lib/supabase/server"
+import { prisma } from "@/lib/prisma"
+import { requireAuth } from "@/lib/auth/api-auth"
 
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ gameId: string }> }
 ) {
   try {
-    const supabase = await createSupabaseServer()
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
-
-    if (authError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    const authResult = await requireAuth(request)
+    if (!authResult.success) {
+      return authResult.response
     }
+    const { user } = authResult.data
 
-    const { doodadId } = await request.json()
-    const gameId = parseInt(params.gameId)
+    const body = await request.json()
+    const { doodadId, name, description, cost } = body
+    const { gameId } = await params
+    const parsedGameId = parseInt(gameId)
 
     // Get player
-    const { data: player } = await supabase
-      .from('players')
-      .select('*')
-      .eq('game_session_id', gameId)
-      .eq('user_id', user.id)
-      .single()
+    const player = await prisma.player.findFirst({
+      where: { gameSessionId: parsedGameId, userId: user.id }
+    })
 
     if (!player) {
       return NextResponse.json({ error: "Player not found" }, { status: 404 })
     }
 
-    // Get doodad
-    const { data: doodad } = await supabase
-      .from('doodads')
-      .select('*')
-      .eq('id', doodadId)
-      .single()
+    // Resolve doodad info: either from catalog ID or directly from body (AI doodads)
+    let doodadName = name
+    let doodadDescription = description
+    let doodadCost = cost
 
-    if (!doodad) {
-      return NextResponse.json({ error: "Doodad not found" }, { status: 404 })
+    if (doodadId && doodadId !== 9999) {
+      // Fetch from catalog table
+      const doodad = await prisma.doodad.findUnique({
+        where: { id: parseInt(doodadId) }
+      })
+
+      if (!doodad) {
+        return NextResponse.json({ error: "Doodad not found" }, { status: 404 })
+      }
+
+      doodadName = doodad.name
+      doodadDescription = doodad.description
+      doodadCost = doodad.cost
+    }
+
+    if (!doodadName || doodadCost === undefined) {
+      return NextResponse.json({ error: "Doodad info missing" }, { status: 400 })
     }
 
     // Check if player has enough cash
-    if (player.cash_on_hand < doodad.cost) {
+    if (player.cashOnHand < doodadCost) {
       return NextResponse.json({ error: "Not enough cash" }, { status: 400 })
     }
 
-    // Create player doodad record
-    await supabase
-      .from('player_doodads')
-      .insert({
-        player_id: player.id,
-        doodad_id: doodad.id,
-        name: doodad.name,
-        description: doodad.description,
-        cost: doodad.cost
+    const newCash = player.cashOnHand - doodadCost
+
+    await prisma.$transaction(async (tx) => {
+      // Create player doodad record (no FK to doodad catalog — schema uses name/desc/cost)
+      await tx.playerDoodad.create({
+        data: {
+          playerId: player.id,
+          name: doodadName,
+          description: doodadDescription || null,
+          cost: doodadCost
+        }
       })
 
-    // Update player cash
-    await supabase
-      .from('players')
-      .update({ cash_on_hand: player.cash_on_hand - doodad.cost })
-      .eq('id', player.id)
+      // Update player cash
+      await tx.player.update({
+        where: { id: player.id },
+        data: { cashOnHand: newCash }
+      })
 
-    // Log doodad purchase
-    await supabase.from('game_events').insert({
-      game_session_id: gameId,
-      player_id: player.id,
-      event_type: "doodad_purchased",
-      event_data: {
-        doodadId: doodad.id,
-        doodadName: doodad.name,
-        cost: doodad.cost
-      },
-      cash_change: -doodad.cost,
-      turn_number: player.current_turn
+      // Log doodad purchase
+      await tx.gameEvent.create({
+        data: {
+          gameSessionId: parsedGameId,
+          playerId: player.id,
+          eventType: "doodad_purchased",
+          eventData: { doodadId, doodadName, cost: doodadCost },
+          cashChange: -doodadCost,
+          turnNumber: player.currentTurn || 1
+        }
+      })
     })
 
     return NextResponse.json({
       message: "Doodad purchased successfully",
-      newCash: player.cash_on_hand - doodad.cost
+      newCash
     })
 
   } catch (error) {

@@ -127,7 +127,7 @@ export default function HistorialPage() {
             <div className="flex items-center gap-3">
               <Coins className="text-amber-400" size={22} />
               <span className="text-2xl font-black">{(dbProfile?.bizcoins || 0).toLocaleString()}</span>
-              <span className="text-xs font-bold text-slate-500 mb-[-4px]">BC</span>
+              <span className="text-xs font-bold text-slate-500 mb-[-4px]">BZ</span>
             </div>
           </div>
         </div>
@@ -198,7 +198,7 @@ export default function HistorialPage() {
                       ? "text-rose-500" 
                       : "text-emerald-500"
                     }`}>
-                      {formatAmount(t.amount, t.category)} <span className="text-[10px] opacity-70 ml-0.5">BC</span>
+                      {formatAmount(t.amount, t.category)} <span className="text-[10px] opacity-70 ml-0.5">BZ</span>
                     </div>
                   </div>
                 </motion.div>

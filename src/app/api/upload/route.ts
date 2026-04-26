@@ -1,10 +1,15 @@
 import { NextResponse } from 'next/server'
 import { auth } from '@clerk/nextjs/server'
-import { createSupabaseServer } from '@/lib/supabase/server'
 import { prisma } from '@/lib/prisma'
+import { Storage } from '@google-cloud/storage'
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB limit
 const ALLOWED_EXTENSIONS = ['png', 'jpg', 'jpeg', 'webp'];
+const BUCKET_NAME = process.env.GOOGLE_CLOUD_BUCKET || 'bizen-uploads'; // Ensure this matches your GCP bucket
+
+// Initialize Google Cloud Storage
+// Uses Application Default Credentials (ADC) locally and in GCP
+const storage = new Storage({ projectId: process.env.GOOGLE_CLOUD_PROJECT || 'bizen-475002' });
 
 export async function POST(request: Request) {
   try {
@@ -32,9 +37,6 @@ export async function POST(request: Request) {
       }, { status: 400 })
     }
 
-    // Get supabase client for storage (using service role or standard server client)
-    const supabase = await createSupabaseServer()
-
     // 2. INPUT PROTECTION: Extension validation
     const originalName = file.name
     const ext = (originalName.split('.').pop() || 'png').toLowerCase()
@@ -53,27 +55,35 @@ export async function POST(request: Request) {
     const fileName = `${baseName}_${timestamp}.${ext}`
     const storagePath = `evidences/${userId}/${fileName}`
 
-    // Now it's safe to read the buffer (already size checked)
+    // Read buffer
     const bytes = await file.arrayBuffer()
     const buffer = Buffer.from(bytes)
 
-    // Upload to Supabase Storage
-    const { error: uploadError } = await supabase.storage
-      .from('evidences')
-      .upload(storagePath, buffer, {
-        contentType: file.type || `image/${ext === 'jpg' ? 'jpeg' : ext}`,
-        upsert: true
-      })
+    // Upload to Google Cloud Storage
+    const bucket = storage.bucket(BUCKET_NAME)
+    const gcsFile = bucket.file(storagePath)
 
-    if (uploadError) {
+    try {
+      await gcsFile.save(buffer, {
+        contentType: file.type || `image/${ext === 'jpg' ? 'jpeg' : ext}`,
+        resumable: false,
+        validation: false, // Fast upload
+      })
+      
+      // Intentar hacer el archivo público (puede fallar si el bucket ya tiene políticas públicas forzadas)
+      try {
+        await gcsFile.makePublic();
+      } catch (e) {
+        console.warn('Could not make file explicitly public (usually normal if bucket is public by default):', e);
+      }
+      
+    } catch (uploadError) {
       console.error('[Upload:StorageError]', uploadError)
-      return NextResponse.json({ error: 'No se pudo guardar la imagen en el almacenamiento.' }, { status: 500 })
+      return NextResponse.json({ error: 'No se pudo guardar la imagen en Google Cloud Storage. Verifica que el bucket exista.' }, { status: 500 })
     }
 
     // Get public URL
-    const { data: { publicUrl } } = supabase.storage
-      .from('evidences')
-      .getPublicUrl(storagePath)
+    const publicUrl = `https://storage.googleapis.com/${BUCKET_NAME}/${storagePath}`;
 
     // Save metadata securely
     try {
@@ -101,10 +111,10 @@ export async function POST(request: Request) {
     }, { status: 200 })
 
   } catch (error: any) {
-    // 3. SAFE FAILURE: Log details, return generic info
     console.error('❌ [Upload:FatalError]:', error)
     return NextResponse.json({ 
-      error: 'Error inesperado al procesar la subida.' 
+      error: 'Error inesperado al procesar la subida.',
+      details: error.message 
     }, { status: 500 })
   }
 }

@@ -1,19 +1,17 @@
 import { NextRequest, NextResponse } from "next/server"
-import { createSupabaseServer } from "@/lib/supabase/server"
+import { prisma } from "@/lib/prisma"
+import { requireAuth } from "@/lib/auth/api-auth"
 
 export async function POST(request: NextRequest) {
   try {
-    const supabase = await createSupabaseServer()
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
-
-    if (authError || !user) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      )
+    const authResult = await requireAuth(request)
+    if (!authResult.success) {
+      return authResult.response
     }
+    const { user } = authResult.data
 
-    const { professionId } = await request.json()
+    const body = await request.json()
+    const { professionId } = body
 
     if (!professionId) {
       return NextResponse.json(
@@ -23,71 +21,61 @@ export async function POST(request: NextRequest) {
     }
 
     // Get profession details
-    const { data: profession, error: profError } = await supabase
-      .from('professions')
-      .select('*')
-      .eq('id', professionId)
-      .single()
+    const profession = await prisma.profession.findUnique({
+      where: { id: parseInt(professionId) }
+    })
 
-    if (profError || !profession) {
+    if (!profession) {
       return NextResponse.json(
         { error: "Profession not found" },
         { status: 404 }
       )
     }
 
-    // Create game session
-    const { data: gameSession, error: gameError } = await supabase
-      .from('game_sessions')
-      .insert({
-        user_id: user.id,
-        status: "active",
-        current_phase: "rat_race",
-        total_turns: 0
+    // Create game session and player in a transaction to ensure atomicity
+    const result = await prisma.$transaction(async (tx) => {
+      const gameSession = await tx.gameSession.create({
+        data: {
+          userId: user.id,
+          status: "active",
+          currentPhase: "rat_race",
+          totalTurns: 0
+        }
       })
-      .select()
-      .single()
 
-    if (gameError) throw gameError
-
-    // Create player
-    const { data: player, error: playerError } = await supabase
-      .from('players')
-      .insert({
-        game_session_id: gameSession.id,
-        user_id: user.id,
-        profession_id: profession.id,
-        cash_on_hand: profession.starting_cash,
-        savings: profession.starting_savings,
-        num_children: 0,
-        current_position: 0,
-        current_turn: 1,
-        passive_income: 0
-      })
-      .select()
-      .single()
-
-    if (playerError) throw playerError
-
-    // Log game start event
-    const { error: eventError } = await supabase
-      .from('game_events')
-      .insert({
-        game_session_id: gameSession.id,
-        player_id: player.id,
-        event_type: "game_started",
-        event_data: {
+      const player = await tx.player.create({
+        data: {
+          gameSessionId: gameSession.id,
+          userId: user.id,
           professionId: profession.id,
-          professionName: profession.name
-        },
-        turn_number: 1
+          cashOnHand: profession.startingCash,
+          savings: profession.startingSavings,
+          numChildren: 0,
+          currentPosition: 0,
+          currentTurn: 1,
+          passiveIncome: 0
+        }
       })
 
-    if (eventError) throw eventError
+      await tx.gameEvent.create({
+        data: {
+          gameSessionId: gameSession.id,
+          playerId: player.id,
+          eventType: "game_started",
+          eventData: {
+            professionId: profession.id,
+            professionName: profession.name
+          },
+          turnNumber: 1
+        }
+      })
+
+      return { gameSession, player }
+    })
 
     return NextResponse.json({
-      gameId: gameSession.id,
-      playerId: player.id,
+      gameId: result.gameSession.id,
+      playerId: result.player.id,
       message: "Game started successfully"
     })
 

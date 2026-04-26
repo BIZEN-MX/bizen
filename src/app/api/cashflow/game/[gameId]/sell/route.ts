@@ -1,98 +1,97 @@
 import { NextRequest, NextResponse } from "next/server"
-import { createSupabaseServer } from "@/lib/supabase/server"
+import { prisma } from "@/lib/prisma"
+import { requireAuth } from "@/lib/auth/api-auth"
 
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ gameId: string }> }
 ) {
   try {
-    const supabase = await createSupabaseServer()
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
-
-    if (authError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    const authResult = await requireAuth(request)
+    if (!authResult.success) {
+      return authResult.response
     }
+    const { user } = authResult.data
 
-    const { investmentId, salePrice } = await request.json()
-    const gameId = parseInt(params.gameId)
+    const body = await request.json()
+    const { investmentId, salePrice } = body
+    const { gameId } = await params
+    const parsedGameId = parseInt(gameId)
 
     // Get player
-    const { data: player } = await supabase
-      .from('players')
-      .select('*')
-      .eq('game_session_id', gameId)
-      .eq('user_id', user.id)
-      .single()
+    const player = await prisma.player.findFirst({
+      where: { gameSessionId: parsedGameId, userId: user.id }
+    })
 
     if (!player) {
       return NextResponse.json({ error: "Player not found" }, { status: 404 })
     }
 
     // Get investment with card details
-    const { data: investment } = await supabase
-      .from('player_investments')
-      .select('*, opportunity_cards(*)')
-      .eq('id', investmentId)
-      .eq('player_id', player.id)
-      .single()
+    const investment = await prisma.playerInvestment.findFirst({
+      where: { id: parseInt(investmentId), playerId: player.id },
+      include: { opportunityCard: true }
+    })
 
-    if (!investment || investment.is_sold) {
+    if (!investment || investment.isSold) {
       return NextResponse.json({ error: "Investment not found or already sold" }, { status: 404 })
     }
 
-    const card = investment.opportunity_cards
-    const minPrice = card.min_sale_price || 0
-    const maxPrice = card.max_sale_price || investment.purchase_price
+    const card = investment.opportunityCard
+    const minPrice = card.minSalePrice || 0
+    const maxPrice = card.maxSalePrice || investment.purchasePrice
 
     if (salePrice < minPrice || salePrice > maxPrice) {
       return NextResponse.json({ error: "Sale price out of range" }, { status: 400 })
     }
 
-    // Mark as sold
-    await supabase
-      .from('player_investments')
-      .update({
-        is_sold: true,
-        sold_at: new Date().toISOString(),
-        sale_price: salePrice
+    const profit = salePrice - investment.purchasePrice
+    const cashChange = salePrice - (investment.mortgageAmount || 0)
+    const newPassiveIncome = Math.max(0, (player.passiveIncome || 0) - (investment.currentCashFlow || 0))
+
+    await prisma.$transaction(async (tx) => {
+      // Mark investment as sold
+      await tx.playerInvestment.update({
+        where: { id: investment.id },
+        data: {
+          isSold: true,
+          soldAt: new Date(),
+          salePrice: salePrice
+        }
       })
-      .eq('id', investmentId)
 
-    // Calculate profit/loss
-    const profit = salePrice - investment.purchase_price
-    const cashChange = salePrice - (investment.mortgage_amount || 0)
-
-    // Update player cash and passive income
-    const newPassiveIncome = player.passive_income - (investment.current_cash_flow || 0)
-    
-    await supabase
-      .from('players')
-      .update({
-        cash_on_hand: player.cash_on_hand + cashChange,
-        passive_income: Math.max(0, newPassiveIncome)
+      // Update player cash and passive income
+      await tx.player.update({
+        where: { id: player.id },
+        data: {
+          cashOnHand: player.cashOnHand + cashChange,
+          passiveIncome: newPassiveIncome
+        }
       })
-      .eq('id', player.id)
 
-    // Log sale event
-    await supabase.from('game_events').insert({
-      game_session_id: gameId,
-      player_id: player.id,
-      event_type: "investment_sold",
-      event_data: {
-        investmentId,
-        cardName: card.name,
-        salePrice,
-        profit
-      },
-      cash_change: cashChange,
-      cash_flow_change: -(investment.current_cash_flow || 0),
-      turn_number: player.current_turn
+      // Log sale event
+      await tx.gameEvent.create({
+        data: {
+          gameSessionId: parsedGameId,
+          playerId: player.id,
+          eventType: "investment_sold",
+          eventData: {
+            investmentId,
+            cardName: card.name,
+            salePrice,
+            profit
+          },
+          cashChange: cashChange,
+          cashFlowChange: -(investment.currentCashFlow || 0),
+          turnNumber: player.currentTurn || 1
+        }
+      })
     })
 
     return NextResponse.json({
       message: "Investment sold successfully",
       profit,
-      newCash: player.cash_on_hand + cashChange,
+      newCash: player.cashOnHand + cashChange,
       newPassiveIncome
     })
 

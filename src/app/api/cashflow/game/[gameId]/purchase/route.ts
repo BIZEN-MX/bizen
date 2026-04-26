@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
-import { createSupabaseServer } from "@/lib/supabase/server"
+import { prisma } from "@/lib/prisma"
+import { requireAuth } from "@/lib/auth/api-auth"
 import { awardXp } from "@/lib/rewards"
 
 export async function POST(
@@ -7,127 +8,132 @@ export async function POST(
   { params }: { params: Promise<{ gameId: string }> }
 ) {
   try {
-    const supabase = await createSupabaseServer()
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
-
-    if (authError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    const authResult = await requireAuth(request)
+    if (!authResult.success) {
+      return authResult.response
     }
+    const { user } = authResult.data
 
-    const { opportunityCardId } = await request.json()
-    const gameId = parseInt(params.gameId)
+    const body = await request.json()
+    const { opportunityCardId } = body
+    const { gameId } = await params
+    const parsedGameId = parseInt(gameId)
 
     // Get player with profession
-    const { data: players } = await supabase
-      .from('players')
-      .select('*, professions(*)')
-      .eq('game_session_id', gameId)
-      .eq('user_id', user.id)
-      .single()
+    const player = await prisma.player.findFirst({
+      where: { gameSessionId: parsedGameId, userId: user.id },
+      include: { profession: true }
+    })
 
-    const player = players
-    if (!player) {
+    if (!player || !player.profession) {
       return NextResponse.json({ error: "Player not found" }, { status: 404 })
     }
 
     // Get opportunity card
-    const { data: card } = await supabase
-      .from('opportunity_cards')
-      .select('*')
-      .eq('id', opportunityCardId)
-      .single()
+    const card = await prisma.opportunityCard.findUnique({
+      where: { id: parseInt(opportunityCardId) }
+    })
 
     if (!card) {
       return NextResponse.json({ error: "Card not found" }, { status: 404 })
     }
 
-    const purchaseCost = card.down_payment || card.cost
+    const purchaseCost = card.downPayment || card.cost
 
-    if (player.cash_on_hand < purchaseCost) {
+    if (player.cashOnHand < purchaseCost) {
       return NextResponse.json({ error: "Not enough cash" }, { status: 400 })
     }
 
-    // Create investment
-    const { data: investment } = await supabase
-      .from('player_investments')
-      .insert({
-        player_id: player.id,
-        opportunity_card_id: card.id,
-        purchase_price: card.cost,
-        down_payment_paid: card.down_payment,
-        mortgage_amount: card.mortgage,
-        shares_owned: card.shares || 1,
-        current_cash_flow: card.cash_flow || 0
+    const newPassiveIncome = (player.passiveIncome || 0) + (card.cashFlow || 0)
+
+    // Run in a transaction
+    const result = await prisma.$transaction(async (tx) => {
+      // Create investment
+      const investment = await tx.playerInvestment.create({
+        data: {
+          playerId: player.id,
+          opportunityCardId: card.id,
+          purchasePrice: card.cost,
+          downPaymentPaid: card.downPayment,
+          mortgageAmount: card.mortgage,
+          sharesOwned: card.shares || 1,
+          currentCashFlow: card.cashFlow || 0
+        }
       })
-      .select()
-      .single()
 
-    const newPassiveIncome = player.passive_income + (card.cash_flow || 0)
-
-    // Update player
-    await supabase
-      .from('players')
-      .update({
-        cash_on_hand: player.cash_on_hand - purchaseCost,
-        passive_income: newPassiveIncome
+      // Update player cash and passive income
+      const updatedPlayer = await tx.player.update({
+        where: { id: player.id },
+        data: {
+          cashOnHand: player.cashOnHand - purchaseCost,
+          passiveIncome: newPassiveIncome
+        }
       })
-      .eq('id', player.id)
 
-    // Log purchase event
-    await supabase.from('game_events').insert({
-      game_session_id: gameId,
-      player_id: player.id,
-      event_type: "investment_purchased",
-      event_data: {
-        cardId: card.id,
-        cardName: card.name,
-        cardType: card.type,
-        purchasePrice: card.cost,
-        cashFlow: card.cash_flow
-      },
-      cash_change: -purchaseCost,
-      cash_flow_change: card.cash_flow || 0,
-      turn_number: player.current_turn
+      // Log purchase event
+      await tx.gameEvent.create({
+        data: {
+          gameSessionId: parsedGameId,
+          playerId: player.id,
+          eventType: "investment_purchased",
+          eventData: {
+            cardId: card.id,
+            cardName: card.name,
+            cardType: card.type,
+            purchasePrice: card.cost,
+            cashFlow: card.cashFlow
+          },
+          cashChange: -purchaseCost,
+          cashFlowChange: card.cashFlow || 0,
+          turnNumber: player.currentTurn || 1
+        }
+      })
+
+      return { investment, updatedPlayer }
     })
 
-    // Check if escaped rat race
-    const profession = player.professions
+    // Check if escaped rat race (outside transaction to avoid nested issues)
+    const profession = player.profession
     const totalExpenses =
       profession.taxes +
-      profession.home_mortgage_payment +
-      profession.school_loan_payment +
-      profession.car_loan_payment +
-      profession.credit_card_payment +
-      profession.retail_payment +
-      profession.other_expenses +
-      (profession.child_expense * player.num_children)
+      profession.homeMortgagePayment +
+      profession.schoolLoanPayment +
+      profession.carLoanPayment +
+      profession.creditCardPayment +
+      profession.retailPayment +
+      profession.otherExpenses +
+      (profession.childExpense * (player.numChildren || 0))
 
     let rewards = null
-    if (newPassiveIncome > totalExpenses && !player.has_escaped_rat_race) {
-      await supabase
-        .from('players')
-        .update({
-          has_escaped_rat_race: true,
-          is_on_fast_track: true,
-          escaped_at: new Date().toISOString()
+    if (newPassiveIncome > totalExpenses && !player.hasEscapedRatRace) {
+      await prisma.$transaction(async (tx) => {
+        await tx.player.update({
+          where: { id: player.id },
+          data: {
+            hasEscapedRatRace: true,
+            isOnFastTrack: true,
+            escapedAt: new Date()
+          }
         })
-        .eq('id', player.id)
 
-      await supabase.from('game_events').insert({
-        game_session_id: gameId,
-        player_id: player.id,
-        event_type: "escaped_rat_race",
-        event_data: { passiveIncome: newPassiveIncome, totalExpenses },
-        turn_number: player.current_turn
+        await tx.gameEvent.create({
+          data: {
+            gameSessionId: parsedGameId,
+            playerId: player.id,
+            eventType: "escaped_rat_race",
+            eventData: { passiveIncome: newPassiveIncome, totalExpenses },
+            turnNumber: player.currentTurn || 1
+          }
+        })
       })
 
-      rewards = await awardXp(user.id, 150) // Massive bonus for winning cashflow
+      rewards = await awardXp(user.id, 150)
     }
 
     return NextResponse.json({
       message: "Investment purchased successfully",
-      investment,
-      newCash: player.cash_on_hand - purchaseCost,
+      investment: result.investment,
+      newCash: player.cashOnHand - purchaseCost,
       newPassiveIncome,
       rewards
     })

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { GoogleGenerativeAI } from "@google/generative-ai"
 import { chatbotMessageSchema } from "@/validators/chatbot"
+import { prisma } from "@/lib/prisma"
 
 // Simple in-memory tracker (resets daily, resets on server restart).
 let dailyAIRequests = 0
@@ -64,7 +65,7 @@ DATOS FINANCIEROS REALES (BIZEN 2026):
 - Cursos Inscritos: ${stats?.coursesEnrolled || 0}.
 - Logros Obtenidos: ${userContext.achievements?.join(', ') || 'Ninguno aún'}.
 - Inversiones Activas: ${userContext.investments?.length > 0 ? userContext.investments.map((i:any) => `${i.symbol}: ${i.amount} unidades`).join(', ') : 'Sin inversiones en el simulador'}.
-- Últimos Movimientos: ${transactions?.map((t:any) => `${t.description} (${t.amount} BC)`).join(', ') || 'Sin transacciones'}.
+- Últimos Movimientos: ${transactions?.map((t:any) => `${t.description} (${t.amount} BZ)`).join(', ') || 'Sin transacciones'}.
 - Perfil ADN: ${diagnostic?.adnProfile || adnProfile}.
 - Desglose ADN: ${diagnostic?.categoryScores ? JSON.stringify(diagnostic.categoryScores) : 'Sin detalle'}.
 - Inventario (Tienda): ${userContext.inventory?.join(', ') || 'Sin artículos comprados'}.
@@ -93,10 +94,15 @@ DATOS FINANCIEROS REALES (BIZEN 2026):
     }
 
     // Fetch Global Prompt
-    const configProfile = await prisma.profile.findUnique({
-      where: { userId: "GLOBAL_CONFIG_BILLY" },
-      select: { settings: true }
-    });
+    let configProfile = null;
+    try {
+      configProfile = await prisma.profile.findUnique({
+        where: { userId: "GLOBAL_CONFIG_BILLY" },
+        select: { settings: true }
+      });
+    } catch (dbError) {
+      console.warn("No se pudo obtener la configuración global de Billy de la BD, usando predeterminado:", dbError);
+    }
     
     // Fallback default Si no existe
     const defaultPrompt = `Eres Billy, el mentor asistente de BIZEN. BIZEN enseña educación financiera a jóvenes.

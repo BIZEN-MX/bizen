@@ -17,6 +17,7 @@ import { createClientMicrocred } from '@/lib/supabase/client-microcred';
 import { AlertTriangle, Lightbulb } from 'lucide-react';
 import PageLoader from '@/components/PageLoader';
 import ReturnButton from '@/components/ReturnButton';
+import LockedToolGuard from "@/components/LockedToolGuard";
 
 interface Simulator {
   id: string;
@@ -136,7 +137,14 @@ export default function SimulatorPage() {
     return null
   }
 
-  return (
+  const lockConfig: Record<string, { id: string; name: string }> = {
+    'savings-goal': { id: "11", name: "Planificador de Metas" },
+    'inflation-calculator': { id: "12", name: "Calculadora de Inflación" }
+  };
+
+  const lock = lockConfig[slug];
+
+  const content = (
     <>
       <style>{`
         /* ─── Layout shell ─── */
@@ -261,4 +269,14 @@ export default function SimulatorPage() {
       </div>
     </>
   );
+
+  if (lock) {
+    return (
+      <LockedToolGuard productId={lock.id} toolName={lock.name}>
+        {content}
+      </LockedToolGuard>
+    );
+  }
+
+  return content;
 }

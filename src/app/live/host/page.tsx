@@ -529,8 +529,28 @@ export default function HostPage() {
             </AnimatePresence>
             {active.length === 0 && <p style={{ color: "rgba(255,255,255,0.2)", fontSize: 14, alignSelf: "center" }}>Esperando jugadores...</p>}
           </div>
-          <button onClick={handleStartQuiz} disabled={active.length === 0} style={{ width: "100%", maxWidth: 360, padding: "18px", background: active.length > 0 ? "linear-gradient(135deg, #059669, #10b981)" : "rgba(255,255,255,0.1)", border: "none", borderRadius: 18, color: "white", fontSize: 18, fontWeight: 800, cursor: active.length > 0 ? "pointer" : "not-allowed", boxShadow: active.length > 0 ? "0 8px 32px rgba(16,185,129,0.4)" : "none", transition: "all 0.3s" }}>
-            {active.length > 0 ? <><IconRocket size={18} color="white" /> {`¡Empezar con ${active.length} jugador${active.length > 1 ? "es" : ""}!`}</> : "Esperando jugadores..."}
+          <button 
+            onClick={handleStartQuiz} 
+            style={{ 
+              width: "100%", 
+              maxWidth: 360, 
+              padding: "18px", 
+              background: active.length > 0 ? "linear-gradient(135deg, #059669, #10b981)" : "linear-gradient(135deg, #1e293b, #334155)", 
+              border: "none", 
+              borderRadius: 18, 
+              color: "white", 
+              fontSize: 18, 
+              fontWeight: 800, 
+              cursor: "pointer", 
+              boxShadow: active.length > 0 ? "0 8px 32px rgba(16,185,129,0.4)" : "0 8px 24px rgba(0,0,0,0.2)", 
+              transition: "all 0.3s" 
+            }}
+          >
+            {active.length > 0 ? (
+              <><IconRocket size={18} color="white" /> {`¡Empezar con ${active.length} jugador${active.length > 1 ? "es" : ""}!`}</>
+            ) : (
+              <><IconRocket size={18} color="white" /> Iniciar (Modo Solo / Test)</>
+            )}
           </button>
         </div>
       </div>
@@ -552,6 +572,12 @@ export default function HostPage() {
         <div style={{ padding: "40px 48px 32px", textAlign: "center", flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 24 }}>
           <h2 style={{ fontSize: 28, fontWeight: 800, color: "white", lineHeight: 1.3, maxWidth: 720, margin: 0 }}>{currentQ.question_text}</h2>
           
+          {active.length === 0 && (
+            <div style={{ background: "rgba(15,98,254,0.1)", border: "1px solid rgba(15,98,254,0.3)", borderRadius: 12, padding: "8px 16px", color: "#3B82F6", fontSize: 13, fontWeight: 600 }}>
+              💡 Modo Vista Previa: La respuesta correcta está resaltada para revisión.
+            </div>
+          )}
+
           {currentQ.image_url && (
             <div style={{ width: "100%", maxWidth: 640, height: 320, borderRadius: 24, overflow: "hidden", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", position: "relative" }}>
               <img src={currentQ.image_url} alt="Pregunta" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
@@ -562,11 +588,33 @@ export default function HostPage() {
             {(currentQ.options as any[]).map((opt: any, i: number) => {
               const colors = ["rgba(15,98,254,0.3)", "rgba(5,150,105,0.3)", "rgba(232,93,74,0.3)", "rgba(245,166,35,0.3)"]
               const borders = ["rgba(15,98,254,0.6)", "rgba(5,150,105,0.6)", "rgba(232,93,74,0.6)", "rgba(245,166,35,0.6)"]
+              const isCorrect = opt.isCorrect
+              const showCheck = active.length === 0 && isCorrect
+
               return (
-                <div key={opt.id} style={{ background: colors[i % 4], border: `2px solid ${borders[i % 4]}`, borderRadius: 16, padding: "18px 24px", display: "flex", alignItems: "center", gap: 14 }}>
+                <div 
+                  key={opt.id} 
+                  style={{ 
+                    background: colors[i % 4], 
+                    border: `2px solid ${showCheck ? "#10b981" : borders[i % 4]}`, 
+                    borderRadius: 16, 
+                    padding: "18px 24px", 
+                    display: "flex", 
+                    alignItems: "center", 
+                    gap: 14,
+                    boxShadow: showCheck ? "0 0 20px rgba(16,185,129,0.3)" : "none",
+                    position: "relative"
+                  }}
+                >
                   <span style={{ fontSize: 20, color: "white" }}>{["▲", "◆", "●", "■"][i % 4]}</span>
                   <span style={{ flex: 1, color: "white", fontWeight: 700, fontSize: 16 }}>{opt.text}</span>
-                  <span style={{ color: "rgba(255,255,255,0.7)", fontWeight: 800, fontSize: 18 }}>{answers.filter(a => a.selected_option_id === opt.id).length}</span>
+                  {showCheck ? (
+                    <div style={{ background: "#10b981", borderRadius: "50%", width: 24, height: 24, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                      <IconCheck size={14} color="white" />
+                    </div>
+                  ) : (
+                    <span style={{ color: "rgba(255,255,255,0.7)", fontWeight: 800, fontSize: 18 }}>{answers.filter(a => a.selected_option_id === opt.id).length}</span>
+                  )}
                 </div>
               )
             })}
