@@ -357,7 +357,7 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
   const profileName = user?.user_metadata?.first_name || user?.user_metadata?.full_name?.split(" ")[0] || user?.email?.split("@")[0] || "usuario"
   const emailForRole = user?.email?.toLowerCase() || ""
   const isInstitutional = emailForRole.endsWith(".edu") || emailForRole.includes(".edu.")
-  const isAnahuac = emailForRole.endsWith('@anahuac.mx') || emailForRole.endsWith('.anahuac.mx') || emailForRole.endsWith('@bizen.mx')
+  const isAnahuac = emailForRole.endsWith('@anahuac.mx') || emailForRole.endsWith('.anahuac.mx') || emailForRole.endsWith('@bizen.mx') || userEmail === 'diegopenita31@gmail.com'
   const stepList: Step[] = isInstitutional
     ? ["welcome", "avatar", "username", "school", "birthday", "wallet", "billy"]
     : ["welcome", "avatar", "username", "birthday", "wallet", "billy"]

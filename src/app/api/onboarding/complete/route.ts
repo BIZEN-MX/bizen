@@ -47,7 +47,7 @@ export async function POST(request: NextRequest) {
         
         // Sanitize data before DB
         const safeBio = (typeof bio === 'string') ? bio.trim() : "";
-        const safeAvatar = (typeof avatar === 'string') ? avatar : (avatar ? JSON.stringify(avatar) : "Sin Diagnosticar");
+        const avatarData = (typeof avatar === 'object' && avatar !== null) ? avatar : null;
 
         try {
             console.log(`[onboarding] Creating profile for user ${user.id}...`)
@@ -59,7 +59,7 @@ export async function POST(request: NextRequest) {
                     bio: safeBio,
                     birthDate: parsedBirthDate,
                     schoolId: schoolId || null,
-                    dnaProfile: safeAvatar
+                    avatar: avatarData ? avatarData : undefined
                 },
                 create: {
                     userId: user.id,
@@ -71,13 +71,19 @@ export async function POST(request: NextRequest) {
                     bio: safeBio,
                     birthDate: parsedBirthDate,
                     schoolId: schoolId || null,
-                    dnaProfile: safeAvatar
+                    avatar: avatarData ? avatarData : undefined,
+                    dnaProfile: "Sin Diagnosticar"
                 }
             })
             console.log("[onboarding] UPSERT SUCCESSFUL:", result.userId)
 
         } catch (dbError: any) {
             console.error("[onboarding] DB OPERATION FAILED:", dbError.message)
+            require("fs").writeFileSync("/Users/diegopenasanchez/BIZEN/_onboarding_error.log", JSON.stringify({
+                message: dbError.message,
+                code: dbError.code,
+                meta: dbError.meta
+            }, null, 2));
             return NextResponse.json({ 
                 error: "Database operation failed", 
                 details: dbError.message,
@@ -89,6 +95,10 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ success: true })
     } catch (error: any) {
         console.error("[onboarding] GLOBAL CRASH:", error.message)
+        require("fs").writeFileSync("/Users/diegopenasanchez/BIZEN/_onboarding_global_error.log", JSON.stringify({
+            message: error.message,
+            stack: error.stack
+        }, null, 2));
         
         // Safety Fallback for local development
         const host = request.headers.get("host") || "";

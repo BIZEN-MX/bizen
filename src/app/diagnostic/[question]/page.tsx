@@ -16,6 +16,7 @@ import {
   CONTENT_PADDING_Y,
   CONTENT_GAP,
 } from "@/components/lessons"
+import { useAuth } from "@/contexts/AuthContext"
 
 type StoredQuizState = {
   quizSubmitted: boolean
@@ -61,6 +62,7 @@ export default function DiagnosticQuestionPage() {
   const [userInfoError, setUserInfoError] = React.useState("")
   const [isStorageReady, setIsStorageReady] = React.useState(false)
   const [isCheckingEmail, setIsCheckingEmail] = React.useState(false)
+  const { user, dbProfile } = useAuth()
 
   const totalQuestions = diagnosticQuiz.length
   const questionParam = Array.isArray(params.question) ? params.question[0] : params.question
@@ -86,6 +88,21 @@ export default function DiagnosticQuestionPage() {
     }
     setIsStorageReady(true)
   }, [])
+
+  // Auto-fill from auth
+  React.useEffect(() => {
+    if (user && isStorageReady && !userInfo) {
+      const email = user.email || ""
+      const fullName = user.user_metadata?.full_name || dbProfile?.fullName || ""
+      const institution = dbProfile?.school?.name || ""
+      
+      setTempUserInfo(prev => ({
+        email: prev.email || email,
+        fullName: prev.fullName || fullName,
+        institution: prev.institution || institution
+      }))
+    }
+  }, [user, dbProfile, isStorageReady, userInfo])
 
   React.useEffect(() => {
     if (!isStorageReady) return

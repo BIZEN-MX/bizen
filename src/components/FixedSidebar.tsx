@@ -372,7 +372,7 @@ export default function FixedSidebar() {
                     {(() => {
                       const role = dbProfile?.role;
                       const isPremium = dbProfile?.subscriptionStatus === 'active' || (dbProfile?.school?.licenses?.length || 0) > 0;
-                      const isUnauthorized = userEmail === 'diegopenita31@gmail.com';
+                      const isUnauthorized = false // userEmail === 'diegopenita31@gmail.com';
                       
                       let label = 'Plan Básico';
                       if (role === 'teacher') label = 'Docente';

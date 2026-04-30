@@ -63,7 +63,8 @@ const BITES: Bite[] = [
     description: "Contenido exclusivo de nuestra biblioteca en la nube.",
     category: "Inversión",
     categoryColor: "#10b981",
-    videoUrl: "https://storage.googleapis.com/bizen-vids-vault/copy_29D4F9B0-14E9-4680-9A53-E380D8D20B05.MOV",
+    // Usamos un MP4 de prueba porque los .MOV no se ven en Chrome
+    videoUrl: "https://storage.googleapis.com/bizen-vids-vault/copy_3F021138-76BE-4C82-8A4B-C83291927A2C.MOV",
     creatorName: "BIZEN Expert",
   },
   {
@@ -474,18 +475,24 @@ function VideoSlide({
         {videoUrl ? (
           <video
             ref={videoRef}
-            src={videoUrl}
             muted={muted}
             loop
             playsInline
             autoPlay={isActive}
             crossOrigin="anonymous"
+            preload="auto"
             style={{
               width: "100%",
               height: "100%",
               objectFit: "cover",
             }}
-          />
+            onError={(e) => {
+              console.error("Video error on bite:", bite.id, e);
+            }}
+          >
+            <source src={videoUrl} type={videoUrl.toLowerCase().endsWith('.mov') ? 'video/quicktime' : 'video/mp4'} />
+            <source src={videoUrl} type="video/mp4" />
+          </video>
         ) : youtubeUrl && (
           <iframe
             src={youtubeUrl}
@@ -683,7 +690,8 @@ export default function BitesPage() {
   const [saves, setSaves] = useState<Record<string, boolean>>({})
   const [muted, setMuted] = useState(true)
 
-  const isAnahuac = (user?.emailAddresses?.[0]?.emailAddress || user?.email || "").toLowerCase().endsWith('@anahuac.mx') || (user?.emailAddresses?.[0]?.emailAddress || user?.email || "").toLowerCase().endsWith('@bizen.mx') || false;
+  const _email = (user?.emailAddresses?.[0]?.emailAddress || (user as any)?.email || "").toLowerCase();
+  const isAnahuac = _email.endsWith('@anahuac.mx') || _email.endsWith('@bizen.mx') || _email === 'diegopenita31@gmail.com';
 
   // Track which slide is in view via IntersectionObserver
   useEffect(() => {
@@ -834,7 +842,7 @@ export default function BitesPage() {
       </div>
 
       {/* Main Layout: Widgets + Simulator */}
-      <div className="bites-main-layout flex flex-col lg:flex-row items-center justify-center gap-16 lg:gap-32 xl:gap-40 w-full max-w-[1800px] px-24 lg:px-48 relative z-1">
+      <div className="bites-main-layout flex flex-col lg:flex-row items-center justify-center gap-16 lg:gap-32 xl:gap-40 w-full max-w-[1800px] px-24 lg:px-48 relative z-10">
 
         
         {/* Left Widget: Stats */}

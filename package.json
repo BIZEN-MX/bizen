@@ -63,6 +63,7 @@
     "swr": "^2.4.1",
     "tailwind-merge": "^3.4.0",
     "xlsx": "^0.18.5",
+    "yahoo-finance2": "^3.14.0",
     "ytdl-core": "^4.11.5",
     "zod": "^3.25.76"
   },

@@ -46,8 +46,8 @@ export async function GET(req: NextRequest) {
           data: {
             user_id: user.id,
             currency: 'BIZCOINS',
-            starting_cash: profile.bizcoins || 100000,
-            cash_balance: profile.bizcoins || 100000
+            starting_cash: profile.bizcoins || 1000,
+            cash_balance: profile.bizcoins || 1000
           },
           include: { holdings: true, orders: true }
         });
@@ -74,11 +74,18 @@ export async function GET(req: NextRequest) {
 
     // 3. Sync Logic (Sync Cash Balance if needed)
     if (portfolio.currency !== 'BIZCOINS' || Number(portfolio.cash_balance) !== (profile.bizcoins || 0)) {
+        // If the user has a weird starting_cash (like the old 100k bug) and NO holdings,
+        // we reset their starting_cash to their current bizcoins to fix the -99% display.
+        const shouldResetStartingCash = 
+            Number(portfolio.starting_cash) > Number(profile.bizcoins) * 10 && 
+            portfolio.holdings.length === 0;
+
         portfolio = await prisma.simulator_portfolios.update({
           where: { id: portfolio.id },
           data: { 
             currency: 'BIZCOINS',
-            cash_balance: profile.bizcoins || 0
+            cash_balance: profile.bizcoins || 0,
+            ...(shouldResetStartingCash ? { starting_cash: profile.bizcoins || 1000 } : {})
           },
           include: { 
             holdings: true, 

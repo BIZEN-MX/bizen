@@ -9,7 +9,13 @@ export const StockLogo = ({
   size?: number;
 }) => {
   const [showFallback, setShowFallback] = useState(false);
-  const domain = SYMBOL_DOMAINS[symbol];
+  const [useClearbitFallback, setUseClearbitFallback] = useState(false);
+  const upperSymbol = symbol.toUpperCase();
+  const domain = SYMBOL_DOMAINS[upperSymbol];
+
+  if (!domain) {
+    console.warn(`[StockLogo] No domain found for symbol: ${symbol}`);
+  }
 
   if (!domain || showFallback) {
     return (
@@ -34,10 +40,17 @@ export const StockLogo = ({
     );
   }
 
-  const logoUrl = `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
+  // Use Google as primary (more reliable without CORS) and Clearbit as fallback
+  const logoUrl = useClearbitFallback 
+    ? `https://logo.clearbit.com/${domain}`
+    : `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
 
   const handleLogoError = () => {
-    setShowFallback(true);
+    if (!useClearbitFallback) {
+      setUseClearbitFallback(true);
+    } else {
+      setShowFallback(true);
+    }
   };
 
   return (

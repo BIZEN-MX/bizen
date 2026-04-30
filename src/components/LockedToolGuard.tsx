@@ -31,7 +31,7 @@ export default function LockedToolGuard({ children, productId, toolName }: Locke
                 if (res.ok) {
                     const data = await res.json()
                     const inventory = data.inventory || []
-                    setIsOwned(inventory.includes(String(productId)))
+                    setIsOwned(inventory.includes(String(productId)) || inventory.includes("9"))
                 } else {
                     setIsOwned(false)
                 }

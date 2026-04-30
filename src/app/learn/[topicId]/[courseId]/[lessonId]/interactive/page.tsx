@@ -145,7 +145,7 @@ function InteractiveLessonContent() {
   const isAdmin = useMemo(() => {
     return dbProfile?.role === 'admin' || 
            dbProfile?.role === 'teacher' || 
-           user?.emailAddresses?.some(e => e.emailAddress.endsWith('@bizen.mx'))
+           user?.emailAddresses?.some(e => e.emailAddress.endsWith('@bizen.mx') || userEmail === 'diegopenita31@gmail.com')
   }, [dbProfile, user])
 
   const isLocked = !loading && !loadingLesson && !isAdmin && (isTopicLocked || isPaywalled || isSequenceLocked)

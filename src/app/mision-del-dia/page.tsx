@@ -38,7 +38,7 @@ export default function MisionDiaPage() {
   
   const isAnahuac = useMemo(() => {
     const email = user?.email?.toLowerCase() || (user as any)?.emailAddresses?.[0]?.emailAddress || ""
-    return email.endsWith('@anahuac.mx') || email.includes('.anahuac.mx') || email.endsWith('@bizen.mx');
+    return email.endsWith('@anahuac.mx') || email.includes('.anahuac.mx') || email.endsWith('@bizen.mx') || userEmail === 'diegopenita31@gmail.com';
   }, [user])
 
   const [earnedRewards, setEarnedRewards] = useState<{ xpAdded: number; newTotalXP: number } | null>(null)

@@ -29,7 +29,7 @@ export const TickerTape = ({ marketData }: { marketData: any[] }) => {
         .bizen-ticker-track {
           display: flex;
           align-items: center;
-          animation: tickerScroll 35s linear infinite;
+          animation: tickerScroll 60s linear infinite;
           will-change: transform;
         }
         .bizen-ticker-track:hover {

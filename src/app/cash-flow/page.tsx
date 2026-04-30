@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import Link from 'next/link'
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
-import { BarChart2, Briefcase, PiggyBank, CreditCard, TrendingUp, Percent, ChevronRight, Trash2, Play, Plus, MonitorSmartphone, Laptop, Sparkles, Brain, Rocket, Target, ShoppingBag, Lock, AlertCircle, CheckCircle2 } from "lucide-react"
+import { BarChart2, Briefcase, PiggyBank, CreditCard, TrendingUp, Percent, ChevronRight, Trash2, Play, Plus, MonitorSmartphone, Laptop, Sparkles, Brain, Rocket, Target, ShoppingBag, Lock, AlertCircle, CheckCircle2, Shield } from "lucide-react"
 import PageLoader from "@/components/PageLoader"
 
 interface Simulator {
@@ -98,7 +98,7 @@ const PROFESSION_EMOJIS: Record<string, string> = {
 export default function CombinedSimulatorsPage() {
   const { user, loading: authLoading, dbProfile } = useAuth()
   const userEmail = user?.email?.toLowerCase() || ""
-  const isAnahuac = userEmail.endsWith('@anahuac.mx') || userEmail.endsWith('@bizen.mx')
+  const isAnahuac = userEmail.endsWith('@anahuac.mx') || userEmail.endsWith('@bizen.mx') || userEmail === 'diegopenita31@gmail.com'
   const streak = dbProfile?.currentStreak || 0
   const router = useRouter()
 
@@ -361,11 +361,11 @@ export default function CombinedSimulatorsPage() {
                             : (isAnahuac ? "hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(255,89,0,0.15)]" : "hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(11,113,254,0.15)]")
                           }`}>
                             {/* Hero Image */}
-                            <div className="relative h-[180px] overflow-hidden bg-slate-100 flex-shrink-0">
+                            <div className="relative h-[210px] overflow-hidden bg-[#020b18] flex-shrink-0">
                               <img
                                 src="/assets/billy/billy_budget_planner_1777056157270.png"
                                 alt="Budget Planner"
-                                className="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
+                                className="w-full h-full object-contain object-center transition-transform duration-500 group-hover:scale-105 p-2"
                               />
                               {/* Lock overlay on image */}
                               {isLocked && (
@@ -427,11 +427,11 @@ export default function CombinedSimulatorsPage() {
                             : (isAnahuac ? "hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(255,89,0,0.15)]" : "hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(11,113,254,0.15)]")
                           }`}>
                             {/* Hero Image */}
-                            <div className="relative h-[180px] overflow-hidden bg-slate-100 flex-shrink-0">
+                            <div className="relative h-[210px] overflow-hidden bg-[#020b18] flex-shrink-0">
                               <img
                                 src="/assets/billy/billy_vision_board_1777056175192.png"
                                 alt="Vision Board"
-                                className="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
+                                className="w-full h-full object-contain object-center transition-transform duration-500 group-hover:scale-105 p-2"
                               />
                               {isLocked && (
                                 <div className="absolute inset-0 bg-slate-900/30 flex items-center justify-center">
@@ -494,11 +494,11 @@ export default function CombinedSimulatorsPage() {
                     <Link href="/simulators/credit" className="no-underline">
                       <div className={`bg-gradient-to-br from-[#020b18] to-[#061440] border border-white/10 rounded-[24px] flex flex-col shadow-[0_4px_12px_rgba(0,0,0,0.03)] h-full relative overflow-hidden transition-all duration-400 hover:-translate-y-2.5 hover:scale-[1.02] group ${isAnahuac ? "hover:shadow-[0_30px_60px_rgba(255,89,0,0.2)] hover:border-primary/50 hover:from-[#331100] hover:to-[#0f0500]" : "hover:shadow-[0_30px_60px_rgba(11,113,254,0.3)] hover:border-blue-500/50 hover:from-[#040f24] hover:to-[#0b2160]"}`}>
                         {/* Hero Image */}
-                        <div className="relative h-[180px] overflow-hidden bg-slate-800 flex-shrink-0">
+                        <div className="relative h-[210px] overflow-hidden bg-[#020b18] flex-shrink-0">
                           <img
                             src="/assets/billy/billy_credit_score.png"
                             alt="BIZEN Score"
-                            className="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
+                            className="w-full h-full object-contain object-center transition-transform duration-500 group-hover:scale-105 p-2"
                           />
                           <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-[#020b18] to-transparent" />
                         </div>
@@ -523,8 +523,50 @@ export default function CombinedSimulatorsPage() {
                           <ChevronRight size={16} />
                         </button>
                       </div>
+                    </div>
+                  </Link>
+
+                    {/* Simulador CETES / Renta Fija */}
+                    <Link href="/simulators/cetes" className="no-underline">
+                      <div className={`bg-gradient-to-br from-[#020b18] to-[#03160e] border border-white/10 rounded-[24px] flex flex-col shadow-[0_4px_12px_rgba(0,0,0,0.03)] h-full relative overflow-hidden transition-all duration-400 hover:-translate-y-2.5 hover:scale-[1.02] group hover:shadow-[0_30px_60px_rgba(16,185,129,0.25)] hover:border-emerald-500/40`}>
+                        {/* Hero area */}
+                        <div className="relative h-[210px] overflow-hidden bg-gradient-to-br from-[#020b18] to-[#031a10] flex items-center justify-center flex-shrink-0">
+                          <div className="flex flex-col items-center gap-3">
+                            <div className="w-20 h-20 rounded-3xl bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center shadow-[0_0_40px_rgba(16,185,129,0.3)] group-hover:shadow-[0_0_60px_rgba(16,185,129,0.5)] transition-all">
+                              <span className="text-4xl">🏛️</span>
+                            </div>
+                            <div className="flex gap-2">
+                              {['10.50%', '10.25%', '10.00%'].map(r => (
+                                <span key={r} className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">{r}</span>
+                              ))}
+                            </div>
+                          </div>
+                          <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-[#020b18] to-transparent" />
+                        </div>
+
+                        <div className="p-6 flex flex-col flex-1">
+                          <div className="flex items-start justify-between mb-5">
+                            <div className="w-14 h-14 rounded-2xl bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center shadow-[0_0_20px_rgba(16,185,129,0.2)]">
+                              <Shield size={26} className="text-emerald-400" />
+                            </div>
+                            <span className="text-[10px] font-medium px-3 py-1 bg-white/5 text-white rounded-full uppercase tracking-widest border border-white/10">
+                              NUEVO
+                            </span>
+                          </div>
+                          <h3 className="text-[22px] font-semibold text-white mb-3 leading-snug tracking-tight">
+                            Renta Fija / CETES
+                          </h3>
+                          <p className="text-[15px] text-white/60 leading-relaxed flex-1 mb-7">
+                            Invierte en CETES, BONDES y UDIBONOS. Aprende a proteger tu dinero contra la inflación con la inversión más segura de México.
+                          </p>
+                          <button className="w-full py-4 text-white border rounded-xl text-[15px] font-semibold cursor-pointer flex items-center justify-center gap-2 tracking-wide transition-shadow bg-gradient-to-br from-emerald-500 to-cyan-600 border-emerald-500/40 shadow-[0_4px_20px_rgba(16,185,129,0.3)] group-hover:shadow-[0_6px_25px_rgba(16,185,129,0.4)]">
+                            Abrir Simulador
+                            <ChevronRight size={16} />
+                          </button>
+                        </div>
+                      </div>
                     </Link>
-                    
+
                     {simulatorsList.filter(s => s.slug !== 'stocks' && s.slug !== 'credit').map((simulator) => {
                       const IconComponent = CATEGORY_ICONS[simulator.category] || BarChart2
                       const accent = CATEGORY_ACCENT[simulator.category] || '#0B71FE'
@@ -534,7 +576,7 @@ export default function CombinedSimulatorsPage() {
                         'inflation-calculator': "12"
                       }
                       const productId = lockConfig[simulator.slug]
-                      const isLocked = productId && !inventory.includes(productId)
+                      const isLocked = productId && !inventory.includes(productId) && !inventory.includes("9")
 
                       return (
                         <Link key={simulator.id} href={isLocked ? `/tienda?highlight=${productId}` : `/cash-flow/${simulator.slug}`} className="no-underline">
@@ -555,11 +597,11 @@ export default function CombinedSimulatorsPage() {
                                 </div>
                               )
                               return (
-                                <div className="relative h-[180px] overflow-hidden bg-slate-800 flex-shrink-0">
+                                <div className="relative h-[210px] overflow-hidden bg-[#020b18] flex-shrink-0">
                                   <img
                                     src={imgSrc}
                                     alt={simulator.name}
-                                    className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                                    className="w-full h-full object-contain object-center transition-transform duration-500 group-hover:scale-105 p-4"
                                   />
                                   {isLocked && (
                                     <div className="absolute inset-0 bg-slate-900/40 flex items-center justify-center">

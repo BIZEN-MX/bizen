@@ -37,8 +37,9 @@ export default function MobileFooterNav() {
   const userEmail = (user?.email || (user as any)?.emailAddresses?.[0]?.emailAddress || "").toLowerCase()
   const isSuperAdmin = userEmail === "diego@bizen.mx"
   const isAdminOrTeacher = dbProfile?.role === "school_admin" || dbProfile?.role === "teacher" || dbProfile?.role === "admin" || isSuperAdmin
+  const isStudentOrGuest = !isAdminOrTeacher
   const canHostLive = isAdminOrTeacher || dbProfile?.role === "institutional" || dbProfile?.role === "student"
-  const isUnauthorized = userEmail === 'diegopenita31@gmail.com'
+  const isUnauthorized = false // userEmail === 'diegopenita31@gmail.com'
   const isInstitutional = (dbProfile?.role === 'student' || dbProfile?.role === 'teacher' || dbProfile?.role === 'school_admin' || dbProfile?.role === 'admin' || isSuperAdmin) && !isUnauthorized
 
   const isOnLessonPage = pathname?.includes('/learn/')

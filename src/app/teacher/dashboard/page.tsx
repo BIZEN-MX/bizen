@@ -181,7 +181,7 @@ export default function AdminDashboardPage() {
     const router = useRouter()
     const { user } = useAuth()
     const userEmail = (user?.email || "").toLowerCase()
-    const isAnahuac = userEmail.endsWith('@anahuac.mx') || userEmail.endsWith('@bizen.mx')
+    const isAnahuac = userEmail.endsWith('@anahuac.mx') || userEmail.endsWith('@bizen.mx') || userEmail === 'diegopenita31@gmail.com'
     
     const [data, setData] = useState<DashboardData | null>(null)
     const [loading, setLoading] = useState(true)

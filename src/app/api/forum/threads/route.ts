@@ -5,6 +5,7 @@ import { filterContent } from "@/lib/forum/contentFilter"
 import { checkRateLimit } from "@/lib/forum/rateLimiter"
 import { checkAndAwardAchievements } from "@/lib/achievements"
 import { touchDailyStreak } from "@/lib/rewards"
+import { auth } from "@clerk/nextjs/server"
 import { forumThreadSchema } from "@/validators/forum"
 
 // ... GET function remains the same ...
@@ -15,14 +16,10 @@ export async function GET(request: NextRequest) {
     const sort = searchParams.get("sort") || "new"
     const topicSlug = searchParams.get("topic")
 
-    const supabase = await createSupabaseServer()
-    const { data: { session } } = await supabase.auth.getSession()
-    const user = session?.user
+    const { userId } = await auth()
 
-    let userId: string | undefined
     let isParticular = false
-    if (user) {
-      userId = user.id
+    if (userId) {
       const profile = await prisma.profile.findUnique({ where: { userId }, select: { role: true } })
       isParticular = profile?.role === 'particular'
     }
@@ -80,10 +77,9 @@ export async function GET(request: NextRequest) {
 // POST create thread
 export async function POST(request: NextRequest) {
   try {
-    const supabase = await createSupabaseServer()
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    const { userId } = await auth()
 
-    if (authError || !user) {
+    if (!userId) {
       return NextResponse.json({ error: "No autorizado" }, { status: 401 })
     }
 
@@ -103,7 +99,7 @@ export async function POST(request: NextRequest) {
 
     // Get user profile
     let profile = await prisma.profile.findUnique({
-      where: { userId: user.id },
+      where: { userId: userId },
       select: { role: true, reputation: true, postsCreated: true, isMinor: true, parentalOverride: true }
     })
 
@@ -119,7 +115,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Rate limit
-    const rateLimit = await checkRateLimit(user.id, 'create_thread', 3, 60)
+    const rateLimit = await checkRateLimit(userId, 'create_thread', 3, 60)
     if (!rateLimit.allowed) {
       return NextResponse.json({
         error: `Límite alcanzado. Intenta de nuevo en ${Math.ceil((rateLimit.resetAt.getTime() - Date.now()) / 60000)} min`
@@ -170,7 +166,7 @@ export async function POST(request: NextRequest) {
       data: {
         title: titleFilter.filteredContent.trim(), // Sanitized!
         body: bodyFilter.filteredContent.trim(),   // Sanitized!
-        authorId: user.id,
+        authorId: userId,
         topicId,
         moderationStatus,
         tags: { create: finalTagIds.map(tagId => ({ tagId })) }
@@ -179,12 +175,12 @@ export async function POST(request: NextRequest) {
 
     // Update stats & rewards
     const updatedProfile = await prisma.profile.update({
-      where: { userId: user.id },
+      where: { userId: userId },
       data: { postsCreated: { increment: 1 } }
     })
 
-    checkAndAwardAchievements(user.id, { postsCreated: updatedProfile.postsCreated || 1 }).catch(() => {})
-    touchDailyStreak(user.id).catch(() => {})
+    checkAndAwardAchievements(userId, { postsCreated: updatedProfile.postsCreated || 1 }).catch(() => {})
+    touchDailyStreak(userId).catch(() => {})
 
     return NextResponse.json(thread, { status: 201 })
   } catch (error) {
@@ -204,10 +200,9 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: "ID de tema no proporcionado" }, { status: 400 })
     }
 
-    const supabase = await createSupabaseServer()
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    const { userId } = await auth()
 
-    if (authError || !user) {
+    if (!userId) {
       return NextResponse.json({ error: "No autorizado" }, { status: 401 })
     }
 
@@ -221,7 +216,7 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: "Tema no encontrado" }, { status: 404 })
     }
 
-    if (thread.authorId !== user.id) {
+    if (thread.authorId !== userId) {
       return NextResponse.json({ error: "No tienes permiso para eliminar este tema" }, { status: 403 })
     }
 

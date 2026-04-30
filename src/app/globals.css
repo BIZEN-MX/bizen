@@ -692,6 +692,13 @@ body.hide-sidebar .app-main {
   box-shadow: 0 1px 0 rgba(0,0,0,0.04);
 }
 
+.topnav-bar.not-scrolled[data-is-landing="true"] {
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  box-shadow: none;
+}
+
 .topnav-bar::after {
   content: "";
   position: absolute;

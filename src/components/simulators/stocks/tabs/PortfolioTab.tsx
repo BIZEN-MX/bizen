@@ -12,6 +12,8 @@ import { StockLogo } from '@/components/simulators/stocks/StockLogo';
 import BizcoinIcon from '@/components/BizcoinIcon';
 import { SYMBOL_SECTORS, SECTOR_COLORS } from '@/data/simulators/stocks-constants';
 import { SaveRunButton } from '@/components/simulators/SaveRunButton';
+import { DividendPanel } from '@/components/simulators/stocks/DividendPanel';
+import PortfolioScoreCard from '@/components/simulators/stocks/PortfolioScoreCard';
 
 interface PortfolioTabProps {
   isMobile: boolean;
@@ -30,6 +32,7 @@ interface PortfolioTabProps {
   selectStock: (symbol: string) => void;
   setActiveTab: (tab: string) => void;
   highlightSymbol?: string | null;
+  onDividendPaid?: (amount: number) => void;
 }
 
 export const PortfolioTab: React.FC<PortfolioTabProps> = ({
@@ -48,7 +51,8 @@ export const PortfolioTab: React.FC<PortfolioTabProps> = ({
   totalValue,
   selectStock,
   setActiveTab,
-  highlightSymbol = null
+  highlightSymbol = null,
+  onDividendPaid,
 }) => {
   return (
     <div className="p-5 px-4 md:p-7 md:px-8">
@@ -317,55 +321,11 @@ export const PortfolioTab: React.FC<PortfolioTabProps> = ({
               </div>
             </div>
 
-            <div className="flex flex-col justify-center">
-              <div className="bg-slate-50 rounded-[20px] p-6 border border-slate-200">
-                <h3 className="text-[16px] font-bold text-[#0B1E5E] m-0 mb-1 flex items-center gap-2">
-                  <Shield size={18} className="text-emerald-500" /> Score de
-                  Diversificación
-                </h3>
-                <div className="flex items-end gap-2.5 my-4 mt-4 mb-2.5">
-                  <span
-                    className={`text-[44px] font-black leading-none ${diversificationScore > 70 ? "text-emerald-500" : diversificationScore > 40 ? "text-amber-500" : "text-red-500"}`}
-                  >
-                    {diversificationScore}
-                  </span>
-                  <span className="text-[16px] font-bold text-slate-400 pb-1.5">
-                    / 100
-                  </span>
-                </div>
-                <div className="h-2.5 bg-slate-200 rounded-full overflow-hidden mb-4">
-                  <div
-                    style={{
-                      height: "100%",
-                      width: `${diversificationScore}%`,
-                      background:
-                        diversificationScore > 70
-                          ? "#10b981"
-                          : diversificationScore > 40
-                            ? "#f59e0b"
-                            : "#ef4444",
-                      borderRadius: 99,
-                      transition: "width 0.6s ease-out",
-                    }}
-                  />
-                </div>
-                <p
-                  style={{
-                    fontSize: 13,
-                    color: "#64748b",
-                    lineHeight: 1.6,
-                    margin: 0,
-                  }}
-                >
-                  {diversificationScore > 70
-                    ? "¡Excelente trabajo! Tienes un portafolio bien balanceado."
-                    : diversificationScore > 40
-                      ? "Buen comienzo. Intenta agregar activos de otros sectores para reducir riesgos."
-                      : "Tu portafolio está muy concentrado. Comprar diferentes tipos de activos te protege mejor."}
-                </p>
-              </div>
-            </div>
           </div>
+
+          {/* ── Portfolio Score Card ─────────────────────── */}
+          <PortfolioScoreCard />
+
 
           {isMobile ? (
             /* Mobile: card layout */
@@ -472,6 +432,9 @@ export const PortfolioTab: React.FC<PortfolioTabProps> = ({
               </table>
             </div>
           )}
+
+          {/* ── DIVIDEND PANEL ─────────────────── */}
+          <DividendPanel onDividendPaid={onDividendPaid} />
 
         </div>
       ) : (

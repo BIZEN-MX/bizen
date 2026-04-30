@@ -161,51 +161,66 @@ export function ExamIntro({ userInfo, onChange, error, onSubmit, isLoading }: Ex
         position: "relative",
         zIndex: 1,
       }}>
-        {/* Name field */}
-        <div>
-          <label htmlFor="fullName" style={labelStyle}>Nombre Completo</label>
-          <input
-            id="fullName"
-            type="text"
-            value={userInfo.fullName}
-            onChange={(e) => handleChange("fullName", e.target.value)}
-            placeholder="Juan Pérez"
-            style={inputStyle}
-            onFocus={(e) => {
-              e.currentTarget.style.borderColor = "#3b82f6"
-              e.currentTarget.style.background = "rgba(15, 98, 254, 0.05)"
-              e.currentTarget.style.boxShadow = "0 0 0 4px rgba(59, 130, 246, 0.15)"
-            }}
-            onBlur={(e) => {
-              e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.15)"
-              e.currentTarget.style.background = "rgba(255, 255, 255, 0.04)"
-              e.currentTarget.style.boxShadow = "none"
-            }}
-          />
-        </div>
+        {/* Identified user message */}
+        {userInfo.fullName && (
+          <div style={{ textAlign: "center", marginBottom: "-8px" }}>
+            <p style={{ margin: 0, fontSize: "14px", color: "#60a5fa", fontWeight: 600 }}>
+              Hola, <span style={{ color: "#fff" }}>{userInfo.fullName}</span>
+            </p>
+            <p style={{ margin: "4px 0 0", fontSize: "12px", color: "rgba(255,255,255,0.4)" }}>
+              Identificado como {userInfo.email}
+            </p>
+          </div>
+        )}
+        {/* Name field - Hide if already provided */}
+        {!userInfo.fullName && (
+          <div>
+            <label htmlFor="fullName" style={labelStyle}>Nombre Completo</label>
+            <input
+              id="fullName"
+              type="text"
+              value={userInfo.fullName}
+              onChange={(e) => handleChange("fullName", e.target.value)}
+              placeholder="Juan Pérez"
+              style={inputStyle}
+              onFocus={(e) => {
+                e.currentTarget.style.borderColor = "#3b82f6"
+                e.currentTarget.style.background = "rgba(15, 98, 254, 0.05)"
+                e.currentTarget.style.boxShadow = "0 0 0 4px rgba(59, 130, 246, 0.15)"
+              }}
+              onBlur={(e) => {
+                e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.15)"
+                e.currentTarget.style.background = "rgba(255, 255, 255, 0.04)"
+                e.currentTarget.style.boxShadow = "none"
+              }}
+            />
+          </div>
+        )}
 
-        {/* Email field */}
-        <div>
-          <label htmlFor="email" style={labelStyle}>Correo Electrónico</label>
-          <input
-            id="email"
-            type="email"
-            value={userInfo.email}
-            onChange={(e) => handleChange("email", e.target.value)}
-            placeholder="tu@universidad.edu"
-            style={inputStyle}
-            onFocus={(e) => {
-              e.currentTarget.style.borderColor = "#3b82f6"
-              e.currentTarget.style.background = "rgba(15, 98, 254, 0.05)"
-              e.currentTarget.style.boxShadow = "0 0 0 4px rgba(59, 130, 246, 0.15)"
-            }}
-            onBlur={(e) => {
-              e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.15)"
-              e.currentTarget.style.background = "rgba(255, 255, 255, 0.04)"
-              e.currentTarget.style.boxShadow = "none"
-            }}
-          />
-        </div>
+        {/* Email field - Hide if already provided */}
+        {!userInfo.email && (
+          <div>
+            <label htmlFor="email" style={labelStyle}>Correo Electrónico</label>
+            <input
+              id="email"
+              type="email"
+              value={userInfo.email}
+              onChange={(e) => handleChange("email", e.target.value)}
+              placeholder="tu@universidad.edu"
+              style={inputStyle}
+              onFocus={(e) => {
+                e.currentTarget.style.borderColor = "#3b82f6"
+                e.currentTarget.style.background = "rgba(15, 98, 254, 0.05)"
+                e.currentTarget.style.boxShadow = "0 0 0 4px rgba(59, 130, 246, 0.15)"
+              }}
+              onBlur={(e) => {
+                e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.15)"
+                e.currentTarget.style.background = "rgba(255, 255, 255, 0.04)"
+                e.currentTarget.style.boxShadow = "none"
+              }}
+            />
+          </div>
+        )}
 
         {/* Institution field */}
         <div>

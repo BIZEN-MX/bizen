@@ -58,6 +58,7 @@ export default function TopNav() {
   const [scrolled, setScrolled] = useState(false)
   const [profileOpen, setProfileOpen] = useState(false)
   const [isHiddenByGlobalClass, setIsHiddenByGlobalClass] = useState(false)
+  const isLandingPage = pathname === '/simulators/stocks' || pathname === '/cash-flow'
   const [showExitDialog, setShowExitDialog] = useState(false)
   const [pendingNavigation, setPendingNavigation] = useState<string | null>(null)
   const [notifications, setNotifications] = useState<any[]>([])
@@ -217,7 +218,7 @@ export default function TopNav() {
 
   return (
     <>
-      <nav className={`topnav-bar ${scrolled ? 'scrolled' : 'not-scrolled'}`} aria-label="Navegación principal">
+      <nav className={`topnav-bar ${scrolled ? 'scrolled' : 'not-scrolled'}`} data-is-landing={isLandingPage} aria-label="Navegación principal">
         <div className="topnav-brand" onClick={() => navigateTo(user ? (isAdminOrTeacher ? '/teacher/dashboard' : '/dashboard') : '/')}>
           <div className="topnav-logo" style={{ display: "flex", alignItems: "center", gap: "6px" }}>
             {isAnahuac ? (

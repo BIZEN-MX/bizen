@@ -172,7 +172,7 @@ export default function BizenVirtualCard({
 
   const { user } = useAuth()
   const userEmail = (user?.email || (user as any)?.emailAddresses?.[0]?.emailAddress || "").toLowerCase()
-  const isAnahuac = colorTheme === 'anahuac' || userEmail.endsWith('@anahuac.mx') || userEmail.includes('.anahuac.mx') || userEmail.endsWith('@bizen.mx')
+  const isAnahuac = colorTheme === 'anahuac' || userEmail.endsWith('@anahuac.mx') || userEmail.includes('.anahuac.mx') || userEmail.endsWith('@bizen.mx') || userEmail === 'diegopenita31@gmail.com'
   
   let finalColorTheme = colorTheme
   if (!colorTheme && isAnahuac) {

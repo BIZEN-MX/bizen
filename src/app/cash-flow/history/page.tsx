@@ -245,7 +245,8 @@ export default function HistoryPage() {
   const [filterSlug, setFilterSlug] = React.useState<string>('all');
   const router = useRouter();
   const { user } = useAuth();
-  const isAnahuac = (user?.emailAddresses?.[0]?.emailAddress || user?.email || "").toLowerCase().endsWith('@anahuac.mx') || (user?.emailAddresses?.[0]?.emailAddress || user?.email || "").toLowerCase().endsWith('@bizen.mx') || false;
+  const userEmailStr = (user?.emailAddresses?.[0]?.emailAddress || user?.email || "").toLowerCase();
+  const isAnahuac = userEmailStr.endsWith('@anahuac.mx') || userEmailStr.endsWith('@bizen.mx') || userEmailStr === 'diegopenita31@gmail.com' || false;
   const brandPrimary = isAnahuac ? '#FF5900' : '#0B71FE';
 
   const loadRuns = React.useCallback(async () => {

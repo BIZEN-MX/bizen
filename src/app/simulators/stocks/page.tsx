@@ -86,7 +86,7 @@ export function StockSimulatorContent({ tradeSymbol }: { tradeSymbol?: string })
   const isAnahuac = userEmail && (
     userEmail.endsWith('@anahuac.mx') ||
     userEmail.endsWith('.anahuac.mx') ||
-    userEmail.endsWith('@bizen.mx')
+    userEmail.endsWith('@bizen.mx') || userEmail === 'diegopenita31@gmail.com'
   );
 
   useEffect(() => {
@@ -350,6 +350,13 @@ export function StockSimulatorContent({ tradeSymbol }: { tradeSymbol?: string })
       fetchPerformance(performanceRange);
     }
     
+    // Handle tab query parameter
+    const tabParam = searchParams.get("tab");
+    if (tabParam) {
+      setActiveTab(tabParam);
+      setHasEntered(true);
+    }
+
     // Detect highlight parameter in URL
     const highlight = searchParams.get("highlight");
     if (highlight) {
@@ -549,6 +556,8 @@ export function StockSimulatorContent({ tradeSymbol }: { tradeSymbol?: string })
         // Smooth redirect to the Simulator's own Portfolio tab with highlight trigger
         setTimeout(() => {
           const boughtSymbol = orderForm.symbol;
+          // Exit landing page and enter simulator view
+          setHasEntered(true);
           // If we are in the terminal overlay, we close it and switch tab
           setOrderForm(f => ({ ...f, symbol: "" })); 
           setActiveTab("portfolio");
@@ -1853,6 +1862,9 @@ export function StockSimulatorContent({ tradeSymbol }: { tradeSymbol?: string })
                 selectStock={selectStock}
                 setActiveTab={setActiveTab}
                 highlightSymbol={highlightSymbol}
+                onDividendPaid={async () => {
+                  await Promise.all([fetchPortfolio(), refreshUser?.()]);
+                }}
               />
             )}
 

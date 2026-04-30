@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createSupabaseServer } from '@/lib/supabase/server';
+import { auth } from '@clerk/nextjs/server';
 import fs from 'fs';
 import path from 'path';
 
@@ -9,19 +9,44 @@ export async function GET(
 ) {
   try {
     const { slug } = await params;
-    const supabase = await createSupabaseServer();
     
     // 1. Verificar Autenticación
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
+    const { userId } = await auth();
+    if (!userId) {
       return new NextResponse('Unauthorized: Please login to access BIZEN content.', { status: 401 });
     }
 
     // 2. Verificar Permisos / Paywall (Usamos la cookie o el perfil)
-    const hasAccess = request.cookies.get('bizen_has_access')?.value === '1';
+    let hasAccess = request.cookies.get('bizen_has_access')?.value === '1';
     
-    // Si no tiene acceso premium, bloqueamos (a menos que seas admin)
-    // Nota: Aquí podrías añadir excepciones para ciertos PDFs gratuitos si quisieras
+    // Si no tiene el cookie de acceso general, comprobamos si compró el ebook específico
+    if (!hasAccess) {
+      const SLUG_TO_PRODUCT_ID: Record<string, number> = {
+        "Bolsa_de_Valores_desde_Cero": 5,
+        "Bizen_Ebook_Inflacion_vs_Rendimiento_2": 6,
+        "Finanzas_Personales_desde_Cero": 7,
+        "Bizen_ElCostoDeEsperar_3": 8,
+        "BIZEN_Historia_del_Dinero": 20,
+      };
+
+      const productId = SLUG_TO_PRODUCT_ID[slug];
+      
+      if (productId) {
+        const { prisma } = await import('@/lib/prisma');
+        const inventoryItem = await prisma.userInventoryItem.findFirst({
+          where: {
+            userId: userId,
+            productId: String(productId)
+          }
+        });
+        
+        if (inventoryItem) {
+          hasAccess = true;
+        }
+      }
+    }
+
+    // Si no tiene acceso premium ni ha comprado el ebook, bloqueamos
     if (!hasAccess) {
       return new NextResponse('Premium Access Required', { status: 403 });
     }

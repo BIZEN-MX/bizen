@@ -14,13 +14,14 @@ const nextConfig: NextConfig = {
               "default-src 'self';",
               "script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://clerk.bizen.mx https://*.clerk.accounts.dev https://challenges.cloudflare.com;",
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;",
-              "img-src 'self' blob: data: https://images.unsplash.com https://*.clerk.com https://*.clerk.accounts.dev https://img.clerk.com https://api.dicebear.com https://storage.googleapis.com https://*.gravatar.com;",
+              "img-src 'self' blob: data: https://images.unsplash.com https://*.clerk.com https://*.clerk.accounts.dev https://img.clerk.com https://api.dicebear.com https://storage.googleapis.com https://*.gravatar.com https://*.google.com https://*.gstatic.com https://logo.clearbit.com;",
               "font-src 'self' https://fonts.gstatic.com;",
               "frame-src 'self' https://clerk.bizen.mx https://challenges.cloudflare.com https://www.youtube.com https://*.youtube.com;",
               "connect-src 'self' https://clerk.bizen.mx https://*.clerk.accounts.dev https://challenges.cloudflare.com;",
               "object-src 'none';",
               "base-uri 'self';",
               "form-action 'self';",
+              "media-src 'self' blob: data: https://storage.googleapis.com https://*.youtube.com https://www.youtube.com;",
               "frame-ancestors 'none';",
               "upgrade-insecure-requests;"
             ].join(' ')

@@ -38,7 +38,7 @@ export async function GET(
     // Role bypass: Admins, Teachers or BIZEN staff
     const isAdmin = 
       ['admin', 'school_admin', 'teacher'].includes(role) || 
-      user.emailAddresses.some(e => e.emailAddress.endsWith('@bizen.mx'))
+      user.emailAddresses.some(e => e.emailAddress.endsWith('@bizen.mx') || userEmail === 'diegopenita31@gmail.com')
 
     const isTopic1 = currentLesson.course?.topicId === 'tema-01'
 

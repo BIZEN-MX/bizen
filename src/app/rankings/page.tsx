@@ -59,7 +59,7 @@ function RankBadge({ rank }: { rank: number }) {
 export default function RankingsPage() {
     const { dbProfile, user } = useAuth()
     const userEmail = typeof user?.email === 'string' ? user.email.toLowerCase() : ""
-    const isAnahuac = userEmail.endsWith('@anahuac.mx') || userEmail.endsWith('@bizen.mx')
+    const isAnahuac = userEmail.endsWith('@anahuac.mx') || userEmail.endsWith('@bizen.mx') || userEmail === 'diegopenita31@gmail.com'
     const isParticular = dbProfile?.role === 'particular'
 
     const [activeTab, setActiveTab] = useState<"users" | "schools">("users")

@@ -28,15 +28,16 @@ import {
 import { CheckIcon, CrossIcon } from "@/components/CustomIcons";
 import * as React from "react";
 import { TickerTape } from "@/components/simulators/stocks/TickerTape";
+import { LiveTickerTape } from "@/components/simulators/stocks/LiveTickerTape";
 import Hero3DScene from "@/components/landing/Hero3DScene";
 import { PremiumButton } from "@/components/ui/PremiumButton";
 
 // Centralized navigation data
-const NAV_LINKS: { label: string; href: string; persona?: "instituciones" | "estudiantes" }[] = [
+const NAV_LINKS: { label: string; href: string }[] = [
   { label: "Inicio", href: "/" },
   { label: "Somos BIZEN", href: "#sobre-bizen" },
   { label: "Perfil educativo", href: "#perfiles" },
-  { label: "Impacto social", href: "#impacto" },
+  { label: "Comunidad", href: "#impacto" },
 ];
 
 // Force dynamic rendering to avoid prerendering issues
@@ -62,16 +63,13 @@ export default function WelcomePage() {
   const [isMouthOpen, setIsMouthOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [activeHeroCard, setActiveHeroCard] = useState<number | null>(null);
-  const [activeProfile, setActiveProfile] = useState<
-    "docentes" | "estudiantes" | "padres"
-  >("docentes");
+
   const [activeTestimonial, setActiveTestimonial] = useState(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [authDropdownOpen, setAuthDropdownOpen] = useState(false);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [navScrolled, setNavScrolled] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const [activePersona, setActivePersona] = useState<"instituciones" | "estudiantes">("instituciones");
 
 
   useEffect(() => {
@@ -367,10 +365,9 @@ export default function WelcomePage() {
                 key={link.href}
                 href={link.href}
                 className="header-nav-link landing-header-nav-link"
-                onClick={() => { if (link.persona) setActivePersona(link.persona); }}
                 style={{
                   fontSize: "clamp(13px, 1.3vw, 15px)",
-                  fontWeight: link.persona ? 600 : 500,
+                  fontWeight: 500,
                   color: navScrolled ? "var(--primary)" : "rgba(255,255,255,0.9)",
                   textDecoration: "none",
                   whiteSpace: "nowrap",
@@ -395,34 +392,7 @@ export default function WelcomePage() {
               flexShrink: 0,
             }}
           >
-            {/* Agendar DEMO */}
-            <a
-              href="https://calendly.com/diego-bizen"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="landing-header-demo landing-header-actions-link"
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "8px",
-                padding: "10px 20px",
-                fontSize: "clamp(13px, 1.3vw, 15px)",
-                fontWeight: 500,
-                color: navScrolled ? "#0056E7" : "rgba(255,255,255,0.85)",
-                textDecoration: "none",
-                borderRadius: "9999px",
-                background: navScrolled
-                  ? "rgba(0, 86, 231, 0.08)"
-                  : "rgba(255, 255, 255, 0.1)",
-                border: navScrolled
-                  ? "none"
-                  : "1px solid rgba(255, 255, 255, 0.18)",
-                transition: "all 0.3s ease",
-              }}
-            >
-              <Calendar size={16} />
-              <span className="hide-tablet">Agendar DEMO</span>
-            </a>
+
 
             {/* Comenzar ahora with Dropdown */}
             <div
@@ -687,27 +657,6 @@ export default function WelcomePage() {
                 <UserPlus size={20} />
                 Empieza ahora
               </Link>
-              <a
-                href="https://calendly.com/diego-bizen"
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => setMobileMenuOpen(false)}
-                style={{
-                  width: "100%",
-                  fontSize: "15px",
-                  color: "rgba(255,255,255,0.6)",
-                  textDecoration: "none",
-                  fontWeight: 500,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: "8px",
-                  marginTop: "16px",
-                }}
-              >
-                <Calendar size={18} />
-                Agendar demo
-              </a>
             </nav>
           </div>
         </div>
@@ -734,8 +683,8 @@ export default function WelcomePage() {
           <div
             className="landing-hero-wrapper"
             style={{
-              paddingTop: "clamp(100px, 14vw, 180px)",
-              paddingBottom: "clamp(80px, 12vw, 160px)",
+              paddingTop: "clamp(60px, 8vw, 110px)",
+              paddingBottom: "clamp(60px, 10vw, 130px)",
               position: "relative",
               display: "flex",
               flexDirection: "column",
@@ -1102,7 +1051,7 @@ export default function WelcomePage() {
                 }}
               >
                 <span style={{ display: "inline-block", whiteSpace: "nowrap" }}>
-                  El futuro de la{" "}
+                  Aprende a manejar{" "}
                   <span
                     style={{
                       background:
@@ -1112,11 +1061,11 @@ export default function WelcomePage() {
                       backgroundClip: "text",
                     }}
                   >
-                    Educación Financiera
+                    tu dinero
                   </span>
                 </span>
                 <br />
-                para jóvenes en un click
+                Por fin, de forma divertida
                 <br />
                 con{" "}
                 <span
@@ -1209,25 +1158,9 @@ export default function WelcomePage() {
                   }}
                 />
 
-                {/* ── Persona Switcher Pill ── */}
-                <div style={{ display: "flex", justifyContent: "center", marginTop: "clamp(32px, 6vw, 64px)", marginBottom: 0 }}>
-                  <div className="persona-switcher">
-                    <button
-                      className={`persona-btn ${activePersona === "instituciones" ? "active" : "inactive"}`}
-                      onClick={() => setActivePersona("instituciones")}
-                    >
-                      Para Instituciones
-                    </button>
-                    <button
-                      className={`persona-btn ${activePersona === "estudiantes" ? "active" : "inactive"}`}
-                      onClick={() => setActivePersona("estudiantes")}
-                    >
-                      Para Estudiantes
-                    </button>
-                  </div>
-                </div>
 
-                {/* ── Persona-aware tagline ── */}
+
+                {/* ── Tagline ── */}
                 <div
                   style={{
                     marginTop: "clamp(20px, 3vw, 32px)",
@@ -1245,15 +1178,11 @@ export default function WelcomePage() {
                     style={{
                       padding: "2px",
                       borderRadius: "18px",
-                      backgroundImage:
-                        activePersona === "instituciones"
-                          ? "linear-gradient(135deg, #0056E7, #1983FD, #93c5fd, #0056E7)"
-                          : "linear-gradient(135deg, #7c3aed, #a78bfa, #60a5fa, #7c3aed)",
+                      backgroundImage: "linear-gradient(135deg, #0056E7, #1983FD, #60a5fa, #0056E7)",
                       backgroundSize: "300% 300%",
                       animation: "border-shimmer 6s ease infinite",
                       width: "100%",
                       maxWidth: "clamp(280px, 92vw, 750px)",
-                      transition: "background-image 0.4s ease",
                     }}
                   >
                     <div
@@ -1276,59 +1205,12 @@ export default function WelcomePage() {
                           width: "32px",
                           height: "3px",
                           borderRadius: "99px",
-                          background:
-                            activePersona === "instituciones"
-                              ? "linear-gradient(90deg, #60a5fa, #1983FD)"
-                              : "linear-gradient(90deg, #a78bfa, #60a5fa)",
+                          background: "linear-gradient(90deg, #1983FD, #60a5fa)",
                           margin: "0 auto 12px",
-                          transition: "background 0.4s ease",
                         }}
                       />
 
-                      {/* Persona-specific text */}
-                      {activePersona === "instituciones" ? (
-                        <p
-                          style={{
-                            margin: 0,
-                            fontSize: "clamp(14px, 1.6vw, 22px)",
-                            lineHeight: 1.5,
-                            fontWeight: 400,
-                            color: "rgba(255, 255, 255, 0.92)",
-                            letterSpacing: "0.01em",
-                            wordWrap: "break-word",
-                          }}
-                        >
-                          Implementa educación financiera en tu institución con{" "}
-                          <span
-                            style={{
-                              display: "inline-flex",
-                              alignItems: "center",
-                              gap: "5px",
-                              background: "linear-gradient(90deg, #1983FD, #60a5fa)",
-                              color: "#fff",
-                              borderRadius: "6px",
-                              padding: "2px 10px 2px 8px",
-                              fontWeight: 600,
-                              fontSize: "0.95em",
-                              letterSpacing: "0.02em",
-                              whiteSpace: "nowrap",
-                              boxShadow: "0 2px 12px rgba(25, 131, 253, 0.35)",
-                            }}
-                          >
-                            dashboard de impacto
-                          </span>{" "}
-                          para directivos, reportes automáticos y contenido{" "}
-                          <em
-                            style={{
-                              fontStyle: "normal",
-                              fontWeight: 600,
-                              color: "#93c5fd",
-                            }}
-                          >
-                            alineado al contexto mexicano.
-                          </em>
-                        </p>
-                      ) : (
+                      {/* B2C text */}
                         <p
                           style={{
                             margin: 0,
@@ -1346,7 +1228,7 @@ export default function WelcomePage() {
                               display: "inline-flex",
                               alignItems: "center",
                               gap: "5px",
-                              background: "linear-gradient(90deg, #7c3aed, #a78bfa)",
+                              background: "linear-gradient(90deg, #0056E7, #1983FD)",
                               color: "#fff",
                               borderRadius: "6px",
                               padding: "2px 10px 2px 8px",
@@ -1354,7 +1236,7 @@ export default function WelcomePage() {
                               fontSize: "0.95em",
                               letterSpacing: "0.02em",
                               whiteSpace: "nowrap",
-                              boxShadow: "0 2px 12px rgba(124, 58, 237, 0.35)",
+                              boxShadow: "0 2px 12px rgba(0, 86, 231, 0.4)",
                             }}
                           >
                             Billy: tu coach de IA
@@ -1364,19 +1246,19 @@ export default function WelcomePage() {
                             style={{
                               fontStyle: "normal",
                               fontWeight: 600,
-                              color: "#c4b5fd",
+                              color: "#93c5fd",
                             }}
                           >
                             minutos al día.
                           </em>
                         </p>
-                      )}
-                    </div>
                   </div>
                 </div>
               </div>
+              {/* end landing-hero-sub-container */}
+              </div>
 
-              {/* Persona-aware CTAs */}
+              {/* CTAs */}
               <div
                 style={{
                   display: "flex",
@@ -1387,12 +1269,8 @@ export default function WelcomePage() {
                   flexWrap: "wrap",
                 }}
               >
-                {activePersona === "instituciones" ? (
-                  <>
                     <a
-                      href="https://calendly.com/diego-bizen"
-                      target="_blank"
-                      rel="noopener noreferrer"
+                      href="/signup"
                       className="landing-hero-cta-primary"
                       style={{
                         display: "inline-flex",
@@ -1406,55 +1284,7 @@ export default function WelcomePage() {
                         backgroundSize: "200% auto",
                         color: "#fff",
                         textDecoration: "none",
-                        boxShadow: "0 4px 24px rgba(15, 98, 254, 0.5), inset 0 1px 0 rgba(255,255,255,0.2)",
-                        transition: "all 0.3s ease",
-                        letterSpacing: "0.01em",
-                      }}
-                    >
-                      <Calendar size={16} />
-                      Agendar demo institucional
-                    </a>
-                    <a
-                      href="#sobre-bizen"
-                      style={{
-                        display: "inline-flex",
-                        alignItems: "center",
-                        gap: "8px",
-                        padding: "clamp(13px, 2vw, 17px) clamp(24px, 3.5vw, 40px)",
-                        fontSize: "clamp(14px, 1.4vw, 17px)",
-                        fontWeight: 500,
-                        borderRadius: "9999px",
-                        background: "rgba(255, 255, 255, 0.06)",
-                        border: "1.5px solid rgba(255, 255, 255, 0.2)",
-                        color: "rgba(255, 255, 255, 0.88)",
-                        textDecoration: "none",
-                        backdropFilter: "blur(10px)",
-                        transition: "all 0.3s ease",
-                        letterSpacing: "0.01em",
-                      }}
-                    >
-                      Ver impacto
-                      <ChevronRight size={16} />
-                    </a>
-                  </>
-                ) : (
-                  <>
-                    <a
-                      href="/signup"
-                      className="landing-hero-cta-primary"
-                      style={{
-                        display: "inline-flex",
-                        alignItems: "center",
-                        gap: "8px",
-                        padding: "clamp(14px, 2vw, 18px) clamp(28px, 4vw, 48px)",
-                        fontSize: "clamp(14px, 1.4vw, 17px)",
-                        fontWeight: 600,
-                        borderRadius: "9999px",
-                        backgroundImage: "linear-gradient(110deg, #7c3aed 0%, #a78bfa 50%, #7c3aed 100%)",
-                        backgroundSize: "200% auto",
-                        color: "#fff",
-                        textDecoration: "none",
-                        boxShadow: "0 4px 24px rgba(124, 58, 237, 0.5), inset 0 1px 0 rgba(255,255,255,0.2)",
+                        boxShadow: "0 4px 24px rgba(0, 86, 231, 0.5), inset 0 1px 0 rgba(255,255,255,0.2)",
                         transition: "all 0.3s ease",
                         letterSpacing: "0.01em",
                       }}
@@ -1486,8 +1316,6 @@ export default function WelcomePage() {
                       <Play size={14} />
                       Ver funciones
                     </a>
-                  </>
-                )}
               </div>
 
             </div>
@@ -1528,7 +1356,7 @@ export default function WelcomePage() {
                 >
                   Mercado en Vivo — BIZEN Market
                 </p>
-                <TickerTape marketData={[]} />
+                <LiveTickerTape />
               </div>
             </div>
           </div>
@@ -1641,175 +1469,133 @@ export default function WelcomePage() {
                 generar ingresos desde temprana edad.
               </p>
 
-              {/* Stats row — 3 glowing cards */}
+              {/* B2C Benefits grid — 4 cards */}
               <div
                 style={{
                   display: "grid",
-                  gridTemplateColumns: "repeat(3, 1fr)",
-                  gap: "clamp(16px, 2vw, 28px)",
+                  gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+                  gap: "clamp(14px, 2vw, 24px)",
                   marginBottom: "clamp(48px, 7vw, 80px)",
                 }}
                 className="somos-stats-grid"
               >
-                {/* Stat 1 */}
-                <div
-                  className="somos-stat-card reveal-element"
-                  style={{
-                    background: "var(--glass-bg)",
-                    border: "1px solid var(--glass-border)",
-                    borderRadius: "var(--radius-xl)",
-                    padding: "clamp(28px, 4vw, 48px) clamp(16px, 3vw, 40px)",
-                    textAlign: "center",
-                    backdropFilter: "blur(var(--glass-blur))",
-                    position: "relative",
-                  }}
-                >
+                {/* Card 1 — Aprende jugando */}
+                {[
+                  {
+                    icon: (
+                      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                        <rect x="2" y="7" width="20" height="14" rx="3"/>
+                        <path d="M16 3l-4 4-4-4"/>
+                        <path d="M8 12h2m2 0h2M11 10v4"/>
+                        <circle cx="17" cy="14" r="1" fill="currentColor" stroke="none"/>
+                      </svg>
+                    ),
+                    color: "#a78bfa",
+                    glow: "rgba(124,58,237,0.25)",
+                    title: "Aprende jugando",
+                    desc: "Misiones, retos y simuladores que hacen que las finanzas sean adictivas, no aburridas.",
+                  },
+                  {
+                    icon: (
+                      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M12 2a7 7 0 0 1 7 7c0 2.6-1.4 4.9-3.5 6.2V17a1 1 0 0 1-1 1h-5a1 1 0 0 1-1-1v-1.8A7 7 0 0 1 12 2z"/>
+                        <path d="M9 21h6M10 17.5v.5M14 17.5v.5"/>
+                        <circle cx="10" cy="10" r="1" fill="currentColor" stroke="none"/>
+                        <circle cx="14" cy="10" r="1" fill="currentColor" stroke="none"/>
+                      </svg>
+                    ),
+                    color: "#60a5fa",
+                    glow: "rgba(25,131,253,0.25)",
+                    title: "Billy, tu coach de IA",
+                    desc: "Tu mentor personal disponible 24/7 para resolver dudas y guiarte en cada decisión financiera.",
+                  },
+                  {
+                    icon: (
+                      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                        <circle cx="12" cy="12" r="10"/>
+                        <polyline points="12 6 12 12 16 14"/>
+                      </svg>
+                    ),
+                    color: "#fbbf24",
+                    glow: "rgba(251,191,36,0.2)",
+                    title: "5 minutos al día",
+                    desc: "Lecciones cortas diseñadas para tu ritmo de vida. Sin excusas, sin perder tiempo.",
+                  },
+                  {
+                    icon: (
+                      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M8 21h8M12 17v4"/>
+                        <path d="M5 4h14l-1.5 6H6.5L5 4z"/>
+                        <path d="M6.5 10C5.5 13 7 15 12 17c5-2 6.5-4 5.5-7"/>
+                      </svg>
+                    ),
+                    color: "#10b981",
+                    glow: "rgba(16,185,129,0.2)",
+                    title: "Gana Bizcoins reales",
+                    desc: "Cada lección completada y reto ganado te da Bizcoins para canjear en la tienda BIZEN.",
+                  },
+                ].map((item) => (
                   <div
+                    key={item.title}
+                    className="somos-stat-card reveal-element"
                     style={{
-                      fontSize: "clamp(36px, 5vw, 56px)",
-                      fontWeight: 800,
-                      letterSpacing: "-0.04em",
-                      lineHeight: 1,
-                      marginBottom: "10px",
-                      background:
-                        "linear-gradient(135deg, #ffffff 30%, #60a5fa 100%)",
-                      WebkitBackgroundClip: "text",
-                      WebkitTextFillColor: "transparent",
-                      backgroundClip: "text",
+                      background: "var(--glass-bg)",
+                      border: `1px solid ${item.color}22`,
+                      borderRadius: "var(--radius-xl)",
+                      padding: "clamp(24px, 3vw, 40px) clamp(16px, 2.5vw, 32px)",
+                      textAlign: "center",
+                      backdropFilter: "blur(var(--glass-blur))",
+                      position: "relative",
+                      boxShadow: `0 8px 32px ${item.glow}`,
+                      transition: "transform 0.3s ease, box-shadow 0.3s ease",
                     }}
                   >
-                    +50
+                    {/* SVG icon */}
+                    <div
+                      style={{
+                        width: 60,
+                        height: 60,
+                        borderRadius: 16,
+                        background: `${item.color}18`,
+                        border: `1px solid ${item.color}30`,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        margin: "0 auto 20px",
+                        color: item.color,
+                        boxShadow: `0 4px 16px ${item.glow}`,
+                      }}
+                    >
+                      {item.icon}
+                    </div>
+                    {/* Title */}
+                    <div
+                      style={{
+                        fontSize: "clamp(15px, 1.3vw, 18px)",
+                        fontWeight: 700,
+                        color: item.color,
+                        marginBottom: "10px",
+                        letterSpacing: "0.01em",
+                      }}
+                    >
+                      {item.title}
+                    </div>
+                    {/* Description */}
+                    <p
+                      style={{
+                        margin: 0,
+                        fontSize: "clamp(13px, 1vw, 15px)",
+                        color: "rgba(255,255,255,0.6)",
+                        lineHeight: 1.65,
+                      }}
+                    >
+                      {item.desc}
+                    </p>
                   </div>
-                  <div
-                    style={{
-                      fontSize: "clamp(14px, 1.2vw, 17px)",
-                      fontWeight: 500,
-                      color: "#60a5fa",
-                      marginBottom: "10px",
-                      textTransform: "uppercase",
-                      letterSpacing: "0.05em",
-                    }}
-                  >
-                    Startups
-                  </div>
-                  <p
-                    style={{
-                      margin: 0,
-                      fontSize: "clamp(13px, 1vw, 15px)",
-                      color: "rgba(255,255,255,0.55)",
-                      lineHeight: 1.6,
-                    }}
-                  >
-                    Seleccionados entre +50 startups. Parte del Programa de
-                    Incubación de la Secretaría de Desarrollo Económico.
-                  </p>
-                </div>
-
-                {/* Stat 2 */}
-                <div
-                  className="somos-stat-card reveal-element"
-                  style={{
-                    background: "var(--glass-bg)",
-                    border: "1px solid var(--glass-border)",
-                    borderRadius: "var(--radius-xl)",
-                    padding: "clamp(28px, 4vw, 48px) clamp(16px, 3vw, 40px)",
-                    textAlign: "center",
-                    backdropFilter: "blur(var(--glass-blur))",
-                    position: "relative",
-                  }}
-                >
-                  <div
-                    style={{
-                      fontSize: "clamp(36px, 5vw, 56px)",
-                      fontWeight: 800,
-                      letterSpacing: "-0.04em",
-                      lineHeight: 1,
-                      marginBottom: "10px",
-                      background:
-                        "linear-gradient(135deg, #ffffff 30%, #60a5fa 100%)",
-                      WebkitBackgroundClip: "text",
-                      WebkitTextFillColor: "transparent",
-                      backgroundClip: "text",
-                    }}
-                  >
-                    +10
-                  </div>
-                  <div
-                    style={{
-                      fontSize: "clamp(14px, 1.2vw, 17px)",
-                      fontWeight: 500,
-                      color: "#60a5fa",
-                      marginBottom: "10px",
-                      textTransform: "uppercase",
-                      letterSpacing: "0.05em",
-                    }}
-                  >
-                    Instituciones
-                  </div>
-                  <p
-                    style={{
-                      margin: 0,
-                      fontSize: "clamp(13px, 1vw, 15px)",
-                      color: "rgba(255,255,255,0.55)",
-                      lineHeight: 1.6,
-                    }}
-                  >
-                    Más de 10 instituciones en Querétaro nos respaldan. BIZEN
-                    enseña ahorro, inversión y emprendimiento con metodología
-                    práctica.
-                  </p>
-                </div>
-
-                {/* Stat 3 */}
-                <div
-                  className="somos-stat-card reveal-element"
-                  style={{
-                    background: "var(--glass-bg)",
-                    border: "1px solid var(--glass-border)",
-                    borderRadius: "var(--radius-xl)",
-                    padding: "clamp(28px, 4vw, 48px) clamp(16px, 3vw, 40px)",
-                    textAlign: "center",
-                    backdropFilter: "blur(var(--glass-blur))",
-                    position: "relative",
-                  }}
-                >
-                  <div
-                    style={{
-                      fontSize: "clamp(36px, 5vw, 64px)",
-                      fontWeight: 700,
-                      letterSpacing: "var(--tracking-tight)",
-                      lineHeight: 1,
-                      marginBottom: "12px",
-                      color: "#fff",
-                    }}
-                  >
-                    $25K
-                  </div>
-                  <div
-                    style={{
-                      fontSize: "clamp(14px, 1.2vw, 17px)",
-                      fontWeight: 500,
-                      color: "#60a5fa",
-                      marginBottom: "10px",
-                      textTransform: "uppercase",
-                      letterSpacing: "0.05em",
-                    }}
-                  >
-                    USD en créditos
-                  </div>
-                  <p
-                    style={{
-                      margin: 0,
-                      fontSize: "clamp(13px, 1vw, 15px)",
-                      color: "rgba(255,255,255,0.55)",
-                      lineHeight: 1.6,
-                    }}
-                  >
-                    Más de 25,000 USD en créditos de Google invertidos en
-                    nosotros. Parte de la comunidad EdTech más grande de LATAM.
-                  </p>
-                </div>
+                ))}
               </div>
+
+
 
               {/* Manifesto bar */}
               <div
@@ -1833,11 +1619,11 @@ export default function WelcomePage() {
                     lineHeight: 1.7,
                   }}
                 >
-                  BIZEN enseña{" "}
+                  BIZEN te enseña lo que nadie te enseñó en la escuela:{" "}
                   <strong style={{ color: "#fff" }}>
-                    ahorro, inversión y emprendimiento
+                    cómo hacer crecer tu dinero.
                   </strong>{" "}
-                  con metodología práctica, gamificada y alineada al mundo real.
+                  Y lo aprenderás haciendo, no memorizando.
                 </p>
               </div>
 
@@ -1858,7 +1644,7 @@ export default function WelcomePage() {
                     letterSpacing: "0.1em",
                   }}
                 >
-                  Nos respaldan
+                  Avalados por
                 </p>
                 <div
                   style={{
@@ -3430,7 +3216,7 @@ export default function WelcomePage() {
                 letterSpacing: "-0.02em",
               }}
             >
-              Colegios líderes en México{" "}
+              Lo que dicen quienes{" "}
               <span
                 style={{
                   background: "linear-gradient(90deg, #0056E7, #1983FD)",
@@ -3439,9 +3225,9 @@ export default function WelcomePage() {
                   backgroundClip: "text",
                 }}
               >
-                ya evolucionaron
-              </span>{" "}
-              con BIZEN.
+                ya aprendieron con BIZEN
+              </span>
+              .
             </h2>
           </div>
 
@@ -3464,21 +3250,21 @@ export default function WelcomePage() {
                   quote:
                     "Una plataforma increíble para aprender finanzas personales de forma clara y práctica. A mi hijo le encantó.",
                   name: "Gabriela Burgos",
-                  title: "Directora de Programas de Emprendimiento · BLOQUE",
+                  title: "Mamá, emprendedora y usuaria BIZEN",
                   image: "/uploads/Landing_page/image.png",
                 },
                 {
                   quote:
                     "Una herramienta excepcional para quienes buscan desarrollar educación financiera de forma práctica.",
                   name: "Alejandro Rolland",
-                  title: "Secretaría de Desarrollo Sustentable · Querétaro",
+                  title: "Estudiante de Finanzas · Universidad de Querétaro",
                   image: "/uploads/Landing_page/image%20copy.png",
                 },
                 {
                   quote:
                     "Una plataforma innovadora que acerca las finanzas personales de manera sencilla y atractiva para jóvenes.",
                   name: "Joanna Vazquez",
-                  title: "Coordinadora Universidad · Mondragón México",
+                  title: "Joven profesionista · Monterrey, México",
                   image: "/uploads/Landing_page/joanna.png",
                 },
               ].map((testimonial, idx) => (
@@ -3807,28 +3593,27 @@ const logoCarouselLogos: { src: string; alt: string }[] = [
 
 const problemSchools: { title: string; description: string }[] = [
   {
-    title: "Teoría sin práctica",
-    description: "Se enseña el concepto pero no se practica con casos reales.",
+    title: "Nadie te lo explica en la vida real",
+    description: "En la escuela aprendes definiciones. Aquí aprendes a usarlo.",
   },
   {
-    title: "Difícil medir avance",
-    description: "No hay forma clara de ver el progreso de cada estudiante.",
+    title: "No sabes si vas mejorando",
+    description: "Sin métricas claras, es fácil abandonar. BIZEN te muestra exactamente dónde estás.",
   },
   {
-    title: "Falta de tiempo del docente",
-    description:
-      "Los profesores no tienen tiempo para personalizar la enseñanza.",
+    title: "No tienes tiempo para cursos largos",
+    description: "5 minutos al día son suficientes para avanzar de verdad.",
   },
 ];
-const howItWorksSteps: { title: string; schoolsText: string }[] = [
-  { title: "Empiezo", schoolsText: "El colegio crea grupos y accesos." },
+const howItWorksSteps: { title: string; description: string }[] = [
+  { title: "Empiezo", description: "Crea tu cuenta y completa el quiz diagnóstico." },
   {
     title: "Practico",
-    schoolsText: "Los estudiantes usan simuladores y retos en clase.",
+    description: "Usa simuladores y completa misiones diarias.",
   },
   {
     title: "Mido mi progreso",
-    schoolsText: "El docente ve reportes y avance por alumno.",
+    description: "Sube de nivel, gana Bizcoins y domina tus finanzas.",
   },
 ];
 
@@ -3839,7 +3624,7 @@ const defaultFaqs: FAQ[] = [
   },
   {
     q: "¿Para quién es?",
-    a: "Para escuelas, universidades y organizaciones educativas que quieren ofrecer educación financiera práctica a sus estudiantes.",
+    a: "Para estudiantes, jóvenes profesionales y cualquier persona que quiera dominar sus finanzas de forma práctica y divertida.",
   },
   {
     q: "¿Cómo funcionan los retos?",
@@ -4245,9 +4030,7 @@ function LandingContent({
 }) {
   const primary = "#0056E7";
   const accent = "#10B981";
-  const [activeProfile, setActiveProfile] = React.useState<
-    "docentes" | "estudiantes" | "padres"
-  >("docentes");
+
   const [activeAdventureSlide, setActiveAdventureSlide] = React.useState(0);
 
   React.useEffect(() => {
@@ -4321,10 +4104,10 @@ function LandingContent({
                       Quizzes en vivo,<br />estilo Kahoot
                     </h3>
                     <p style={{ fontSize: "clamp(15px, 1.1vw, 18px)", color: "rgba(255,255,255,0.7)", lineHeight: 1.7, marginBottom: "28px" }}>
-                      El docente lanza una sesión, los alumnos entran con un PIN y compiten en tiempo real respondiendo preguntas de finanzas. Rankings en vivo, conteo de puntos y adrenalina garantizada.
+                      Únete a sesiones de quizzes financieros en vivo. Compite contra otros usuarios, sube al ranking y demuestra cuánto sabes. Adrenalina garantizada.
                     </p>
                     <ul style={{ listStyle: "none", padding: 0, margin: "0 0 32px", display: "flex", flexDirection: "column", gap: 12 }}>
-                      {["Sesiones en tiempo real con Supabase Realtime", "Rankings y podio al finalizar", "Docente controla el ritmo desde /live/host"].map((item) => (
+                      {["Actualizaciones en vivo — ves el ranking al instante", "Rankings y podio al finalizar la sesión", "El host lleva el ritmo — tú solo compite y gana"].map((item) => (
                         <li key={item} style={{ display: "flex", alignItems: "center", gap: 12 }}>
                           <span style={{ width: 22, height: 22, borderRadius: "50%", background: "linear-gradient(135deg,#fbbf24,#f59e0b)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                             <svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4.5L4 7.5L10 1.5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
@@ -4664,8 +4447,7 @@ function LandingContent({
                     margin: "0 auto",
                   }}
                 >
-                  Impulsa a tu escuela a desarrollar habilidades clave mientras
-                  los estudiantes aprenden de forma práctica y guiada.
+                  Lo que nadie te enseñó en la escuela, lo aprendes aquí. Sin teoría aburrida, sin excusas.
                 </p>
               </div>
 
@@ -4682,8 +4464,8 @@ function LandingContent({
               >
                 {[
                   { value: "+500", label: "Estudiantes activos" },
-                  { value: "6", label: "Habilidades clave" },
-                  { value: "98%", label: "Satisfacción docente" },
+                  { value: "5 min", label: "al día son suficientes" },
+                  { value: "100%", label: "Práctico y sin teoría" },
                 ].map((stat, i) => (
                   <div
                     key={i}
@@ -4727,129 +4509,54 @@ function LandingContent({
                 ))}
               </div>
 
-              {/* 6 skills — 3-column card grid */}
+              {/* 4 skills — 2-column card grid */}
               <div
                 style={{
                   display: "grid",
-                  gridTemplateColumns: "repeat(3, 1fr)",
+                  gridTemplateColumns: "repeat(2, 1fr)",
                   gap: "clamp(14px, 2vw, 22px)",
                 }}
                 className="conoce-skills-grid"
               >
                 {[
                   {
-                    label: "Toma de decisiones informadas",
-                    desc: "Evalúa opciones y elige con criterio financiero en situaciones reales.",
+                    label: "Decide mejor tu dinero",
+                    desc: "Evalúa opciones y elige con criterio financiero en situaciones reales de tu vida.",
                     Icon: () => (
-                      <svg
-                        width="26"
-                        height="26"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
+                      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M9 11l3 3L22 4" />
                         <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
                       </svg>
                     ),
                   },
                   {
-                    label: "Pensamiento crítico aplicado",
-                    desc: "Analiza información y cuestiona supuestos para resolver mejor.",
+                    label: "Resuelve problemas reales",
+                    desc: "Desde pagar una deuda hasta invertir tus ahorros: herramientas para cada reto.",
                     Icon: () => (
-                      <svg
-                        width="26"
-                        height="26"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <circle cx="12" cy="12" r="10" />
-                        <path d="M12 16v-4M12 8h.01" />
-                      </svg>
-                    ),
-                  },
-                  {
-                    label: "Resolución de problemas financieros",
-                    desc: "Enfrenta retos económicos reales con herramientas prácticas.",
-                    Icon: () => (
-                      <svg
-                        width="26"
-                        height="26"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
+                      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M21.21 15.89A10 10 0 1 1 8 2.83" />
                         <path d="M22 12A10 10 0 0 0 12 2v10z" />
                       </svg>
                     ),
                   },
                   {
-                    label: "Planeación y visión a futuro",
-                    desc: "Establece metas claras y administra recursos con perspectiva.",
+                    label: "Construye tu futuro",
+                    desc: "Establece metas claras, administra lo que tienes y avanza con visión de largo plazo.",
                     Icon: () => (
-                      <svg
-                        width="26"
-                        height="26"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <circle cx="12" cy="12" r="10" />
-                        <polyline points="12 6 12 12 16 14" />
+                      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+                        <polyline points="17 6 23 6 23 12" />
                       </svg>
                     ),
                   },
                   {
-                    label: "Trabajo colaborativo en el aula",
-                    desc: "Potencia el aprendizaje compartido en equipos.",
+                    label: "Compite y aprende",
+                    desc: "Entra a retos en vivo contra otros usuarios, sube al ranking y demuestra cuánto sabes.",
                     Icon: () => (
-                      <svg
-                        width="26"
-                        height="26"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                        <circle cx="9" cy="7" r="4" />
-                        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-                        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                      </svg>
-                    ),
-                  },
-                  {
-                    label: "Responsabilidad socioemocional",
-                    desc: "Desarrolla autonomía, empatía y habilidades para la vida.",
-                    Icon: () => (
-                      <svg
-                        width="26"
-                        height="26"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-                        <path d="M22 4L12 14.01l-3-3" />
+                      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M8 21h8M12 17v4" />
+                        <path d="M5 4h14l-1.5 6H6.5L5 4z" />
+                        <path d="M6.5 10C5.5 13 7 15 12 17c5-2 6.5-4 5.5-7" />
                       </svg>
                     ),
                   },
@@ -5028,7 +4735,7 @@ function LandingContent({
                   marginBottom: "20px",
                 }}
               >
-                Metodología
+                Cómo aprendes
               </span>
               <h2
                 style={{
@@ -5040,7 +4747,7 @@ function LandingContent({
                   letterSpacing: "-0.02em",
                 }}
               >
-                Cada clase,{" "}
+                Cada lección,{" "}
                 <span
                   style={{
                     background: "linear-gradient(90deg, #0056E7, #1983FD)",
@@ -5049,7 +4756,7 @@ function LandingContent({
                     backgroundClip: "text",
                   }}
                 >
-                  una aventura divertida
+                  una experiencia
                 </span>
               </h2>
             </div>
@@ -5069,7 +4776,7 @@ function LandingContent({
                     title: "Microlearning",
                     tag: "Lecciones cortas",
                     description:
-                      "Utilizamos contenidos digitales y videos cortos interactivos en todas nuestras lecciones, creados por especialistas académicos y de animación infantil (Netflix) para facilitar el aprendizaje de tus estudiantes.",
+                      "Lecciones cortas con videos interactivos que van al grano. Aprendes con ejemplos reales y en minutos, no en horas.",
                     imageSrc: "/uploads/Landing_page/landing-1.png",
                     imageAlt: "Microlearning",
                   },
@@ -5077,7 +4784,7 @@ function LandingContent({
                     title: "Gamificación",
                     tag: "Motivación constante",
                     description:
-                      "Cada lección incluye retos y recompensas que mantienen a los estudiantes motivados y comprometidos con su aprendizaje financiero desde el primer día.",
+                      "Cada lección incluye retos y recompensas que te mantienen motivado y comprometido con tu aprendizaje financiero desde el primer día.",
                     imageSrc: "/uploads/Landing_page/landing-2.png",
                     imageAlt: "Gamificación",
                   },
@@ -5203,9 +4910,7 @@ function LandingContent({
                         </p>
 
                         <a
-                          href="https://calendly.com/diego-bizen"
-                          target="_blank"
-                          rel="noopener noreferrer"
+                          href="/signup"
                           style={{
                             display: "inline-flex",
                             alignItems: "center",
@@ -5233,7 +4938,7 @@ function LandingContent({
                               "0 6px 20px rgba(255,255,255,0.15)";
                           }}
                         >
-                          Solicita tu demo
+                          Empieza ahora
                           <svg
                             width="16"
                             height="16"
@@ -5488,7 +5193,7 @@ function LandingContent({
                   marginBottom: "20px",
                 }}
               >
-                El reto en educación financiera
+                ¿Te suena familiar?
               </span>
               <h2
                 style={{
@@ -5500,7 +5205,7 @@ function LandingContent({
                   letterSpacing: "-0.02em",
                 }}
               >
-                Tres obstáculos{" "}
+                Las excusas{" "}
                 <span
                   style={{
                     background: "linear-gradient(90deg, #60a5fa, #1983FD)",
@@ -5509,7 +5214,7 @@ function LandingContent({
                     backgroundClip: "text",
                   }}
                 >
-                  comunes.
+                  que te frenan.
                 </span>
               </h2>
               <p
@@ -5521,7 +5226,7 @@ function LandingContent({
                   lineHeight: 1.65,
                 }}
               >
-                La educación financiera tropieza con lo mismo una y otra vez.
+                La mayoría llega a los 25 sin saber cómo funciona su dinero.
               </p>
             </div>
 
@@ -5540,8 +5245,8 @@ function LandingContent({
               {[
                 {
                   n: "01",
-                  title: "Teoría sin práctica",
-                  desc: "Se enseña el concepto pero no se practica con casos reales.",
+                  title: "Nadie te lo explica en la vida real",
+                  desc: "En la escuela aprendes definiciones. Aquí aprendes a usarlo con situaciones reales.",
                   icon: (
                     <svg
                       width="36"
@@ -5564,8 +5269,8 @@ function LandingContent({
                 },
                 {
                   n: "02",
-                  title: "Difícil medir avance",
-                  desc: "No hay forma clara de ver el progreso de cada estudiante.",
+                  title: "No sabes si vas mejorando",
+                  desc: "Sin métricas claras, es fácil abandonar. BIZEN te muestra exactamente dónde estás.",
                   icon: (
                     <svg
                       width="36"
@@ -5602,8 +5307,8 @@ function LandingContent({
                 },
                 {
                   n: "03",
-                  title: "Falta de tiempo del docente",
-                  desc: "Los profesores no tienen tiempo para personalizar la enseñanza.",
+                  title: "No tienes tiempo para cursos largos",
+                  desc: "5 minutos al día son suficientes para avanzar de verdad. Sin excusas.",
                   icon: (
                     <svg
                       width="36"
@@ -6036,7 +5741,7 @@ function LandingContent({
                         lineHeight: 1.7,
                       }}
                     >
-                      {step.schoolsText}
+                      {step.description}
                     </p>
                   </div>
                 ))}

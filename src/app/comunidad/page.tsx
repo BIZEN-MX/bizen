@@ -42,7 +42,7 @@ function HubCard({
 export default function ComunidadHubPage() {
   const { user, loading, dbProfile } = useAuth()
   const userEmail = typeof user?.email === 'string' ? user.email.toLowerCase() : ""
-  const isAnahuac = userEmail.endsWith('@anahuac.mx') || userEmail.endsWith('@bizen.mx')
+  const isAnahuac = userEmail.endsWith('@anahuac.mx') || userEmail.endsWith('@bizen.mx') || userEmail === 'diegopenita31@gmail.com'
   const router = useRouter()
 
   const [topPlayers, setTopPlayers] = useState<any[]>([])

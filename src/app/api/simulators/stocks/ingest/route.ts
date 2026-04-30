@@ -8,10 +8,19 @@ function normalizeSymbolForProvider(symbol: string) {
     return symbol.replace('.', '-');
 }
 
+export async function GET(req: Request) {
+    return POST(req);
+}
+
 export async function POST(req: Request) {
     try {
         const authHeader = req.headers.get('authorization');
-        if (authHeader !== `Bearer ${API_CRON_SECRET}` && process.env.NODE_ENV !== 'development') {
+        // Vercel Cron adds x-vercel-signature automatically
+        const isVercelCron = req.headers.get('x-vercel-signature') !== null;
+        const isManualSecret = authHeader === `Bearer ${API_CRON_SECRET}`;
+        const isDev = process.env.NODE_ENV === 'development';
+
+        if (!isVercelCron && !isManualSecret && !isDev) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 

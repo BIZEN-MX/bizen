@@ -51,7 +51,7 @@ export function LandingWaitlistFooter({ }: Props) {
                             maxWidth: "320px",
                             margin: "0 0 28px",
                         }}>
-                            Plataforma de educación financiera para colegios. Aprende con simuladores, retos y contenido interactivo.
+                            La app que te enseña a dominar tu dinero de forma práctica y divertida. Sin teoría aburrida, sin excusas.
                         </p>
                         {/* Social icons */}
                         <div style={{ display: "flex", gap: "12px" }}>
@@ -101,9 +101,9 @@ export function LandingWaitlistFooter({ }: Props) {
                         <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
                             {[
                                 { label: "Sobre BIZEN", href: "#sobre-bizen" },
-                                { label: "Metodología", href: "#como-funciona" },
-                                { label: "Para docentes", href: "#perfiles" },
-                                { label: "Impacto social", href: "/impacto-social" },
+                                { label: "Cómo funciona", href: "#como-funciona" },
+                                { label: "Para ti", href: "#perfiles" },
+                                { label: "Comunidad", href: "#impacto" },
                                 { label: "El problema", href: "#problema" },
                             ].map((link) => (
                                 <a key={link.label} href={link.href} className="footer-nav-link" style={{
@@ -125,12 +125,10 @@ export function LandingWaitlistFooter({ }: Props) {
                             Contacto
                         </p>
                         <p style={{ fontSize: "clamp(18px, 1.8vw, 22px)", fontWeight: 500, color: "#fff", lineHeight: 1.3, marginBottom: "24px" }}>
-                            ¿Listo para transformar<br />tu colegio?
+                            ¿Listo para tomar el control<br />de tu dinero?
                         </p>
                         <a
-                            href="https://calendly.com/diego-bizen"
-                            target="_blank"
-                            rel="noopener noreferrer"
+                            href="/signup"
                             className="footer-cta-btn"
                             style={{
                                 display: "inline-flex", alignItems: "center", gap: "10px",
@@ -145,7 +143,7 @@ export function LandingWaitlistFooter({ }: Props) {
                                 marginBottom: "20px",
                             }}
                         >
-                            Solicita una demo
+                            Empieza gratis
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                                 <path d="M5 12h14M12 5l7 7-7 7" />
                             </svg>

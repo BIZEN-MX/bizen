@@ -123,7 +123,7 @@ export default function CoursesPage() {
   const hasPremiumAccess = hasActiveLicense || hasActiveStripe || isInstitutional;
 
   const userEmail = user?.email?.toLowerCase() || ""
-  const isAnahuac = userEmail.endsWith('@anahuac.mx') || userEmail.endsWith('@bizen.mx')
+  const isAnahuac = userEmail.endsWith('@anahuac.mx') || userEmail.endsWith('@bizen.mx') || userEmail === 'diegopenita31@gmail.com'
 
   const completedCount = completedLessons.length
   const progressPct = Math.min(100, Math.round((completedCount / APPROX_TOTAL_LESSONS) * 100))

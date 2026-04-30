@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
-import { createSupabaseServer } from "@/lib/supabase/server"
 import { prisma } from "@/lib/prisma"
+import { auth } from "@clerk/nextjs/server"
 
 export async function GET(
   request: NextRequest,
@@ -8,12 +8,7 @@ export async function GET(
 ) {
   try {
     const { id } = await params
-    const supabase = await createSupabaseServer()
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
-
-    if (authError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    }
+    const { userId } = await auth()
 
     // Get query params for pagination
     const { searchParams } = new URL(request.url)
@@ -76,12 +71,14 @@ export async function GET(
       return NextResponse.json({ error: "Thread not found" }, { status: 404 })
     }
 
-    const profile = await prisma.profile.findUnique({
-      where: { userId: user.id },
-      select: { role: true }
-    })
-
-    const isParticular = profile?.role === 'particular'
+    let isParticular = false
+    if (userId) {
+      const profile = await prisma.profile.findUnique({
+        where: { userId: userId },
+        select: { role: true }
+      })
+      isParticular = profile?.role === 'particular'
+    }
     const isAuthorParticular = (thread as any).author?.role === 'particular'
 
     if (isParticular !== isAuthorParticular) {
@@ -169,12 +166,12 @@ export async function GET(
       data: { viewCount: { increment: 1 } }
     }).catch(err => console.error("Error incrementing view count:", err))
 
-    // Check user's vote, bookmark, follow
-    const [userVote, bookmark, follow] = await Promise.all([
+    // Check user's vote, bookmark, follow (only if logged in)
+    const [userVote, bookmark, follow] = userId ? await Promise.all([
       prisma.forumVote.findUnique({
         where: {
           userId_targetType_targetId: {
-            userId: user.id,
+            userId: userId,
             targetType: 'thread',
             targetId: id
           }
@@ -183,7 +180,7 @@ export async function GET(
       prisma.forumBookmark.findUnique({
         where: {
           userId_threadId: {
-            userId: user.id,
+            userId: userId,
             threadId: id
           }
         }
@@ -191,21 +188,21 @@ export async function GET(
       prisma.forumFollow.findUnique({
         where: {
           userId_threadId: {
-            userId: user.id,
+            userId: userId,
             threadId: id
           }
         }
       })
-    ]).catch(() => [null, null, null])
+    ]).catch(() => [null, null, null]) : [null, null, null]
 
     // Get user votes for all comments in a single optimized query
     const commentIds = includeReplies
       ? (comments as any[]).flatMap(c => [c.id, ...(c.replies || []).map((r: any) => r.id)])
       : (comments as any[]).map(c => c.id)
 
-    const commentVotes = commentIds.length > 0 ? await prisma.forumVote.findMany({
+    const commentVotes = (userId && commentIds.length > 0) ? await prisma.forumVote.findMany({
       where: {
-        userId: user.id,
+        userId: userId,
         targetType: 'comment',
         targetId: { in: commentIds }
       },
@@ -347,10 +344,9 @@ export async function PATCH(
 ) {
   try {
     const { id } = await params
-    const supabase = await createSupabaseServer()
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    const { userId } = await auth()
 
-    if (authError || !user) {
+    if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
@@ -364,10 +360,10 @@ export async function PATCH(
 
     // Check if user is author or moderator/admin
     const profile = await prisma.profile.findUnique({
-      where: { userId: user.id }
+      where: { userId: userId }
     })
 
-    const isAuthor = thread.authorId === user.id
+    const isAuthor = thread.authorId === userId
     const isModerator = ['moderator', 'teacher', 'school_admin'].includes(profile?.role || '')
 
     if (!isAuthor && !isModerator) {
@@ -407,10 +403,9 @@ export async function DELETE(
 ) {
   try {
     const { id } = await params
-    const supabase = await createSupabaseServer()
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    const { userId } = await auth()
 
-    if (authError || !user) {
+    if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
@@ -423,10 +418,10 @@ export async function DELETE(
     }
 
     const profile = await prisma.profile.findUnique({
-      where: { userId: user.id }
+      where: { userId: userId }
     })
 
-    const isAuthor = thread.authorId === user.id
+    const isAuthor = thread.authorId === userId
     const isModerator = ['moderator', 'teacher', 'school_admin'].includes(profile?.role || '')
 
     if (!isAuthor && !isModerator) {
