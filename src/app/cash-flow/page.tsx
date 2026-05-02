@@ -98,7 +98,7 @@ const PROFESSION_EMOJIS: Record<string, string> = {
 export default function CombinedSimulatorsPage() {
   const { user, loading: authLoading, dbProfile } = useAuth()
   const userEmail = user?.email?.toLowerCase() || ""
-  const isAnahuac = userEmail.endsWith('@anahuac.mx') || userEmail.endsWith('@bizen.mx') || userEmail === 'diegopenita31@gmail.com'
+  const isAnahuac = userEmail.endsWith('@anahuac.mx') || userEmail.endsWith('@bizen.mx') 
   const streak = dbProfile?.currentStreak || 0
   const router = useRouter()
 

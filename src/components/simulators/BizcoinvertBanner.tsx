@@ -108,7 +108,7 @@ export function BizcoinvertBanner({ userEmail }: { userEmail?: string }) {
     email.endsWith('.edu') ||
     email.endsWith('.edu.mx') ||
     email.endsWith('anahuac.mx') ||
-    email.endsWith('@bizen.mx') || userEmail === 'diegopenita31@gmail.com'
+    email.endsWith('@bizen.mx') 
   )
 
 

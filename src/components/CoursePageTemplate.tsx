@@ -120,7 +120,7 @@ export default function CoursePageTemplate({
     const hasPremiumAccess = hasActiveStripe || hasActiveLicense || isInstitutional
 
     const userEmail = user?.email?.toLowerCase() || ""
-    const isAnahuac = userEmail.endsWith('@anahuac.mx') || userEmail.endsWith('@bizen.mx') || userEmail === 'diegopenita31@gmail.com'
+    const isAnahuac = userEmail.endsWith('@anahuac.mx') || userEmail.endsWith('@bizen.mx') 
 
     React.useEffect(() => {
         if (!loading && !user) {

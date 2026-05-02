@@ -28,7 +28,7 @@ export default function LoginClient() {
       // Clerk's email input usually has name="identifier" or name="emailAddress"
       if (target.name === "identifier" || target.name === "emailAddress" || target.type === "email") {
         const val = target.value.toLowerCase()
-        const isInstitutional = val.endsWith("@anahuac.mx") || val.includes(".anahuac.mx") || val.endsWith("@bizen.mx") || userEmail === 'diegopenita31@gmail.com'
+        const isInstitutional = val.endsWith("@anahuac.mx") || val.includes(".anahuac.mx") || val.endsWith("@bizen.mx") 
         
         if (isInstitutional) {
           setSelectedTheme("anahuac")

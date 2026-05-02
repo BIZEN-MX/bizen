@@ -86,7 +86,7 @@ export function StockSimulatorContent({ tradeSymbol }: { tradeSymbol?: string })
   const isAnahuac = userEmail && (
     userEmail.endsWith('@anahuac.mx') ||
     userEmail.endsWith('.anahuac.mx') ||
-    userEmail.endsWith('@bizen.mx') || userEmail === 'diegopenita31@gmail.com'
+    userEmail.endsWith('@bizen.mx') 
   );
 
   useEffect(() => {

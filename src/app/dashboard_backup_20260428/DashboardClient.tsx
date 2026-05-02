@@ -263,7 +263,7 @@ export default function DashboardContent() {
   const isAdminOrTeacher = (dbProfile?.role === "school_admin" || dbProfile?.role === "teacher" || dbProfile?.role === "admin" || isSuperAdmin) && !isUnauthorized
 
   const isAnahuac = useMemo(() => {
-    return userEmail.endsWith('@anahuac.mx') || userEmail.includes('.anahuac.mx') || userEmail.endsWith('@bizen.mx') || userEmail === 'diegopenita31@gmail.com';
+    return userEmail.endsWith('@anahuac.mx') || userEmail.includes('.anahuac.mx') || userEmail.endsWith('@bizen.mx') ;
   }, [userEmail])
 
   const isInstitutional = useMemo(() => {

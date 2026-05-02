@@ -39,7 +39,7 @@ export default function MobileFooterNav() {
   const isAdminOrTeacher = dbProfile?.role === "school_admin" || dbProfile?.role === "teacher" || dbProfile?.role === "admin" || isSuperAdmin
   const isStudentOrGuest = !isAdminOrTeacher
   const canHostLive = isAdminOrTeacher || dbProfile?.role === "institutional" || dbProfile?.role === "student"
-  const isUnauthorized = false // userEmail === 'diegopenita31@gmail.com'
+  const isUnauthorized = false //
   const isInstitutional = (dbProfile?.role === 'student' || dbProfile?.role === 'teacher' || dbProfile?.role === 'school_admin' || dbProfile?.role === 'admin' || isSuperAdmin) && !isUnauthorized
 
   const isOnLessonPage = pathname?.includes('/learn/')

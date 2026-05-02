@@ -379,7 +379,7 @@ export default function ProfilePage() {
   const isSchoolAdmin = dbProfile?.role === 'school_admin'
   const isAdminOrTeacher = isSchoolAdmin || dbProfile?.role === 'teacher'
   const isParticular = dbProfile?.role === 'particular'
-  const isUnauthorized = false // userEmail === 'diegopenita31@gmail.com'
+  const isUnauthorized = false //
   const isInstitutionalStudent = dbProfile?.role === 'student' && !isUnauthorized
   const isPremium = dbProfile?.subscriptionStatus === 'active' || (dbProfile?.school?.licenses?.length || 0) > 0
 

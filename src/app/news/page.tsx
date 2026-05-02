@@ -31,7 +31,7 @@ export default function NewsPage() {
   const router = useRouter();
   const { user } = useAuth();
   const userEmail = (user?.email || (user as any)?.emailAddresses?.[0]?.emailAddress || "").toLowerCase();
-  const isAnahuac = userEmail.endsWith('@anahuac.mx') || userEmail.includes('.anahuac.mx') || userEmail.endsWith('@bizen.mx') || userEmail === 'diegopenita31@gmail.com';
+  const isAnahuac = userEmail.endsWith('@anahuac.mx') || userEmail.includes('.anahuac.mx') || userEmail.endsWith('@bizen.mx') ;
 
   const fetchNews = async () => {
     try {

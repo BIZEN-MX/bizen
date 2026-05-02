@@ -46,7 +46,7 @@ export default function BillyChatbot() {
   const adnProfile = dbProfile?.dnaProfile || "Sin Diagnosticar"
   const userName = dbProfile?.firstName || dbProfile?.fullName?.split(' ')[0] || "Estudiante"
   const userEmail = user?.email?.toLowerCase() || ""
-  const isAnahuac = userEmail.endsWith('@anahuac.mx') || userEmail.endsWith('@bizen.mx') || userEmail === 'diegopenita31@gmail.com'
+  const isAnahuac = userEmail.endsWith('@anahuac.mx') || userEmail.endsWith('@bizen.mx') 
 
   useEffect(() => {
     setIsHydrated(true)

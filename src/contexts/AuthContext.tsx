@@ -136,7 +136,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (user?.email) {
       const email = user.email.toLowerCase()
-      if (email.endsWith('@anahuac.mx') || email.includes('.anahuac.mx') || email.endsWith('@bizen.mx') || userEmail === 'diegopenita31@gmail.com') {
+      if (email.endsWith('@anahuac.mx') || email.includes('.anahuac.mx') || email.endsWith('@bizen.mx') ) {
         document.documentElement.classList.add('theme-anahuac')
       } else {
         document.documentElement.classList.remove('theme-anahuac')

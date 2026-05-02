@@ -89,7 +89,7 @@ function SettingsContent() {
   const router=useRouter()
   const {user,dbProfile,refreshUser}=useAuth()
   const userEmail = (user?.email || (user as any)?.emailAddresses?.[0]?.emailAddress || "").toLowerCase()
-  const isAnahuac = userEmail.endsWith('@anahuac.mx') || userEmail.includes('.anahuac.mx') || userEmail.endsWith('@bizen.mx') || userEmail === 'diegopenita31@gmail.com'
+  const isAnahuac = userEmail.endsWith('@anahuac.mx') || userEmail.includes('.anahuac.mx') || userEmail.endsWith('@bizen.mx') 
   const {settings,updateSettings,resetSettings}=useSettings()
   const [supabase,setSupabase]=useState<ReturnType<typeof createClientMicrocred>|null>(null)
   const [activeSection,setActiveSection]=useState("general")

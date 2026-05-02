@@ -40,7 +40,7 @@ export default function BIZENSignupPage() {
       // Email check for theme switching
       if (target.name === "emailAddress" || target.type === "email") {
         const val = target.value.toLowerCase()
-        const isInstitutional = val.endsWith("@anahuac.mx") || val.includes(".anahuac.mx") || val.endsWith("@bizen.mx") || userEmail === 'diegopenita31@gmail.com'
+        const isInstitutional = val.endsWith("@anahuac.mx") || val.includes(".anahuac.mx") || val.endsWith("@bizen.mx") 
         
         if (isInstitutional) {
           setSelectedTheme("anahuac")

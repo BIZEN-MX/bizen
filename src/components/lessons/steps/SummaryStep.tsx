@@ -120,7 +120,7 @@ const XPBar = ({ initialXP, xpEarned, delay }: { initialXP: number; xpEarned: nu
 export const SummaryStep: React.FC<SummaryStepProps> = ({ step, onAnswered, onRestart, actionTrigger }) => {
   const { user, dbProfile } = useAuth()
   const userEmail = user?.email?.toLowerCase() || ""
-  const isAnahuac = userEmail.endsWith('@anahuac.mx') || userEmail.endsWith('@bizen.mx') || userEmail === 'diegopenita31@gmail.com'
+  const isAnahuac = userEmail.endsWith('@anahuac.mx') || userEmail.endsWith('@bizen.mx') 
   const [phase, setPhase] = useState<'celebration' | 'stats'>('celebration')
   const [isGenerating, setIsGenerating] = useState(false)
   const canvasRef = useRef<HTMLCanvasElement>(null)

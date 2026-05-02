@@ -52,7 +52,8 @@ export default function NewThreadPage() {
   const { user, loading } = useAuth()
   const router = useRouter()
 
-  const isAnahuac = (user?.email || (user as any)?.emailAddresses?.[0]?.emailAddress || "").toLowerCase().endsWith("@anahuac.mx") || (user?.email || "").toLowerCase().includes(".anahuac.mx") || (user?.email || "").toLowerCase().endsWith("@bizen.mx") || userEmail === 'diegopenita31@gmail.com'
+  const userEmailStr = (user?.email || (user as any)?.emailAddresses?.[0]?.emailAddress || "").toLowerCase()
+  const isAnahuac = userEmailStr.endsWith("@anahuac.mx") || userEmailStr.includes(".anahuac.mx") || userEmailStr.endsWith("@bizen.mx") || userEmailStr === 'diegopenita31@gmail.com'
 
   const [topics, setTopics] = useState<ForumTopic[]>([])
   const [title, setTitle] = useState("")
