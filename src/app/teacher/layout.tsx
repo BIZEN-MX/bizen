@@ -35,9 +35,8 @@ export default async function TeacherLayout({
     const { currentUser } = await import('@clerk/nextjs/server');
     const fullUser = await currentUser();
     const email = fullUser?.emailAddresses[0]?.emailAddress.toLowerCase();
-    const isUnauthorized = email === 'diegopenita31@gmail.com';
 
-    if (userProfile.role !== 'teacher' && userProfile.role !== 'school_admin' && userProfile.role !== 'admin' || isUnauthorized) {
+    if (userProfile.role !== 'teacher' && userProfile.role !== 'school_admin' && userProfile.role !== 'admin') {
         // Kick them out to the student dashboard immediately
         redirect('/dashboard')
     }

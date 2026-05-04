@@ -77,7 +77,7 @@ export default function TopNav() {
 
   const isOnLessonPage = pathname?.includes('/learn/')
   const isSuperAdmin = userEmail === "diego@bizen.mx";
-  const isAdminOrTeacher = (dbProfile?.role === "school_admin" || dbProfile?.role === "teacher" || dbProfile?.role === "admin" || isSuperAdmin) && userEmail !== "diegopenita31@gmail.com" && userEmail !== "notifications@bizen.mx";
+  const isAdminOrTeacher = (dbProfile?.role === "school_admin" || dbProfile?.role === "teacher" || dbProfile?.role === "admin" || isSuperAdmin) && userEmail !== "notifications@bizen.mx";
   const isStudentOrGuest = !isAdminOrTeacher
   const protectedRoutes = ['/forum', '/profile', '/cuenta', '/configuracion', '/tienda', '/impacto-social']
 

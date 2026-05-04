@@ -262,7 +262,7 @@ export default function FixedSidebar() {
   const rankingsActive = isActivePath("/rankings")
   const liveActive = isActivePath("/live")
 
-  const isAdminOrTeacher = (dbProfile?.role === "school_admin" || dbProfile?.role === "teacher" || dbProfile?.role === "admin") && userEmail !== "diegopenita31@gmail.com" && userEmail !== "notifications@bizen.mx"
+  const isAdminOrTeacher = (dbProfile?.role === "school_admin" || dbProfile?.role === "teacher" || dbProfile?.role === "admin") && userEmail !== "notifications@bizen.mx"
   const isSuperAdmin = userEmail === "diego@bizen.mx"
   const canHostLive = !!user // All authenticated users can now create & host quizzes
   const isStudentOrGuest = !isAdminOrTeacher && !isSuperAdmin
