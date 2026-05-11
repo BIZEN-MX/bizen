@@ -17,7 +17,7 @@ const nextConfig: NextConfig = {
               "img-src 'self' blob: data: https://images.unsplash.com https://*.clerk.com https://*.clerk.accounts.dev https://img.clerk.com https://api.dicebear.com https://storage.googleapis.com https://*.gravatar.com https://*.google.com https://*.gstatic.com https://logo.clearbit.com;",
               "font-src 'self' https://fonts.gstatic.com;",
               "frame-src 'self' https://clerk.bizen.mx https://challenges.cloudflare.com https://www.youtube.com https://*.youtube.com;",
-              "connect-src 'self' https://clerk.bizen.mx https://*.clerk.accounts.dev https://challenges.cloudflare.com;",
+              "connect-src 'self' https://clerk.bizen.mx https://*.clerk.accounts.dev https://challenges.cloudflare.com https://clerk-telemetry.com;",
               "object-src 'none';",
               "base-uri 'self';",
               "form-action 'self';",
