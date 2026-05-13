@@ -39,6 +39,12 @@ yarn-error.log*
 # cursor
 .cursor
 
+# skills
+.agents
+skills-lock.json
+.gemini
+_agents
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
