@@ -113,10 +113,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <ClerkProvider 
             localization={esMX}
             publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY} 
-            signInUrl="/login"
-            signUpUrl="/signup"
-            afterSignInUrl="/dashboard"
-            afterSignUpUrl="/dashboard"
             appearance={{
               baseTheme: dark,
               variables: {

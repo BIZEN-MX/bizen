@@ -29,6 +29,7 @@ interface BizenVirtualCardProps {
   onRedeemClick?: () => void
   hideButtons?: boolean
   pattern?: "none" | "geometric" | "circuit" | "dots"
+  showBillySticker?: boolean
 }
 
 const THEMES: Record<CardTheme, {
@@ -159,7 +160,8 @@ const BizenWordmark = ({ accentColor }: { accentColor: string }) => (
 export default function BizenVirtualCard({
   bizcoins, holderName, animationDelay = "0s",
   colorTheme = "blue", level = 1, showTierBadge = true,
-  onTransferClick, onRedeemClick, hideButtons = false, pattern = "none"
+  onTransferClick, onRedeemClick, hideButtons = false, pattern = "none",
+  showBillySticker = false
 }: BizenVirtualCardProps) {
   const router = useRouter()
   const cardRef = useRef<HTMLDivElement>(null)
@@ -265,6 +267,27 @@ export default function BizenVirtualCard({
 
         {/* Card Border Light */}
         <div style={{ position: "absolute", inset: 0, borderRadius: 24, border: "1.5px solid rgba(255,255,255,0.1)", zIndex: 10, pointerEvents: "none" }} />
+
+        {/* Billy Sticker */}
+        {showBillySticker && (
+          <div style={{
+            position: "absolute",
+            right: "12cqw",
+            top: "22cqw",
+            width: "16cqw",
+            height: "16cqw",
+            zIndex: 12,
+            pointerEvents: "none",
+            transform: "rotate(-10deg) translateZ(40px)",
+            filter: "drop-shadow(0 8px 12px rgba(0,0,0,0.4))"
+          }}>
+            <img 
+              src="/thumbs up.png" 
+              alt="Billy Sticker" 
+              style={{ width: "100%", height: "100%", objectFit: "contain" }}
+            />
+          </div>
+        )}
 
         {/* Content Container */}
         <div style={{ position: "relative", zIndex: 11, height: "100%", padding: "5cqw 6cqw", display: "flex", flexDirection: "column", justifyContent: "space-between", color: "white" }}>
