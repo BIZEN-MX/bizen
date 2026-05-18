@@ -11,7 +11,7 @@ const isProtectedRoute = createRouteMatcher([
 
 const isApiRoute = createRouteMatcher(["/api/(.*)"]);
 
-export default clerkMiddleware(async (auth, req) => {
+export const proxy = clerkMiddleware(async (auth, req) => {
   const session = await auth();
   const url = new URL(req.url);
 
