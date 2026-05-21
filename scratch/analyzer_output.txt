@@ -1,0 +1,293 @@
+Checking 65 root files...
+
+--- EXPORTS DETECTED IN ROOT FILES ---
+File: cloud-sql-proxy
+  - , locked to threaduse of closed fileunexpected messageexport restrictioncannot be negativebufio: buffer fullProxy-Authenticatedecoding error: %vCaucasian_AlbanianDoubleUpDownArrow;DoubleVerticalBar;DownLeftTeeVector;DownLeftVectorBar;FilledSmallSquare;GreaterSlantEqual;LeftDoubleBracket;LeftDownTeeVector;LeftDownVectorBar;LeftTriangleEqual;NegativeThinSpace;NotReverseElement;NotTildeFullEqual;RightAngleBracket;RightUpDownVector;SquareSubsetEqual;VerticalSeparator;blacktriangledown;blacktriangleleft;leftrightharpoons;rightleftharpoons;twoheadrightarrow;NotGreaterGreater;NotLessSlantEqual;NotNestedLessLess;NotSquareSuperset;# TotalAlloc = %d
+  - google/protobuf/descriptor.protoexceeded maximum recursion depthweak message %v is not linked in%v already implements proto.Enumfield %v has invalid nil pointerbytes,1049,opt,name=default_hostbytes,1050,opt,name=oauth_scopesgracefulSwitchBalancer is closedFailed to create new SubConn: %verror reading server preface: %vreading server HTTP response: %vinvalid escape code %q in stringexpected: IDENT | STRING got: %sunimplemented Value for type: %sbasic string not terminated by "could not parse value for %v: %qtimeseries: bad level argument: acm-fips.us-east-1.amazonaws.comacm-fips.us-east-2.amazonaws.comacm-fips.us-west-1.amazonaws.comacm-fips.us-west-2.amazonaws.comapi.ecr.af-south-1.amazonaws.comapi.ecr.ap-south-1.amazonaws.comecr-fips.us-east-1.amazonaws.comecr-fips.us-east-2.amazonaws.comecr-fips.us-west-1.amazonaws.comecr-fips.us-west-2.amazonaws.comapi.ecr.eu-north-1.amazonaws.comapi.ecr.eu-south-1.amazonaws.comapi.ecr.me-south-1.amazonaws.comdms-fips.us-west-1.amazonaws.comdms-fips.us-east-1.amazonaws.comdms-fips.us-east-2.amazonaws.comdms-fips.us-west-2.amazonaws.comrds.ap-northeast-1.amazonaws.comrds.ap-northeast-2.amazonaws.comrds.ap-southeast-1.amazonaws.comrds.ap-southeast-2.amazonaws.comebs-fips.us-east-1.amazonaws.comebs-fips.us-east-2.amazonaws.comebs-fips.us-west-1.amazonaws.comebs-fips.us-west-2.amazonaws.comec2-fips.us-east-1.amazonaws.comec2-fips.us-east-2.amazonaws.comec2-fips.us-west-1.amazonaws.comec2-fips.us-west-2.amazonaws.comecs-fips.us-east-1.amazonaws.comecs-fips.us-east-2.amazonaws.comecs-fips.us-west-1.amazonaws.comecs-fips.us-west-2.amazonaws.comfips.eks.us-east-1.amazonaws.comfips.eks.us-east-2.amazonaws.comfips.eks.us-west-1.amazonaws.comfips.eks.us-west-2.amazonaws.comfms-fips.ap-east-1.amazonaws.comfms-fips.eu-west-1.amazonaws.comfms-fips.eu-west-2.amazonaws.comfms-fips.eu-west-3.amazonaws.comfms-fips.sa-east-1.amazonaws.comfms-fips.us-east-1.amazonaws.comfms-fips.us-east-2.amazonaws.comfms-fips.us-west-1.amazonaws.comfms-fips.us-west-2.amazonaws.comfsx-fips.us-east-1.amazonaws.comfsx-fips.us-east-2.amazonaws.comfsx-fips.us-west-1.amazonaws.comfsx-fips.us-west-2.amazonaws.comiot-fips.us-east-1.amazonaws.comiot-fips.us-east-2.amazonaws.comiot-fips.us-west-1.amazonaws.comiot-fips.us-west-2.amazonaws.comkms-fips.ap-east-1.amazonaws.comkms-fips.eu-west-1.amazonaws.comkms-fips.eu-west-2.amazonaws.comkms-fips.eu-west-3.amazonaws.comkms-fips.sa-east-1.amazonaws.comkms-fips.us-east-1.amazonaws.comkms-fips.us-east-2.amazonaws.comkms-fips.us-west-1.amazonaws.comkms-fips.us-west-2.amazonaws.compinpoint.us-east-1.amazonaws.compinpoint.us-west-2.amazonaws.comram-fips.us-east-1.amazonaws.comram-fips.us-east-2.amazonaws.comram-fips.us-west-1.amazonaws.comram-fips.us-west-2.amazonaws.comrds-fips.us-east-1.amazonaws.comrds-fips.us-east-2.amazonaws.comrds-fips.us-west-1.amazonaws.comrds-fips.us-west-2.amazonaws.comsms-fips.us-east-1.amazonaws.comsms-fips.us-east-2.amazonaws.comsms-fips.us-west-1.amazonaws.comsms-fips.us-west-2.amazonaws.comsns-fips.us-east-1.amazonaws.comsns-fips.us-east-2.amazonaws.comsns-fips.us-west-1.amazonaws.comsns-fips.us-west-2.amazonaws.comsqs-fips.us-east-1.amazonaws.comsqs-fips.us-east-2.amazonaws.comsqs-fips.us-west-1.amazonaws.comsqs-fips.us-west-2.amazonaws.comssm-fips.us-east-1.amazonaws.comssm-fips.us-east-2.amazonaws.comssm-fips.us-west-1.amazonaws.comssm-fips.us-west-2.amazonaws.comsts-fips.us-east-1.amazonaws.comsts-fips.us-east-2.amazonaws.comsts-fips.us-west-1.amazonaws.comsts-fips.us-west-2.amazonaws.comswf-fips.us-east-1.amazonaws.comswf-fips.us-east-2.amazonaws.comswf-fips.us-west-1.amazonaws.comswf-fips.us-west-2.amazonaws.comtranscribestreaming-ca-central-1autoscaling.{region}.{dnsSuffix}elasticache.{region}.{dnsSuffix}logs.us-gov-east-1.amazonaws.comlogs.us-gov-west-1.amazonaws.comoidc.us-gov-east-1.amazonaws.comoidc.us-gov-west-1.amazonaws.comapi.ecr.us-iso-east-1.c2s.ic.govapi.ecr.us-iso-west-1.c2s.ic.govsupport.us-iso-east-1.c2s.ic.govdms.us-isob-east-1.sc2s.sgov.goviam.us-isob-east-1.sc2s.sgov.govcredentials: %q missing %q fieldunexpected null character (0x00)bootstrap type already present: unescaped < inside quoted stringPrint the cloud-sql-proxy versiongo package net: confVal.netCgo = pseudo header field after regularhttp2: recursive push not allowedhttp: invalid Read on closed Bodynet/http: skip alternate protocolhttp: CloseIdleConnections calledapplication/x-www-form-urlencodedinvalid header field value for %qpad size larger than data payloadframe_pushpromise_promiseid_shorthttp2: invalid pseudo headers: %vhttp: multiple registrations for invalid concurrent Body.Read callconnection not allowed by rulesetinvalid username/password versionunsupported transfer encoding: %qrelease of handle with refcount 0142108547152020037174224853515625710542735760100185871124267578125sync: RUnlock of unlocked RWMutexoperation not supported by devicetoo many references: can't splicetoo many levels of symbolic linkstoo many levels of remote in pathinappropriate file type or formatoperation not supported on socketcannot register the collector: %v[%s] client closed the connectioncalled Execute() on a nil Commandflag accessed but not defined: %sunknown shorthand flag: %q in -%sflag needs an argument: %q in -%s%s must be formatted as key=valueattempting to read in config filereflect: slice index out of rangefailed to get universe domain: %vskip everything and stop the walkreflect: NumOut of non-func type  of method on nil interface valuereflect: Field index out of rangereflect: array index out of rangereflect.Value.Equal: invalid Kind to pointer to array with length too many Answers to pack (>65535)dnsmessage.SRVResource{Priority: dnsmessage.UnknownResource{Type: slice bounds out of range [%x:%y]SIGCHLD: child status has changedSIGTTIN: background read from ttySIGXFSZ: file size limit exceededbase outside usable address spaceruntime: memory allocated by OS [misrounded allocation in sysAllocconcurrent map read and map write/cpu/classes/gc/pause:cpu-seconds/cpu/classes/gc/total:cpu-seconds/gc/limiter/last-enabled:gc-cycle/memory/classes/heap/stacks:bytes/memory/classes/heap/unused:bytes/sched/pauses/stopping/gc:seconds/sched/pauses/total/other:secondsmin must be a non-zero power of 2runtime: failed mSpanList.insert short slice passed to readGCStatssemawakeup on Darwin signal stackruntime: morestack on g0, stack [runtime: castogscanstatus oldval=stoplockedm: inconsistent lockingfindrunnable: negative nmspinningfreeing stack not in a stack spanstackalloc not on scheduler stackruntime: goroutine stack exceeds runtime: text offset out of rangetimer period must be non-negativetoo many concurrent timer firingsruntime: name offset out of rangeruntime: type offset out of rangewaiting for unsupported file typebytes.Buffer.Grow: negative counttls: failed to write to key log: tls: invalid server finished hashtls: invalid client finished hashtls: unexpected ServerKeyExchangetls: unknown public key algorithmbytes.Reader.Seek: invalid whenceempty hex number for chunk lengthfound function with reserved ID=0found location with reserved id=0label value %q is not valid UTF-8exemplar label name %q is invalidError retrieving gcp metadata: %vopencensus.io/http/client/latencyopencensus.io/http/server/latencyFailed to read from fuse conn: %vMount %T on subdir %s, parent i%doauth2: Transport's Source is nilhttps://sqladmin.UNIVERSE_DOMAIN/incompatible types for comparisoncannot index slice/array with nilinvalid value %q for flag -%s: %vdecoder not found for this formatfailed to parse X.509 certificateThe bytes received from Cloud SQLGODEBUG: no value specified for "crypto: requested hash function #SigEd25519 no Ed25519 collisionsSigEd25519 no Ed25519 collisions ed25519: bad private key length: x509: invalid RSA public exponentx509: SAN rfc822Name is malformedx509: invalid extended key usagescrypto/aes: output not full blockcrypto/des: output not full blockmlkem768: invalid encoding lengthleafCounts[maxBits][maxBits] != nio.prometheus.client.MetricFamilycannot unmarshal %#q into enum %sCount of all completed GC cycles.The stack size of new goroutines.couldn't parse %q (cpu/cpuid): %wcouldn't parse %q (processes): %wanchor '%s' value contains itselfexpected nothing after STREAM-ENDwhile scanning for the next tokengrpc: the server has been stoppedChannel Connectivity change to %vgrpc: error while compressing: %vNewServerTransport(%q) failed: %vregexp: unhandled case in compileunsupported HTTP client specifiedtransport: no Transport specifiedno support for proto1 MessageSetsinvalid value for %v field %v: %v%s contains irreversible value %qoauth2/google: status code %d: %soauth2: cannot parse response: %vauth: auth style must be providedGOOGLE_API_USE_CLIENT_CERTIFICATEerror building S2A TLS config: %vjsCtxRegexpjsCtxDivOpjsCtxUnknownkey-value delimiter not found: %sinvalid timezone offset charactercouldn't parse decimal number: %wnumber cannot end with underscorescalar has high bit set illegallyindefinite length found (not DER)struct contains unexported fieldsGODEBUG sys/cpu: can not enable "mount point %q is not a directoryno support for proto1 weak fieldsinvalid SetUnknown on nil MessageEncountered http2.StreamError: %vinvalid (non-empty) authority: %v* not allowed in blacklist configcertificate source is unavailable%v: close unexpectedly failed: %vencoding: missing byte order markslice offset larger than int (%d)could not format value for %v: %vgoogle/protobuf/go_features.prototimeseries: start > finish, %v>%vevidently.eu-west-1.amazonaws.comevidently.us-east-1.amazonaws.comevidently.us-east-2.amazonaws.comevidently.us-west-2.amazonaws.comfms-fips.af-south-1.amazonaws.comfms-fips.ap-south-1.amazonaws.comfms-fips.eu-south-1.amazonaws.comfms-fips.me-south-1.amazonaws.comglue-fips.us-east-1.amazonaws.comglue-fips.us-east-2.amazonaws.comglue-fips.us-west-1.amazonaws.comglue-fips.us-west-2.amazonaws.comkms-fips.af-south-1.amazonaws.comkms-fips.ap-south-1.amazonaws.comkms-fips.eu-north-1.amazonaws.comkms-fips.eu-south-1.amazonaws.comkms-fips.me-south-1.amazonaws.comlogs-fips.us-east-1.amazonaws.comlogs-fips.us-east-2.amazonaws.comlogs-fips.us-west-1.amazonaws.comlogs-fips.us-west-2.amazonaws.comoidc.ap-northeast-1.amazonaws.comoidc.ap-northeast-2.amazonaws.comoidc.ap-southeast-1.amazonaws.comoidc.ap-southeast-2.amazonaws.comqldb-fips.us-east-1.amazonaws.comqldb-fips.us-east-2.amazonaws.comqldb-fips.us-west-2.amazonaws.comxray-fips.us-east-1.amazonaws.comxray-fips.us-east-2.amazonaws.comxray-fips.us-west-1.amazonaws.comxray-fips.us-west-2.amazonaws.combatch.us-gov-east-1.amazonaws.combatch.us-gov-west-1.amazonaws.comkms-fips.us-iso-east-1.c2s.ic.govkms-fips.us-iso-west-1.c2s.ic.govfailed to kill signer process: %wfailed to retrieve public key: %wGot client TLS config from S2Av2.Got server TLS config from S2Av2.protocol %v is already registeredfailed to update AEAD crypter: %vStarting health check server at %stimeout waiting for client prefacehttp2: aborting request body writehttp: connection has been hijackedhttp: persistConn.readLoop exitinghttp: read on closed response bodystream error: stream ID %d; %v; %vframe_settings_window_size_too_bigframe_windowupdate_zero_inc_streamnewWriterAndRequestNoBody(%+v): %v%s matches the same requests as %shttp: MultipartReader called twicehttp: invalid Content-Length of %qBaseContext returned a nil contextunsupported authentication method Could not enable CPU profiling: %s3552713678800500929355621337890625bad executable (or shared library): day-of-year does not match monthFailed to export to Prometheus: %vcould not create socket for %q: %vcobra_annotation_flag_set_by_cobraCommand can't be a child of itselfFlag --%s has been deprecated, %s
+  - unsigned integer overflow on token http: server closed idle connectionCONTINUATION frame with stream ID 0Prohibited TLS 1.2 Cipher Suite: %xhttp2: server: client %v said hellohttp2: server processing setting %vWrite called after Handler finished2006-01-02T15:04:05.999999999Z07:00os/signal: Notify using nil channel1776356839400250464677810668945312588817841970012523233890533447265625ryuFtoaFixed32 called with prec > 9strings.Reader.Seek: invalid whencenetwork dropped connection on resetnon-positive interval for NewTickeraggregation %T is not yet supportednon-nil metric or metric descriptorFailed to export to Stackdriver: %v[Health Check] Readiness failed: %v[%s] Error accepting connection: %v[%s] instance closed the connectioncreating new socket for instance %q__%[1]s_handle_go_custom_completioncobra_annotation_mutually_exclusiveinvalid argument %q for %q flag: %v[%v] Connection info added to cacheisReflexive called on non-key type " is unexported but missing PkgPathreflect.MakeSlice of non-slice typetoo many Questions to pack (>65535)persistentalloc: align is too large/memory/classes/heap/released:bytesgreyobject: obj not pointer-alignedmismatched begin/end of activeSweepmheap.freeSpanLocked - invalid freefailed to get or create weak handleattempt to clear non-empty span setruntime: close polldesc w/o unblockruntime: inconsistent read deadlinefindrunnable: netpoll with spinningpidleput: P has non-empty run queuetraceback did not unwind completelyfile type does not support deadlineunsupported signature algorithm: %vTLS_ECDHE_RSA_WITH_3DES_EDE_CBC_SHAtls: too many non-advancing recordstls: server selected an invalid PSKtls: invalid Kyber server key sharetls: invalid Kyber client key sharetls: invalid or missing PSK bindersmime: bogus characters after %%: %qgzip: invalid compression level: %dgzip.Write: Extra data is too largehpack: invalid Huffman-encoded datadynamic table size update too largeincompatible period types %v and %vincompatible sample types %v and %vmultiple functions with same id: %dmultiple locations with same id: %dpprof: use of uninitialized Profileruntime/pprof: converting profile: mismatched profile records and tagsExceeded configured timeout of %v.
+  - {{end}}{{if or .Runnable .HasSubCommands}}{{.UsageString}}{{end}}tls: failed to find certificate PEM data in certificate input, but did find a private key; PEM inputs may have been switchedgrpc: no transport security set (use grpc.WithTransportCredentials(insecure.NewCredentials()) explicitly or set credentials)Stack traces of all current goroutines. Use debug=2 as a query parameter to export in the same format as an unrecovered panic.A sampling of memory allocations of live objects. You can specify the gc GET parameter to run GC before taking the heap sample.                                                                                                                                --------------------------------------------------------------------------------------------------------------------------------================================================================================================================================a previously registered descriptor with the same fully-qualified name as %s has different label names or a different help stringTypeGaugeInt64TypeGaugeFloat64TypeGaugeDistributionTypeCumulativeInt64TypeCumulativeFloat64TypeCumulativeDistributionTypeSummaryoauth2/google/externalaccount: Only one of CredentialSource, SubjectTokenSupplier, or AwsSecurityCredentialsSupplier must be settls: failed to find PEM block with type ending in "PRIVATE KEY" in key input after skipping PEM blocks of the following types: %vdescriptors reported by collector have inconsistent label names or help strings for the same fully-qualified name, offender is %sRuns a connection test
+  - <p>Set debug=1 as a query parameter to export in legacy text format</p>
+File: server.log
+  - ⚠ Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+  - ⚠ Unsupported metadata viewport is configured in metadata export in /courses. Please move it to viewport export instead.
+  - ⚠ Unsupported metadata viewport is configured in metadata export in /courses/[id]. Please move it to viewport export instead.
+  - ⚠ Unsupported metadata viewport is configured in metadata export in /cash-flow. Please move it to viewport export instead.
+  - ⚠ Unsupported metadata viewport is configured in metadata export in /courses. Please move it to viewport export instead.
+  - ⚠ Unsupported metadata viewport is configured in metadata export in /courses/[id]. Please move it to viewport export instead.
+  - ⚠ Unsupported metadata viewport is configured in metadata export in /cash-flow. Please move it to viewport export instead.
+  - ⚠ Unsupported metadata viewport is configured in metadata export in /cash-flow. Please move it to viewport export instead.
+  - ⚠ Unsupported metadata viewport is configured in metadata export in /cash-flow. Please move it to viewport export instead.
+  - ⚠ Unsupported metadata viewport is configured in metadata export in /reto-diario. Please move it to viewport export instead.
+  - ⚠ Unsupported metadata viewport is configured in metadata export in /reto-diario. Please move it to viewport export instead.
+  - ⚠ Unsupported metadata viewport is configured in metadata export in /reto-diario. Please move it to viewport export instead.
+  - ⚠ Unsupported metadata viewport is configured in metadata export in /reto-diario. Please move it to viewport export instead.
+  - ⚠ Unsupported metadata viewport is configured in metadata export in /reto-diario. Please move it to viewport export instead.
+  - ⚠ Unsupported metadata viewport is configured in metadata export in /simulators/credit. Please move it to viewport export instead.
+  - ⚠ Unsupported metadata viewport is configured in metadata export in /simulators/stocks. Please move it to viewport export instead.
+  - ⚠ Unsupported metadata viewport is configured in metadata export in /simulators/credit. Please move it to viewport export instead.
+  - ⚠ Unsupported metadata viewport is configured in metadata export in /impacto-social. Please move it to viewport export instead.
+  - ⚠ Unsupported metadata viewport is configured in metadata export in /impacto-social. Please move it to viewport export instead.
+  - ⚠ Unsupported metadata viewport is configured in metadata export in /impacto-social. Please move it to viewport export instead.
+  - ⚠ Unsupported metadata viewport is configured in metadata export in /impacto-social. Please move it to viewport export instead.
+  - ⚠ Unsupported metadata viewport is configured in metadata export in /impacto-social. Please move it to viewport export instead.
+  - ⚠ Unsupported metadata viewport is configured in metadata export in /impacto-social. Please move it to viewport export instead.
+  - ⚠ Unsupported metadata viewport is configured in metadata export in /impacto-social. Please move it to viewport export instead.
+  - ⚠ Unsupported metadata viewport is configured in metadata export in /impacto-social. Please move it to viewport export instead.
+  - ⚠ Unsupported metadata viewport is configured in metadata export in /cash-flow. Please move it to viewport export instead.
+  - ⚠ Unsupported metadata viewport is configured in metadata export in /simulators/stocks. Please move it to viewport export instead.
+  - ⚠ Unsupported metadata viewport is configured in metadata export in /cash-flow. Please move it to viewport export instead.
+  - ⚠ Unsupported metadata viewport is configured in metadata export in /cash-flow/[slug]. Please move it to viewport export instead.
+  - ⚠ Unsupported metadata viewport is configured in metadata export in /cash-flow/[slug]. Please move it to viewport export instead.
+  - ⚠ Unsupported metadata viewport is configured in metadata export in /cash-flow/[slug]. Please move it to viewport export instead.
+  - ⚠ Unsupported metadata viewport is configured in metadata export in /cash-flow/[slug]. Please move it to viewport export instead.
+  - ⚠ Unsupported metadata viewport is configured in metadata export in /cash-flow/[slug]. Please move it to viewport export instead.
+  - ⚠ Unsupported metadata viewport is configured in metadata export in /cash-flow/[slug]. Please move it to viewport export instead.
+  - ⚠ Unsupported metadata viewport is configured in metadata export in /cash-flow/[slug]. Please move it to viewport export instead.
+  - ⚠ Unsupported metadata viewport is configured in metadata export in /cash-flow/[slug]. Please move it to viewport export instead.
+  - ⚠ Unsupported metadata viewport is configured in metadata export in /cash-flow/[slug]. Please move it to viewport export instead.
+  - ⚠ Unsupported metadata viewport is configured in metadata export in /cash-flow/[slug]. Please move it to viewport export instead.
+  - ⚠ Unsupported metadata viewport is configured in metadata export in /cash-flow/[slug]. Please move it to viewport export instead.
+  - ⚠ Unsupported metadata viewport is configured in metadata export in /cash-flow/[slug]. Please move it to viewport export instead.
+  - ⚠ Unsupported metadata viewport is configured in metadata export in /cash-flow/[slug]. Please move it to viewport export instead.
+  - ⚠ Unsupported metadata viewport is configured in metadata export in /cash-flow. Please move it to viewport export instead.
+  - ⚠ Unsupported metadata viewport is configured in metadata export in /cash-flow/[slug]. Please move it to viewport export instead.
+  - ⚠ Unsupported metadata viewport is configured in metadata export in /cash-flow/[slug]. Please move it to viewport export instead.
+  - ⚠ Unsupported metadata viewport is configured in metadata export in /cash-flow/[slug]. Please move it to viewport export instead.
+  - ⚠ Unsupported metadata viewport is configured in metadata export in /cash-flow/[slug]. Please move it to viewport export instead.
+  - ⚠ Unsupported metadata viewport is configured in metadata export in /cash-flow. Please move it to viewport export instead.
+  - ⚠ Unsupported metadata viewport is configured in metadata export in /cash-flow. Please move it to viewport export instead.
+  - ⚠ Unsupported metadata viewport is configured in metadata export in /cash-flow/[slug]. Please move it to viewport export instead.
+  - ⚠ Unsupported metadata viewport is configured in metadata export in /cash-flow. Please move it to viewport export instead.
+  - ⚠ Unsupported metadata viewport is configured in metadata export in /cash-flow/[slug]. Please move it to viewport export instead.
+  - ⚠ Unsupported metadata viewport is configured in metadata export in /cash-flow. Please move it to viewport export instead.
+  - ⚠ Unsupported metadata viewport is configured in metadata export in /cash-flow/[slug]. Please move it to viewport export instead.
+  - ⚠ Unsupported metadata viewport is configured in metadata export in /cash-flow. Please move it to viewport export instead.
+  - ⚠ Unsupported metadata viewport is configured in metadata export in /cash-flow/[slug]. Please move it to viewport export instead.
+  - ⚠ Unsupported metadata viewport is configured in metadata export in /cash-flow. Please move it to viewport export instead.
+  - ⚠ Unsupported metadata viewport is configured in metadata export in /cash-flow/[slug]. Please move it to viewport export instead.
+  - ⚠ Unsupported metadata viewport is configured in metadata export in /cash-flow. Please move it to viewport export instead.
+  - ⚠ Unsupported metadata viewport is configured in metadata export in /cash-flow/[slug]. Please move it to viewport export instead.
+  - ⚠ Unsupported metadata viewport is configured in metadata export in /cash-flow. Please move it to viewport export instead.
+  - ⚠ Unsupported metadata viewport is configured in metadata export in /cash-flow/[slug]. Please move it to viewport export instead.
+  - ⚠ Unsupported metadata viewport is configured in metadata export in /cash-flow. Please move it to viewport export instead.
+  - ⚠ Unsupported metadata viewport is configured in metadata export in /simulators/stocks. Please move it to viewport export instead.
+  - ⚠ Unsupported metadata viewport is configured in metadata export in /simulators/stocks. Please move it to viewport export instead.
+  - ⚠ Unsupported metadata viewport is configured in metadata export in /simulators/stocks. Please move it to viewport export instead.
+  - ⚠ Unsupported metadata viewport is configured in metadata export in /simulators/stocks. Please move it to viewport export instead.
+  - ⚠ Unsupported metadata viewport is configured in metadata export in /simulators/stocks. Please move it to viewport export instead.
+
+--- REFERENCE SEARCH RESULTS ---
+[REFERENCED] server.log is referenced in:
+  - /src/app/admin/layout.tsx
+  - /src/app/admin/page.tsx
+  - /src/app/api/achievements/route.ts
+  - /src/app/api/admin/banner/route.ts
+  - /src/app/api/admin/billy/route.ts
+  - /src/app/api/admin/bites/upload/route.ts
+  - /src/app/api/admin/csv-import/route.ts
+  - /src/app/api/admin/curriculum/route.ts
+  - /src/app/api/admin/daily-missions/route.ts
+  - /src/app/api/admin/db-audit/route.ts
+  - /src/app/api/admin/delete-user-data/route.ts
+  - /src/app/api/admin/files/delete/route.ts
+  - /src/app/api/admin/files/route.ts
+  - /src/app/api/admin/files/view/route.ts
+  - /src/app/api/admin/final-test-results/route.ts
+  - /src/app/api/admin/glossary/route.ts
+  - /src/app/api/admin/ingest-bite/route.ts
+  - /src/app/api/admin/lesson-audit/route.ts
+  - /src/app/api/admin/list-users/route.ts
+  - /src/app/api/admin/market-config/route.ts
+  - /src/app/api/admin/module-quiz-results/route.ts
+  - /src/app/api/admin/overall-results/route.ts
+  - /src/app/api/admin/quiz-results/route.ts
+  - /src/app/api/admin/reminders/route.ts
+  - /src/app/api/admin/rescue-seed/route.ts
+  - /src/app/api/admin/schools/route.ts
+  - /src/app/api/admin/seed-platform/route.ts
+  - /src/app/api/admin/supabase-migrate/route.ts
+  - /src/app/api/admin/system/route.ts
+  - /src/app/api/admin/users/route.ts
+  - /src/app/api/admin/users/sync/route.ts
+  - /src/app/api/ai/analyze/route.ts
+  - /src/app/api/ai/budget/route.ts
+  - /src/app/api/ai/topics/[id]/insight/route.ts
+  - /src/app/api/ai/vision/route.ts
+  - /src/app/api/aprender/route.ts
+  - /src/app/api/assignments/route.ts
+  - /src/app/api/attempts/route.ts
+  - /src/app/api/auth/admin-confirm/route.ts
+  - /src/app/api/auth/signup/route.ts
+  - /src/app/api/billy-lab/generate/route.ts
+  - /src/app/api/cashflow/game/[gameId]/buy-doodad/route.ts
+  - /src/app/api/cashflow/game/[gameId]/delete/route.ts
+  - /src/app/api/cashflow/game/[gameId]/draw-card/route.ts
+  - /src/app/api/cashflow/game/[gameId]/end-turn/route.ts
+  - /src/app/api/cashflow/game/[gameId]/market-event/route.ts
+  - /src/app/api/cashflow/game/[gameId]/pay-loan/route.ts
+  - /src/app/api/cashflow/game/[gameId]/purchase/route.ts
+  - /src/app/api/cashflow/game/[gameId]/roll-dice/route.ts
+  - /src/app/api/cashflow/game/[gameId]/route.ts
+  - /src/app/api/cashflow/game/[gameId]/sell/route.ts
+  - /src/app/api/cashflow/game/[gameId]/take-loan/route.ts
+  - /src/app/api/cashflow/my-games/route.ts
+  - /src/app/api/cashflow/professions/route.ts
+  - /src/app/api/cashflow/start-game/route.ts
+  - /src/app/api/cashflow/statistics/route.ts
+  - /src/app/api/cashflow/test-db/route.ts
+  - /src/app/api/certificates/route.ts
+  - /src/app/api/chatbot/route.ts
+  - /src/app/api/check-db/route.ts
+  - /src/app/api/community/stats/route.ts
+  - /src/app/api/contact/route.ts
+  - /src/app/api/content/pdf/[slug]/route.ts
+  - /src/app/api/courses/[id]/route.ts
+  - /src/app/api/courses/route.ts
+  - /src/app/api/cron/bizcoinvert/route.ts
+  - /src/app/api/cron/db-cleanup/route.ts
+  - /src/app/api/cron/dividends/route.ts
+  - /src/app/api/daily-challenge/today/route.ts
+  - /src/app/api/dashboard/insights/route.ts
+  - /src/app/api/dashboard-init/route.ts
+  - /src/app/api/db-test/route.ts
+  - /src/app/api/debug/award-bizcoins/route.ts
+  - /src/app/api/debug/section-status/route.ts
+  - /src/app/api/debug-clerk/route.ts
+  - /src/app/api/debug-db/route.ts
+  - /src/app/api/diagnostic-quiz/route.ts
+  - /src/app/api/enrollments/route.ts
+  - /src/app/api/evidence/[postId]/comment/route.ts
+  - /src/app/api/evidence/[postId]/react/route.ts
+  - /src/app/api/evidence/[postId]/validate/route.ts
+  - /src/app/api/evidence/route.ts
+  - /src/app/api/example-protected/route.ts
+  - /src/app/api/forum/accepted/route.ts
+  - /src/app/api/forum/bookmarks/route.ts
+  - /src/app/api/forum/check-age-graduation/route.ts
+  - /src/app/api/forum/comments/[id]/route.ts
+  - /src/app/api/forum/comments/route.ts
+  - /src/app/api/forum/follows/route.ts
+  - /src/app/api/forum/leaderboard/route.ts
+  - /src/app/api/forum/moderation/[id]/route.ts
+  - /src/app/api/forum/moderation/route.ts
+  - /src/app/api/forum/parental-override/route.ts
+  - /src/app/api/forum/profile/[userId]/followers/route.ts
+  - /src/app/api/forum/profile/[userId]/following/route.ts
+  - /src/app/api/forum/profile/[userId]/route.ts
+  - /src/app/api/forum/profile/[userId]/stats/route.ts
+  - /src/app/api/forum/reports/route.ts
+  - /src/app/api/forum/search/route.ts
+  - /src/app/api/forum/seed-topics/route.ts
+  - /src/app/api/forum/tags/route.ts
+  - /src/app/api/forum/threads/[id]/route.ts
+  - /src/app/api/forum/threads/[id]/summarize/route.ts
+  - /src/app/api/forum/threads/route.ts
+  - /src/app/api/forum/topics/route.ts
+  - /src/app/api/forum/verify-age/route.ts
+  - /src/app/api/forum/votes/route.ts
+  - /src/app/api/free-chatbot/route.ts
+  - /src/app/api/health/route.ts
+  - /src/app/api/impact/stats/route.ts
+  - /src/app/api/leagues/current/route.ts
+  - /src/app/api/leagues/process-week/route.ts
+  - /src/app/api/lesson/complete/route.ts
+  - /src/app/api/lessons/[id]/route.ts
+  - /src/app/api/lessons/route.ts
+  - /src/app/api/licenses/[id]/route.ts
+  - /src/app/api/licenses/route.ts
+  - /src/app/api/live/answer/route.ts
+  - /src/app/api/live/join/route.ts
+  - /src/app/api/live/sessions/route.ts
+  - /src/app/api/live/templates/route.ts
+  - /src/app/api/missions/daily/route.ts
+  - /src/app/api/news/analysis/route.ts
+  - /src/app/api/news/route.ts
+  - /src/app/api/notifications/route.ts
+  - /src/app/api/objectives/route.ts
+  - /src/app/api/onboarding/complete/route.ts
+  - /src/app/api/payment/create-checkout/route.ts
+  - /src/app/api/payment/create-portal/route.ts
+  - /src/app/api/payment/verify-session/route.ts
+  - /src/app/api/prerequisites/route.ts
+  - /src/app/api/profile/dna-evolution/route.ts
+  - /src/app/api/profile/follow/route.ts
+  - /src/app/api/profile/me/route.ts
+  - /src/app/api/profile/route.ts
+  - /src/app/api/profile/stats/route.ts
+  - /src/app/api/profile/update/route.ts
+  - /src/app/api/profiles/route.ts
+  - /src/app/api/progress/route.ts
+  - /src/app/api/progress/user-progress/route.ts
+  - /src/app/api/questions/route.ts
+  - /src/app/api/quizzes/[id]/route.ts
+  - /src/app/api/quizzes/route.ts
+  - /src/app/api/rankings/route.ts
+  - /src/app/api/school-admin/dashboard/route.ts
+  - /src/app/api/school-admin/market/route.ts
+  - /src/app/api/school-admin/students/[id]/route.ts
+  - /src/app/api/school-topics/route.ts
+  - /src/app/api/schools/[id]/route.ts
+  - /src/app/api/schools/route.ts
+  - /src/app/api/search/route.ts
+  - /src/app/api/seed-forum/route.ts
+  - /src/app/api/seed-platform/route.ts
+  - /src/app/api/send-email/route.ts
+  - /src/app/api/send-welcome-email/route.ts
+  - /src/app/api/simuladores/route.ts
+  - /src/app/api/simuladores/runs/[id]/route.ts
+  - /src/app/api/simuladores/runs/route.ts
+  - /src/app/api/simulators/cetes/invest/route.ts
+  - /src/app/api/simulators/cetes/portfolio/route.ts
+  - /src/app/api/simulators/cetes/redeem/route.ts
+  - /src/app/api/simulators/credit/profile/route.ts
+  - /src/app/api/simulators/route.ts
+  - /src/app/api/simulators/stocks/alerts/route.ts
+  - /src/app/api/simulators/stocks/claim-bonus/route.ts
+  - /src/app/api/simulators/stocks/dividends/route.ts
+  - /src/app/api/simulators/stocks/execute/route.ts
+  - /src/app/api/simulators/stocks/history/route.ts
+  - /src/app/api/simulators/stocks/ingest/route.ts
+  - /src/app/api/simulators/stocks/leaderboard/route.ts
+  - /src/app/api/simulators/stocks/market/route.ts
+  - /src/app/api/simulators/stocks/orders/route.ts
+  - /src/app/api/simulators/stocks/performance/route.ts
+  - /src/app/api/simulators/stocks/portfolio/route.ts
+  - /src/app/api/simulators/stocks/portfolio-score/route.ts
+  - /src/app/api/simulators/stocks/watchlist/route.ts
+  - /src/app/api/streak/touch/route.ts
+  - /src/app/api/submissions/route.ts
+  - /src/app/api/test-db/route.ts
+  - /src/app/api/test-execution/route.ts
+  - /src/app/api/test-onboarding/route.ts
+  - /src/app/api/ticker/route.ts
+  - /src/app/api/tienda/inventory/route.ts
+  - /src/app/api/tienda/purchase/route.ts
+  - /src/app/api/topics/[id]/route.ts
+  - /src/app/api/topics/route.ts
+  - /src/app/api/tts/route.ts
+  - /src/app/api/upload/route.ts
+  - /src/app/api/user/activity/route.ts
+  - /src/app/api/user/award-xp/route.ts
+  - /src/app/api/user/readiness/route.ts
+  - /src/app/api/user/stats/route.ts
+  - /src/app/api/users/list/route.ts
+  - /src/app/api/wallet/goals/[id]/route.ts
+  - /src/app/api/wallet/goals/route.ts
+  - /src/app/api/wallet/search-users/route.ts
+  - /src/app/api/wallet/staking/route.ts
+  - /src/app/api/wallet/transactions/route.ts
+  - /src/app/api/wallet/transfer/route.ts
+  - /src/app/api/webhook/stripe/route.ts
+  - /src/app/auth/callback/route.ts
+  - /src/app/bizen/auth/callback/route.ts
+  - /src/app/signup/actions.ts
+  - /src/app/teacher/layout.tsx
+  - /src/auth/callback/route.ts
+  - /src/lib/audit.ts
+  - /src/lib/auth/api-auth.ts
+  - /src/lib/rewards.ts
+  - /src/middleware/roleMiddleware.ts
+  - /src/proxy.ts
+  - /src/signup/actions.ts
+
+Summary: 1 referenced, 64 unreferenced.
